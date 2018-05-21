@@ -63,7 +63,7 @@ Navigate into your plugins folder by running `cd plugins` and clone our [Faceboo
 
 `git clone https://github.com/airflow-plugins/facebook_ads_plugin.git`
 
-This will allow us to use the salesforce hook to establish a connection to Facebook Ads and extract data into a file. We will also be able to use the appropriate operators to transfer the Facebook Ads data to S3 and then from S3 to Redshift.
+This will allow us to use the Facebook Ads hook to establish a connection to Facebook Ads and extract data into a file. We will also be able to use the appropriate operators to transfer the Facebook Ads data to S3 and then from S3 to Redshift.
 
 ### Step 7: 
 Now, navigate into your dags folder by running `cd ../dags` and clone our [Example DAGs](https://github.com/airflow-plugins/Example-Airflow-DAGs) repository by running the following command: 
@@ -85,7 +85,7 @@ REDSHIFT_SCHEMA = ''
 
 
 ### Step 9: 
-Once you have those credentials plugged into your DAG, make sure that you’re logged in and run `astro deploy` to push your DAG to your Airflow instance. You can then log into your Airflow UI through app.astronomer.io and see your DAGs running. Once the DAG run succeeds, you will see your Salesforce data in the appropriate schema in your Redshift instance.
+Once you have those credentials plugged into your DAG, make sure that you’re logged in and run `astro deploy` to push your DAG to your Airflow instance. You can then log into your Airflow UI through app.astronomer.io and see your DAGs running. Once the DAG run succeeds, you will see your Facebook Ads data in the appropriate schema in your Redshift instance.
 
 ### Step 10: 
 Now, you can add custom logic into the hooks, operators, and DAGs that you have saved locally. For more info on how to do that, feel free to drop us a note in the webchat below!
