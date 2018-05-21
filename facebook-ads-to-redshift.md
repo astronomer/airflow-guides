@@ -2,7 +2,7 @@
 ## How to build a Facebook Ads to Redshift pipeline using Airflow
 
 
-In this guide, we’ll explore how you can use Airflow to move your CRM data from Facebook Ads to Redshift. Note that this is an effective and flexible alternative to point-and-click ETL tools like Segment, Alooma, Xplenty, Stitch, and ETLeap.
+In this guide, we’ll explore how you can use Airflow to move your ad data from Facebook Ads to Redshift. Note that this is an effective and flexible alternative to point-and-click ETL tools like Segment, Alooma, Xplenty, Stitch, and ETLeap.
 
 Before we get started, be sure you have the following on hand:
 * A Facebook Ads
@@ -50,7 +50,7 @@ Download the Astronomer CLI by opening your terminal and running:
 `curl -o- https//cli.astronomer.io/install.sh | bash`
 
 ### Step 3:
-Sign into the CLI by running the command astro login and inputting your Astronomer username and password when prompted.
+Sign into the CLI by running the command `astro login`` and inputting your Astronomer username and password when prompted.
 
 ### Step 4: 
 If you haven’t already done so, you’ll want to begin by creating a project directory and navigating into it. To do this, open your terminal and run `mkdir airflow_project_directory`. Then, run `cd airflow_project_directory` to navigate into this folder. While the data we pull won’t actually end up in this folder, this is where we’ll store all of our code that will perform the operation of extracting the data from Facebook Ads and scheduling it to be dumped into Redshift using Airflow.
@@ -71,6 +71,8 @@ Now, navigate into your dags folder by running `cd ../dags` and clone our [Examp
 `git clone https://github.com/airflow-plugins/Example-Airflow-DAGs.git`
 
 This repo contains the [Facebook Ads to Redshift DAG](https://github.com/airflow-plugins/Example-Airflow-DAGs/blob/master/etl/facebook_ads_to_redshift.py) that will act as the orchestrator for your actual data movement. Note that, if you’re only using the Facebook Ads to Redshift DAG, you can delete all of the other DAG files that you downloaded here. This will prevent them from showing up in the Airflow UI once you deploy.
+
+Alternatively, if you'd rather not clone the entire repo and have to delete the extra files, you can just copy the actual [Facebook Ads to Redshift DAG file](https://github.com/airflow-plugins/Example-Airflow-DAGs/blob/master/etl/facebook_ads_to_redshift.py)into the dags folder of your project directory.
 
 ### Step 8: 
 Open up the [facebook_ads_to_redshift.py file](https://github.com/airflow-plugins/Example-Airflow-DAGs/blob/master/etl/facebook_ads_to_redshift.py#L51) from the repo you just cloned in a text editor of your choice and fill out the following fields fin lines 51-56:

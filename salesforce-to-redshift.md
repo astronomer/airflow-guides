@@ -40,19 +40,19 @@ Download the Astronomer CLI by opening your terminal and running:
 
 ### Step 3
 
-Sign into the CLI by running the command astro login and inputting your Astronomer username and password when prompted.
+Sign into the CLI by running the command `astro login` and inputting your Astronomer username and password when prompted.
 
 ### Step 4
 
-If you haven’t already done so, you’ll want to begin by creating a project directory and navigating into it. To do this, open your terminal and run mkdir airflow_project_directory. Then, run cd airflow_project_directory to navigate into this folder. While the data we pull won’t actually end up in this folder, this is where we’ll store all of our code that will perform the operation of extracting the data from Salesforce and scheduling it to be dumped into Redshift using Airflow.
+If you haven’t already done so, you’ll want to begin by creating a project directory and navigating into it. To do this, open your terminal and run `mkdir airflow_project_directory`. Then, run `cd airflow_project_directory` to navigate into this folder. While the data we pull won’t actually end up in this folder, this is where we’ll store all of our code that will perform the operation of extracting the data from Salesforce and scheduling it to be dumped into Redshift using Airflow.
 
 ### Step 5
 
-Once you’ve navigated into your project directory, run astro init to initialize the project. This will create a dags and a plugins folder in your project directory.
+Once you’ve navigated into your project directory, run `astro init` to initialize the project. This will create a dags and a plugins folder in your project directory.
 
 ### Step 6
 
-Navigate into your plugins folder by running cd plugins and clone our [Salesforce Plugin](https://github.com/airflow-plugins/salesforce_plugin) using the following command: 
+Navigate into your plugins folder by running `cd plugins` and clone our [Salesforce Plugin](https://github.com/airflow-plugins/salesforce_plugin) using the following command: 
 
 `git clone https://github.com/airflow-plugins/salesforce_plugin.git`
 
@@ -60,11 +60,13 @@ This will allow us to use the salesforce hook to establish a connection to Sales
 
 ### Step 7
 
-Now, navigate into your dags folder by running cd ../dags and clone our [Example DAGs](https://github.com/airflow-plugins/Example-Airflow-DAGs) repository by running the following command: 
+Now, navigate into your dags folder by running `cd ../dags` and clone our [Example DAGs](https://github.com/airflow-plugins/Example-Airflow-DAGs) repository by running the following command: 
 
 `git clone https://github.com/airflow-plugins/Example-Airflow-DAGs.git`
 
 This repo contains the Salesforce to Redshift DAG that will act as the orchestrator for your actual data movement. Note that, if you’re only using the Salesforce to Redshift DAG, you can delete all of the other DAG files that you downloaded here. This will prevent them from showing up in the Airflow UI once you deploy.
+
+Alternatively, if you'd rather not clone the entire repo and have to delete the extra files, you can just copy the actual [Salesforce to Redshift DAG file](https://github.com/airflow-plugins/Example-Airflow-DAGs/blob/master/etl/salesforce_to_redshift.py)into the dags folder of your project directory.
 
 ### Step 8
 
