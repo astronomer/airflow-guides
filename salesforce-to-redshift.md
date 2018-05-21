@@ -42,16 +42,6 @@ Download the Astronomer CLI by opening your terminal and running:
 
 Sign into the CLI by running the command astro login and inputting your Astronomer username and password when prompted.
 
-<<<<<<< HEAD
-### Step 4: 
-If you haven’t already done so, you’ll want to begin by creating a project directory and navigating into it. To do this, open your terminal and run `mkdir airflow_project_directory`. Then, run `cd airflow_project_directory` to navigate into this folder. While the data we pull won’t actually end up in this folder, this is where we’ll store all of our code that will perform the operation of extracting the data from Salesforce and scheduling it to be dumped into Redshift using Airflow.
-
-### Step 5: 
-Once you’ve navigated into your project directory, run `astro init` to initialize the project. This will create a dags and a plugins folder in your project directory.
-
-### Step 6:
-Navigate into your plugins folder by running `cd plugins` and clone our [Salesforce Plugin](https://github.com/airflow-plugins/salesforce_plugin) using the following command: 
-=======
 ### Step 4
 
 If you haven’t already done so, you’ll want to begin by creating a project directory and navigating into it. To do this, open your terminal and run mkdir airflow_project_directory. Then, run cd airflow_project_directory to navigate into this folder. While the data we pull won’t actually end up in this folder, this is where we’ll store all of our code that will perform the operation of extracting the data from Salesforce and scheduling it to be dumped into Redshift using Airflow.
@@ -63,32 +53,19 @@ Once you’ve navigated into your project directory, run astro init to initializ
 ### Step 6
 
 Navigate into your plugins folder by running cd plugins and clone our [Salesforce Plugin](https://github.com/airflow-plugins/salesforce_plugin) using the following command: 
->>>>>>> b2eb6043d724a6072a80989b6a1bbf0c46a5b80a
 
 `git clone https://github.com/airflow-plugins/salesforce_plugin.git`
 
 This will allow us to use the salesforce hook to establish a connection to Salesforce and extract data into a file. We will also be able to use the appropriate operators to transfer the Salesforce data to S3 and then from S3 to Redshift.
 
-<<<<<<< HEAD
-### Step 7: 
-Now, navigate into your dags folder by running `cd ../dags` and clone our [Example DAGs](https://github.com/airflow-plugins/Example-Airflow-DAGs) repository by running the following command: 
-=======
 ### Step 7
 
 Now, navigate into your dags folder by running cd ../dags and clone our [Example DAGs](https://github.com/airflow-plugins/Example-Airflow-DAGs) repository by running the following command: 
->>>>>>> b2eb6043d724a6072a80989b6a1bbf0c46a5b80a
 
 `git clone https://github.com/airflow-plugins/Example-Airflow-DAGs.git`
 
 This repo contains the Salesforce to Redshift DAG that will act as the orchestrator for your actual data movement. Note that, if you’re only using the Salesforce to Redshift DAG, you can delete all of the other DAG files that you downloaded here. This will prevent them from showing up in the Airflow UI once you deploy.
 
-<<<<<<< HEAD
-### Step 8: 
-Open up the`salesforce_to_redshift.py` file from the repo you just cloned in a text editor of your choice and input your Salesforce Connection ID, S3 Connection ID, S3 Bucket Name, Redshift Connection ID, Redshift Schema Name, Origin Schema, and Schema Location. Save the file once this information has been imported. (More info to come)
-
-### Step 9: 
-Once you have those credentials plugged into your DAG, make sure that you’re logged in and run `astro deploy` to push your DAG to your Airflow instance. You can then log into your Airflow UI through app.astronomer.io and see your DAGs running. Once the DAG run succeeds, you will see your Salesforce data in the appropriate schema in your Redshift instance.
-=======
 ### Step 8
 
 Open up the salesforce_to_redshift.py file from the repo you just cloned in a text editor of your choice and input your Salesforce Connection ID, S3 Connection ID, S3 Bucket Name, Redshift Connection ID, Redshift Schema Name, Origin Schema, and Schema Location. Save the file once this information has been imported. (More info to come)
@@ -96,7 +73,6 @@ Open up the salesforce_to_redshift.py file from the repo you just cloned in a te
 ### Step 9
 
 Once you have those credentials plugged into your DAG, make sure that you’re logged in and run astro deploy to push your DAG to your Airflow instance. You can then log into your Airflow UI through app.astronomer.io and see your DAGs running. Once the DAG run succeeds, you will see your Salesforce data in the appropriate schema in your Redshift instance.
->>>>>>> b2eb6043d724a6072a80989b6a1bbf0c46a5b80a
 
 ### Step 10
 
