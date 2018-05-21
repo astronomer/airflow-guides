@@ -74,7 +74,7 @@ Open up the salesforce_to_redshift.py file from the repo you just cloned in a te
 
 ### Step 9
 
-Once you have those credentials plugged into your DAG, make sure that you’re logged in and run astro deploy to push your DAG to your Airflow instance. You can then log into your Airflow UI through app.astronomer.io and see your DAGs running. Once the DAG run succeeds, you will see your Salesforce data in the appropriate schema in your Redshift instance.
+Once you have those credentials plugged into your DAG, make sure that you’re logged in and run `astro deploy` to push your DAG to your Airflow instance. You can then log into your Airflow UI through app.astronomer.io and see your DAGs running. Once the DAG run succeeds, you will see your Salesforce data in the appropriate schema in your Redshift instance.
 
 ### Step 10
 

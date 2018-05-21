@@ -67,7 +67,7 @@ This will allow us to use the Google Analytics hook to establish a connection to
 
 ### Step 7
 
-Now, navigate into your dags folder by running cd ../dags and clone our [Example DAGs](https://github.com/airflow-plugins/Example-Airflow-DAGs) repository by running the following command: 
+Now, navigate into your dags folder by running `cd ../dags` and clone our [Example DAGs](https://github.com/airflow-plugins/Example-Airflow-DAGs) repository by running the following command: 
 
 `git clone https://github.com/airflow-plugins/Example-Airflow-DAGs.git`
 
@@ -89,7 +89,7 @@ REDSHIFT_SCHEMA = ''
 
 ### Step 9
 
-Once you have those credentials plugged into your DAG, make sure that you’re logged in and run astro deploy to push your DAG to your Airflow instance. You can then log into your Airflow UI through app.astronomer.io and see your DAGs running. Once the DAG run succeeds, you will see your Google Analytics data in the appropriate schema in your Redshift instance.
+Once you have those credentials plugged into your DAG, make sure that you’re logged in and run `astro deploy` to push your DAG to your Airflow instance. You can then log into your Airflow UI through app.astronomer.io and see your DAGs running. Once the DAG run succeeds, you will see your Google Analytics data in the appropriate schema in your Redshift instance.
 
 ### Step 10
 
