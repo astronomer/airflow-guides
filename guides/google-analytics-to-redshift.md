@@ -1,3 +1,12 @@
+---
+title: "Google Analytics to Redshift"
+description: "A guide to outline how to use Airflow to move your data from Google Analytics to Redshift."
+date: 2018-05-21T00:00:00.000Z
+slug: "google-analytics-to-redshift"
+hero_image_path: null
+tags: ["Building DAGs", "Redshift", "Google Analytics"]
+---
+
 # Google Analytics to Redshift
 
 ## How to build a Google Analytics to Redshift pipeline using Airflow
@@ -9,8 +18,8 @@ Before we get started, be sure you have the following on hand:
 * A Google Analytics account
 * An S3 bucket with a valid `aws_access_key_id` and `aws_secret_access_key`
 * A Redshift instance with a valid host IP and login information
-* An instance of Apache Airflow. You can either set this up yourself if you have devops resources or sign 
-  up and get going immediately with Astronomer’s managed Airflow service. Note that this guide will use 
+* An instance of Apache Airflow. You can either set this up yourself if you have devops resources or sign
+  up and get going immediately with Astronomer’s managed Airflow service. Note that this guide will use
   commands using the Astronomer CLI to push dags into production and will assume you’ve spun up an Airflow
   instance via Astronomer, but the core code should work the same regardless of how you’re hosting Airflow
 * Docker running on your machine
@@ -41,7 +50,7 @@ Begin by creating all of the necessary connections in your Airflow UI. To do thi
 
 ### Step 2
 
-Download the Astronomer CLI by opening your terminal and running: 
+Download the Astronomer CLI by opening your terminal and running:
 
 `curl -o- https//cli.astronomer.io/install.sh | bash`
 
@@ -59,7 +68,7 @@ Once you’ve navigated into your project directory, run `astro init` to initial
 
 ### Step 6
 
-Navigate into your plugins folder by running `cd plugins` and clone our [Google Analytics Plugin](https://github.com/airflow-plugins/google_analytics_plugin) using the following command: 
+Navigate into your plugins folder by running `cd plugins` and clone our [Google Analytics Plugin](https://github.com/airflow-plugins/google_analytics_plugin) using the following command:
 
 `git clone https://github.com/airflow-plugins/google_analytics_plugin.git`
 
@@ -67,7 +76,7 @@ This will allow us to use the Google Analytics hook to establish a connection to
 
 ### Step 7
 
-Now, navigate into your dags folder by running `cd ../dags` and clone our [Example DAGs](https://github.com/airflow-plugins/Example-Airflow-DAGs) repository by running the following command: 
+Now, navigate into your dags folder by running `cd ../dags` and clone our [Example DAGs](https://github.com/airflow-plugins/Example-Airflow-DAGs) repository by running the following command:
 
 `git clone https://github.com/airflow-plugins/Example-Airflow-DAGs.git`
 
