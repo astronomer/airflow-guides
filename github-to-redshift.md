@@ -53,7 +53,7 @@ Navigate into your plugins folder by running `cd plugins` and clone our [Github 
 
 `git clone https://github.com/airflow-plugins/github_plugin.git`
 
-This will allow us to use the Github hook to establish a connection to GA and extract data into a file. We will also be able to use the appropriate operators to transfer the Github data to S3 and then from S3 to Redshift.
+This will allow us to use the Github hook to establish a connection to Github and extract data into a file. We will also be able to use the appropriate operators to transfer the Github data to S3 and then from S3 to Redshift.
 
 ### Step 7
 
