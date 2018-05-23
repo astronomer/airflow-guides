@@ -4,7 +4,7 @@ description: "A guide to outline how to use Airflow to move your ad data from Fa
 date: 1503504000000
 slug: "facebook-ads-to-redshift"
 hero_image_path: null
-tags: "Facebook", "Redshift", "Airflow"
+tags: ["Facebook", "Redshift", "Airflow"]
 ---
 
 # Facebook Ads to Redshift
