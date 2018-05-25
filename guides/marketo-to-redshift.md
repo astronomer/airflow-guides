@@ -7,8 +7,6 @@ hero_image_path: null
 tags: ["Building DAGs", "Redshift", "Marketo"]
 ---
 
-# Marketo to Redshift
-
 ## How to build a Marketo to Redshift pipeline using Airflow
 
 In this guide, we’ll explore how you can use Airflow to move your data from Marketo to Redshift. Note that this is an effective and flexible alternative to point-and-click ETL tools like Segment, Alooma, Xplenty, Stitch, and ETLeap.

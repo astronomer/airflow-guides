@@ -7,8 +7,6 @@ hero_image_path: null
 tags: ["Building DAGs", "Redshift", "Hubspot"]
 ---
 
-# Hubspot to Redshift
-
 ## How to build a Hubspot to Redshift pipeline using Airflow
 
 In this guide, we’ll explore how you can use Airflow to move your CRM data from Hubspot to Redshift. Note that this is an effective and flexible alternative to point-and-click ETL tools like Segment, Alooma, Xplenty, Stitch, and ETLeap.
