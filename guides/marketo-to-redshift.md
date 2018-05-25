@@ -3,7 +3,7 @@ title: "Marketo to Redshift"
 description: "A guide to outline how to use Airflow to move your data from Marketo to Redshift."
 date: 2018-05-23T00:00:00.000Z
 slug: "marketo-to-redshift"
-hero_image_path: null
+heroImagePath: null
 tags: ["Building DAGs", "Redshift", "Marketo"]
 ---
 
