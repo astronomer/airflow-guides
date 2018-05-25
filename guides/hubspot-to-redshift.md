@@ -33,30 +33,30 @@ naming convention "INCREMENTAL_KEY__{DAG_ID}_{TASK_ID}_vidOffset" at the end of 
 * Campaigns - Rebuild
 * Companies - Rebuild
 * Contacts - Append - Built based on incremental contact id
-  * Form Submissions - Append
-  * Identity Profiles - Append
-  * List Memberships - Append
-  * Merge Audits - Append
+   * Form Submissions - Append
+   * Identity Profiles - Append
+   * List Memberships - Append
+   * Merge Audits - Append
 * Deals - rebuild
-  * Associations_AssociatedVids - Append
-  * Associations_AssociatedCompanyVids - Append
-  * Associations_AssociatedDealIds - Append
+   * Associations_AssociatedVids - Append
+   * Associations_AssociatedCompanyVids - Append
+   * Associations_AssociatedDealIds - Append
 * Deal Pipelines - Rebuild
 * Engagments - Rebuild
-  * Associations - Rebuild
-  * Attachments - Rebuild
+   * Associations - Rebuild
+   * Attachments - Rebuild
 * Events - Append - Built based on incremental date
 * Forms - Rebuild
-  * Field Groups - Rebuild
+   * Field Groups - Rebuild
 * Keywords - Rebuild
 * Lists - Rebuild
-  * Filters - Rebuild
+   * Filters - Rebuild
 * Owners - Rebuild
-  * Remote List - Rebuild
+   * Remote List - Rebuild
 * Social - Rebuild
 * Timeline - Append - Built based on incremental date
 * Workflow - Rebuild
-  * Persona Tag Ids - Rebuild
+   * Persona Tag Ids - Rebuild
   * Contact List Ids Steps - Rebuild
 
 
