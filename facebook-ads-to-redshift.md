@@ -31,7 +31,7 @@ Before we get started, be sure you have the following on hand:
     - cpm
     - cpp
     - ctr
-    - mpressions
+    - impressions
     - objective
     - reach
     - social_clicks
