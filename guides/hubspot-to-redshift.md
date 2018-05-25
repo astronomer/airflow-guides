@@ -30,34 +30,34 @@ The associated scope to the varius endpoints can be found in the "scope" field w
 
 *NOTE:* The contacts table and associated subtables are built based on an incrementing contact id that is stored as an Airflow Variable with the
 naming convention "INCREMENTAL_KEY__{DAG_ID}_{TASK_ID}_vidOffset" at the end of each run and then pulled on the next to be used as an offset. As such, while accessing the Contacts endpoint, "max_active_runs" should be set to 1 to avoid pulling the same incremental key offset and therefore pulling the same data twice.
-- Campaigns - Rebuild
-- Companies - Rebuild
-- Contacts - Append - Built based on incremental contact id
-    - Form Submissions - Append
-    - Identity Profiles - Append
-    - List Memberships - Append
-    - Merge Audits - Append
-- Deals - rebuild
-    - Associations_AssociatedVids - Append
-    - Associations_AssociatedCompanyVids - Append
-    - Associations_AssociatedDealIds - Append
-- Deal Pipelines - Rebuild
-- Engagments - Rebuild
-    - Associations - Rebuild
-    - Attachments - Rebuild
-- Events - Append - Built based on incremental date
-- Forms - Rebuild
-    - Field Groups - Rebuild
-- Keywords - Rebuild
-- Lists - Rebuild
-    - Filters - Rebuild
-- Owners - Rebuild
-    - Remote List - Rebuild
-- Social - Rebuild
-- Timeline - Append - Built based on incremental date
-- Workflow - Rebuild
-    - Persona Tag Ids - Rebuild
-    - Contact List Ids Steps - Rebuild
+* Campaigns - Rebuild
+* Companies - Rebuild
+* Contacts - Append - Built based on incremental contact id
+  * Form Submissions - Append
+  * Identity Profiles - Append
+  * List Memberships - Append
+  * Merge Audits - Append
+* Deals - rebuild
+  * Associations_AssociatedVids - Append
+  * Associations_AssociatedCompanyVids - Append
+  * Associations_AssociatedDealIds - Append
+* Deal Pipelines - Rebuild
+* Engagments - Rebuild
+  * Associations - Rebuild
+  * Attachments - Rebuild
+* Events - Append - Built based on incremental date
+* Forms - Rebuild
+  * Field Groups - Rebuild
+* Keywords - Rebuild
+* Lists - Rebuild
+  * Filters - Rebuild
+* Owners - Rebuild
+  * Remote List - Rebuild
+* Social - Rebuild
+* Timeline - Append - Built based on incremental date
+* Workflow - Rebuild
+  * Persona Tag Ids - Rebuild
+  * Contact List Ids Steps - Rebuild
 
 
 ### Step 1
