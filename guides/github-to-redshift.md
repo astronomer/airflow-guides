@@ -1,3 +1,12 @@
+---
+title: "Github to Redshift"
+description: "A guide to outline how to use Airflow to move your data from Github to Redshift."
+date: 2018-05-21T00:00:00.000Z
+slug: "github-to-redshift"
+hero_image_path: null
+tags: ["Building DAGs", "Redshift", "Github"]
+---
+
 # Github to Redshift
 
 ## How to build a Github to Redshift pipeline using Airflow
@@ -9,8 +18,8 @@ Before we get started, be sure you have the following on hand:
 * A github account
 * An S3 bucket with a valid `aws_access_key_id` and `aws_secret_access_key`
 * A Redshift instance with a valid host IP and login information
-* An instance of Apache Airflow. You can either set this up yourself if you have devops resources or sign 
-  up and get going immediately with Astronomer’s managed Airflow service. Note that this guide will use 
+* An instance of Apache Airflow. You can either set this up yourself if you have devops resources or sign
+  up and get going immediately with Astronomer’s managed Airflow service. Note that this guide will use
   commands using the Astronomer CLI to push dags into production and will assume you’ve spun up an Airflow
   instance via Astronomer, but the core code should work the same regardless of how you’re hosting Airflow
 * Docker running on your machine
@@ -31,7 +40,7 @@ Begin by creating all of the necessary connections in your Airflow UI. To do thi
 
 ### Step 2
 
-Download the Astronomer CLI by opening your terminal and running: 
+Download the Astronomer CLI by opening your terminal and running:
 
 `curl -o- https//cli.astronomer.io/install.sh | bash`
 
@@ -49,7 +58,7 @@ Once you’ve navigated into your project directory, run `astro init` to initial
 
 ### Step 6
 
-Navigate into your plugins folder by running `cd plugins` and clone our [Github Plugin](https://github.com/airflow-plugins/github_plugin) using the following command: 
+Navigate into your plugins folder by running `cd plugins` and clone our [Github Plugin](https://github.com/airflow-plugins/github_plugin) using the following command:
 
 `git clone https://github.com/airflow-plugins/github_plugin.git`
 
@@ -57,7 +66,7 @@ This will allow us to use the Github hook to establish a connection to Github an
 
 ### Step 7
 
-Now, navigate into your dags folder by running `cd ../dags` and clone our [Example DAGs](https://github.com/airflow-plugins/Example-Airflow-DAGs) repository by running the following command: 
+Now, navigate into your dags folder by running `cd ../dags` and clone our [Example DAGs](https://github.com/airflow-plugins/Example-Airflow-DAGs) repository by running the following command:
 
 `git clone https://github.com/airflow-plugins/Example-Airflow-DAGs.git`
 
