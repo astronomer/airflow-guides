@@ -37,7 +37,7 @@ Begin by creating all of the necessary connections in your Airflow UI. To do thi
 
 ### 2. Clone the plugin
 
-Navigate into your plugins folder by running `cd plugins` and clone the [Github Plugin](https://github.com/airflow-plugins/github_plugin) using the following command:
+If you haven't done so already, navigate into your project directory and create a `plugins` folder by running  `mkdir plugins` in your terminal.Navigate into this folder by running `cd plugins` and clone the [Github Plugin](https://github.com/airflow-plugins/github_plugin) using the following command:
 
 `git clone https://github.com/airflow-plugins/github_plugin.git`
 
@@ -45,7 +45,7 @@ This will allow you to use the Github hook to establish a connection to Github a
 
 ### 3. Copy the DAG file
 
-Copy the [Github to Redshift DAG file](https://github.com/airflow-plugins/Example-Airflow-DAGs/blob/master/etl/github_to_redshift.py) into the dags folder of your project directory.
+Navigate back into your project directory and create a `dags` folder by running `mkdir dags`. Copy the [Github to Redshift DAG file](https://github.com/airflow-plugins/Example-Airflow-DAGs/blob/master/etl/github_to_redshift.py) into this folder.
 
 ### 4. Customize
 
@@ -63,3 +63,7 @@ LOAD_TYPE = ''
 ### 5. Test + Deploy
 
 Once you have those credentials plugged into your DAG, test and deploy it!
+
+
+
+If you don't have Airflow already set up in your production environment, head over to [our app](https://app.astronomer.io/signup) to get spun up with your own managed instance!
