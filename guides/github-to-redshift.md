@@ -31,11 +31,11 @@ This DAG copies the following objects:
 * members
 * pull_requests
 
-### Add Connections in Airflow UI
+### 1. Add Connections in Airflow UI
 
 Begin by creating all of the necessary connections in your Airflow UI. To do this, log into your Airflow dashboard and navigate to Admin-->Connections. In order to build this pipeline, you’ll need to create a connection to your Github account, your S3 bucket, and your Redshift instance. For more info on how to fill out the fields within your connections, check out our [documentation here](https://docs.astronomer.io/v2/apache_airflow/tutorial/connections.html).
 
-### Clone the plugin
+### 2. Clone the plugin
 
 Navigate into your plugins folder by running `cd plugins` and clone the [Github Plugin](https://github.com/airflow-plugins/github_plugin) using the following command:
 
@@ -43,11 +43,11 @@ Navigate into your plugins folder by running `cd plugins` and clone the [Github 
 
 This will allow you to use the Github hook to establish a connection to Github and extract data into a file. You will also be able to use the appropriate operators to transfer the Github data to S3 and then from S3 to Redshift.
 
-### Copy the DAG file
+### 3. Copy the DAG file
 
 Copy the [Github to Redshift DAG file](https://github.com/airflow-plugins/Example-Airflow-DAGs/blob/master/etl/github_to_redshift.py) into the dags folder of your project directory.
 
-### Customize
+### 4. Customize
 
 Open up the [github_to_redshift.py file](https://github.com/airflow-plugins/Example-Airflow-DAGs/blob/master/etl/github_to_redshift.py#L29) from the repo you just cloned in a text editor of your choice and input the following credentials in lines 29-35:
 ```
@@ -60,6 +60,6 @@ SCHEMA_LOCATION = ''
 LOAD_TYPE = ''
 ```
 
-### Deploy
+### 5. Test + Deploy
 
 Once you have those credentials plugged into your DAG, test and deploy it!
