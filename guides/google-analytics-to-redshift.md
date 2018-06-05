@@ -47,7 +47,7 @@ Begin by creating all of the necessary connections in your Airflow UI. To do thi
 
 ### 2. Clone the plugin
 
-If you haven't done so already, navigate into your project directory and create a `plugins` folder by running  `mkdir plugins` in your terminal.Navigate into this folder by running `cd plugins` and clone the [Github Plugin](https://github.com/airflow-plugins/google_analytics_plugin) using the following command:
+If you haven't done so already, navigate into your project directory and create a `plugins` folder by running  `mkdir plugins` in your terminal.Navigate into this folder by running `cd plugins` and clone the [Google Analytics Plugin](https://github.com/airflow-plugins/google_analytics_plugin) using the following command:
 
 `git clone https://github.com/airflow-plugins/google_analytics_plugin.git`
 
