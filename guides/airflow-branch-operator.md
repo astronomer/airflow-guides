@@ -96,8 +96,8 @@ with dag:
     kick_off_dag >> branch
     branch >> kickoff_summary >> run_condition >> downstream_task
     branch >> trigger_warning
-    ```
+```
 
 
-https://cdn.astronomer.io/website/img/guides/branch_operator_dag.png
+cdn.astronomer.io/website/img/guides/branch_operator_dag.png
     
