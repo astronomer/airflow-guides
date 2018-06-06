@@ -99,5 +99,5 @@ with dag:
 ```
 
 
-cdn.astronomer.io/website/img/guides/branch_operator_dag.png
+![](cdn.astronomer.io/website/img/guides/branch_operator_dag.png)
     
