@@ -78,7 +78,7 @@ t3.set_upstream(t2)
 
 When the scheduler taps this DAG, it will generate a DAG run for each day from the `start_date` to 4/30/18, and then for each day going forward:
 
-https://cdn.astronomer.io/website/img/guides/ucg_scheduling.png
+![](https://cdn.astronomer.io/website/img/guides/ucg_scheduling.png)
 
 In this example DAG it won't really cause many problems, but if this DAG were hitting an external system (e.g. making API calls, querying a database, etc.) it could get problematic.
 
@@ -129,7 +129,7 @@ t3.set_upstream(t2)
 
 This DAG only gets one DAG run scheduled once on 4/30 due to the catchup parameter:
 
-https://cdn.astronomer.io/website/img/guides/ucg_scheduling_catchup.png
+![](https://cdn.astronomer.io/website/img/guides/ucg_scheduling_catchup.png)
 
 ### Using catchup effectively
 
@@ -225,7 +225,7 @@ with dag:
         start >> google_analytics >> s3_to_redshift
 ```        
 
-https://cdn.astronomer.io/website/img/guides/ucg_ga_ga_scheduled.png
+![](https://cdn.astronomer.io/website/img/guides/ucg_ga_ga_scheduled.png)
 
 **Note:** Your GA service account may only be bound to a limited number of concurrent connections.
 
