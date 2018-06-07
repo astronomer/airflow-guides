@@ -90,7 +90,7 @@ The data is stored in Airflow's underyling Postgres, so while it's not a great s
 _Note_: Most of your constants and variables should be defined in code, but it's useful to have some variables or configuration items accessible and modifiable through the UI itself.
 
 https://airflow.apache.org/concepts.html#variables
-![airflow_variables](img/airflow_variables.png)
+![airflow_variables](https://cdn.astronomer.io/website/img/guides/airflow_variables.png)
 
 ### XComs
 
@@ -100,7 +100,7 @@ However, Variables are designed to be a place to store constands, whereas Xcoms 
 
 https://airflow.apache.org/concepts.html#xcoms
 
-![ui_xcom](img/ui_xcom.png)
+![ui_xcom](https://cdn.astronomer.io/website/img/guides/ui_xcom.png)
 _Various bits of metadata that have been passed back and forth between DAGs_.
 
 **Note**: Just like Variables, only small amounts of data are meant to live in XComs. 
