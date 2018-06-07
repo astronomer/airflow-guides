@@ -4,7 +4,7 @@ description: "A high-level overview of the Airflow UI."
 date: 2018-05-21T00:00:00.000Z
 slug: "airflow-ui"
 heroImagePath: https://cdn.astronomer.io/website/img/guides/graph_view.png
-tags: ["UI", "Frontend", "Airflow"]
+tags: ["DAGs", "Data Pipelines", "Airflow"]
 ---
 
 A notable part of Apache Airflow is its built in UI, which allows you to see the status of your jobs, their underlying code, and even some meta-data on their execution time. This will help you both monitor and troubleshoot your workflows.
