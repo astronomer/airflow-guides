@@ -7,7 +7,7 @@ heroImagePath: https://cdn.astronomer.io/website/img/guides/graph_view.png
 tags: ["UI", "Frontend", "Airflow"]
 ---
 
-A notable part of Apache Airflow is its built in UI, which allows you to see the status of your jobs, their underyling code, and even some meta-data on their execution time. This will help you both monitor and troubleshoot your workflows.
+A notable part of Apache Airflow is its built in UI, which allows you to see the status of your jobs, their underlying code, and even some meta-data on their execution time. This will help you both monitor and troubleshoot your workflows.
 
 With that said, the UI is not always the most intuitive.
 
