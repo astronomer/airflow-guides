@@ -77,10 +77,9 @@ Best practices emerging around data engineering are pointing towards concepts fo
 This concept will be stressed throughout everything - idempotency is one of, if not the most, important characteristic of good ETL architecture.
 
 Something is idempotent if it will produce the same result regardless of how many times it is run. In mathematical terms:
-<br><br>
-<center>
-$f(x) = f(f(x)) = f(f(f(x)))...$
-</center>
+
+`$f(x) = f(f(x)) = f(f(f(x)))...$`
+
 
 Idempotency usually hand in hand with **reproducability** - a set of inputs always produces the same set of outputs 
 
@@ -95,10 +94,9 @@ There should be a clear and intuitive association between tables, intermediate f
 Furthermore, this association should filter down into all metadata - logs, runtimes, 
 
 Mathematically, this idea of clarity and directness is intuitive:
-<br><br>
-<center>
-$f(x) = y$
-</center>
+
+`$f(x) = y$`
+
 
 
 
