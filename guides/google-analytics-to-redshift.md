@@ -3,7 +3,7 @@ title: "Google Analytics to Redshift"
 description: "A guide to outline how to use Airflow to move your data from Google Analytics to Redshift."
 date: 2018-05-21T00:00:00.000Z
 slug: "google-analytics-to-redshift"
-heroImagePath: "https://cdn.astronomer.io/website/GoogleAnalyticsToRedshift_preview.png"
+heroImagePath: "https://cdn.astronomer.io/website/img/guides/GoogleAnalyticsToRedshift_preview.png"
 tags: ["Building DAGs", "Redshift", "Google Analytics"]
 ---
 
