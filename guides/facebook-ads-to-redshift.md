@@ -3,7 +3,7 @@ title: "Facebook Ads to Redshift"
 description: "A guide to outline how to use Airflow to move your ad data from Facebook Ads to Redshift."
 date: 2018-05-21T00:00:00.000Z
 slug: "facebook-ads-to-redshift"
-heroImagePath: null
+heroImagePath: https://cdn.astronomer.io/website/FBToRedshift_preview.png
 tags: ["Building DAGs", "Redshift", "Facebook Ads"]
 ---
 

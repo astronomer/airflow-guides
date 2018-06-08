@@ -3,7 +3,8 @@ title: "Intro to DAGs"
 description: "An explanation of DAGs and how they are constructed in Airflow."
 date: 2018-05-21T00:00:00.000Z
 slug: "dags"
-heroImagePath: https://cdn.astronomer.io/website/img/guides/graph_view.png
+heroImagePath:
+https://cdn.astronomer.io/website/img/guides/IntroToDAG_preview.png
 tags: ["UI", "Frontend", "Airflow"]
 ---
 

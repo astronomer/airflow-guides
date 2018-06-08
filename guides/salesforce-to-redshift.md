@@ -3,7 +3,7 @@ title: "Salesforce to Redshift"
 description: "A guide to outline how to use Airflow to move your CRM data from Salesforce to Redshift."
 date: 2018-05-23T00:00:00.000Z
 slug: "salesforce-to-redshift"
-heroImagePath: null
+heroImagePath: https://cdn.astronomer.io/website/SalesforceToRedshift_preview.png
 tags: ["Building DAGs", "Redshift", "Salesforce"]
 ---
 

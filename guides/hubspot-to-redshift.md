@@ -3,7 +3,7 @@ title: "Hubspot to Redshift"
 description: "A guide to outline how to use Airflow to move your CRM data from Hubspot to Redshift."
 date: 2018-05-23T00:00:00.000Z
 slug: "hubspot-to-redshift"
-heroImagePath: null
+heroImagePath: https://cdn.astronomer.io/website/HubspotToRedshift_preview.png
 tags: ["Building DAGs", "Redshift", "Hubspot"]
 ---
 
