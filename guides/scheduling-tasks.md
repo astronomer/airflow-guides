@@ -3,7 +3,7 @@ title: "Scheduling Tasks in Airflow"
 description: "A comprehensive overview of the Airflow scheduler."
 date: 2018-05-21T00:00:00.000Z
 slug: "scheduling-tasks"
-heroImagePath: https://cdn.astronomer.io/website/SchedulingTasksinAirflow_preview.png
+heroImagePath: "https://cdn.astronomer.io/website/SchedulingTasksinAirflow_preview.png"
 tags: ["Building DAGs", "Scheduling Tasks", "Airflow"]
 ---
 

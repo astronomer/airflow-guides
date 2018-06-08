@@ -3,7 +3,7 @@ title: "Github to Redshift"
 description: "A guide to outline how to use Airflow to move your data from Github to Redshift."
 date: 2018-05-21T00:00:00.000Z
 slug: "github-to-redshift"
-heroImagePath: https://cdn.astronomer.io/website/GithubToRedshit_preview.png
+heroImagePath: "https://cdn.astronomer.io/website/GithubToRedshit_preview.png"
 tags: ["Building DAGs", "Redshift", "Github"]
 ---
 
