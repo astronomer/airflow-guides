@@ -5,7 +5,7 @@ date: 2018-05-21T00:00:00.000Z
 slug: "dags"
 heroImagePath:
 https://cdn.astronomer.io/website/img/guides/IntroToDAG_preview.png
-tags: ["UI", "Frontend", "Airflow"]
+tags:
 ---
 
 # Functional Data Engineering
