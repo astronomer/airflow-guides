@@ -1,13 +1,11 @@
 ---
-title: "MongoDB to Redshift"
+title: "How to Build a MongoDB to Redshift Pipeline Using Airflow"
 description: "A guide to outline how to use Airflow to move your data from MongoDB to Redshift."
 date: 2018-05-23T00:00:00.000Z
 slug: "mongo-to-redshift"
 heroImagePath: "https://cdn.astronomer.io/website/img/guides/MongoDBToRedshift_preview.png"
 tags: ["Building DAGs", "Redshift", "MongoDB"]
 ---
-
-## How to build a MongoDB to Redshift pipeline using Airflow
 
 In this guide, we’ll explore how you can use Airflow to move your data from your MongoDB to Redshift. Note that this is an effective and flexible alternative to point-and-click ETL tools like Segment, Alooma, Xplenty, Stitch, and ETLeap.
 

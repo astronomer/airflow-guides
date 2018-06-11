@@ -1,13 +1,11 @@
 ---
-title: "Github to Redshift"
+title: "How to Build a Github to Redshift Pipeline Using Airflow"
 description: "A guide to outline how to use Airflow to move your data from Github to Redshift."
 date: 2018-05-21T00:00:00.000Z
 slug: "github-to-redshift"
 heroImagePath: "https://cdn.astronomer.io/website/img/guides/GithubToRedshit_preview.png"
 tags: ["Building DAGs", "Redshift", "Github"]
 ---
-
-## How to build a Github to Redshift pipeline using Airflow
 
 In this guide, we’ll explore how you can use Airflow to move your data from Github to Redshift. Note that this is an effective and flexible alternative to point-and-click ETL tools like Segment, Alooma, Xplenty, Stitch, and ETLeap.
 

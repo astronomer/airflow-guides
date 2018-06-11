@@ -1,13 +1,11 @@
 ---
-title: "Facebook Ads to Redshift"
+title: "How to Build a Facebook Ads to Redshift Pipeline using Airflow"
 description: "A guide to outline how to use Airflow to move your ad data from Facebook Ads to Redshift."
 date: 2018-05-21T00:00:00.000Z
 slug: "facebook-ads-to-redshift"
 heroImagePath: "https://cdn.astronomer.io/website/img/guides/FBToRedshift_preview.png"
 tags: ["Building DAGs", "Redshift", "Facebook Ads"]
 ---
-
-## How to build a Facebook Ads to Redshift pipeline using Airflow
 
 In this guide, we’ll explore how you can use Airflow to move your ad data from Facebook Ads to Redshift. Note that this is an effective and flexible alternative to point-and-click ETL tools like Segment, Alooma, Xplenty, Stitch, and ETLeap.
 

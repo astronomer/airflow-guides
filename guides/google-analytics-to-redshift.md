@@ -1,13 +1,11 @@
 ---
-title: "Google Analytics to Redshift"
+title: "How to Build a Google Analytics to Redshift Pipeline Using Airflow"
 description: "A guide to outline how to use Airflow to move your data from Google Analytics to Redshift."
 date: 2018-05-21T00:00:00.000Z
 slug: "google-analytics-to-redshift"
 heroImagePath: "https://cdn.astronomer.io/website/img/guides/GoogleAnalyticsToRedshift_preview.png"
 tags: ["Building DAGs", "Redshift", "Google Analytics"]
 ---
-
-## How to build a Google Analytics to Redshift pipeline using Airflow
 
 In this guide, we’ll explore how you can use Airflow to move your data from Google Analytics to Redshift. Note that this is an effective and flexible alternative to point-and-click ETL tools like Segment, Alooma, Xplenty, Stitch, and ETLeap.
 
