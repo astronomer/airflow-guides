@@ -2,9 +2,9 @@
 title: "Airflow Best Practices: Subdags"
 description: "A guide outlining the use of subdags in Airflow."
 date: 2018-05-23T00:00:00.000Z
-slug: "salesforce-to-redshift"
-heroImagePath: "https://cdn.astronomer.io/website/img/guides/SalesforceToRedshift_preview.png"
-tags: ["Building DAGs", "Redshift", "Salesforce"]
+slug: "subdags"
+heroImagePath: null
+tags: ["Building DAGs", "Subdags", "Airflow"]
 ---
 
 # Subdags
