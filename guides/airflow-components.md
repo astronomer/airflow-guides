@@ -1,6 +1,6 @@
 ---
 title: "Airflow's Components"
-description: "How everything fits together in Airflow"
+description: "How all of Airflow's components fit together."
 date: 2018-05-21T00:00:00.000Z
 slug: "airflow-components"
 heroImagePath: null
@@ -8,10 +8,9 @@ tags: ["Airflow", "Components"]
 ---
 
 
-#Airflow Components
+# Airflow Components
 
 ## Core Components
-_How everything fits together_
 
 At the core,  Airflow consists of 4 core components:
 
