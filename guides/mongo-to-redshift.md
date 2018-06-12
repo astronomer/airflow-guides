@@ -1,6 +1,6 @@
 ---
-title: "How to Build a MongoDB to Redshift Pipeline Using Airflow"
-description: "A guide to outline how to use Airflow to move your data from MongoDB to Redshift."
+title: "MongoDB to Redshift"
+description: "Use Airflow to ingest data from MongoDB to Redshift"
 date: 2018-05-23T00:00:00.000Z
 slug: "mongo-to-redshift"
 heroImagePath: "https://cdn.astronomer.io/website/img/guides/MongoDBToRedshift_preview.png"

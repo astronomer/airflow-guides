@@ -1,6 +1,6 @@
 ---
-title: "How to Build a Facebook Ads to Redshift Pipeline using Airflow"
-description: "A guide to outline how to use Airflow to move your ad data from Facebook Ads to Redshift."
+title: "Facebook Ads API to Redshift"
+description: "Use Airflow to ingest ad data from the Facebook Ads API into Redshift"
 date: 2018-05-21T00:00:00.000Z
 slug: "facebook-ads-to-redshift"
 heroImagePath: "https://cdn.astronomer.io/website/img/guides/FBToRedshift_preview.png"
@@ -80,4 +80,3 @@ Once you have those credentials plugged into your DAG, test and deploy it!
 
 
 If you don't have Airflow already set up in your production environment, head over to [our app](https://app.astronomer.io/signup) to get spun up with your own managed instance!
-

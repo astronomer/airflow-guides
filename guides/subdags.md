@@ -1,6 +1,6 @@
 ---
-title: "Airflow Best Practices: Subdags"
-description: "A guide outlining the use of subdags in Airflow."
+title: "Using SubDAGs"
+description: "Using SubDAGs in Airflow"
 date: 2018-05-23T00:00:00.000Z
 slug: "subdags"
 heroImagePath: null
@@ -66,7 +66,7 @@ load_tasks = SubDagOperator(
     )
 ```
 
-- The subdag should be named with a `parent.child` style or Airflow will throw an error. 
+- The subdag should be named with a `parent.child` style or Airflow will throw an error.
 - The state of the SubDagOperator and the tasks themselves are independent - a SubDagOperator marked as success (or failed) will not affect the underlying tasks._This can be dangerous_
 - SubDags should be scheduled the same as their parent DAGs or unexpected behavior might occur.
 
@@ -78,7 +78,7 @@ SubDags are not currently first class citizens in Airflow. Although it is in the
 ### Slots on the worker pool
 The SubDagOperator kicks off an entire DAG when it is put on a worker slot. Each task in the child DAG takes up a slot until the entire SubDag has completed. The parent operator will take up a worker slot until each child task has completed. This could cause delays in other task processing
 
-In mathematical terms, each SubDag is behaving like a _vertex_ (a single point in a graph) instead of a _graph_. 
+In mathematical terms, each SubDag is behaving like a _vertex_ (a single point in a graph) instead of a _graph_.
 
 
 Depending on the scale and infrastructure, a specialized queue can be added just for SubDags (assuming a CeleryExecutor), but a cleaner workaround is to avoid subdags entirely.

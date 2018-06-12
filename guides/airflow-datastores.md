@@ -1,6 +1,6 @@
 ---
-title: "Airflow Datastores"
-description: "A guide on using Airflow's internal datastores."
+title: "Using Airflow Datastores"
+description: "Use Airflow's internal datastores to build more powerful DAGs"
 date: 2018-05-21T00:00:00.000Z
 slug: "airflow-datastores"
 heroImagePath: null
@@ -11,31 +11,28 @@ _Built in methods of storing data._
 
 In theory, all data processing and storage should be done in external systems with Airflow only containing workflow metadata.
 
-In practice, this is much easier said than done. Depending on the architecture Airflow is running on, certain data stores may be more reliable than others.<br>
+In practice, this is much easier said than done. Depending on the architecture Airflow is running on, certain data stores may be more reliable than others.
 
-Balance between what processing Airflow does and what processing is done by something else should depend on the setup and available tools- there’s no hard and fast rule
-
+Balance between what processing Airflow does and what processing is done by something else should depend on the setup and available tools—there’s no hard and fast rule.
 
 ## Variables and XComs
 
 _Static and Dynamic information stores_
 
 ### XComs
+
 _Cross Communication_
 
-XComs, or short fro "cross communication" are stores of key, value, and timestamps meant to communicate between tasks. XComs are stored in Airflow's metadata database with an associated `execution_date`, `TaskInstance` and `DagRun`. 
+XComs, or short for "cross communication" are stores of key, value, and timestamps meant to communicate between tasks. XComs are stored in Airflow's metadata database with an associated `execution_date`, `TaskInstance` and `DagRun`.
 
-XComs can be "pushed" or "pulled" by all TaskInstances (by using `xcom_push()` or `xcom_pull()`, respectively). 
+XComs can be "pushed" or "pulled" by all TaskInstances (by using `xcom_push()` or `xcom_pull()`, respectively).
 
 All values that are returned by an Operator's `execute()` method, or from a PythonOperator's `python_callable` are pushed to XCom.
-
-
 
 ```python
 def generate_values(**kwargs):
     values = list(range(0, 100000))
     return values
-
 
 with dag:
 
@@ -48,7 +45,6 @@ with dag:
 _**What gets pushed to XCom?**_
 
 Information about where to pull the xcom value from is found in the task's context.
-
 
 ```python
 def manipulate_values(**kwargs):
@@ -66,7 +62,7 @@ t2 = PythonOperator(
 ### Variables
 _Static Values_
 
-Similar to XComs, Variables are key-value stores in Airflow's metadata database. However, Variables are just key-value stores - they don't store the "conditions" (`execution_date`, `TaskInstance`, etc.) that led to a value being produced. 
+Similar to XComs, Variables are key-value stores in Airflow's metadata database. However, Variables are just key-value stores - they don't store the "conditions" (`execution_date`, `TaskInstance`, etc.) that led to a value being produced.
 
 Variables can be pushed and pulled in a similar fashion to `XComs`:
 ```python
@@ -80,7 +76,6 @@ Variables can also be created from the UI.
 ![variable_ui](https://cdn.astronomer.io/website/img/guides/variable_ui.png)
 
 **Note:** Although variables are fernet key encrypted in the database, they are accessible in the UI and therefore should not be used to store passwords or other sensitve data.
-
 
 ### When to use each
 
@@ -101,14 +96,11 @@ In the example above - XCom values can be seen for every task.
 Under "View Logs"
 ![view_xcom](https://cdn.astronomer.io/website/img/guides/xcom_encrypt.png)
 
-
 **Note:** Encryption and character settings may show misleading values in the UI. However, the values will be preserverd when working with them:
 
 ![view_xcom](https://cdn.astronomer.io/website/img/guides/xcom_pull_logs.png)
 
-
 XCom data can be deleted straight from the database.
-
 
 ## Generating DAGs from Variables
 
@@ -118,15 +110,15 @@ Define the variable:
 ```json
 [{
   "table": "users",
-  "schema":"app_one", 
- "s3_bucket":"etl_bucket", 
- "s3_key":"app_one_users", 
- "redshift_conn_id":"postgres_default" }, 
- { 
+  "schema":"app_one",
+ "s3_bucket":"etl_bucket",
+ "s3_key":"app_one_users",
+ "redshift_conn_id":"postgres_default" },
+ {
    "table": "users",
-   "schema":"app_two", 
- "s3_bucket":"etl_bucket", 
- "s3_key":"app_two_users", 
+   "schema":"app_two",
+ "s3_bucket":"etl_bucket",
+ "s3_key":"app_two_users",
  "redshift_conn_id":"postgres_default"}]
  ```
 <br>

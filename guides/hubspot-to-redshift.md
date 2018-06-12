@@ -1,6 +1,6 @@
 ---
-title: "How to Build a Hubspot to Redshift Pipeline Using Airflow"
-description: "A guide to outline how to use Airflow to move your CRM data from Hubspot to Redshift."
+title: "Hubspot API to Redshift"
+description: "Use Airflow to ingest CRM data from the Hubspot API into Redshift"
 date: 2018-05-23T00:00:00.000Z
 slug: "hubspot-to-redshift"
 heroImagePath: "https://cdn.astronomer.io/website/img/guides/HubspotToRedshift_preview.png"
@@ -125,4 +125,3 @@ Once you have those credentials plugged into your DAG, test and deploy it!
 
 
 If you don't have Airflow already set up in your production environment, head over to [our app](https://app.astronomer.io/signup) to get spun up with your own managed instance!
-

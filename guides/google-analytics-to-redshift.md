@@ -1,6 +1,6 @@
 ---
-title: "How to Build a Google Analytics to Redshift Pipeline Using Airflow"
-description: "A guide to outline how to use Airflow to move your data from Google Analytics to Redshift."
+title: "Google Analytics API to Redshift"
+description: "Use Airflow to ingest data from the Google Analytics API to Redshift"
 date: 2018-05-21T00:00:00.000Z
 slug: "google-analytics-to-redshift"
 heroImagePath: "https://cdn.astronomer.io/website/img/guides/GoogleAnalyticsToRedshift_preview.png"
@@ -73,4 +73,3 @@ Once you have those credentials plugged into your DAG, test and deploy it!
 
 
 If you don't have Airflow already set up in your production environment, head over to [our app](https://app.astronomer.io/signup) to get spun up with your own managed instance!
-

@@ -1,6 +1,6 @@
 ---
-title: "Using a BranchOperator in Airflow"
-description: "How to use Airflow's BranchOperator to execute conditional branches in your workflow."
+title: "Using BranchOperator"
+description: "Use Airflow's BranchOperator to execute conditional branches in your workflow"
 date: 2018-05-21T00:00:00.000Z
 slug: "airflow-branch-operator"
 heroImagePath: "https://cdn.astronomer.io/website/img/guides/TheAirflowUI_preview.png"
@@ -25,11 +25,10 @@ BranchOperator.
 
 Can be used for safety checks or notifications.
 
-This was written when we were having issues with the Bing/Google Ads APIs. Lack of data would lead to 
+This was written when we were having issues with the Bing/Google Ads APIs. Lack of data would lead to
 inaccurate downstream aggregations.
 
 Astronomer related logic was taken out and replaced with Dummy tasks.
-
 """
 
 from airflow import DAG
@@ -80,24 +79,22 @@ def get_recent_date():
 
 with dag:
     kick_off_dag = DummyOperator(task_id='kick_off_dag')
-    
+
     branch = BranchPythonOperator(task_id='check_for_data', python_callable=get_recent_date)
-    
+
     kickoff_summary_tables = DummyOperator(task_id='kickoff_summary_tables')
-    
+
     # Replace this with the type of warning you want to trigger.
     # I.e. slack notification, trigger DAG, etc.
     trigger_warning = DummyOperator(task_id='trigger_warning')
-    
+
     run_condiiton = DummyOperator(task_id = 'sql_statement_one')
     downstream_task = DummyOperator(task_id = 'sql_statement_two')
-    
+
     # Set the dependencies for both possibilities
     kick_off_dag >> branch
     branch >> kickoff_summary >> run_condition >> downstream_task
     branch >> trigger_warning
 ```
 
-
 ![](https://cdn.astronomer.io/website/img/guides/branch_operator_dag.png)
-    

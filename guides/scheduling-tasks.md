@@ -1,6 +1,6 @@
 ---
-title: "Scheduling Tasks in Airflow"
-description: "A comprehensive overview of the Airflow scheduler."
+title: "Airflow Scheduler"
+description: "Overview of the Airflow scheduler"
 date: 2018-05-21T00:00:00.000Z
 slug: "scheduling-tasks"
 heroImagePath: "https://cdn.astronomer.io/website/img/guides/SchedulingTasksinAirflow_preview.png"
@@ -15,7 +15,7 @@ However, actually scheduling these task can be tricky, as much of it is driven b
 
 A DAG Run is an object representing an instantiation **of the DAG in time**.
 
-Each DAG may or may not have a schedule, which informs how DAG Runs are created. schedule_interval is defined as a DAG arguments, and receives a cron expression as a `str`, or a `datetime.timedelta` object. 
+Each DAG may or may not have a schedule, which informs how DAG Runs are created. schedule_interval is defined as a DAG arguments, and receives a cron expression as a `str`, or a `datetime.timedelta` object.
 
 Alternatively, you can also use one of these cron “preset”:
 https://airflow.apache.org/scheduler.html
@@ -145,11 +145,11 @@ With the right file templating - you can get each day's file in a separate fille
 """
 This is an excerpt from an internal Google Analytics dag
 
-It will generate a separate API request, file in S3, and load into redshift 
-(the data will be appended for each table for each day) for each day's request 
+It will generate a separate API request, file in S3, and load into redshift
+(the data will be appended for each table for each day) for each day's request
 from the start_date until today's date.
 
-This way, if you find yourself needing to load the data into another table, you can just 
+This way, if you find yourself needing to load the data into another table, you can just
 run the load tasks instead of making the entire request again.
 """
 
@@ -219,7 +219,7 @@ with dag:
             origin_schema=pipeline['schema'],
             schema_location='local',
             # Set the load_type to  append!
-            load_type='append') 
+            load_type='append')
 
 
         start >> google_analytics >> s3_to_redshift
@@ -235,6 +235,4 @@ Deploying a DAG with `catchup=True` can fit a use case, but consider using addit
 
 This will ensure sequential data loads, but may also stop progress if a job is left to run unmonitored.
 
-`wait_for_downstream`: A stronger version of `depends_on_past` that is extended to a DAG level instead of a task level. The entire DAG will need to run successfully for the next DAG run to start. 
-
-
+`wait_for_downstream`: A stronger version of `depends_on_past` that is extended to a DAG level instead of a task level. The entire DAG will need to run successfully for the next DAG run to start.

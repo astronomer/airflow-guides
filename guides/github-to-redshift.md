@@ -1,6 +1,6 @@
 ---
-title: "How to Build a Github to Redshift Pipeline Using Airflow"
-description: "A guide to outline how to use Airflow to move your data from Github to Redshift."
+title: "Github API to Redshift"
+description: "Use Airflow to ingest data from the Github API into Redshift"
 date: 2018-05-21T00:00:00.000Z
 slug: "github-to-redshift"
 heroImagePath: "https://cdn.astronomer.io/website/img/guides/GithubToRedshit_preview.png"

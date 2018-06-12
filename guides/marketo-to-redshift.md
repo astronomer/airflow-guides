@@ -1,6 +1,6 @@
 ---
-title: "How to Build a Marketo to Redshift Pipeline Using Airflow"
-description: "A guide to outline how to use Airflow to move your data from Marketo to Redshift."
+title: "Marketo API to Redshift"
+description: "Use Airflow to ingest data from the Marketo API to Redshift"
 date: 2018-05-23T00:00:00.000Z
 slug: "marketo-to-redshift"
 heroImagePath: "https://cdn.astronomer.io/website/img/guides/MarketoToRedshift_preview.png"
@@ -73,4 +73,3 @@ Once you have those credentials plugged into your DAG, test and deploy it!
 
 
 If you don't have Airflow already set up in your production environment, head over to [our app](https://app.astronomer.io/signup) to get spun up with your own managed instance!
-

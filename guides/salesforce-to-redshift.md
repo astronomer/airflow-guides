@@ -1,6 +1,6 @@
 ---
-title: "How to Build a Salesforce to Redshift Pipeline Using Airflow"
-description: "A guide to outline how to use Airflow to move your CRM data from Salesforce to Redshift."
+title: "Salesforce API to Redshift"
+description: "Use Airflow to ingest CRM data from the Salesforce API to Redshift"
 date: 2018-05-23T00:00:00.000Z
 slug: "salesforce-to-redshift"
 heroImagePath: "https://cdn.astronomer.io/website/img/guides/SalesforceToRedshift_preview.png"
@@ -61,4 +61,3 @@ Once you have those credentials plugged into your DAG, test and deploy it!
 
 
 If you don't have Airflow already set up in your production environment, head over to [our app](https://app.astronomer.io/signup) to get spun up with your own managed instance!
-
