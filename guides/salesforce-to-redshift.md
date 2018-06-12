@@ -1,5 +1,5 @@
 ---
-title: "Salesforce API to Redshift"
+title: "Salesforce API to Redshift with Airflow"
 description: "Use Airflow to ingest CRM data from the Salesforce API to Redshift"
 date: 2018-05-23T00:00:00.000Z
 slug: "salesforce-to-redshift"

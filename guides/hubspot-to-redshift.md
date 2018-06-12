@@ -1,5 +1,5 @@
 ---
-title: "Hubspot API to Redshift"
+title: "Hubspot API to Redshift with Airflow"
 description: "Use Airflow to ingest CRM data from the Hubspot API into Redshift"
 date: 2018-05-23T00:00:00.000Z
 slug: "hubspot-to-redshift"

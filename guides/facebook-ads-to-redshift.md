@@ -1,5 +1,5 @@
 ---
-title: "Facebook Ads API to Redshift"
+title: "Facebook Ads API to Redshift with Airflow"
 description: "Use Airflow to ingest ad data from the Facebook Ads API into Redshift"
 date: 2018-05-21T00:00:00.000Z
 slug: "facebook-ads-to-redshift"

@@ -1,5 +1,5 @@
 ---
-title: "Github API to Redshift"
+title: "Github API to Redshift with Airflow"
 description: "Use Airflow to ingest data from the Github API into Redshift"
 date: 2018-05-21T00:00:00.000Z
 slug: "github-to-redshift"

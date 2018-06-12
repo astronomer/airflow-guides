@@ -1,5 +1,5 @@
 ---
-title: "MongoDB to Redshift"
+title: "MongoDB to Redshift with Airflow"
 description: "Use Airflow to ingest data from MongoDB to Redshift"
 date: 2018-05-23T00:00:00.000Z
 slug: "mongo-to-redshift"

@@ -1,5 +1,5 @@
 ---
-title: "Airflow Scheduler"
+title: "Scheduling Tasks with Airflow"
 description: "Overview of the Airflow scheduler"
 date: 2018-05-21T00:00:00.000Z
 slug: "scheduling-tasks"

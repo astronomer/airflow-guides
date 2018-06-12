@@ -1,5 +1,5 @@
 ---
-title: "Google Analytics API to Redshift"
+title: "Google Analytics API to Redshift with Airflow"
 description: "Use Airflow to ingest data from the Google Analytics API to Redshift"
 date: 2018-05-21T00:00:00.000Z
 slug: "google-analytics-to-redshift"

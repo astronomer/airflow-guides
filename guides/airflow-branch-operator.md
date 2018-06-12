@@ -1,5 +1,5 @@
 ---
-title: "Using BranchOperator"
+title: "Using BranchOperator in Airflow"
 description: "Use Airflow's BranchOperator to execute conditional branches in your workflow"
 date: 2018-05-21T00:00:00.000Z
 slug: "airflow-branch-operator"

@@ -1,5 +1,5 @@
 ---
-title: "Intro to DAGs"
+title: "Intro to Airflow DAGs"
 description: "What are DAGs, and how they are constructed in Airflow?"
 date: 2018-05-21T00:00:00.000Z
 slug: "dags"

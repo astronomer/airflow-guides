@@ -1,6 +1,6 @@
 ---
-title: "Using SubDAGs"
-description: "Using SubDAGs in Airflow"
+title: "Using SubDAGs in Airflow"
+description: "Using SubDAGs to build modular workflows in Airflow"
 date: 2018-05-23T00:00:00.000Z
 slug: "subdags"
 heroImagePath: null
