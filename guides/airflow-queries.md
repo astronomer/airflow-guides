@@ -60,9 +60,9 @@ SET is_paused = FALSE
 WHERE
   is_paused is TRUE
   AND dag_id in (
-    'clickstream_v2_to_redshift__5970f5ee8b386500015db307',
-    'clickstream_v2_to_redshift__597247068b386500015db382',
-    'clickstream_v2_to_redshift__597247068b386500015db384',
+    'clickstream_v2_to_redshift__xxx',
+    'clickstream_v2_to_redshift__yyy',
+    'clickstream_v2_to_redshift__zzz',
   );
 ```
 
