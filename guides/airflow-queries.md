@@ -7,15 +7,7 @@ heroImagePath: null
 tags: ["Queries", "SQL", "Airflow"]
 ---
 
-# Queries
-
-A home for random SQL queries that we run frequently at Astronomer--we hope you find them useful!
-
----
-
-## Airflow Postgres
-
-### Get total completed task count
+## Get total completed task count
 
 ```sql
 SELECT COUNT(1)
@@ -25,7 +17,7 @@ WHERE
   AND state NOT IN ('scheduled', 'queued');
 ```
 
-### Get tasks started per hour for past week
+## Get tasks started per hour for past week
 
 ```sql
 SELECT
@@ -37,7 +29,7 @@ ORDER BY 1 DESC
 LIMIT 24*7;
 ```
 
-### Get tasks finished per hour for past week
+## Get tasks finished per hour for past week
 
 ```sql
 SELECT
@@ -52,7 +44,7 @@ ORDER BY 1 DESC
 LIMIT 24*7;
 ```
 
-### Unpause a list of paused DAGs
+## Unpause a list of paused DAGs
 
 ```sql
 UPDATE dag
@@ -66,7 +58,7 @@ WHERE
   );
 ```
 
-### Pause all active DAGs and unpause with a temp table
+## Pause all active DAGs and unpause with a temp table
 
 We use this to be able to limit the impact of prod rollouts by only affecting one or two Astronomer DAGs before all customers.
 
@@ -91,7 +83,7 @@ WHERE dag.dag_id = dag_tmp.dag_id;
 DROP TABLE dag_tmp;
 ```
 
-### Delete a DAG completely
+## Delete a DAG completely
 
 Deleting the DAG file itself leaves traces across 7 database tables, such as those for DAG runs and task instances.
 
@@ -109,19 +101,17 @@ delete from dag_run where dag_id = 'my_dag_id';
 delete from dag where dag_id = 'my_dag_id';
 ```
 
-### Rewinding a DAG
+## Rewinding a DAG
 
 To rewind a DAG:
 
 1. Turn the DAG off in Airflow.
-1. Update its config in Mongo.
-1. Wait for the Houston destination cache to update (watch for the `expire` field to change, and confirm the updated metadata is as expected).
-1. Then blow out the Airflow metadata for that DAG.
+1. Blow out the Airflow metadata for that DAG.
 1. The DAG will be automatically recreated and started from the new config.
 
 If you blow out the metadata before the cache has updated, it will re-create the DAG with the old data.
 
-### Fast Forwarding a DAG
+## Fast Forwarding a DAG
 
 You can fast forward a DAG by generating fake DAG runs in the Airflow metadata database.
 
@@ -148,4 +138,3 @@ values (
 ```
 
 If you want to go all the way up until (exclusive) 5/9/18 00:00 UTC, then the last fake DAG run to create is '2018-05-08 23:15:00.000000'.
-
