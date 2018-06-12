@@ -2,7 +2,7 @@
 title: "Airflow's Components"
 description: "How everything fits together in Airflow"
 date: 2018-05-21T00:00:00.000Z
-slug: "airflow-branch-operator"
+slug: "airflow-components"
 heroImagePath: null
 tags: ["Airflow", "Components"]
 ---
