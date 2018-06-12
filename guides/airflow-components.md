@@ -7,9 +7,6 @@ heroImagePath: null
 tags: ["Airflow", "Components"]
 ---
 
-
-# Airflow Components
-
 ## Core Components
 
 At the core,  Airflow consists of 4 core components:
