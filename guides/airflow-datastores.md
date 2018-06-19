@@ -1,6 +1,6 @@
 ---
 title: "Using Airflow Datastores"
-description: "Use Airflow's internal datastores to build more powerful DAGs"
+description: "Use Apache Airflow's internal datastores to build more powerful DAGs"
 date: 2018-05-21T00:00:00.000Z
 slug: "airflow-datastores"
 heroImagePath: null

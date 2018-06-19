@@ -1,13 +1,13 @@
 ---
 title: "Using BranchOperator in Airflow"
-description: "Use Airflow's BranchOperator to execute conditional branches in your workflow"
+description: "Use Apache Airflow's BranchOperator to execute conditional branches in your workflow"
 date: 2018-05-21T00:00:00.000Z
 slug: "airflow-branch-operator"
 heroImagePath: "https://cdn.astronomer.io/website/img/guides/TheAirflowUI_preview.png"
 tags: ["Building DAGs", "BranchOperator", "Airflow"]
 ---
 
-Airflow's BranchOperator is a great way to execute conditional branches in your workflow.
+[Apache Airflow's BranchOperator](https://airflow.apache.org/code.html#operator-api) is a great way to execute conditional branches in your workflow.
 
 These can be used for safety checks, notifications, etc.
 

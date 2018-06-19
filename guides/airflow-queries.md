@@ -1,5 +1,5 @@
 ---
-title: "Useful SQL queries for Airflow"
+title: "Useful SQL queries for Apache Airflow"
 description: "A home for SQL queries that we frequently run on our Airflow postgres database."
 date: 2018-05-21T00:00:00.000Z
 slug: "airflow-queries"

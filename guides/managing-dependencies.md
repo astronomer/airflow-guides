@@ -1,5 +1,5 @@
 ---
-title: "Managing Dependencies in Airflow"
+title: "Managing Dependencies in Apache Airflow"
 description: "An overview of dependencies and triggers in Airflow."
 date: 2018-05-21T00:00:00.000Z
 slug: "managing-dependencies"

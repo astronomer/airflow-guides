@@ -1,6 +1,6 @@
 ---
-title: "Intro to Airflow DAGs"
-description: "What are DAGs, and how they are constructed in Airflow?"
+title: "Intro to Apache Airflow DAGs"
+description: "What are DAGs and how they are constructed in Apache Airflow?"
 date: 2018-05-21T00:00:00.000Z
 slug: "dags"
 heroImagePath: "https://cdn.astronomer.io/website/img/guides/IntroToDAG_preview.png"
@@ -19,7 +19,7 @@ In practice, this analogy is a bit misleading, and if anything, fits for streami
 
 Data isn’t literally in a single tube starting on one side and coming out of the other but it is isolated from other data during this time (as if in a physical pipe). Unlike water through a pipe data is transformed through a workflow and produces valuable metadata.
 
-In Airflow, pipelines are _directed acyclic graphs_ (DAGs).
+[In Airflow, pipelines are _directed acyclic graphs_ (DAGs)](https://airflow.apache.org/concepts.html?highlight=what%20dag#dags)
 
 ### Mathematical Background
 

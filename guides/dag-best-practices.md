@@ -1,5 +1,5 @@
 ---
-title: "DAG Writing Best Practices in Airflow"
+title: "DAG Writing Best Practices in Apache Airflow"
 description: "How to create effective, clean, and functional DAGs."
 date: 2018-05-21T00:00:00.000Z
 slug: "dag-best-practices"

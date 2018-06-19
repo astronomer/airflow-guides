@@ -1,6 +1,6 @@
 ---
 title: "Airflow's Components"
-description: "How all of Airflow's components fit together."
+description: "How all of Apache Airflow's components fit together."
 date: 2018-05-21T00:00:00.000Z
 slug: "airflow-components"
 heroImagePath: null
@@ -9,7 +9,7 @@ tags: ["Airflow", "Components"]
 
 ## Core Components
 
-At the core,  Airflow consists of 4 core components:
+At the core, Apache Airflow consists of 4 core components:
 
 **Webserver:** Airflow's UI. At it's core, this is just a flask app that displays the status of your jobs and provides an interface to interact with the database and reads logs from a remote file store (S3, Google Cloud Storage, AzureBlobs, etc.).
 

@@ -1,5 +1,5 @@
 ---
-title: "Github API to Redshift with Airflow"
+title: "Github API to Redshift with Apache Airflow"
 description: "Use Airflow to ingest data from the Github API into Redshift"
 date: 2018-05-21T00:00:00.000Z
 slug: "github-to-redshift"
@@ -7,7 +7,7 @@ heroImagePath: "https://cdn.astronomer.io/website/img/guides/GithubToRedshit_pre
 tags: ["Building DAGs", "Redshift", "Github"]
 ---
 
-In this guide, we’ll explore how you can use Airflow to move your data from Github to Redshift. Note that this is an effective and flexible alternative to point-and-click ETL tools like Segment, Alooma, Xplenty, Stitch, and ETLeap.
+In this guide, we’ll explore how you can use [Apache Airflow](https://airflow.apache.org/ to move your data from Github to Redshift. Note that this is an effective and flexible alternative to point-and-click ETL tools like [Segment](https://segment.com), [Alooma](https://alooma.com), [Xplenty](https://xplenty.com), [Stitch](https://stitchdata.com), and [ETLeap](https://etleap.com/).
 
 Before we get started, be sure you have the following on hand:
 
