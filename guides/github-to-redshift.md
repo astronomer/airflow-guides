@@ -3,7 +3,7 @@ title: "Github API to Redshift with Apache Airflow"
 description: "Use Airflow to ingest data from the Github API into Redshift"
 date: 2018-05-21T00:00:00.000Z
 slug: "github-to-redshift"
-heroImagePath: "https://cdn.astronomer.io/website/img/guides/GithubToRedshit_preview.png"
+heroImagePath: "https://cdn.astronomer.io/website/img/guides/GithubToRedshift_preview.png"
 tags: ["Building DAGs", "Redshift", "Github"]
 ---
 
