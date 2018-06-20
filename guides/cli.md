@@ -4,7 +4,7 @@ description: "Using our CLI to manage your instance of Apache Airflow"
 date: 2018-05-23T00:00:00.000Z
 slug: "cli"
 heroImagePath: "https://cdn.astronomer.io/website/img/guides/markus-spiske-207946-unsplash.jpg"
-tags: ["Airflow", "CLI"]
+tags: ["Airflow", "CLI", "Product Documentation"]
 ---
 
 
