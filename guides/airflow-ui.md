@@ -3,7 +3,7 @@ title: "The Airflow UI"
 description: "A high-level overview of the Airflow UI"
 date: 2018-05-21T00:00:00.000Z
 slug: "airflow-ui"
-heroImagePath: "https://cdn.astronomer.io/website/img/guides/TheAirflowUI_preview.png"
+heroImagePath: "https://cdn.astronomer.io/website/img/guides/paused_dags.png"
 tags: ["DAGs", "Data Pipelines", "Airflow"]
 ---
 
