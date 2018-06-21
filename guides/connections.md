@@ -1,5 +1,5 @@
 ---
-title: "Managing your Connections in Apache airflow"
+title: "Managing your Connections in Apache Airflow"
 description: "An overview of how connections work in the Airflow UI."
 date: 2018-05-21T00:00:00.000Z
 slug: "connections"
