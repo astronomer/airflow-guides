@@ -174,6 +174,7 @@ How to get started as a developer.
     ```
     $ astro
     ```
+    
 ### Old Deploys
 
 In your project directory there will be a hidden `.astro` folder that contains past deploys (made from that machine).
