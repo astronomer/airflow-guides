@@ -3,7 +3,7 @@ title: "Trigger DAGs in Airflow"
 description: "How to use DAGs to trigger secondary DAG kickoffs in Airflow."
 date: 2018-05-23T00:00:00.000Z
 slug: "trigger-dag-operator"
-heroImagePath: null
+heroImagePath: "https://cdn.astronomer.io/website/img/guides/trigger.png"
 tags: ["Building DAGs", "Operators", "Airflow"]
 ---
 

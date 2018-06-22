@@ -3,7 +3,7 @@ title: "Airflow's Components"
 description: "How all of Apache Airflow's components fit together."
 date: 2018-05-21T00:00:00.000Z
 slug: "airflow-components"
-heroImagePath: "https://cdn.astronomer.io/website/img/guides/airflow_component_relationship.png"
+heroImagePath: "https://cdn.astronomer.io/website/img/guides/components.png"
 tags: ["Airflow", "Components"]
 ---
 

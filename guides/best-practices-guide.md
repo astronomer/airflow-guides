@@ -3,7 +3,7 @@ title: "Airflow Best Practices Guide"
 description: "Rules to follow when implementing pipelines with Airflow."
 date: 2018-05-21T00:00:00.000Z
 slug: "best-practices-guide"
-heroImagePath: null
+heroImagePath: "https://cdn.astronomer.io/website/img/guides/bestpractices.png"
 tags: ["Airflow", "Best Practices"]
 ---
 
