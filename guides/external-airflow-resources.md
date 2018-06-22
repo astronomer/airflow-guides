@@ -7,11 +7,11 @@ heroImagePath: null
 tags: ["Resources", "Airflow"]
 ---
 
-Here you’ll find a few Airflow pieces we’ve highlighted over the past few years. Some are for people who have never heard of Airflow, some are written for Airflow conoisseuers who want to dive deeper. 
+Here, you'll find a selection of blog posts, decks, guides and use cases written by and for the Airflow community.
 
-Either way, this collection is a good snapshot of challenges, best practices, gotchas, and use cases for orgs of all kinds adapting Airflow. 
+We've been aggregating this collection over the past few months, and think it's a good snapshot of challenges, best practices, gotchas, and use cases for teams and orgs of all kinds adapting Airflow. 
 
-Did you read or write something that should be on here? Shoot us a tweet at @astronomerio, or drop us a line at humans@astronomer.io
+If you've read or written something that you think should be on here, shoot us a tweet at @astronomerio, or drop us a line at humans@astronomer.io
 
 We'll keep adding to this on a weekly basis :) 
 
