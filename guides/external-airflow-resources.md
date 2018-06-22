@@ -7,7 +7,7 @@ heroImagePath: null
 tags: ["Resources", "Airflow"]
 ---
 
-Here you’ll find a Airflow few pieces we’ve highlighted over the past few years. Some are for people who have never heard of Airflow, some are written for Airflow conoisseuers who want to dive deeper. 
+Here you’ll find a few Airflow pieces we’ve highlighted over the past few years. Some are for people who have never heard of Airflow, some are written for Airflow conoisseuers who want to dive deeper. 
 
 Either way, this collection is a good snapshot of challenges, best practices, gotchas, and use cases for orgs of all kinds adapting Airflow. 
 
