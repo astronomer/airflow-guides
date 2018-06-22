@@ -8,18 +8,19 @@ tags: ["Airflow", "Components"]
 ---
 
 ## Core Components
+_How everything fits together_
 
-At the core, Apache Airflow consists of 4 core components:
+At the core,  Airflow consists of 4 core components:
 
-**Webserver:** Airflow's UI. At it's core, this is just a flask app that displays the status of your jobs and provides an interface to interact with the database and reads logs from a remote file store (S3, Google Cloud Storage, AzureBlobs, etc.).
+**Webserver:** Airflow's UI. At it's core, this is just a Flask app that displays the status of your jobs and provides an interface to interact with the database and reads logs from a remote file store (S3, Google Cloud Storage, AzureBlobs, ElasticSearch etc.).
 
-**Scheduler:** This is responsible for scheduling jobs. It is a multithreaded Python process that uses the DAG object wtih the state of tasks in teh metadata database to decide what tasks need to be run, when they need to be run, and where they are run.
+**Scheduler:** This is responsible for scheduling jobs. It is a multithreaded Python process that uses the DAG object with the state of tasks in the metadata database to decide what tasks need to be run, when they need to be run, and where they are run.
 
-**Executor:** The mechanisms by which work actually gets done. It is a message queuing process that communicates with the Scheduler to determine how work gets done. There are a few different varieties of executors, each wtih their own stregnths and weaknesses.
+**Executor:** The mechanism by which work actually gets done. There are a few different varieties of executors, each wtih their own strengths and weaknesses.
 
 **Metadata Database:** A database (usually Postgres, but can be anything with SQLAlchemy support) that powers how the other components interact. The scheduler stores and updates task statuses, which the webserver then uses to display job information
 
-![title](https://cdn.astronomer.io/website/img/guides/airflow_component_relationship.png)
+![title](img/airflow_component_relationship.png)
 
 ## How does work get scheduled?
 
@@ -76,3 +77,34 @@ def _process_dags(self, dagbag, dags, tis_out):
 
         models.DagStat.update([d.dag_id for d in dags])
 ```
+
+## Controlling Component Interactions
+_Fine tuning airflow.cfg_
+
+The schedule at which these components interact can be set through airflow.cfg. This file has tuning for several airflow settings that can be optimized for a use case.
+
+This file is well documented, but a few notes:
+
+### Executors:
+By default, Airflow can use the LocalExecutor, SequentialExecutor, or the CelelryExecutor.
+- The SequentialExecutor just executes tasks sequentially, with no parallelism or concurrency. It is good for a test environment or when debugging deeper Airflow bugs.
+
+- The LocalExecutor supports parallelism and hyperthreading and is a good fit for Airflow running on local machine or a single node. 
+
+- The CeleryExecutor is the preferred method to run a distrubted Airflow cluster. It requires Redis, RabbitMq, or another message queue system to coordinate tasks between workers.
+
+There is a communinty contributed MesosExecutors and KubernetesExexcutor that can execute tasks across  larger clusters, but neither of them are _currently_ production ready.
+
+### Parallelism
+The `parallelism`, `dag_concurrency` and `max_active_runs_per_dag` settings  can be tweaked to determine how many tasks can be executed at once. 
+
+It is important to note that `parallelism` determines how many task instances can run in parallel in the executor, while `dag_concurrency` determines the number of tasks that can be scheduled  by the scheduler. These two numbers should be fine tuned together when optimizing an Airflow deployment, with the ratio depending on the number of DAGs.
+
+`max_active_runs_per_dag` is for each particular DAG - how many DagRuns across time can be scheduled for a single DAG at once. This number should depend on how how long DAGs take to execute, their schedule interval, and scheduler performance.
+
+
+### Scheduler Settings
+
+`job_heartbeat_sec` determines the frequency at which the scheduler listens for external kill signals,  while `scheduler_heartbeat_sec` looks for new tasks. 
+
+As the cluster grows in size, increasing the `scheduler_heartbeat_sec` gets increasingly expensive. Depending on the infrastructure and how long tasks generally take, and how the scheduler performs, consider increasing this number from the default.
