@@ -20,7 +20,7 @@ At the core,  Airflow consists of 4 core components:
 
 **Metadata Database:** A database (usually Postgres, but can be anything with SQLAlchemy support) that powers how the other components interact. The scheduler stores and updates task statuses, which the webserver then uses to display job information
 
-![title](img/airflow_component_relationship.png)
+![title](https://cdn.astronomer.io/website/img/guides/airflow_component_relationship.png)
 
 ## How does work get scheduled?
 
