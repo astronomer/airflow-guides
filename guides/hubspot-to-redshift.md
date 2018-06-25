@@ -58,22 +58,9 @@ naming convention "INCREMENTAL_KEY__{DAG_ID}_{TASK_ID}_vidOffset" at the end of 
   * Contact List Ids Steps - Rebuild
 
 
----
-title: "Github to Redshift"
-description: "A guide to outline how to use Airflow to move your data from Github to Redshift."
-date: 2018-05-21T00:00:00.000Z
-slug: "github-to-redshift"
-heroImagePath: null
-tags: ["Building DAGs", "Redshift", "Github"]
----
-
-## How to build a Github to Redshift pipeline using Airflow
-
-In this guide, we’ll explore how you can use Airflow to move your data from Github to Redshift. Note that this is an effective and flexible alternative to point-and-click ETL tools like Segment, Alooma, Xplenty, Stitch, and ETLeap.
-
 Before we get started, be sure you have the following on hand:
 
-* A Github account
+* A Hubspot account with valid credentials
 * An S3 bucket with a valid `aws_access_key_id` and `aws_secret_access_key`
 * A Redshift instance with a valid host IP and login information
 * An instance of Apache Airflow. You can either set this up yourself if you have devops resources or sign
@@ -101,7 +88,7 @@ If you haven't done so already, navigate into your project directory and create 
 
 `git clone https://github.com/airflow-plugins/hubspot_plugin.git`
 
-This will allow you to use the Github hook to establish a connection to Hubspot and extract data into a file. You will also be able to use the appropriate operators to transfer the Hubspot data to S3 and then from S3 to Redshift.
+This will allow you to use the Hubspot hook to establish a connection to Hubspot and extract data into a file. You will also be able to use the appropriate operators to transfer the Hubspot data to S3 and then from S3 to Redshift.
 
 ### 3. Copy the DAG file
 
