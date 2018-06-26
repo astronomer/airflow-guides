@@ -14,7 +14,7 @@ Below is a selection of blog posts, decks, guides and use cases written by and f
 * [“Airflow Part 2: Lessons learned”][2]  - Nehil Jain, SnapTravel
 * [“Airflow: The Missing Context”][3] - Dotan Nahum, Como
 * [“Developing an Apache Airflow Addiction”][4] - Max Goldbas, Caserta
-* [“Modern Data Pipelines with Apache Airflow (Momentum 2018 talk)”][5] - Taylor Edminston & Andy Cooper, Astronomer
+* [“Modern Data Pipelines with Apache Airflow (Momentum 2018 talk)”][5] - Taylor Edmiston & Andy Cooper, Astronomer
 * [“What we learned migrating off Cron to Airflow”][6] - Katie Macias, VideoAmp
 * [“How Sift Trains Thousands of Models using Apache Airflow”][7] - Duy Tran, Sift
 * [“Airflow: Why is nothing working?”][8] - Jessica Laughlin, Bluecore
