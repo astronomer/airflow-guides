@@ -1,13 +1,11 @@
 ---
-title: "Airflow Best Practices Guide"
-description: "Rules to follow when implementing pipelines with Airflow."
+title: "Introduction to Apache Airflow"
+description: "A crash-course in introductory Airflow concepts."
 date: 2018-05-21T00:00:00.000Z
-slug: "best-practices-guide"
+slug: "intro-to-airflow"
 heroImagePath: "https://cdn.astronomer.io/website/img/guides/bestpractices.png"
 tags: ["Airflow", "Best Practices"]
 ---
-
-# Airflow Best Practices and Development Guide
 
 ## Introduction
 
