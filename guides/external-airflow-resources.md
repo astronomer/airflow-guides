@@ -45,7 +45,7 @@ or shoot over an email to [humans@astronomer.io](mailto:humans@astronomer.io)
 * [“Automated Model Building with EMR, Spark, and Airflow”][25] - Kevin Mandich, Agari
 * [“How Agari Uses Airbnb's Airflow As A Smarter Cron”][26] - Siddharth Anand, Agari
 * [“Operating Data Pipelines with Airflow”][28] - Ananath Packkilduari, Slack
-* ["Airflow on Kubernetes: A Different Kind of Operator | Tech At Bloomberg"][30]
+* ["Airflow on Kubernetes: A Different Kind of Operator | Tech At Bloomberg"][30] - Daniel Imberman, Bloomberg LP
 
 ## Data Engineering
 * [“A Beginner’s Guide to Data Engineering — Part I”][10] - Robert Chang, Airbnb
