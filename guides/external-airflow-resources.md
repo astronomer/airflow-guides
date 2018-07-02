@@ -46,6 +46,7 @@ or shoot over an email to [humans@astronomer.io](mailto:humans@astronomer.io)
 * [“How Agari Uses Airbnb's Airflow As A Smarter Cron”][26] - Siddharth Anand, Agari
 * [“Operating Data Pipelines with Airflow”][28] - Ananath Packkilduari, Slack
 * ["Airflow on Kubernetes: A Different Kind of Operator | Tech At Bloomberg"][30] - Daniel Imberman, Bloomberg LP
+* ["SQL based Sanity check in Airflow before kicking off machine learning model"][31] - Rajnish Kumar Garg, Epic
 
 ## Data Engineering
 * [“A Beginner’s Guide to Data Engineering — Part I”][10] - Robert Chang, Airbnb
@@ -88,3 +89,4 @@ or shoot over an email to [humans@astronomer.io](mailto:humans@astronomer.io)
 [28]: https://speakerdeck.com/vananth22/operating-data-pipeline-with-airflow-at-slack?slide=1 "Operating Data Pipelines with Airflow"
 [29]: https://medium.com/@rchang/a-beginners-guide-to-data-engineering-the-series-finale-2cc92ff14b0 "A Beginner's Guide to Data Engineering - The Series Finale"
 [30]: https://www.techatbloomberg.com/blog/airflow-on-kubernetes/ "Airflow on Kubernetes: A Different Kind of Operator | Tech At Bloomberg"
+[31]: https://medium.com/coinmonks/sql-based-sanity-check-in-airflow-before-kicking-off-machine-learning-model-2733868b1cf2 "SQL based Sanity check in Airflow before kicking off machine learning model"
