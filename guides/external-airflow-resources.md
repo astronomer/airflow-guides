@@ -47,6 +47,7 @@ or shoot over an email to [humans@astronomer.io](mailto:humans@astronomer.io)
 * [“Operating Data Pipelines with Airflow”][28] - Ananath Packkilduari, Slack
 * ["Airflow on Kubernetes: A Different Kind of Operator | Tech At Bloomberg"][30] - Daniel Imberman, Bloomberg LP
 * ["SQL based Sanity check in Airflow before kicking off machine learning model"][31] - Rajnish Kumar Garg, Epic
+* ["La conquête de nos workflows avec Apache Airflow (Conquering our Workflows with Apache Airflow)"][32] - Germain Tanguy & Cedric Hourcade, Dailymotion
 
 ## Data Engineering
 * [“A Beginner’s Guide to Data Engineering — Part I”][10] - Robert Chang, Airbnb
@@ -57,6 +58,8 @@ or shoot over an email to [humans@astronomer.io](mailto:humans@astronomer.io)
 
 ## Other
 * [Awesome Airflow Resources](https://github.com/jghoman/awesome-apache-airflow)  - A great collection of Airflow Resources in a dedicated GitHub repo, curated by [Jakob Homan](https://twitter.com/BlueBoxTraveler)
+
+
 
 [0]: https://blog.socialcops.com/engineering/apache-airflow-disease-outbreaks-india/ "How to create a workflow in Apache Airflow to track disease outbreaks in India"
 [1]: https://wecode.wepay.com/posts/improving-airflow-ui-security "Improving Airflow UI Security"
@@ -90,3 +93,4 @@ or shoot over an email to [humans@astronomer.io](mailto:humans@astronomer.io)
 [29]: https://medium.com/@rchang/a-beginners-guide-to-data-engineering-the-series-finale-2cc92ff14b0 "A Beginner's Guide to Data Engineering - The Series Finale"
 [30]: https://www.techatbloomberg.com/blog/airflow-on-kubernetes/ "Airflow on Kubernetes: A Different Kind of Operator | Tech At Bloomberg"
 [31]: https://medium.com/coinmonks/sql-based-sanity-check-in-airflow-before-kicking-off-machine-learning-model-2733868b1cf2 "SQL based Sanity check in Airflow before kicking off machine learning model"
+[32]: https://www.youtube.com/watch?v=NEtmrJWZbXQ "La conquête de nos workflows avec Apache Airflow - Germain Tanguy & Cedric Hourcade"
