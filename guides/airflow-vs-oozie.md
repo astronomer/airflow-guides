@@ -26,7 +26,7 @@ Oozie is an open-source workflow scheduling system written in Java for Hadoop sy
 While it has been used successfully by a few teams, [it has been reported](https://stackoverflow.com/questions/47928995/which-one-to-choose-apache-oozie-or-apache-airflow-need-a-comparison) that Oozie has difficulty handling complex pipelines and has an underdeveloped GUI that is challenging to navigate.
 
 
-# Key Differences 
+# Key Differences
 
 ## Python vs. Java
 
@@ -50,29 +50,16 @@ Note that, with open source projects, community contributions are significant in
 
 ## Other Features
 
-As pointed out by [Stack Overflow user Michele De Simoni](https://stackoverflow.com/users/8050556/michele-ubik-de-simoni), there are a few reasons why Airflow is preferred over Oozie by the community for workflow management.
+As pointed out by [Stack Overflow user Michele De Simoni](https://stackoverflow.com/users/8050556/michele-ubik-de-simoni), there are a few reasons why Airflow is preferred over Oozie by the community for workflow management (we reorganized his points slightly.)
 
-
-### Airflow
-
-+ Python Code for DAGs (+)
-+ Has connectors for every major service/cloud provider (+)
-+ More versatile (+)
-+ Advanced metrics (+)
-+ Better UI and API (+)
-+ Capable of creating extremely complex workflows (+)
-+ Jinja Templating (+)
-+  Can be parallelized (=)
-+ Native Connections to HDFS, HIVE, PIG etc.. (=)
-+  Graph as DAG (=)
-
-### Oozie
-
-- Java or XML for DAGs (---)
-- Hard to build complex pipelines (-)
-- Smaller, less active community (-)
-- Worse WEB GUI (-)
-- Java API (-)
-- Can be parallelized (=)
-- Native Connections to HDFS, HIVE, PIG etc.. (=)
-- Graph as DAG (=)
+| Airflow                                                               | Oozie                                           |
+|-----------------------------------------------------------------------|-------------------------------------------------|
+| Python Code for DAGs (+)                                              | Java or XML for DAGs (---)                      |
+| More versatile (+)                                                    | Smaller, less active community (-)              |
+| Better Web UI and API (+)                                             | Worse Web UI and Java API (-)                   |
+| Capable of creating extremely complex workflows, Jinja templating (+) | Hard to build complex pipelines (-)             |
+| Can be parallelized (=)                                               | Can be parallelized (=)                         |
+| Native Connections to HDFS, HIVE, PIG etc.. (=)                       | Native Connections to HDFS, HIVE, PIG etc.. (=) |
+| Graph as DAG (=)                                                      | Graph as DAG (=)                                |
+| Has connectors for every major service/cloud provider (+)             |                                                 |
+| Advanced metrics (+)                                                  |                                                 |
