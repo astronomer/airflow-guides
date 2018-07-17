@@ -48,6 +48,7 @@ or shoot over an email to [humans@astronomer.io](mailto:humans@astronomer.io)
 * ["Airflow on Kubernetes: A Different Kind of Operator | Tech At Bloomberg"][30] - Daniel Imberman, Bloomberg LP
 * ["SQL based Sanity check in Airflow before kicking off machine learning model"][31] - Rajnish Kumar Garg, Epic
 * ["La conquête de nos workflows avec Apache Airflow (Conquering our Workflows with Apache Airflow)"][32] - Germain Tanguy & Cedric Hourcade, Dailymotion
+* ["Productionizing ML Workflows at Twitter"][33] - Samuel Ngahane and Devin Goodsell
 
 ## Data Engineering
 * [“A Beginner’s Guide to Data Engineering — Part I”][10] - Robert Chang, Airbnb
@@ -94,3 +95,4 @@ or shoot over an email to [humans@astronomer.io](mailto:humans@astronomer.io)
 [30]: https://www.techatbloomberg.com/blog/airflow-on-kubernetes/ "Airflow on Kubernetes: A Different Kind of Operator | Tech At Bloomberg"
 [31]: https://medium.com/coinmonks/sql-based-sanity-check-in-airflow-before-kicking-off-machine-learning-model-2733868b1cf2 "SQL based Sanity check in Airflow before kicking off machine learning model"
 [32]: https://www.youtube.com/watch?v=NEtmrJWZbXQ "La conquête de nos workflows avec Apache Airflow - Germain Tanguy & Cedric Hourcade"
+[33]: https://blog.twitter.com/engineering/en_us/topics/insights/2018/ml-workflows.html "Productionizing ML with workflows at Twitter"
