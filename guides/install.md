@@ -124,7 +124,7 @@ For the purpose of this doc, our application domain is `mercury.astronomer.io`. 
 1. **Deploy / Install the Astronomer chart.**
 
 	```shell
-	helm install -f config.yaml . --namespace=foo
+	$ helm install -f config.yaml . --namespace=foo
 	```
 
 	Click the link in the output notes to log in to the Astronomer app.
