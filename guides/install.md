@@ -95,6 +95,8 @@ See the [Google OAuth credentials guide](/guides/google-oauth-creds).
 
 ## 6. Set the Astronomer config values
 
+Now, we'll set the configuration values for the Astronomer Helm chart.
+
 Create a `config.yaml` for your domain setting overrides by copying [config.tpl.yaml](https://github.com/astronomerio/helm.astronomer.io/blob/master/config.tpl.yaml) if you don't already have one.
 
 Change the branch on GitHub to match your desired Astronomer Platform version.
@@ -114,7 +116,7 @@ astronomer:
       clientSecret: <your-client-secret>
 ```
 
-Replace `<your-client-id>` and `<your-client-secret>` with the values from (5).
+Replace `<your-client-id>` and `<your-client-secret>` with the values from the previous step.
 
 ## 7. Deploy / Install the Astronomer chart
 
