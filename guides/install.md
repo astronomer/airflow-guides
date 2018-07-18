@@ -128,12 +128,3 @@ For the purpose of this doc, our application domain is `mercury.astronomer.io`. 
 	```
 
 	Click the link in the output notes to log in to the Astronomer app.
-
----
-
-TODO:
-
-- test and remove the standard cert part if not needed
-- maybe add any additional detail from paola's note about records & certs - https://astronomerteam.slack.com/archives/CAR8BNHGR/p1531859254000114
-
----
