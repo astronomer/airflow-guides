@@ -7,9 +7,9 @@ heroImagePath: "https://cdn.astronomer.io/website/img/guides/TheAirflowUI_previe
 tags: ["Astronomer Platform", "Airflow", "Getting Started"]
 ---
 
-The purpose of this guide is to describe the Astronomer Platform installation process for platform owners and end users.
+**The purpose of this guide is to describe the Astronomer Platform installation process for platform owners and end users.**
 
-This is where we recommend getting started with Astronomer.
+This is where we recommend getting started with the Astronomer Platform.
 
 ---
 
