@@ -3,7 +3,7 @@ title: "Astronomer Platform v0.3.0 Install Guide"
 description: "Install the Astronomer Platform"
 date: 2018-07-17T00:00:00.000Z
 slug: "install"
-heroImagePath: "https://cdn.astronomer.io/website/img/guides/datastores.png"
+heroImagePath: "https://cdn.astronomer.io/website/img/guides/TheAirflowUI_preview.png"
 tags: ["Astronomer Platform", "Airflow", "Getting Started"]
 ---
 
@@ -30,7 +30,7 @@ For the purpose of this doc, our application domain is `mercury.astronomer.io`. 
 	We'll create two SSL certs:
 
 	1. A standard certificate for the base domain.
-	1. A wildcard certificate to support dynamic dashboards like the Astronomer app (app.<your base domain>), Airflow webserver, Flower, and Grafana.
+	1. A wildcard certificate to support dynamic dashboards like the Astronomer app (`app.<your base domain>`), Airflow webserver, Flower, and Grafana.
 
 	This requires performing two domain challenges.  Add the two DNS TXT records mentioned in the output.
 
@@ -124,7 +124,7 @@ For the purpose of this doc, our application domain is `mercury.astronomer.io`. 
 1. **Deploy / Install the Astronomer chart.**
 
 	```shell
-	helm install -f config.yaml . --namespace=foo
+	$ helm install -f config.yaml . --namespace=foo
 	```
 
 	Click the link in the output notes to log in to the Astronomer app.
