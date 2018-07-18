@@ -66,7 +66,7 @@ For the purpose of this doc, our application domain is `mercury.astronomer.io`. 
 
 1. **Create a Kubernetes secret with your PostgreSQL connection.**
 
-    If you do not already have a PostgreSQL database, we recommend using a service like Compose, Amazon RDS, or Google Cloud SQL.
+    If you do not already have a PostgreSQL cluster, we recommend using a service like Compose, Amazon RDS, or Google Cloud SQL.
 
     This PostgreSQL user needs permissions to create users, schemas, databases, and tables.
 
