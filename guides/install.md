@@ -7,15 +7,11 @@ heroImagePath: "https://cdn.astronomer.io/website/img/guides/TheAirflowUI_previe
 tags: ["Astronomer Platform", "Airflow", "Getting Started"]
 ---
 
-**The purpose of this guide is to describe the Astronomer Platform v0.3.0 installation process for platform owners and end users.**
+For the purpose of this doc, our installation domain is
+`mercury.astronomer.io`.  You should set this value to your
+desired installation domain name.
 
-This is where we recommend getting started with the Astronomer Platform.
-
----
-
-For the purpose of this doc, our application domain is `mercury.astronomer.io`.  You should set this value to your desired domain name.
-
-## 1. Generate the SSL/TLS certificates
+## 1. Generate SSL/TLS certificates
 
 We'll create two SSL certs:
 
