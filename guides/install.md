@@ -15,7 +15,7 @@ This is where we recommend getting started with the Astronomer Platform.
 
 For the purpose of this doc, our application domain is `mercury.astronomer.io`.  You should set this value to your desired domain name.
 
-## 1. Generate the SSL/TLS certificates.
+## 1. Generate the SSL/TLS certificates
 
 We'll create two SSL certs:
 
@@ -64,7 +64,7 @@ Before continuing, verify the record is deployed.
 Press Enter to Continue
 ```
 
-## 2. Create a Kubernetes secret with your PostgreSQL connection.
+## 2. Create a Kubernetes secret with your PostgreSQL connection
 
 If you do not already have a PostgreSQL cluster, we recommend using a service like Compose, Amazon RDS, or Google Cloud SQL.
 
@@ -78,7 +78,7 @@ $ kubectl create secret generic astronomer-bootstrap --from-literal connection="
 
 Note: Change user from `admin` if you're creating a user instead of using the default, it needs permission to create databases, schemas, and users.
 
-## 3. Generate a static IP and create an A record for it.
+## 3. Generate a static IP and create an A record for it
 
 ```shell
 $ gcloud compute addresses create astronomer-mercury-external-ip --region us-east4 --project astronomer-prod
@@ -87,17 +87,17 @@ $ gcloud compute addresses describe astronomer-mercury-external-ip --region us-e
 
 - A record details: `*.<base domain>` pointing to the static IP
 
-## 4. Create a Kubernetes secret for the SSL/TLS certificates.
+## 4. Create a Kubernetes secret for the SSL/TLS certificates
 
 ```shell
 $ kubectl create secret tls astronomer-mercury-tls --kubeconfig=/home/schnie/.kube/config --key /home/schnie/dev/letsencrypt/etc/letsencrypt/live/mercury.astronomer.io/privkey.pem --cert /home/schnie/dev/letsencrypt/etc/letsencrypt/live/mercury.astronomer.io/fullchain.pem --namespace astronomer-ee
 ```
 
-## 5. Generate credentials for Google OAuth.
+## 5. Generate credentials for Google OAuth
 
 See the [Google OAuth credentials guide](/guides/google-oauth-creds).
 
-## 6. Set the Astronomer config values.
+## 6. Set the Astronomer config values
 
 Create a `config.yaml` for your domain setting overrides by copying [config.tpl.yaml](https://github.com/astronomerio/helm.astronomer.io/blob/master/config.tpl.yaml) if you don't already have one.
 
@@ -120,7 +120,7 @@ astronomer:
 
 Replace `<your-client-id>` and `<your-client-secret>` with the values from (5).
 
-## 7. Deploy / Install the Astronomer chart.
+## 7. Deploy / Install the Astronomer chart
 
 ```shell
 $ helm install -f config.yaml . --namespace astronomer-ee
