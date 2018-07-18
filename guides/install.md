@@ -93,7 +93,7 @@ For the purpose of this doc, our application domain is `mercury.astronomer.io`. 
 	$ gcloud compute addresses describe astronomer-mercury-external-ip --region us-east4 --project astronomer-prod --format 'value(address)'
 	```
 
-	- A record details: *.<base domain> pointing to the static IP
+	- A record details: `*.<base domain>` pointing to the static IP
 
 1. **Create a Kubernetes secret for the SSL/TLS certificates.**
 
