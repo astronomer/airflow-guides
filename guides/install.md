@@ -30,7 +30,7 @@ For the purpose of this doc, our application domain is `mercury.astronomer.io`. 
 	We'll create two SSL certs:
 
 	1. A standard certificate for the base domain.
-	1. A wildcard certificate to support dynamic dashboards like the Astronomer app (app.<your base domain>), Airflow webserver, Flower, and Grafana.
+	1. A wildcard certificate to support dynamic dashboards like the Astronomer app (`app.<your base domain>`), Airflow webserver, Flower, and Grafana.
 
 	This requires performing two domain challenges.  Add the two DNS TXT records mentioned in the output.
 
