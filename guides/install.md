@@ -76,6 +76,8 @@ For the purpose of this doc, our application domain is `mercury.astronomer.io`. 
     $ kubectl create secret generic astronomer-bootstrap --from-literal connection="postgres://admin:${PASSWORD}@aws-us-east-1-portal.32.dblayer.com:27307" --namespace astronomer-ee
     ```
 
+    Note: Change user from `admin` if you're creating a user instead of using the default, it needs permission to create databases, schemas, and users.
+
 1. **Generate a static IP and create an A record for it.**
 
     ```shell
