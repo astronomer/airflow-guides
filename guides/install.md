@@ -1,5 +1,5 @@
 ---
-title: "Astronomer v0.3 Install Guide"
+title: "Astronomer Install Guide"
 description: "Install the Astronomer Platform"
 date: 2018-07-17T00:00:00.000Z
 slug: "install"
@@ -7,7 +7,7 @@ heroImagePath: "https://cdn.astronomer.io/website/img/guides/TheAirflowUI_previe
 tags: ["Astronomer Platform", "Airflow", "Getting Started"]
 ---
 
-**The purpose of this guide is to describe the Astronomer Platform installation process for platform owners and end users.**
+**The purpose of this guide is to describe the Astronomer Platform v0.3.0 installation process for platform owners and end users.**
 
 This is where we recommend getting started with the Astronomer Platform.
 
