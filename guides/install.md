@@ -1,4 +1,11 @@
-# Astronomer Platform v0.3.0 Install Guide
+---
+title: "Astronomer Platform v0.3.0 Install Guide"
+description: "Install the Astronomer Platform"
+date: 2018-07-17T00:00:00.000Z
+slug: "install"
+heroImagePath: "https://cdn.astronomer.io/website/img/guides/datastores.png"
+tags: ["Astronomer Platform", "Airflow", "Getting Started"]
+---
 
 The purpose of this guide is to describe the Astronomer Platform installation process for platform owners and end users.
 
