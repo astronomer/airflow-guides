@@ -113,18 +113,18 @@ For the purpose of this doc, our application domain is `mercury.astronomer.io`. 
 
 	In `config.yaml`, set the following values:
 
-	```yaml
-	global:
-	  baseDomain: ...
-	  tlsSecret: ...
+    ```yaml
+    global:
+      baseDomain: ...
+      tlsSecret: ...
 
     astronomer:
-	  auth:
-	    google:
-	      enabled: true
-	      clientId: <your-client-id>
-	      clientSecret: <your-client-secret>
-	```
+      auth:
+        google:
+          enabled: true
+          clientId: <your-client-id>
+          clientSecret: <your-client-secret>
+    ```
 
 	Replace `<your-client-id>` and `<your-client-secret>` with the values from (5).
 
