@@ -103,7 +103,7 @@ For the purpose of this doc, our application domain is `mercury.astronomer.io`. 
 
 1. **Generate credentials for Google OAuth.**
 
-	- TODO: CJ
+	See the [Google OAuth credentials guide](/guides/google-oauth-creds).
 
 1. **Set the Astronomer config values.**
 
@@ -117,9 +117,16 @@ For the purpose of this doc, our application domain is `mercury.astronomer.io`. 
 	global:
 	  baseDomain: ...
 	  tlsSecret: ...
+
+    astronomer:
+	  auth:
+	    google:
+	      enabled: true
+	      clientId: <your-client-id>
+	      clientSecret: <your-client-secret>
 	```
 
-	[TODO: CJ] Add the oauth clientId and clientSecret
+	Replace `<your-client-id>` and `<your-client-secret>` with the values from (5).
 
 1. **Deploy / Install the Astronomer chart.**
 
