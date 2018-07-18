@@ -1,5 +1,5 @@
 ---
-title: "Astronomer v0.3 Install Guide"
+title: "Astronomer Install Guide"
 description: "Install the Astronomer Platform"
 date: 2018-07-17T00:00:00.000Z
 slug: "install"
@@ -7,121 +7,123 @@ heroImagePath: "https://cdn.astronomer.io/website/img/guides/TheAirflowUI_previe
 tags: ["Astronomer Platform", "Airflow", "Getting Started"]
 ---
 
-The purpose of this guide is to describe the Astronomer Platform installation process for platform owners and end users.
+**The purpose of this guide is to describe the Astronomer Platform v0.3.0 installation process for platform owners and end users.**
 
-This is where we recommend getting started with Astronomer.
+This is where we recommend getting started with the Astronomer Platform.
 
 ---
 
 For the purpose of this doc, our application domain is `mercury.astronomer.io`.  You should set this value to your desired domain name.
 
-1. **Generate the SSL/TLS certificates.**
+## 1. Generate the SSL/TLS certificates.
 
-    We'll create two SSL certs:
+We'll create two SSL certs:
 
-    1. A standard certificate for the base domain.
-    1. A wildcard certificate to support dynamic dashboards like the Astronomer app (`app.<your base domain>`), Airflow webserver, Flower, and Grafana.
+1. A standard certificate for the base domain.
+1. A wildcard certificate to support dynamic dashboards like the Astronomer app (`app.<your base domain>`), Airflow webserver, Flower, and Grafana.
 
-    This requires performing two domain challenges.  Add the two DNS TXT records mentioned in the output.
+This requires performing two domain challenges.  Add the two DNS TXT records mentioned in the output.
 
-    Follow your DNS provider's guidance for how to set two values under the same key.
+Follow your DNS provider's guidance for how to set two values under the same key.
 
-    We recommend temporarily setting a short time to live (TTL) value for the DNS records to expedite the setup process.
+We recommend temporarily setting a short time to live (TTL) value for the DNS records to expedite the setup process.
 
-    Run:
+Run:
 
-    ```shell
-    $ docker run -it --rm --name letsencrypt -v ~/dev/letsencrypt/etc/letsencrypt:/etc/letsencrypt -v ~/dev/letsencrypt/var/lib/letsencrypt:/var/lib/letsencrypt certbot/certbot:latest certonly -d "mercury.astronomer.io" -d "*.mercury.astronomer.io" --manual --preferred-challenges dns --server https://acme-v02.api.letsencrypt.org/directory
-    ```
+```shell
+$ docker run -it --rm --name letsencrypt -v ~/dev/letsencrypt/etc/letsencrypt:/etc/letsencrypt -v ~/dev/letsencrypt/var/lib/letsencrypt:/var/lib/letsencrypt certbot/certbot:latest certonly -d "mercury.astronomer.io" -d "*.mercury.astronomer.io" --manual --preferred-challenges dns --server https://acme-v02.api.letsencrypt.org/directory
+```
 
-    Sample output:
+Sample output:
 
-    ```plain
-    Saving debug log to /var/log/letsencrypt/letsencrypt.log
-    Plugins selected: Authenticator manual, Installer None
-    Obtaining a new certificate
-    Performing the following challenges:
-    dns-01 challenge for mercury.astronomer.io
-    dns-01 challenge for mercury.astronomer.io
+```plain
+Saving debug log to /var/log/letsencrypt/letsencrypt.log
+Plugins selected: Authenticator manual, Installer None
+Obtaining a new certificate
+Performing the following challenges:
+dns-01 challenge for mercury.astronomer.io
+dns-01 challenge for mercury.astronomer.io
 
-    - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-    NOTE: The IP of this machine will be publicly logged as having requested this
-    certificate. If you're running certbot in manual mode on a machine that is not
-    your server, please ensure you're okay with that.
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+NOTE: The IP of this machine will be publicly logged as having requested this
+certificate. If you're running certbot in manual mode on a machine that is not
+your server, please ensure you're okay with that.
 
-    Are you OK with your IP being logged?
-    - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-    (Y)es/(N)o: y
+Are you OK with your IP being logged?
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+(Y)es/(N)o: y
 
-    - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-    Please deploy a DNS TXT record under the name
-    _acme-challenge.mercury.astronomer.io with the following value:
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+Please deploy a DNS TXT record under the name
+_acme-challenge.mercury.astronomer.io with the following value:
 
-    0CDuwkP_vNOfIgI7RMiY0DBZO5lLHugSo7UsSVpL6ok
+0CDuwkP_vNOfIgI7RMiY0DBZO5lLHugSo7UsSVpL6ok
 
-    Before continuing, verify the record is deployed.
-    - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-    Press Enter to Continue
-    ```
+Before continuing, verify the record is deployed.
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+Press Enter to Continue
+```
 
-1. **Create a Kubernetes secret with your PostgreSQL connection.**
+## 2. Create a Kubernetes secret with your PostgreSQL connection.
 
-    If you do not already have a PostgreSQL database, we recommend using a service like Compose, Amazon RDS, or Google Cloud SQL.
+If you do not already have a PostgreSQL cluster, we recommend using a service like Compose, Amazon RDS, or Google Cloud SQL.
 
-    This PostgreSQL user needs permissions to create users, schemas, databases, and tables.
+This PostgreSQL user needs permissions to create users, schemas, databases, and tables.
 
-    Run:
+Run:
 
-    ```shell
-    $ kubectl create secret generic astronomer-bootstrap --from-literal connection="postgres://admin:${PASSWORD}@aws-us-east-1-portal.32.dblayer.com:27307" --namespace astronomer-ee
-    ```
+```shell
+$ kubectl create secret generic astronomer-bootstrap --from-literal connection="postgres://admin:${PASSWORD}@aws-us-east-1-portal.32.dblayer.com:27307" --namespace astronomer-ee
+```
 
-1. **Generate a static IP and create an A record for it.**
+Note: Change user from `admin` if you're creating a user instead of using the default, it needs permission to create databases, schemas, and users.
 
-    ```shell
-    $ gcloud compute addresses create astronomer-mercury-external-ip --region us-east4 --project astronomer-prod
-    $ gcloud compute addresses describe astronomer-mercury-external-ip --region us-east4 --project astronomer-prod --format 'value(address)'
-    ```
+## 3. Generate a static IP and create an A record for it.
 
-    - A record details: `*.<base domain>` pointing to the static IP
+```shell
+$ gcloud compute addresses create astronomer-mercury-external-ip --region us-east4 --project astronomer-prod
+$ gcloud compute addresses describe astronomer-mercury-external-ip --region us-east4 --project astronomer-prod --format 'value(address)'
+```
 
-1. **Create a Kubernetes secret for the SSL/TLS certificates.**
+- A record details: `*.<base domain>` pointing to the static IP
 
-    ```shell
-    $ kubectl create secret tls astronomer-mercury-tls --kubeconfig=/home/schnie/.kube/config --key /home/schnie/dev/letsencrypt/etc/letsencrypt/live/mercury.astronomer.io/privkey.pem --cert /home/schnie/dev/letsencrypt/etc/letsencrypt/live/mercury.astronomer.io/fullchain.pem --namespace astronomer-ee
-    ```
+## 4. Create a Kubernetes secret for the SSL/TLS certificates.
 
-1. **Generate credentials for Google OAuth.**
+```shell
+$ kubectl create secret tls astronomer-mercury-tls --kubeconfig=/home/schnie/.kube/config --key /home/schnie/dev/letsencrypt/etc/letsencrypt/live/mercury.astronomer.io/privkey.pem --cert /home/schnie/dev/letsencrypt/etc/letsencrypt/live/mercury.astronomer.io/fullchain.pem --namespace astronomer-ee
+```
 
-    See the [Google OAuth credentials guide](/guides/google-oauth-creds).
+## 5. Generate credentials for Google OAuth.
 
-1. **Set the Astronomer config values.**
+See the [Google OAuth credentials guide](/guides/google-oauth-creds).
 
-    Create a `config.yaml` for your domain setting overrides by copying [config.tpl.yaml](https://github.com/astronomerio/helm.astronomer.io/blob/master/config.tpl.yaml) if you don't already have one.
+## 6. Set the Astronomer config values.
 
-    Change the branch on GitHub to match your desired Astronomer Platform version.
+Create a `config.yaml` for your domain setting overrides by copying [config.tpl.yaml](https://github.com/astronomerio/helm.astronomer.io/blob/master/config.tpl.yaml) if you don't already have one.
 
-    In `config.yaml`, set the following values:
+Change the branch on GitHub to match your desired Astronomer Platform version.
 
-    ```yaml
-    global:
-      baseDomain: ...
-      tlsSecret: ...
+In `config.yaml`, set the following values:
 
-    astronomer:
-      auth:
-        google:
-          enabled: true
-          clientId: <your-client-id>
-          clientSecret: <your-client-secret>
-    ```
+```yaml
+global:
+  baseDomain: ...
+  tlsSecret: ...
 
-    Replace `<your-client-id>` and `<your-client-secret>` with the values from (5).
+astronomer:
+  auth:
+    google:
+      enabled: true
+      clientId: <your-client-id>
+      clientSecret: <your-client-secret>
+```
 
-1. **Deploy / Install the Astronomer chart.**
+Replace `<your-client-id>` and `<your-client-secret>` with the values from (5).
 
-    ```shell
-    $ helm install -f config.yaml . --namespace astronomer-ee
-    ```
+## 7. Deploy / Install the Astronomer chart.
 
-    Click the link in the output notes to log in to the Astronomer app.
+```shell
+$ helm install -f config.yaml . --namespace astronomer-ee
+```
+
+Click the link in the output notes to log in to the Astronomer app.
