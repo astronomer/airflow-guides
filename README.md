@@ -1,15 +1,14 @@
 # Airflow Guides
+
 A curated collection of guides to help with building specific ETL pipelines using Airflow.
 
 These are stepwise instructions and use various repositories from the open-source [Airflow Plugins Organization](https://github.com/airflow-plugins).
 
 ---
 
-## How to Update Astronomer's Website with Latest Guides
-1) Commit your latest changes to `master` in this repo
-2) Login to CircleCI and make sure you are following the `astronomerio/website` project
-3) Choose the `dato-production` workflow under the `website` repo in Circle
-4) Click the "rerun" button under the lastest _successful_ build
-5) Choose the `Rerun from beginning` option from the dropdown
+## How to deploy guides
 
-_Once Circle has successfully rebuilt the `website` repo, the lastest changes to Guides will be reflected on the site._
+1. Commit your changes / merge your PR to `astronomerio/airflow-guides` master branch.
+1. Open <https://circleci.com/gh/astronomerio/workflows/website/tree/dato-production>.
+1. In CircleCI, click `Rerun > Rerun from beginning` on the latest build marked "succeeded".
+1. After the build succeeds, open <https://www.astronomer.io/guides/> to verify.
