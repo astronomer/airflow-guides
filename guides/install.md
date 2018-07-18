@@ -1,5 +1,5 @@
 ---
-title: "Astronomer Platform v0.3.0 Install Guide"
+title: "Astronomer v0.3 Install Guide"
 description: "Install the Astronomer Platform"
 date: 2018-07-17T00:00:00.000Z
 slug: "install"
