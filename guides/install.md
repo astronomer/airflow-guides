@@ -13,16 +13,6 @@ This is where we recommend getting started with Astronomer.
 
 ---
 
-Upgrade process overview:
-
-1. Pause active DAGs
-1. Create new Astronomer cluster
-1. Deploy to new cluster
-1. Unpause DAGs that were paused in (1) and test new cluster
-1. Tear down old Astronomer cluster
-
----
-
 For the purpose of this doc, our application domain is `mercury.astronomer.io`.  You should set this value to your desired domain name.
 
 1. **Generate the SSL/TLS certificates.**
