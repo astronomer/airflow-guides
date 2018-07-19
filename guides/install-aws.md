@@ -1,6 +1,6 @@
 ---
 title: "Astronomer Install Guide - Amazon Web Services Prerequisites"
-description: "Install the Astronomer Platform"
+description: "Setup the Astronomer Platform prerequisites on AWS"
 date: 2018-07-17T00:00:00.000Z
 slug: "install-aws"
 heroImagePath: "https://cdn.astronomer.io/website/img/guides/TheAirflowUI_preview.png"

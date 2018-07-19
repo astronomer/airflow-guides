@@ -1,6 +1,6 @@
 ---
 title: "Astronomer Install Guide - Google Cloud Platform Prerequisites"
-description: "Install the Astronomer Platform"
+description: "Setup the Astronomer Platform prerequisites on GCP"
 date: 2018-07-17T00:00:00.000Z
 slug: "install-gcp"
 heroImagePath: "https://cdn.astronomer.io/website/img/guides/TheAirflowUI_preview.png"
