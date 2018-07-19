@@ -11,18 +11,31 @@ For the purpose of this doc, our installation domain is
 `mercury.astronomer.io`.  You should set this value to your
 desired installation domain name.
 
-## 1. Generate SSL/TLS certificates
+This is where we recommend getting started with the Astronomer Platform.
 
-We'll create two SSL certs:
+---
+
+For the purpose of this doc, our application domain is `mercury.astronomer.io`.  You should set this value to your desired domain name.
+
+## 1. Prerequisites
+
+Please see the following doc for prerequisites based on your cloud:
+
+- [AWS](/guides/install-aws)
+- [GCP](/guides/install-gcp)
+
+The GCP doc can serve as a requirements reference if your cloud is not yet listed.
+
+## 2. Generate SSL/TLS certificates
+
+The recommended way to install the Astronomer Platform is on a subdomain and not on your root domain.  If you don't have a preference, a good default subdomain is `astro`.  (For the rest of this guide, we'll continue to use `mercury.astronomer.io`.)
+
+Note: We recommend following the process below to generate trusted certificates.  Self-signed certificates are not recommended for the Astronomer Platform.
+
+We'll create two SSL/TLS certs:
 
 1. A standard certificate for the base domain.
-1. A wildcard certificate to support dynamic dashboards like the Astronomer app (`app.<your base domain>`), Airflow webserver, Flower, and Grafana.
-
-This requires performing two domain challenges.  Add the two DNS TXT records mentioned in the output.
-
-Follow your DNS provider's guidance for how to set two values under the same key.
-
-We recommend temporarily setting a short time to live (TTL) value for the DNS records to expedite the setup process.
+1. A wildcard certificate for dynamic dashboards like the Astronomer app, Airflow webserver, Flower, Grafana, etc.
 
 Run:
 
@@ -60,7 +73,11 @@ Before continuing, verify the record is deployed.
 Press Enter to Continue
 ```
 
-## 2. Create a Kubernetes secret with your PostgreSQL connection
+Follow the directions in the output to perform the two domain challenges by adding the two DNS TXT records mentioned.  Follow your DNS provider's guidance for how to set two values under the same key.
+
+We recommend temporarily setting a short time to live (TTL) value for the DNS records to expedite the setup process.
+
+## 3. Create a Kubernetes secret with your PostgreSQL connection
 
 If you do not already have a PostgreSQL cluster, we recommend using a service like Compose, Amazon RDS, or Google Cloud SQL.
 
@@ -74,15 +91,6 @@ $ kubectl create secret generic astronomer-bootstrap --from-literal connection="
 
 Note: Change user from `admin` if you're creating a user instead of using the default, it needs permission to create databases, schemas, and users.
 
-## 3. Generate a static IP and create an A record for it
-
-```shell
-$ gcloud compute addresses create astronomer-mercury-external-ip --region us-east4 --project astronomer-prod
-$ gcloud compute addresses describe astronomer-mercury-external-ip --region us-east4 --project astronomer-prod --format 'value(address)'
-```
-
-- A record details: `*.<base domain>` pointing to the static IP
-
 ## 4. Create a Kubernetes secret for the SSL/TLS certificates
 
 ```shell
@@ -93,7 +101,9 @@ $ kubectl create secret tls astronomer-mercury-tls --kubeconfig=/home/schnie/.ku
 
 See the [Google OAuth credentials guide](/guides/google-oauth-creds).
 
-## 6. Set the Astronomer config values
+Note: We're also adding support for Auth0 very soon as an alternative OAuth provider.
+
+## 6. Configure Astronomer
 
 Now, we'll set the configuration values for the Astronomer Helm chart.
 
@@ -118,7 +128,7 @@ astronomer:
 
 Replace `<your-client-id>` and `<your-client-secret>` with the values from the previous step.
 
-## 7. Deploy / Install the Astronomer chart
+## 7. Install Astronomer
 
 ```shell
 $ helm install -f config.yaml . --namespace astronomer-ee
