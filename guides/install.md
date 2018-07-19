@@ -7,15 +7,9 @@ heroImagePath: "https://cdn.astronomer.io/website/img/guides/TheAirflowUI_previe
 tags: ["Astronomer Platform", "Airflow", "Getting Started"]
 ---
 
-For the purpose of this doc, our installation domain is
+*For the purpose of this doc, our application domain is
 `mercury.astronomer.io`.  You should set this value to your
-desired installation domain name.
-
-This is where we recommend getting started with the Astronomer Platform.
-
----
-
-For the purpose of this doc, our application domain is `mercury.astronomer.io`.  You should set this value to your desired domain name.
+desired domain name.*
 
 ## 1. Prerequisites
 
