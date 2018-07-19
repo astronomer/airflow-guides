@@ -20,21 +20,18 @@ Please see the following doc for prerequisites based on your cloud:
 
 The GCP doc can serve as a requirements reference if your cloud is not yet listed.
 
-## 2. Generate SSL/TLS certificates
+## 2. Generate a wildcard SSL/TLS certificate
 
 The recommended way to install the Astronomer Platform is on a subdomain and not on your root domain.  If you don't have a preference, a good default subdomain is `astro`.  (For the rest of this guide, we'll continue to use `mercury.astronomer.io`.)
 
-Note: We recommend following the process below to generate trusted certificates.  Self-signed certificates are not recommended for the Astronomer Platform.
+We recommend purchasing a SSL/TLS certificate signed by a Trusted CA. Alternatively you can follow the guide below to generate a trusted wildcard certificate via Let's Encrypt (90 day expiration).  
 
-We'll create two SSL/TLS certs:
-
-1. A standard certificate for the base domain.
-1. A wildcard certificate for dynamic dashboards like the Astronomer app, Airflow webserver, Flower, Grafana, etc.
+Note: Self-signed certificates are not supported on the Astronomer Platform.
 
 Run:
 
 ```shell
-$ docker run -it --rm --name letsencrypt -v ~/dev/letsencrypt/etc/letsencrypt:/etc/letsencrypt -v ~/dev/letsencrypt/var/lib/letsencrypt:/var/lib/letsencrypt certbot/certbot:latest certonly -d "mercury.astronomer.io" -d "*.mercury.astronomer.io" --manual --preferred-challenges dns --server https://acme-v02.api.letsencrypt.org/directory
+$ docker run -it --rm --name letsencrypt -v ~/dev/letsencrypt/etc/letsencrypt:/etc/letsencrypt -v ~/dev/letsencrypt/var/lib/letsencrypt:/var/lib/letsencrypt certbot/certbot:latest certonly -d "*.mercury.astronomer.io" --manual --preferred-challenges dns --server https://acme-v02.api.letsencrypt.org/directory
 ```
 
 Sample output:
@@ -44,7 +41,6 @@ Saving debug log to /var/log/letsencrypt/letsencrypt.log
 Plugins selected: Authenticator manual, Installer None
 Obtaining a new certificate
 Performing the following challenges:
-dns-01 challenge for mercury.astronomer.io
 dns-01 challenge for mercury.astronomer.io
 
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -67,9 +63,9 @@ Before continuing, verify the record is deployed.
 Press Enter to Continue
 ```
 
-Follow the directions in the output to perform the two domain challenges by adding the two DNS TXT records mentioned.  Follow your DNS provider's guidance for how to set two values under the same key.
+Follow the directions in the output to perform the domain challenge by adding the DNS TXT record mentioned.  Follow your DNS provider's guidance for how to set the TXT record.
 
-We recommend temporarily setting a short time to live (TTL) value for the DNS records to expedite the setup process.
+We recommend temporarily setting a short time to live (TTL) value for the DNS record should you need to retry creating the cert.
 
 ## 3. Create a Kubernetes secret with your PostgreSQL connection
 
