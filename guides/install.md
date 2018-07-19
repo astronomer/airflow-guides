@@ -15,8 +15,8 @@ desired domain name.*
 
 Please see the following doc for prerequisites based on your cloud:
 
-- [AWS](/guides/install-aws)
-- [GCP](/guides/install-gcp)
+- [AWS](https://www.astronomer.io/guides/install-aws)
+- [GCP](https://www.astronomer.io/guides/install-gcp)
 
 The GCP doc can serve as a requirements reference if your cloud is not yet listed.
 

@@ -7,7 +7,7 @@ heroImagePath: "https://cdn.astronomer.io/website/img/guides/TheAirflowUI_previe
 tags: ["Astronomer Platform", "Getting Started"]
 ---
 
-This guide describes the prerequisite steps to install Astronomer on Google Cloud Platform (GCP).  After completing it, return to the main [install guide](/guides/install) to complete the process.
+This guide describes the prerequisite steps to install Astronomer on Google Cloud Platform (GCP).  After completing it, return to the main [install guide](https://www.astronomer.io/guides/install) to complete the process.
 
 ## 1. Generate a static IP and create an A record for it
 
@@ -20,4 +20,4 @@ The A record should be `*.<base domain>` pointing to the static IP.
 
 ---
 
-Now return to the [install guide](/guides/install) to install Astronomer.
+Now return to the [install guide](https://www.astronomer.io/guides/install) to install Astronomer.
