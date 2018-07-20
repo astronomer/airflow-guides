@@ -94,7 +94,7 @@ Note: Change user from `postgres` if you're creating a user instead of using the
 ## 4. Create a Kubernetes secret for the TLS certificates
 
 ```shell
-$ kubectl create secret tls astronomer-tls --key /etc/letsencrypt/live/astro.mycompany.com/privkey.pem --cert /etc/letsencrypt/live/astro.mycompany.com fullchain.pem --namespace astronomer
+$ kubectl create secret tls astronomer-tls --key /etc/letsencrypt/live/astro.mycompany.com/privkey.pem --cert /etc/letsencrypt/live/astro.mycompany.com/fullchain.pem --namespace astronomer
 ```
 
 ## 5. Generate credentials for Google OAuth
