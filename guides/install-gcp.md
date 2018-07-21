@@ -17,6 +17,7 @@ You will need to be able to:
 * Obtain a wildcard SSL certificate
 * Edit your DNS records
 * Create resources on Google Cloud Platform
+  (GKE admin permission)
 * Install/run Kubernetes command line tools to your machine
 
 ## Pre-requisites

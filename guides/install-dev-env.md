@@ -7,13 +7,13 @@ heroImagePath: "https://cdn.astronomer.io/website/img/guides/TheAirflowUI_previe
 tags: ["admin-docs"]
 ---
 
-* Ensure you have `gcloud` command line utility installed
+* Install Google Cloud CLI `gcloud`
+* Install Kubernetes CLI `kubectl` (On Mac: `brew install kubernetes-cli`)
+* Install Helm CLI `helm` (On Mac: `brew install kubernetes-helm`)
+  You may need to run `helm repo update` and/or `helm init --client-only`
 * Login with `gcloud auth login`
-* Ensure you have `kubectl` command `brew install kubernetes-cli`
-* Ensure you have `helm` installed and updated. On mac it's `brew install kubernetes-helm`.
-  You may need to run `helm repo update` and/or `helm init --client-only`.
-* Get `kubernetes admin` permission on your Google Cloud account
 * Download Astronomer helm charts locally `git clone git@github.com:astronomerio/helm.astronomer.io.git`
+* `cd` into that directory
 
 > Note: if you work with multiple Kubernetes clusters, `kubectx` is a nice utility
 to switch context between clusters.

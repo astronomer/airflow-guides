@@ -9,9 +9,7 @@ tags: ["admin-docs"]
 
 ## 1. Create a GCP project
 
-If you don't alreasdy have a GCP project,
-`gcloud projects create astronomer-project`
-
+If you don't alreasdy have a GCP project, `gcloud projects create astronomer-project`.
 Note the resultant `Project ID`.
 
 ## 2. Create a GKE cluster
