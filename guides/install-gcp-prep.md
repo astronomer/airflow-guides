@@ -2,7 +2,7 @@
 title: "Install Dev Environment for Astronomer"
 description: "Install Dev Environment for Astronomer"
 date: 2018-07-17T00:00:00.000Z
-slug: "install-dev-env"
+slug: "install-gcp-prep"
 heroImagePath: "https://cdn.astronomer.io/website/img/guides/TheAirflowUI_preview.png"
 tags: ["admin-docs"]
 ---
