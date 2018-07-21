@@ -13,7 +13,7 @@ a URL like `unique-name-airflow.astro.mydomain.com` and the admin application
 will be installed to `app.astro.mydomain.com`, the Grafana dashboard will be
 installed to `grafana.astro.mydomain.com` etc.
 
-Note: You will need to edit the DNS for this domain. If you work for a big
+You will need to edit the DNS for this domain. If you work for a big
 company it might be easier to just register a new domain like `astro-mycompany.com`
 that you'll have full control of, and Astronomer can be installed on that root
 domain (`app.astro-mycompany.com` etc).

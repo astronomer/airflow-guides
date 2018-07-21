@@ -17,6 +17,7 @@ The PostgreSQL user needs permissions to create users, schemas, databases, and t
 For testing purposes, you can quickly get started using the PostgreSQL helm chart.
 
 Run:
+
 ```shell
 $ helm install --name astro-db stable/postgresql --namespace astronomer
 ```

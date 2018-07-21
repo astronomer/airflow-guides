@@ -9,20 +9,20 @@ tags: ["Astronomer EE", "Install", "OAuth"]
 
 As of Astronomer v0.3, it uses Google OAuth to authenticate users. In order to get this setup you will need to create credentials to securely communicate with Google services
 
-Note: We're also adding support for Auth0 very soon as an alternative OAuth provider to simplify installation.
+> Note: We're also adding support for Auth0 very soon as an alternative OAuth provider to simplify installation.
 
-# Create OAuth Credentials
+## Create OAuth Credentials
 
-#### Prerequisites:
+### Prerequisites:
 
 - A Google Account for accessing the GCP console
 - Know the `baseDomain` you are installing Astronomer EE to.  (ie. astro.yourdomain.com)
 
-## Step 1: Navigate to Google Cloud Platform
+### Step 1: Navigate to Google Cloud Platform
 
 Visit the Google [cloud console](https://console.cloud.google.com/)
 
-## Step 2: Create a project
+### Step 2: Create a project
 
 If you already have an existing project you want to use, you can skip to Step 3
 
@@ -38,11 +38,11 @@ This will direct you to a page to create a new project.  Fill in the `Project Na
 
 Now you should have a new project and it should automatically be selected as your active project.
 
-## Step 3: Navigate to Credentials page
+### Step 3: Navigate to Credentials page
 
 In the main menu, hover over the `APIs & Services` item, and click on the sub-menu item of `Credentials`.
 
-## Step 4: Update "OAuth consent screen"
+### Step 4: Update "OAuth consent screen"
 
 On the `Credentials` page there will be three tabs.  Click the center tab `OAuth consent screen`.  In this form, fill out the `Product name shown to users` field.  The value doesn't matter, but it must be set to create credentials.
 
@@ -50,13 +50,13 @@ On the `Credentials` page there will be three tabs.  Click the center tab `OAuth
 
 Hit save in the bottom left of the form, and you should be ready to create your credentials
 
-## Step 5: Create "OAuth client ID"
+### Step 5: Create "OAuth client ID"
 
 On the `Credentials` page, click the left tab labeled `Credentials`.  Down the page will be a button labeled `Create credentials`.  Click this, which will open a dropdown.  Hit the option labeled `OAuth client ID`
 
 ![create-creds](https://cdn.astronomer.io/website/img/guides/google-oauth-creds/create-creds.png)
 
-## Step 6: Create the OAuth credentials
+### Step 6: Create the OAuth credentials
 
 You'll need to fill out some information to create the credentials. The important fields are outlined below:
 
@@ -76,7 +76,7 @@ So for instance, if your `baseDomain` is `astro.yourdomain.com`, the value shoul
 
 Once these fields have been filled out, click the `Create` button in the bottom left of the form.
 
-## Step 7: Copy your "clientID" and "clientSecret"
+### Step 7: Copy your "clientID" and "clientSecret"
 
 After creating your credentials, Google will redirect you back to the credentials page and popup a window with your newly created OAuth client credentials.  
 

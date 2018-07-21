@@ -26,7 +26,7 @@ To set the secret, run:
 $ kubectl create secret generic astronomer-bootstrap --from-literal connection="postgres://postgres:${PGPASSWORD}@astro-db-postgresql:5432" --namespace astronomer
 ```
 
-Note: Change user from `postgres` if you're creating a user instead of using the default, it needs permission to create databases, schemas, and users.
+> Note: Change user from `postgres` if you're creating a user instead of using the default, it needs permission to create databases, schemas, and users.
 
 ## 2. TLS Secret
 
