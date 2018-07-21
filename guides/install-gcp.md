@@ -24,8 +24,8 @@ You will need to be able to:
 Before running the Astronomer install command you must:
 
 1. [Select a base domain](/guides/install-base-domain)
-1. [Get your machine setup with needed dev tools](/guides/dev-env)
-1. [Setup GCP](/guides/gcp-setup)
+1. [Get your machine setup with needed dev tools](/guides/install-dev-env)
+1. [Setup GCP](/guides/install-gcp-setup)
 1. [Get a Postgres server running](/guides/install-postgres)
 1. [Obtain SSL](/guides/install-ssl)
 1. [Setup DNS](/guides/install-dns)
