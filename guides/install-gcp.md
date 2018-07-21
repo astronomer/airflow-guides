@@ -1,23 +1,42 @@
 ---
-title: "Astronomer Install Guide - Google Cloud Platform Prerequisites"
-description: "Setup the Astronomer Platform prerequisites on GCP"
+title: "Install Astronomer to Google Cloud Platform"
+description: "Install Astronomer to Google Cloud Platform"
 date: 2018-07-17T00:00:00.000Z
 slug: "install-gcp"
 heroImagePath: "https://cdn.astronomer.io/website/img/guides/TheAirflowUI_preview.png"
-tags: ["Astronomer Platform", "Getting Started"]
+tags: ["admin-docs"]
 ---
 
-This guide describes the prerequisite steps to install Astronomer on Google Cloud Platform (GCP).  After completing it, return to the main [install guide](https://www.astronomer.io/guides/install) to complete the process.
+This guide describes the process to install Astronomer on Google Cloud Platform
+(GCP).
 
-## 1. Generate a static IP and create an A record for it
+## Are you admin-y enough to do this alone?
+
+You will need to be able to:
+
+* Obtain a wildcard SSL certificate
+* Edit your DNS records
+* Create resources on Google Cloud Platform
+* Install/run Kubernetes command line tools to your machine
+
+## Pre-requisites
+
+Before running the Astronomer install command you must:
+
+1. [Select a base domain](/guides/install-base-domain)
+1. [Get your machine setup with needed dev tools](/guides/dev-env)
+1. [Setup GCP](/guides/gcp-setup)
+1. [Get a Postgres server running](/guides/install-postgres)
+1. [Obtain SSL](/guides/install-ssl)
+1. [Setup DNS](/guides/install-dns)
+1. [Set a few Kubernetes secrets](/guides/install-k8s-secrets)
+1. [Create Google OAuth Creds ](/guides/install-google-oauth)
+1. [Build your config.yaml](/guides/install-config)
+
+## Install Astronomer
 
 ```shell
-$ gcloud compute addresses create astronomer-mercury-external-ip --region us-east4 --project astronomer-prod
-$ gcloud compute addresses describe astronomer-mercury-external-ip --region us-east4 --project astronomer-prod --format 'value(address)'
+$ helm install -f config.yaml . --namespace astronomer
 ```
 
-The A record should be `*.<base domain>` pointing to the static IP.
-
----
-
-Now return to the [install guide](https://www.astronomer.io/guides/install) to install Astronomer.
+Click the link in the output notes to log in to the Astronomer app.
