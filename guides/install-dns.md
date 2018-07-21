@@ -3,7 +3,7 @@ title: "Setting up DNS for Astronomer"
 description: "Setting up DNS for Astronomer"
 date: 2018-07-17T00:00:00.000Z
 slug: "install-dns"
-heroImagePath: "https://cdn.astronomer.io/website/img/guides/TheAirflowUI_preview.png"
+heroImagePath: null
 tags: ["admin-docs"]
 ---
 
