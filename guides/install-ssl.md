@@ -7,7 +7,7 @@ heroImagePath: "https://cdn.astronomer.io/website/img/guides/TheAirflowUI_previe
 tags: ["admin-docs"]
 ---
 
-The recommended way to install the Astronomer Platform is on a subdomain and not on your root domain, or aquiring a new domain.  If you don't have a preference, a good default subdomain is `astro`.  (For the rest of this guide, we'll continue to use `astro.mycompany.com`.)
+The recommended way to install the Astronomer Platform is on a subdomain and not on your root domain, or acquiring a new domain.  If you don't have a preference, a good default subdomain is `astro`.  (For the rest of this guide, we'll continue to use `astro.mycompany.com`.)
 
 You'll need to obtain a wildcard SSL certificate for `*.astro.mydomain.com` not
 only to protect the web endpoints (so it's `https://app.astro.mydomain.com`)
@@ -19,7 +19,7 @@ pods.
 
 We recommend purchasing a TLS certificate signed by a Trusted CA. Alternatively you can follow the guide below to manually generate a trusted wildcard certificate via Let's Encrypt (90 day expiration).  This certificate generation process and renewal can be automated in a production environment with a little more setup.
 
-Note: Self-signed certificates are not supported on the Astronomer Platform.
+> Note: Self-signed certificates are not supported on the Astronomer Platform.
 
 Run:
 

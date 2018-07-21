@@ -35,6 +35,8 @@ Before running the Astronomer install command you must:
 
 ## Install Astronomer
 
+You're ready to go!
+
 ```shell
 $ helm install -f config.yaml . --namespace astronomer
 ```

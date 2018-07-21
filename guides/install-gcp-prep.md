@@ -15,8 +15,8 @@ tags: ["admin-docs"]
 * Get `kubernetes admin` permission on your Google Cloud account
 * Download Astronomer helm charts locally `git clone git@github.com:astronomerio/helm.astronomer.io.git`
 
-Note: Kubectl cheatsheet https://kubernetes.io/docs/reference/kubectl/cheatsheet/
-Useful aliases https://gist.github.com/tamas-molnar/32a07c0eb83e95484e3cdb4b7fada32b
+> Note: Kubectl cheatsheet https://kubernetes.io/docs/reference/kubectl/cheatsheet/
+  Useful aliases https://gist.github.com/tamas-molnar/32a07c0eb83e95484e3cdb4b7fada32b
 
 Note: if you work with multiple Kubernetes clusters, `kubectx` is a nice utility
 to switch context between clusters.
