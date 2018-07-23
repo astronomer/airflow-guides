@@ -1,6 +1,6 @@
 ---
-title: "Astronomer Install Guide - Amazon Web Services Prerequisites"
-description: "Setup the Astronomer Platform prerequisites on AWS"
+title: "Install Astronomer to Amazon Web Services"
+description: "Install Astronomer to Amazon Web Services"
 date: 2018-07-17T00:00:00.000Z
 slug: "install-aws"
 heroImagePath: "https://cdn.astronomer.io/website/img/guides/TheAirflowUI_preview.png"
@@ -8,6 +8,8 @@ tags: ["Astronomer Platform", "Getting Started"]
 ---
 
 This guide describes the prerequisite steps to install Astronomer on Amazon Web Services (AWS).  
+
+## Are you admin-y enough to do this alone?
 
 You will need to be able to:
 
