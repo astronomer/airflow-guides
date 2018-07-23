@@ -2,7 +2,7 @@
 title: "AWS default storage class"
 description: "Creating your stateful storage"
 date: 2018-07-23T00:00:00.000Z
-slug: "aws-stateful-set"
+slug: "install-aws-stateful-set"
 heroImagePath: null
 tags: ["Airflow", "AWS", "Product Documentation"]
 ---
