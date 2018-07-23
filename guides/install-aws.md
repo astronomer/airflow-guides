@@ -38,7 +38,7 @@ $ helm install -f config.yaml . --namespace astronomer
 ```
 ## DNS routing
 
-Your final step is to setup your DNS to route traffic to your airflow resources following [these steps](/guides/install-dns-aws.md).
+Your final step is to setup your DNS to route traffic to your airflow resources following [these steps](/guides/install-dns-aws).
 
 Click the link in the output notes to log in to the Astronomer app.
 
