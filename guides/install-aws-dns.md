@@ -2,7 +2,7 @@
 title: "Setting up DNS for AWS"
 description: "Setting up DNS for AWS"
 date: 2018-07-17T00:00:00.000Z
-slug: "install-dns-aws"
+slug: "install-aws-dns"
 heroImagePath: null
 tags: ["admin-docs"]
 ---
