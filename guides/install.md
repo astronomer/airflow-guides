@@ -99,7 +99,7 @@ $ kubectl create secret tls astronomer-tls --key /etc/letsencrypt/live/astro.myc
 
 ## 5. Generate credentials for Google OAuth
 
-See the [Google OAuth credentials guide](/guides/google-oauth-creds).
+See the [Google OAuth credentials guide](/guides/install-google-oauth).
 
 Note: We're also adding support for Auth0 very soon as an alternative OAuth provider to simplify installation.
 
