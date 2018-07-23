@@ -13,7 +13,7 @@ desired domain name.*
 
 ## 1. Prerequisites
 
-Please see the following doc for prerequisites based on your cloud:
+Please see the following docs for prerequisites based on your cloud:
 
 - [AWS](https://www.astronomer.io/guides/install-aws)
 - [GCP](https://www.astronomer.io/guides/install-gcp)
