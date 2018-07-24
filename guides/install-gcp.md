@@ -10,6 +10,7 @@ tags: ["admin-docs"]
 This guide describes the process to install Astronomer on Google Cloud Platform
 (GCP).
 
+
 ## Are you admin-y enough to do this alone?
 
 You will need to be able to:
@@ -43,3 +44,7 @@ $ helm install -f config.yaml . --namespace astronomer
 ```
 
 Click the link in the output notes to log in to the Astronomer app.
+
+Feel free to check out our video walkthrough of the Install below:
+
+<iframe width="560" height="315" src="https://www.youtube.com/embed/IoeesuFNG9Q" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
