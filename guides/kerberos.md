@@ -4,6 +4,10 @@ An overview of the support for Kerberos in Airflow today and how you can use Ker
 
 tags: Airflow, Kerberos
 
+## Introduction
+
+Kerberos is an authentication system which allows Airflow to access and submit jobs to Kerberos-enabled clusters.  Typically this feature would be used for something like a long-running Spark cluster in a large enterprise environment.
+
 ## Support for Kerberos in Airflow
 
 Core support for Kerberos in Airflow is there including a ticket renewer service in the CLI.  Some of its limitations are described in [Airflow - Security](https://airflow.readthedocs.io/en/latest/security.html?highlight=kerberos#kerberos).
