@@ -2,35 +2,56 @@
 
 The purpose of this guide is to describe the Astronomer Platform release process for platform maintainers.
 
-1. **Create a `v0.3.0` branch off of master for each [platform component repos](https://github.com/astronomerio/astronomer/tree/master/docker/platform).**
+## 1. Create a `v0.3-stable` branch off of master for each platform component
 
-	1. [commander](https://github.com/astronomerio/commander)
-	1. [db-bootstrapper](https://github.com/astronomerio/db-bootstrapper)
-	1. [default-backend](https://github.com/astronomerio/default-backend)
-	1. [houston-api](https://github.com/astronomerio/houston-api)
-	1. [orbit-ui](https://github.com/astronomerio/orbit-ui)
-	1. [astronomer](https://github.com/astronomerio/astronomer) (second to last)
-	1. [helm.astronomer.io](https://github.com/astronomerio/helm.astronomer.io) (last)
+The [platform component repos](https://github.com/astronomerio/astronomer/tree/master/docker/platform) are:
 
-1. **For each repo above, create a release on GitHub.**
+1. [commander](https://github.com/astronomerio/commander)
+1. [db-bootstrapper](https://github.com/astronomerio/db-bootstrapper)
+1. [default-backend](https://github.com/astronomerio/default-backend)
+1. [houston-api](https://github.com/astronomerio/houston-api)
+1. [orbit-ui](https://github.com/astronomerio/orbit-ui)
+1. [astronomer](https://github.com/astronomerio/astronomer) (second to last)
+1. [helm.astronomer.io](https://github.com/astronomerio/helm.astronomer.io) (last)
 
-	- Tag version: `v0.3.0`
-	- Target: `v0.3.0` (branch)
-	- Release title: `v0.3.0`
+## 2. For each repo, create a GitHub Release
 
-	Creating a release will automatically create the `v0.3.0` tag as well.
+- Tag version: `v0.3.0`
+- Target: `v0.3-stable` (branch)
+- Release title: `v0.3.0`
 
-1. **Build and push Docker images.**
+Creating a release will automatically create the `v0.3.0` tag as well.
 
-	TODO
+## 3. Build and push the Docker images
+
+1. Grab the latest code:
 
 	```shell
-	git clone ...
-	... code changes? ...
+	cd astronomer
+	git checkout master
+	git pull
+	```
+
+1. Bump the platform version.
+
+	Adjust the version variables in the Makefile as needed:
+
+	- `ASTRONOMER_MAJOR_VERSION`
+	- `ASTRONOMER_MINOR_VERSION`
+	- `ASTRONOMER_PATCH_VERSION`
+	- `BUILD_NUMBER`
+
+1. Build the Docker images:
+
+	```shell
 	make build
 	make push
 	```
 
-1. **Publish Helm charts.**
+## 5. Publish Helm charts
 
-	TODO
+```shell
+cd helm.astronomer.io
+make build
+make push
+```
