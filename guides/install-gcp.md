@@ -47,4 +47,4 @@ Click the link in the output notes to log in to the Astronomer app.
 
 Feel free to check out our video walkthrough of the Install below:
 
-<iframe width="560" height="315" src="https://www.youtube.com/embed/IoeesuFNG9Q" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+[![Install](http://img.youtube.com/vi/IoeesuFNG9Q/0.jpg)](http://www.youtube.com/watch?v=IoeesuFNG9Q "Install Video")
