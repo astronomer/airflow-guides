@@ -1,12 +1,19 @@
-# Using Kerberos in Apache Airflow
+---
+title: "Using Kerberos in Apache Airflow"
+description: "How to use Kerberos and Kerberized hooks in Airflow"
+date: 2018-07-24T00:00:00.000Z
+slug: "kerberos"
+heroImagePath: "https://cdn.astronomer.io/website/img/guides/TheAirflowUI_preview.png"
+tags: ["Airflow", "Kerberos"]
+---
 
 An overview of the support for Kerberos in Airflow today and how you can use Kerberized hooks.
-
-tags: Airflow, Kerberos
 
 ## Introduction
 
 Kerberos is an authentication system which allows Airflow to access and submit jobs to Kerberos-enabled clusters.  Typically this feature would be used for something like a long-running Spark cluster in a large enterprise environment.
+
+Kerberos support is available in Astronomer EE.
 
 ## Support for Kerberos in Airflow
 
