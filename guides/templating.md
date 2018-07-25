@@ -14,15 +14,14 @@ Apart from efficiency, they're also powerful tools in forcing jobs to be idempot
 A list of default variables accessible in all templates can be found here: https://airflow.apache.org/code.html#macros
 
 Common macros include:
+
 - A timestamp for incremental ETL
 - A decryption key for an external system
 - Custom user defined parameters for complex operators
 
-
 ## Setting a Template
 
 Templates can be sit directly in the DAG file:
-
 
 ```python
 dag = DAG('example_template_once_v2',
@@ -56,15 +55,14 @@ Since templated information is rendered at run-time, it can be helpful to see wh
 
 From the Github to Redshift workflow we have been working with, we execute a post load transform to make reporting easier:
 
-
 ```python
 get_individual_issue_counts = \
     """
     INSERT INTO github.issue_count_by_user
     (SELECT login, sum(count) as count, timestamp
      FROM
-            ((SELECT 
-                m.login, count(i.id), 
+            ((SELECT
+                m.login, count(i.id),
                 cast('{{ execution_date + macros.timedelta(hours=-4) }}' as timestamp) as timestamp
             FROM github.astronomerio_issues i
             JOIN github.astronomerio_members m
@@ -73,8 +71,8 @@ get_individual_issue_counts = \
             GROUP BY m.login
             ORDER BY login)
         UNION
-            (SELECT 
-                m.login, count(i.id), 
+            (SELECT
+                m.login, count(i.id),
                 cast('{{ execution_date + macros.timedelta(hours=-4) }}' as timestamp) as timestamp
             FROM github.astronomerio_issues i
             JOIN github.astronomerio_members m
@@ -83,9 +81,9 @@ get_individual_issue_counts = \
             GROUP BY m.login
             ORDER BY login)
         UNION
-            (SELECT 
-                m.login, 
-                count(i.id), 
+            (SELECT
+                m.login,
+                count(i.id),
                 cast('{{ execution_date + macros.timedelta(hours=-4) }}' as timestamp) as timestamp
             FROM github."airflow-plugins_issues" i
             JOIN github."airflow-plugins_members" m
@@ -105,7 +103,7 @@ On the *Rendered* tab
 
 ![rendered_sql](https://cdn.astronomer.io/website/img/guides/rendered_sql.png)
 
-The corresponding timestamp has been rendered into the TaskInstance. 
+The corresponding timestamp has been rendered into the TaskInstance.
 
 ## Using Templating for Idempotency
 
@@ -119,14 +117,12 @@ Luckily, this usually only requires changing a few lines of code:
  <br>
 https://github.com/airflow-plugins/google_analytics_plugin/blob/master/operators/google_analytics_reporting_to_s3_operator.py#L41
 
-
 ```python
 template_fields = ('s3_key', 'since', 'until')
 ```
 
 2) Define the corresponding values in the DAG file:<br>
 https://github.com/airflow-plugins/Example-Airflow-DAGs/blob/master/etl/google_analytics_to_redshift.py#L131
-
 
 ```python
 SINCE = "{{{{ macros.ds_add(ds, -{0}) }}}}".format(str(LOOKBACK_WINDOW))
@@ -141,7 +137,6 @@ S3_KEY = 'google_analytics/{0}/{1}_{2}_{3}.json'.format(REDSHIFT_SCHEMA,
 3) Instantiate the Operator with the right values:
 
 https://github.com/airflow-plugins/Example-Airflow-DAGs/blob/master/etl/google_analytics_to_redshift.py#L136
-
 
 ```python
 g = GoogleAnalyticsReportingToS3Operator(task_id='get_google_analytics_data',
@@ -165,7 +160,6 @@ g = GoogleAnalyticsReportingToS3Operator(task_id='get_google_analytics_data',
 Since macros are rendered at runtime, a DAG's `schedule_interval` should be taken into account when testing and deploying DAGs.
 
 Consider the following DAG:
-
 
 ```python
 from airflow import DAG

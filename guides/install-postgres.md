@@ -19,5 +19,5 @@ For testing purposes, you can quickly get started using the PostgreSQL helm char
 Run:
 
 ```shell
-$ helm install --name astro-db stable/postgresql --namespace astronomer
+helm install --name astro-db stable/postgresql --namespace astronomer
 ```

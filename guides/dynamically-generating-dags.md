@@ -8,7 +8,6 @@ tags: ["Airflow", "DAGS"]
 ---
 The simplest way of creating a DAG in Airflow is to define it in the DAGs folder. Anything with a .py suffix will be scanned to see if it contains the definition of a new DAG.
 
-
 ```python
 from datetime import datetime
 
@@ -48,7 +47,6 @@ A common use case for this is when pulling data from multiple APIs or database t
 
 To create new dags, we're going to create a dag template within the `create_dag` function. The code here is almost identical to the previous code above when only one dag was being created but now it is wrapped in a method that allows for custom parameters to be passed in.
 
-
 ```python
 from datetime import datetime
 
@@ -80,7 +78,6 @@ def create_dag(dag_id,
 ```
 
 We can then set a simple loop (`range(1, 10)`) to generate these unique parameters and pass them to the global scope, thereby registering them as valid DAGs to the Airflow scheduler.
-
 
 ```python
 from datetime import datetime
@@ -139,7 +136,6 @@ Taking this a step further, the input parameters don't have to exist in the dag 
 ![title](https://cdn.astronomer.io/website/img/guides/dag_number_var.png)
 
 We can retrieve this value by importing the Variable class and passing it into our `range`. Because we want the interpreter to register this file as valid regardless of whether the variable exists, the `default_var` is set to 10.
-
 
 ```python
 from datetime import datetime
@@ -204,12 +200,11 @@ Then we can go to the main UI and see all of the new DAGs that have been created
 
 ## Adding DAGs based on Connections
 
-Creating DAGs based on a varible or set of variables is a very powerful feature of Airflow. But what if we want our number of DAGs to correspond to the number of connections (to an API, database, etc.) that are created in the "Connections" tab? In that case, we wouldn't want to have to create an additional variable uncessarily every time we made a new connection -- that would be redundant. 
+Creating DAGs based on a varible or set of variables is a very powerful feature of Airflow. But what if we want our number of DAGs to correspond to the number of connections (to an API, database, etc.) that are created in the "Connections" tab? In that case, we wouldn't want to have to create an additional variable uncessarily every time we made a new connection -- that would be redundant.
 
 Instead, we can pull the connections we have in our database by instantiating the "Session" and querying the "Connection" table. We can even filter our query so that this only pulls connections that match a certain criteria.
 
 ![title](https://cdn.astronomer.io/website/img/guides/connections.png)
-
 
 ```python
 from datetime import datetime
@@ -270,4 +265,4 @@ Notice that like before we are accessing the Models library to bring in the `Con
 
 ![title](https://cdn.astronomer.io/website/img/guides/connection_dags.png)
 
-We can see that all of the connections that match our filter have now been created as a unique DAG. The one connection we had which did not match (`SOME_OTHER_DATABASE`) has been ignored. 
+We can see that all of the connections that match our filter have now been created as a unique DAG. The one connection we had which did not match (`SOME_OTHER_DATABASE`) has been ignored.

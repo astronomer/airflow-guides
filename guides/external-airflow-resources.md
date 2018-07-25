@@ -11,9 +11,10 @@ Below, you'll find a categorized selection of blog posts, decks, guides and use 
 
 If you've read or written something that you think should be on here,
 tweet us at [@astronomerio](https://twitter.com/astronomerio/)
-or shoot over an email to [humans@astronomer.io](mailto:humans@astronomer.io) 
+or shoot over an email to [humans@astronomer.io](mailto:humans@astronomer.io)
 
 ## Airflow 101
+
 * [“Apache Airflow for the confused explained using airplanes ✈️”][13] - Jonathan Pichot, NYC City Planning
 * [“Apache Airflow and the Future of Data Engineering: A Q&A”][20] - Maxime Beauchemin, Lyft
 * [“Modern Data Pipelines with Apache Airflow (Momentum 2018 talk)”][5] - Taylor Edmiston & Andy Cooper, Astronomer
@@ -24,15 +25,15 @@ or shoot over an email to [humans@astronomer.io](mailto:humans@astronomer.io)
 * [“Installing and Configuring Apache Airflow”][22] - Robert Sanders, Clairvoyant
 * [“Airflow: A Beautiful Cron Alternative (or replacement) for Data Pipelines and Workflows”][23] - rbahaguejr, cp-union.com
 
-
 ## Airflow Learnings
+
 * [“Improving Airflow UI Security”][1] - Joy Gao, WePay
 * [“Airflow Part 2: Lessons learned”][2]  - Nehil Jain, SnapTravel
 * [“What we learned migrating off Cron to Airflow”][6] - Katie Macias, VideoAmp
 * [“Airflow: Why is nothing working?”][8] - Jessica Laughlin, Bluecore
 
-
 ## Airflow Use Cases
+
 * [“How Sift Trains Thousands of Models using Apache Airflow”][7] - Duy Tran, Sift
 * [“How to create a workflow in Apache Airflow to track disease outbreaks in India”][0] - Vinayak Mehta, Social Cops
 * [“Airflow at Zillow: Easily Authoring and Managing ETL Pipelines”][15] - Tianlong Song, Zillow
@@ -51,6 +52,7 @@ or shoot over an email to [humans@astronomer.io](mailto:humans@astronomer.io)
 * ["Productionizing ML Workflows at Twitter"][33] - Samuel Ngahane and Devin Goodsell
 
 ## Data Engineering
+
 * [“A Beginner’s Guide to Data Engineering — Part I”][10] - Robert Chang, Airbnb
 * [“A Beginner’s Guide to Data Engineering — Part II”][9] - Robert Chang, Airbnb
 * [A Beginner's Guide to Data Engineering - The Series Finale][29] - Robert Chang, Airbnb
@@ -58,9 +60,8 @@ or shoot over an email to [humans@astronomer.io](mailto:humans@astronomer.io)
 * [“Why data automation matters for open data portals”][18] - Maksim Pecherskiy, City of San Diego
 
 ## Other
+
 * [Awesome Airflow Resources](https://github.com/jghoman/awesome-apache-airflow)  - A great collection of Airflow Resources in a dedicated GitHub repo, curated by [Jakob Homan](https://twitter.com/BlueBoxTraveler)
-
-
 
 [0]: https://blog.socialcops.com/engineering/apache-airflow-disease-outbreaks-india/ "How to create a workflow in Apache Airflow to track disease outbreaks in India"
 [1]: https://wecode.wepay.com/posts/improving-airflow-ui-security "Improving Airflow UI Security"

@@ -20,7 +20,6 @@ Before we get started, be sure you have the following on hand:
   instance via Astronomer, but the core code should work the same regardless of how you’re hosting Airflow
 * Docker running on your machine
 
-
 ### 1. Add Connections in Airflow UI
 
 Begin by creating all of the necessary connections in your Airflow UI. To do this, log into your Airflow dashboard and navigate to Admin-->Connections. In order to build this pipeline, you’ll need to create a connection to your IMAP server, your S3 bucket, and your Redshift instance. For more info on how to fill out the fields within your connections, check out our [documentation here](https://docs.astronomer.io/v2/apache_airflow/tutorial/connections.html).
@@ -31,7 +30,7 @@ If you haven't done so already, navigate into your project directory and create 
 
 `git clone https://github.com/airflow-plugins/imap_analytics_plugin.git`
 
-This will allow you to use the IMAP hook to access your IMAP server, search your inbox for emails with specific subjects, pull in the csv attachments of the emails, and store them in S3 using the IMAP to S3 operator. 
+This will allow you to use the IMAP hook to access your IMAP server, search your inbox for emails with specific subjects, pull in the csv attachments of the emails, and store them in S3 using the IMAP to S3 operator.
 
 ### 3. Copy the DAG file
 
@@ -40,6 +39,7 @@ Navigate back into your project directory and create a `dags` folder by running 
 ### 4. Customize
 
 Open up the [google_analytics_to_redshift.py file](https://github.com/airflow-plugins/Example-Airflow-DAGs/blob/master/etl/imap_to_redshift.py#L25) that you just copied in a text editor of your choice and input the following credentials into lines 25-34:
+
 ```py
 IMAP_CONN_ID = ''
 IMAP_EMAIL = ''

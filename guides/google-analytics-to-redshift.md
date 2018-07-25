@@ -23,19 +23,21 @@ Before we get started, be sure you have the following on hand:
 This DAG generates a report using v4 of the Google Analytics Core Reporting API. The dimensions and metrics are as follows. Note that while these can be modified, a maximum of 10 metrics and 7 dimensions can be requested at once.
 
 METRICS
- * pageView
- * bounces
- * users
- * newUsers
- * goal1starts
- * goal1completions
+
+* pageView
+* bounces
+* users
+* newUsers
+* goal1starts
+* goal1completions
 
 DIMENSIONS
- * dateHourMinute
- * keyword
- * referralPath
- * campaign
- * sourceMedium
+
+* dateHourMinute
+* keyword
+* referralPath
+* campaign
+* sourceMedium
 
 Not all metrics and dimensions are compatible with each other. When forming the request, please refer to the official [Google Analytics API Reference docs](https://developers.google.com/analytics/devguides/reporting/core/dimsmets)
 
@@ -58,6 +60,7 @@ Navigate back into your project directory and create a `dags` folder by running 
 ### 4. Customize
 
 Open up the [google_analytics_to_redshift.py file](https://github.com/airflow-plugins/Example-Airflow-DAGs/blob/master/etl/google_analytics_to_redshift.py#L46) that you just copied in a text editor of your choice and input the following credentials into lines 46-50:
+
 ```py
 S3_CONN_ID = ''
 S3_BUCKET = ''
@@ -69,7 +72,5 @@ REDSHIFT_SCHEMA = ''
 ### 5. Test + Deploy
 
 Once you have those credentials plugged into your DAG, test and deploy it!
-
-
 
 If you don't have Airflow already set up in your production environment, head over to [our app](https://app.astronomer.io/signup) to get spun up with your own managed instance!

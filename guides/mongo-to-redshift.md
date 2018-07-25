@@ -20,7 +20,6 @@ Before we get started, be sure you have the following on hand:
   instance via Astronomer, but the core code should work the same regardless of how you’re hosting Airflow
 * Docker running on your machine
 
-
 This DAG uses a Mongo collection processing script that accepts a json formatted Mongo schema mapping and outputs both a Mongo query projection and a compatible Redshift schema mapping. This script can be found [here](https://github.com/airflow-plugins/Example-Airflow-DAGs/blob/master/etl/mongo_to_redshift/collections/_collection_processing.py).This DAG also contains a flattening script that removes invalid characters from the Mongo keys as well as scrubbing out the "_$date" suffix that PyMongo appends to datetime fields.
 
 ### 1. Add Connections in Airflow UI
@@ -55,7 +54,5 @@ MONGO_DATABASE = ''
 ### 5. Test + Deploy
 
 Once you have those credentials plugged into your DAG, test and deploy it!
-
-
 
 If you don't have Airflow already set up in your production environment, head over to [our app](https://app.astronomer.io/signup) to get spun up with your own managed instance!

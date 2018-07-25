@@ -48,6 +48,7 @@ Navigate back into your project directory and create a `dags` folder by running 
 ### 4. Customize
 
 Open up the [github_to_redshift.py file](https://github.com/airflow-plugins/Example-Airflow-DAGs/blob/master/etl/github_to_redshift.py#L29) that you just copied in a text editor of your choice and input the following credentials into lines 29-35:
+
 ```
 S3_CONN_ID = ''
 S3_BUCKET = ''
@@ -61,7 +62,5 @@ LOAD_TYPE = ''
 ### 5. Test + Deploy
 
 Once you have those credentials plugged into your DAG, test and deploy it!
-
-
 
 If you don't have Airflow already set up in your production environment, head over to [our app](https://app.astronomer.io/signup) to get spun up with your own managed instance!

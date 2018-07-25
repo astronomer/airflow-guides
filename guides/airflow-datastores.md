@@ -60,11 +60,13 @@ t2 = PythonOperator(
 ```
 
 ### Variables
+
 _Static Values_
 
 Similar to XComs, Variables are key-value stores in Airflow's metadata database. However, Variables are just key-value stores - they don't store the "conditions" (`execution_date`, `TaskInstance`, etc.) that led to a value being produced.
 
 Variables can be pushed and pulled in a similar fashion to `XComs`:
+
 ```python
 config = Variable.get("db_config")
 
@@ -107,6 +109,7 @@ XCom data can be deleted straight from the database.
 Variables can be used as static value stores to generate DAGs from config files.
 
 Define the variable:
+
 ```json
 [{
   "table": "users",
@@ -121,6 +124,7 @@ Define the variable:
  "s3_key":"app_two_users",
  "redshift_conn_id":"postgres_default"}]
  ```
+
 <br>
 Call the Variable in the dag file
 <br>
@@ -141,6 +145,7 @@ with dag:
         )
         start >> d1
 ```
+
 ![variable_dag](img/variable_dag.png)
 
 This can be an especially powerful method of defining any database sync workflows - the first step in the DAG can generate a list of tables and schemas with their corresponding transformation, and downstream tasks can perform the necessary queries.

@@ -11,21 +11,22 @@ In this guide, we’ll explore how you can use [Apache Airflow](https://airflow.
 
 Before we get started, be sure you have the following on hand:
 
-* A Marketo account
-* An S3 bucket with a valid `aws_access_key_id` and `aws_secret_access_key`
-* A Redshift instance with a valid host IP and login information
-* An instance of Apache Airflow. You can either set this up yourself if you have devops resources or sign
+- A Marketo account
+- An S3 bucket with a valid `aws_access_key_id` and `aws_secret_access_key`
+- A Redshift instance with a valid host IP and login information
+- An instance of Apache Airflow. You can either set this up yourself if you have devops resources or sign
   up and get going immediately with Astronomer’s managed Airflow service. Note that this guide will use
   commands using the Astronomer CLI to push dags into production and will assume you’ve spun up an Airflow
   instance via Astronomer, but the core code should work the same regardless of how you’re hosting Airflow
-* Docker running on your machine
+- Docker running on your machine
 
 This ongoing DAG pulls the following Marketo objects:
-    - Activities
-    - Campaigns
-    - Leads
-    - Lead Lists
-    - Programs
+
+- Activities
+- Campaigns
+- Leads
+- Lead Lists
+- Programs
 
 Note that, when backfilling, only the leads object is pulled. By default, it begins
 pulling since Jan 1, 2013.
@@ -64,12 +65,9 @@ hourly_id = '{}_to_redshift_hourly'.format(MARKETO_CONN_ID)
 daily_id = '{}_to_redshift_daily_backfill'.format(MARKETO_CONN_ID)
 monthly_id = '{}_to_redshift_monthly_backfill'.format(MARKETO_CONN_ID)
 ```
-```
 
 ### 5. Test + Deploy
 
 Once you have those credentials plugged into your DAG, test and deploy it!
-
-
 
 If you don't have Airflow already set up in your production environment, head over to [our app](https://app.astronomer.io/signup) to get spun up with your own managed instance!

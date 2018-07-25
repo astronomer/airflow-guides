@@ -34,6 +34,7 @@ Paused DAGs can be toggled to be hidden from the UI - but we would advise agains
 ![paused_dags](https://cdn.astronomer.io/website/img/guides/paused_dags.png)
 
 ## Admin Panel
+
 The Admin panel will have information regarding things that are ancillary to DAGs. Note that for now, Astronomer handles the _Pools_ and _Configuration_ views as environment variables, so they cannot be changed from the UI.
 
 ![admin](https://cdn.astronomer.io/website/img/guides/admin_views.png)
@@ -51,6 +52,7 @@ This view won't be helpful for much at the moment, but it will be roped into the
 Airflow needs to know how to connect to your environment. Connections is where you can store that information - anything from hostname, to port, to logins to other systems. The pipeline code you will author will reference the ‘conn_id’ of the Connection objects.
 
 The Airflow Variables section can also hold such information, but storing them as Connections allows:
+
 - Encryption on passwords and extras.
 - Common JSON structure for connections:
 
@@ -65,6 +67,7 @@ However, a Docker Registry will look like this:
 ![docker](https://cdn.astronomer.io/website/img/guides/docker_registry.png)
 
 However, they can both be called as such:
+
 ```python
 from airflow.hooks.base_hook import BaseHook
 ...
@@ -117,12 +120,12 @@ Double-clicking on an individual task offers a few options:
 
 ![task_options](https://cdn.astronomer.io/website/img/guides/task_options.png)
 
-- ** Task Instance Details:**  Shows the fully rendered task - an exact summary of what the task does (attributes, values, templates, etc.)
-- ** Rendered: ** Shows the task's metadata after it's been templated
-- ** Task Instances** A historical view of that particular task - times it ran successfully, failed, was skipped, etc.
-- ** View Log:** Brings you to Logs of that particular taskinstance.
-- ** Clear: ** Removes that task runs existence from Airflow's metadata. This clears all downstream tasks and runs that task and all downstream tasks again. (**This is the recommended way to re-run a task **).
-- ** Mark Success:** Sets a task to success. This will update the task's status in the metadata and allow downstream tasks to run.
+- **Task Instance Details:**  Shows the fully rendered task - an exact summary of what the task does (attributes, values, templates, etc.)
+- **Rendered:** Shows the task's metadata after it's been templated
+- **Task Instances** A historical view of that particular task - times it ran successfully, failed, was skipped, etc.
+- **View Log:** Brings you to Logs of that particular taskinstance.
+- **Clear: ** Removes that task runs existence from Airflow's metadata. This clears all downstream tasks and runs that task and all downstream tasks again. (**This is the recommended way to re-run a task **).
+- **Mark Success:** Sets a task to success. This will update the task's status in the metadata and allow downstream tasks to run.
 
 ### Code View
 
@@ -140,7 +143,7 @@ This shows a summary for the past run of the DAG. There's no information that is
 
 ## Data Profiling
 
-###  Visualizing Metadata
+### Visualizing Metadata
 
 Airflow offers a slew of metadata on individual DAG runs along with a few visualizations.
 
@@ -166,7 +169,7 @@ Tasks will NOT automatically re-run if the DAG has failed (which you'll notice b
 
 1. Browse > Task Instances, filter for and select the failed task(s), and Delete (this is essentially the same as clearing individual tasks in the DAG graph or tree view).
 
-2. Browse > DAG Runs, filter for and select the failed DAG(s), and set state to 'running.'
+1. Browse > DAG Runs, filter for and select the failed DAG(s), and set state to 'running.'
 
 This will automatically trigger a DAG re-run start|ing with the first unsuccessful task(s).
 
@@ -179,6 +182,7 @@ _Note_: The task and DAG status field on your main dashboard may take a bit to r
 ![delete_task_instances](https://cdn.astronomer.io/website/img/guides/delete_task_instances.png)
 
 ### DAGs
+
 The same can be done for DAGs from **Browse-> DAG Runs**. This can be particularly helpful when migrating databases or re-running all history for a job with just a small change.
 
 ![browse_dag_runs](https://cdn.astronomer.io/website/img/guides/browse_dag_runs.png)

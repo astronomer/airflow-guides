@@ -8,6 +8,7 @@ tags: ["Building DAGs", "Subdags", "Airflow"]
 ---
 
 # Subdags
+
 _Aesthetically appealing, but fragile._
 
 Most DAGs consist of patterns that often repeat themselves. ETL DAGs that are written to best practice usually all share the pattern of grabbing data from a source, loading it to an intermediary file store or _staging_ table, and then pushing it into production data.
@@ -30,9 +31,7 @@ The zoomed view reveals a granular view of the task:
 
 ![tasks](https://cdn.astronomer.io/website/img/guides/subdag_tasks.png)
 
-
 Subdags should be generated through a "DAG factory" - an external file that returns dag objects.
-
 
 ```python
 def load_subdag(parent_dag_name, child_dag_name, args):
@@ -55,7 +54,6 @@ def load_subdag(parent_dag_name, child_dag_name, args):
 
 This object should then be called when instanstiating the SubDagOperator:
 
-
 ```python
 load_tasks = SubDagOperator(
         task_id='load_tasks',
@@ -71,15 +69,16 @@ load_tasks = SubDagOperator(
 - SubDags should be scheduled the same as their parent DAGs or unexpected behavior might occur.
 
 ## Avoiding Deadlock
+
 _Greedy subdags_
 
 SubDags are not currently first class citizens in Airflow. Although it is in the community's roadmap to fix this, many organizations using Airflow have outright banned them because of how they are executed.
 
 ### Slots on the worker pool
+
 The SubDagOperator kicks off an entire DAG when it is put on a worker slot. Each task in the child DAG takes up a slot until the entire SubDag has completed. The parent operator will take up a worker slot until each child task has completed. This could cause delays in other task processing
 
 In mathematical terms, each SubDag is behaving like a _vertex_ (a single point in a graph) instead of a _graph_.
-
 
 Depending on the scale and infrastructure, a specialized queue can be added just for SubDags (assuming a CeleryExecutor), but a cleaner workaround is to avoid subdags entirely.
 

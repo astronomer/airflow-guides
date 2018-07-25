@@ -28,35 +28,35 @@ The associated scope to the varius endpoints can be found in the "scope" field w
 
 *NOTE:* The contacts table and associated subtables are built based on an incrementing contact id that is stored as an Airflow Variable with the
 naming convention "INCREMENTAL_KEY__{DAG_ID}_{TASK_ID}_vidOffset" at the end of each run and then pulled on the next to be used as an offset. As such, while accessing the Contacts endpoint, "max_active_runs" should be set to 1 to avoid pulling the same incremental key offset and therefore pulling the same data twice.
+
 * Campaigns - Rebuild
 * Companies - Rebuild
 * Contacts - Append - Built based on incremental contact id
-   * Form Submissions - Append
-   * Identity Profiles - Append
-   * List Memberships - Append
-   * Merge Audits - Append
+  * Form Submissions - Append
+  * Identity Profiles - Append
+  * List Memberships - Append
+  * Merge Audits - Append
 * Deals - rebuild
-   * Associations_AssociatedVids - Append
-   * Associations_AssociatedCompanyVids - Append
-   * Associations_AssociatedDealIds - Append
+  * Associations_AssociatedVids - Append
+  * Associations_AssociatedCompanyVids - Append
+  * Associations_AssociatedDealIds - Append
 * Deal Pipelines - Rebuild
 * Engagments - Rebuild
-   * Associations - Rebuild
-   * Attachments - Rebuild
+  * Associations - Rebuild
+  * Attachments - Rebuild
 * Events - Append - Built based on incremental date
 * Forms - Rebuild
-   * Field Groups - Rebuild
+  * Field Groups - Rebuild
 * Keywords - Rebuild
 * Lists - Rebuild
-   * Filters - Rebuild
+  * Filters - Rebuild
 * Owners - Rebuild
-   * Remote List - Rebuild
+  * Remote List - Rebuild
 * Social - Rebuild
 * Timeline - Append - Built based on incremental date
 * Workflow - Rebuild
-   * Persona Tag Ids - Rebuild
+  * Persona Tag Ids - Rebuild
   * Contact List Ids Steps - Rebuild
-
 
 Before we get started, be sure you have the following on hand:
 
@@ -97,6 +97,7 @@ Navigate back into your project directory and create a `dags` folder by running 
 ### 4. Customize
 
 Open up the [hubspot_to_redshift.py file](https://github.com/airflow-plugins/Example-Airflow-DAGs/blob/master/etl/hubspot_to_redshift.py#L74) from the repo you just cloned in a text editor of your choice and input the following credentials in lines 74-78:
+
 ```
 S3_CONN_ID = ''
 S3_BUCKET = ''
@@ -108,7 +109,5 @@ REDSHIFT_CONN_ ''
 ### 5. Test + Deploy
 
 Once you have those credentials plugged into your DAG, test and deploy it!
-
-
 
 If you don't have Airflow already set up in your production environment, head over to [our app](https://app.astronomer.io/signup) to get spun up with your own managed instance!

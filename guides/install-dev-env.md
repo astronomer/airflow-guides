@@ -6,13 +6,15 @@ slug: "install-dev-env"
 heroImagePath: "https://cdn.astronomer.io/website/img/guides/TheAirflowUI_preview.png"
 tags: ["admin-docs"]
 ---
+
 ## GCP
+
 * Install Google Cloud CLI [Google Cloud SDK](https://cloud.google.com/sdk/install)
 * Initialize gcloud to use your Google Cloud Project [gclouf init](https://cloud.google.com/sdk/gcloud/reference/init)
 
 ## AWS
-* Install the [AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/installing.html) and [Heptio Authenticator](https://docs.aws.amazon.com/eks/latest/userguide/configure-kubectl.html)
 
+* Install the [AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/installing.html) and [Heptio Authenticator](https://docs.aws.amazon.com/eks/latest/userguide/configure-kubectl.html)
 
 ## General
 

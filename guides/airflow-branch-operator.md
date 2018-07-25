@@ -63,7 +63,7 @@ def get_recent_date():
     bing_date = PostgresHook('astro_redshift').get_pandas_df(
         """ SELECT max(gregorian_date) FROM dev.aa_bing_ads.conversion;""")['max'][0]
     google_date = PostgresHook('astro_redshift').get_pandas_df(
-        """ SELECT max(day) FROM dev.aa_google_adwords.cc_search_query_performance_report	; """)['max'][0]
+        """ SELECT max(day) FROM dev.aa_google_adwords.cc_search_query_performance_report   ; """)['max'][0]
     sf_date = PostgresHook('astro_redshift').get_pandas_df(
         """ SELECT max(created_date) FROM aa_salesforce.sf_lead; """)['max'][0].to_pydatetime().date()
     # Salesforce is never easy to work with.
