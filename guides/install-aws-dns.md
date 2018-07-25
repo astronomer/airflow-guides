@@ -1,9 +1,9 @@
 ---
 title: "Setting up DNS for AWS"
 description: "Setting up DNS for AWS"
-date: 2018-07-17T00:00:00.000Z
+date: 2018-07-23T00:00:00.000Z
 slug: "install-aws-dns"
-heroImagePath: null
+heroImagePath: "https://cdn.astronomer.io/website/img/guides/TheAirflowUI_preview.png"
 tags: ["admin-docs"]
 ---
 
