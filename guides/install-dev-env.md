@@ -21,8 +21,13 @@ tags: ["admin-docs"]
 * [Install Kubernetes CLI](https://kubernetes.io/docs/tasks/tools/install-kubectl/), `kubectl` (On Mac: `brew install kubernetes-cli`)
 * [Install Helm CLI](https://docs.helm.sh/using_helm/#installing-helm), `helm` (On Mac: `brew install kubernetes-helm`)
   You may need to run `helm repo update` and/or `helm init --client-only`
-* Download Astronomer helm charts locally `git clone git@github.com:astronomerio/helm.astronomer.io.git`
-* `cd` into that directory
+* Download Astronomer helm charts locally
+
+	```
+	git clone git@github.com:astronomerio/helm.astronomer.io.git
+	cd helm.astronomer.io
+	git checkout v0.3.1
+	```
 
 > Note: if you work with multiple Kubernetes clusters, `kubectx` is a nice utility
 to switch context between clusters.
