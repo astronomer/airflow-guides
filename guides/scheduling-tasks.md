@@ -44,33 +44,33 @@ from airflow.operators.bash_operator import BashOperator
 from datetime import datetime, timedelta
 
 default_args = {
-	'owner': 'airflow',
-	'depends_on_past': False,
-	'start_date': datetime(2018, 1, 1),
-	'email_on_failure': False,
-	'email_on_retry': False,
-	'retries': 1,
-	'retry_delay': timedelta(minutes=5),
+    'owner': 'airflow',
+    'depends_on_past': False,
+    'start_date': datetime(2018, 1, 1),
+    'email_on_failure': False,
+    'email_on_retry': False,
+    'retries': 1,
+    'retry_delay': timedelta(minutes=5),
 }
 
 dag = DAG('example_dag_one',
-			schedule_interval='@daily',
-			default_args=default_args)
+            schedule_interval='@daily',
+            default_args=default_args)
 
 t1 = BashOperator(
-	task_id='print_date1',
-	bash_command='sleep 2m',
-	dag=dag)
+    task_id='print_date1',
+    bash_command='sleep 2m',
+    dag=dag)
 
 t2 = BashOperator(
-	task_id='print_date2',
-	bash_command='sleep 2m',
-	dag=dag)
+    task_id='print_date2',
+    bash_command='sleep 2m',
+    dag=dag)
 
 t3 = BashOperator(
-	task_id='print_date3',
-	bash_command='sleep 2m',
-	dag=dag)
+    task_id='print_date3',
+    bash_command='sleep 2m',
+    dag=dag)
 
 t2.set_upstream(t1)
 t3.set_upstream(t2)
@@ -94,34 +94,34 @@ from airflow.operators.bash_operator import BashOperator
 from datetime import datetime, timedelta
 
 default_args = {
-	'owner': 'airflow',
-	'depends_on_past': False,
-	'start_date': datetime(2018, 1, 1),
-	'email_on_failure': False,
-	'email_on_retry': False,
-	'retries': 1,
-	'retry_delay': timedelta(minutes=5),
+    'owner': 'airflow',
+    'depends_on_past': False,
+    'start_date': datetime(2018, 1, 1),
+    'email_on_failure': False,
+    'email_on_retry': False,
+    'retries': 1,
+    'retry_delay': timedelta(minutes=5),
 }
 
 dag = DAG('example_dag_one',
-			schedule_interval='@daily',
+            schedule_interval='@daily',
             catchup=False,
-			default_args=default_args)
+            default_args=default_args)
 
 t1 = BashOperator(
-	task_id='print_date1',
-	bash_command='sleep 2m',
-	dag=dag)
+    task_id='print_date1',
+    bash_command='sleep 2m',
+    dag=dag)
 
 t2 = BashOperator(
-	task_id='print_date2',
-	bash_command='sleep 2m',
-	dag=dag)
+    task_id='print_date2',
+    bash_command='sleep 2m',
+    dag=dag)
 
 t3 = BashOperator(
-	task_id='print_date3',
-	bash_command='sleep 2m',
-	dag=dag)
+    task_id='print_date3',
+    bash_command='sleep 2m',
+    dag=dag)
 
 t2.set_upstream(t1)
 t3.set_upstream(t2)
@@ -223,7 +223,7 @@ with dag:
 
 
         start >> google_analytics >> s3_to_redshift
-```        
+```
 
 ![](https://cdn.astronomer.io/website/img/guides/ucg_ga_ga_scheduled.png)
 

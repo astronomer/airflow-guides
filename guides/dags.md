@@ -32,13 +32,13 @@ Directed Acyclic Graph: Finally, a directed acyclic graph is a directed graph wi
 In Airflow, each node in a DAG (soon to be known as a task) represents some form of data processing:
 
 > Node A could be the code for pulling data out of an API.
-
+>
 > Node B could be the code for anonymizing the data and dropping any IP address.
-
+>
 > Node D could be the code for checking that no duplicate record ids exist.
-
+>
 > Node E could be putting that data into a database.
-
+>
 > Node F could be running a SQL query on the new tables to update a dashboard.
 
 ## Dependencies
@@ -63,7 +63,7 @@ DAGs are a natural fit for batch architecture - they allow you to model natural 
 
 **Graph** - All tasks are laid out in a clear structure with discrete processes occurring at set points and clear relationships made to other tasks.
 
-##  DAGs as Functional Programming
+## DAGs as Functional Programming
 
 https://medium.com/@maximebeauchemin/functional-data-engineering-a-modern-paradigm-for-batch-data-processing-2327ec32c42a
 

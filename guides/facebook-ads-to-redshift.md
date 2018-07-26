@@ -10,40 +10,44 @@ tags: ["Building DAGs", "Redshift", "Facebook Ads"]
 In this guide, we’ll explore how you can use [Apache Airflow](https://airflow.apache.org/) to move your ad data from Facebook Ads to Redshift. Note that this is an effective and flexible alternative to point-and-click ETL tools like [Segment](https://segment.com), [Alooma](https://alooma.com), [Xplenty](https://xplenty.com), [Stitch](https://stitchdata.com), and [ETLeap](https://etleap.com/).
 
 Before we get started, be sure you have the following on hand:
-* A Facebook Ads
-* An S3 bucket with a valid `aws_access_key_id` and `aws_secret_access_key`
-* A Redshift instance with a valid host IP and login information
-* An instance of Apache Airflow. You can either set this up yourself if you have devops resources or sign up and get going immediately with Astronomer’s managed Airflow service. Note that this guide will use commands using the Astronomer CLI to push dags into production and will assume you’ve spun up an Airflow instance via Astronomer, but the core code should work the same regardless of how you’re hosting Airflow
-* Docker running on your machine
+
+- A Facebook Ads
+- An S3 bucket with a valid `aws_access_key_id` and `aws_secret_access_key`
+- A Redshift instance with a valid host IP and login information
+- An instance of Apache Airflow. You can either set this up yourself if you have devops resources or sign up and get going immediately with Astronomer’s managed Airflow service. Note that this guide will use commands using the Astronomer CLI to push dags into production and will assume you’ve spun up an Airflow instance via Astronomer, but the core code should work the same regardless of how you’re hosting Airflow
+- Docker running on your machine
 
 ### This DAG will create four breakdown reports:
-    - age_gender
-    - device_platform
-    - region_country
-    - no_breakdown
+
+- age_gender
+- device_platform
+- region_country
+- no_breakdown
+
 ### The standard fields included in each report are as follows:
-    - account_id
-    - ad_id
-    - adset_id
-    - ad_name
-    - adset_name
-    - campaign_id
-    - date_start
-    - date_stop
-    - campaign_name
-    - clicks
-    - cpc
-    - cpm
-    - cpp
-    - ctr
-    - impressions
-    - objective
-    - reach
-    - social_clicks
-    - social_impressions
-    - social_spend
-    - spend
-    - total_unique_actions
+
+- account_id
+- ad_id
+- adset_id
+- ad_name
+- adset_name
+- campaign_id
+- date_start
+- date_stop
+- campaign_name
+- clicks
+- cpc
+- cpm
+- cpp
+- ctr
+- impressions
+- objective
+- reach
+- social_clicks
+- social_impressions
+- social_spend
+- spend
+- total_unique_actions
 
 ### 1. Add Connections in Airflow UI
 
@@ -64,6 +68,7 @@ Navigate back into your project directory and create a `dags` folder by running 
 ### 4. Customize
 
 Open up the [facebook_ads_to_redshift.py file](https://github.com/airflow-plugins/Example-Airflow-DAGs/blob/master/etl/facebook_ads_to_redshift.py#L51) from the repo you just cloned in a text editor of your choice and fill out the following fields fin lines 51-56:
+
 ```py
 FACEBOOK_CONN_ID = ''
 ACCOUNT_ID = ''
@@ -76,7 +81,5 @@ REDSHIFT_SCHEMA = ''
 ### 5. Test + Deploy
 
 Once you have those credentials plugged into your DAG, test and deploy it!
-
-
 
 If you don't have Airflow already set up in your production environment, head over to [our app](https://app.astronomer.io/signup) to get spun up with your own managed instance!

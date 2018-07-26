@@ -24,7 +24,7 @@ Core support for Kerberos in Airflow is there including a ticket renewer service
 For Kerberos support in Airflow, install it with the `kerberos` install option:
 
 ```shell
-$ pip install apache-airflow[kerberos]
+pip install apache-airflow[kerberos]
 ```
 
 ## Kerberized Hooks
@@ -58,7 +58,7 @@ If you want to use Kerberos authentication via Airflow's experimental REST API, 
 You can start the Kerberos ticket renewer service via the Airflow CLI
 
 ```shell
-$ airflow kerberos ...
+airflow kerberos ...
 ```
 
 See [Airflow CLI - Kerberos](https://airflow.readthedocs.io/en/latest/cli.html#kerberos) for more info.

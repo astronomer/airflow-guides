@@ -8,6 +8,7 @@ tags: ["Airflow", "Components"]
 ---
 
 ## Core Components
+
 _How everything fits together_
 
 At the core,  Airflow consists of 4 core components:
@@ -30,14 +31,13 @@ Once the scheduler is started:
 
 **Note**: This means all top level code (ie. anything that isn't defining the DAG) in a DAG file will get run each scheduler heartbeat. Try to avoid top level code to your DAG file unless absolutely necessary.
 
-2) Each process parses the DAG file and creates the necessary DagRuns based on the scheduling parameters of each DAG's tasks. A TaskInstance is instanstiated for each task that needs to be executed. These TaskInstances are set to `Scheduled` in the metadata database. 
+2) Each process parses the DAG file and creates the necessary DagRuns based on the scheduling parameters of each DAG's tasks. A TaskInstance is instanstiated for each task that needs to be executed. These TaskInstances are set to `Scheduled` in the metadata database.
 
-3) The primary scheduler process queries the database for all tasks in the `SCHEDULED` state and sends them to the executors to be executed (with state changed to `QUEUED`).  
+3) The primary scheduler process queries the database for all tasks in the `SCHEDULED` state and sends them to the executors to be executed (with state changed to `QUEUED`).
 
 4) Depending on the execution setup, workers will pull tasks from the queue and start executing it. Tasks that are pulled off of the queue are changed from "queued" to "running."
 
 5) If a task finishes, the worker then changes the status of that task to it's final state (finished, failed, etc.). The scheduler then reflects this change in the metadata database.
-
 
 ```python
 # https://github.com/apache/incubator-airflow/blob/2d50ba43366f646e9391a981083623caa12e8967/airflow/jobs.py#L1386
@@ -46,11 +46,11 @@ def _process_dags(self, dagbag, dags, tis_out):
         """
         Iterates over the dags and processes them. Processing includes:
         1. Create appropriate DagRun(s) in the DB.
-        
+
         2. Create appropriate TaskInstance(s) in the DB.
-        
+
         3. Send emails for tasks that have missed SLAs.
-        
+
         :param dagbag: a collection of DAGs to process
         :type dagbag: models.DagBag
         :param dags: the DAGs from the DagBag to process
@@ -81,6 +81,7 @@ def _process_dags(self, dagbag, dags, tis_out):
 ```
 
 ## Controlling Component Interactions
+
 _Fine tuning airflow.cfg_
 
 The schedule at which these components interact can be set through airflow.cfg. This file has tuning for several airflow settings that can be optimized for a use case.
@@ -88,25 +89,27 @@ The schedule at which these components interact can be set through airflow.cfg. 
 This file is well documented, but a few notes:
 
 ### Executors:
+
 By default, Airflow can use the LocalExecutor, SequentialExecutor, or the CelelryExecutor.
+
 - The SequentialExecutor just executes tasks sequentially, with no parallelism or concurrency. It is good for a test environment or when debugging deeper Airflow bugs.
 
-- The LocalExecutor supports parallelism and hyperthreading and is a good fit for Airflow running on local machine or a single node. 
+- The LocalExecutor supports parallelism and hyperthreading and is a good fit for Airflow running on local machine or a single node.
 
 - The CeleryExecutor is the preferred method to run a distrubted Airflow cluster. It requires Redis, RabbitMq, or another message queue system to coordinate tasks between workers.
 
 There is a communinty contributed MesosExecutors and KubernetesExexcutor that can execute tasks across  larger clusters, but neither of them are _currently_ production ready.
 
 ### Parallelism
-The `parallelism`, `dag_concurrency` and `max_active_runs_per_dag` settings  can be tweaked to determine how many tasks can be executed at once. 
+
+The `parallelism`, `dag_concurrency` and `max_active_runs_per_dag` settings  can be tweaked to determine how many tasks can be executed at once.
 
 It is important to note that `parallelism` determines how many task instances can run in parallel in the executor, while `dag_concurrency` determines the number of tasks that can be scheduled  by the scheduler. These two numbers should be fine tuned together when optimizing an Airflow deployment, with the ratio depending on the number of DAGs.
 
 `max_active_runs_per_dag` is for each particular DAG - how many DagRuns across time can be scheduled for a single DAG at once. This number should depend on how how long DAGs take to execute, their schedule interval, and scheduler performance.
 
-
 ### Scheduler Settings
 
-`job_heartbeat_sec` determines the frequency at which the scheduler listens for external kill signals,  while `scheduler_heartbeat_sec` looks for new tasks. 
+`job_heartbeat_sec` determines the frequency at which the scheduler listens for external kill signals,  while `scheduler_heartbeat_sec` looks for new tasks.
 
 As the cluster grows in size, increasing the `scheduler_heartbeat_sec` gets increasingly expensive. Depending on the infrastructure and how long tasks generally take, and how the scheduler performs, consider increasing this number from the default.

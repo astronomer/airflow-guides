@@ -7,7 +7,6 @@ heroImagePath: "https://cdn.astronomer.io/website/img/guides/markus-spiske-20794
 tags: ["Airflow", "CLI", "Product Documentation"]
 ---
 
-
 The Astro CLI helps users create and test activities and deploy those activities and Astronomer/community pre-built activities in actual DAGs. Once DAGs have been tested locally, users can deploy them to our public cloud or their private installation.
 
 ## Prerequisites
@@ -21,6 +20,7 @@ You should also make sure you Go installed (pip and Python too, but they're pack
 ```
 brew install go
 ```
+
 More info: https://golang.org/doc/install
 
 ## Setup
@@ -40,7 +40,6 @@ mkdir /path/to/project
 cd /path/to/project
 ~~~
 
-
 ## Local Airflow
 
 Run `astro airflow up` to start the local airflow cluster.
@@ -49,7 +48,6 @@ Once started, it can be accessed at `http://localhost:8080`.
 
 This will start a local version of Astronomer Airflow on your machine along with a local Postgres database.
 (Run `docker ps` to see the images)
-
 
 Once finished you can run `astro airflow down` to stop the cluster.
 
@@ -98,9 +96,7 @@ dummy_operator >> hello_operator
 Login:
 `astro login`
 
-
 And now we're ready to deploy (make sure your user belongs to an organization):
-
 
 ~~~
 astro deploy
@@ -110,7 +106,6 @@ This will prompt you to select the organization, and confirms you are sure you w
 Once you do that, it will bundle all but a few blacklisted files and push to the API, and then to S3.
 
 **Note**: Information in the `Connections` panel and metadata on local DAG runs will not get pushed up.
-
 
 If you want to log out of your account:
 
@@ -157,28 +152,29 @@ How to get started as a developer.
 
 1. Build:
 
-    ```
-    $ git clone git@github.com:astronomerio/astro-cli.git
-    $ cd astro-cli
-    $ make build
-    ```
+  ```
+  $ git clone git@github.com:astronomerio/astro-cli.git
+  $ cd astro-cli
+  $ make build
+  ```
 
 1. (Optional) Install to `$GOBIN`:
 
-    ```
-    $ make install
-    ```
+  ```
+  $ make install
+  ```
 
 1. Run:
 
-    ```
-    $ astro
-    ```
-    
+  ```
+  $ astro
+  ```
+
 ### Old Deploys
 
 In your project directory there will be a hidden `.astro` folder that contains past deploys (made from that machine).
 
 ### Metadata
+
 When running/building locally you will need to generate the metadata file.  Running `make build-meta` or a `make build`
 will build the meta data file. Once generated, you should be able to build/run without problem.

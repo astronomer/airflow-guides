@@ -21,7 +21,6 @@ The TriggerDagRunOperator needs a controller - a task that decides the outcome b
 
 The controller task takes the form a python callable:
 
-
 ```python
 def conditionally_trigger(context, dag_run_obj):
     """
@@ -38,7 +37,6 @@ def conditionally_trigger(context, dag_run_obj):
 
 If the `dag_run_obj` is returned, the target DAG can will be triggered. The `dag_run_obj` can also be passed with context parameters.
 
-
 ```python
 def target_function(**kwargs):
     print("Remotely received value of {} for key=message".
@@ -49,7 +47,7 @@ The `target` DAG should always be set to `None` for its schedule - the DAG shoul
 
 ## Use Cases
 
-Trigger DAGs are a great way to separate the logic between a "safety check" and the logic to execute in case those checks aren't accomplished. 
+Trigger DAGs are a great way to separate the logic between a "safety check" and the logic to execute in case those checks aren't accomplished.
 
 These sorts of checks are a good fail safe to add to the end of a workflow, downstream of the data ingestion layer.
 
@@ -59,15 +57,16 @@ On the same note, they can be used to monitor Airflow itself.
 
 Error notifications can be set through various levels through a DAG, but propogating whose  between different DAGs can valuable for other reasons. Suppose that after 5  DAG failures, you wanted to trigger a systems check
 
-
 ### Sensors and TriggerDAGs
+
 _Airflow on Airflow._
 
 As Airflow operations are being scaled up, error reporting gets increasingly difficult. The more failure emails that are being sent out, the less each notification matters. Furthermore, a certain threshold of failures could indiciate a deeper issue in another system.
 
 Using a Sensor and TriggerDag can provide a clean solution to this issue,
 
-####  Checking the database for a threshold of failures.
+#### Checking the database for a threshold of failures.
+
 _DagFailureSensor_
 
 A sensor can be used to check the metadatabase for the status of DagRuns. If the number of failed runs is above a certain threshold (different for each DAG), the next task can trigger a systems check DAG.
@@ -92,6 +91,7 @@ checks = [
 ```
 
 The sensor can then be implemented as such:
+
 ```python
 for check in checks:
     sensor = DagFailureSensor(task_id='sensor_task_{0}'
@@ -108,10 +108,11 @@ for check in checks:
                                         python_callable=trigger_sys_dag)
     first_task >> sensor >> trigger
 ```
+
 ![system_check_controller](https://cdn.astronomer.io/website/img/guides/system_check_controller.png)
 
-
 #### Adding Trigger Rules
+
 Depending on the rest of the infrastructure, different "checks" may all trigger the same system level check.
 
 If that is the case, TriggerDagOperators should be set with a different `trigger_rule`
@@ -138,5 +139,5 @@ with dag:
 
         first_task >> sensor >> trigger
 ```
-![system_check_controller](https://cdn.astronomer.io/website/img/guides/trigger_rule_sensor_dag.png)
 
+![system_check_controller](https://cdn.astronomer.io/website/img/guides/trigger_rule_sensor_dag.png)

@@ -31,7 +31,7 @@ Note: Self-signed certificates are not supported on the Astronomer Platform.
 Run:
 
 ```shell
-$ docker run -it --rm --name letsencrypt -v /etc/letsencrypt:/etc/letsencrypt -v /var/lib/letsencrypt:/var/lib/letsencrypt certbot/certbot:latest certonly -d "*.astro.mycompany.com" --manual --preferred-challenges dns --server https://acme-v02.api.letsencrypt.org/directory
+docker run -it --rm --name letsencrypt -v /etc/letsencrypt:/etc/letsencrypt -v /var/lib/letsencrypt:/var/lib/letsencrypt certbot/certbot:latest certonly -d "*.astro.mycompany.com" --manual --preferred-challenges dns --server https://acme-v02.api.letsencrypt.org/directory
 ```
 
 Sample output:
@@ -76,17 +76,17 @@ This PostgreSQL user needs permissions to create users, schemas, databases, and 
 For testing purposes, you can quickly get started using the PostgreSQL helm chart.
 
 Run:
+
 ```shell
-$ helm install --name astro-db stable/postgresql --namespace astronomer
+helm install --name astro-db stable/postgresql --namespace astronomer
 ```
 
 Depending on where your Postgres cluster is running, you may need to adjust the connection string in the next step to match your environment. If you installed via the helm chart, you can run the command that was output by helm to set the `${PGPASSWORD}` environment variable, which can be used in the next step. Once that variable is set, you can run this command directly to create the bootstrap secret.
 
-
 Run:
 
 ```shell
-$ kubectl create secret generic astronomer-bootstrap --from-literal connection="postgres://postgres:${PGPASSWORD}@astro-db-postgresql:5432" --namespace astronomer
+kubectl create secret generic astronomer-bootstrap --from-literal connection="postgres://postgres:${PGPASSWORD}@astro-db-postgresql:5432" --namespace astronomer
 ```
 
 Note: Change user from `postgres` if you're creating a user instead of using the default, it needs permission to create databases, schemas, and users.
@@ -94,7 +94,7 @@ Note: Change user from `postgres` if you're creating a user instead of using the
 ## 4. Create a Kubernetes secret for the TLS certificates
 
 ```shell
-$ kubectl create secret tls astronomer-tls --key /etc/letsencrypt/live/astro.mycompany.com/privkey.pem --cert /etc/letsencrypt/live/astro.mycompany.com/fullchain.pem --namespace astronomer
+kubectl create secret tls astronomer-tls --key /etc/letsencrypt/live/astro.mycompany.com/privkey.pem --cert /etc/letsencrypt/live/astro.mycompany.com/fullchain.pem --namespace astronomer
 ```
 
 ## 5. Generate credentials for Google OAuth
@@ -131,7 +131,7 @@ Replace `<your-client-id>` and `<your-client-secret>` with the values from the p
 ## 7. Install Astronomer
 
 ```shell
-$ helm install -f config.yaml . --namespace astronomer
+helm install -f config.yaml . --namespace astronomer
 ```
 
 Click the link in the output notes to log in to the Astronomer app.

@@ -7,7 +7,7 @@ heroImagePath: "https://cdn.astronomer.io/website/img/guides/TheAirflowUI_previe
 tags: ["Astronomer Platform", "Getting Started"]
 ---
 
-This guide describes the prerequisite steps to install Astronomer on Amazon Web Services (AWS).  
+This guide describes the prerequisite steps to install Astronomer on Amazon Web Services (AWS).
 
 ## Are you admin-y enough to do this alone?
 
@@ -27,7 +27,7 @@ Before running the Astronomer install command you must:
 1. [Get a Postgres server running](/guides/install-postgres)
 1. [Obtain SSL](/guides/install-ssl)
 1. [Set a few Kubernetes secrets](/guides/install-k8s-secrets)
-1. [Create Google OAuth Creds ](/guides/install-google-oauth)
+1. [Create Google OAuth Creds](/guides/install-google-oauth)
 1. [Build your config.yaml](/guides/install-config)
 1. [Create a stateful storage set](/guides/install-aws-stateful-set)
 
@@ -36,8 +36,9 @@ Before running the Astronomer install command you must:
 You're ready to go!
 
 ```shell
-$ helm install -f config.yaml . --namespace astronomer
+helm install -f config.yaml . --namespace astronomer
 ```
+
 ## DNS routing
 
 Your final step is to setup your DNS to route traffic to your airflow resources following [these steps](/guides/install-aws-dns).

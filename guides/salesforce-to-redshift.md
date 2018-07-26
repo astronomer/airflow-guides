@@ -33,7 +33,6 @@ This plugin will allow you to pull the following Salesforce objects into your Re
 * Task
 * User
 
-
 ### 1. Add Connections in Airflow UI
 
 Begin by creating all of the necessary connections in your Airflow UI. To do this, log into your Airflow dashboard and navigate to Admin-->Connections. In order to build this pipeline, you’ll need to create a connection to your Salesforce account, your S3 bucket, and your Redshift instance. For more info on how to fill out the fields within your connections, check out our [documentation here](https://docs.astronomer.io/v2/apache_airflow/tutorial/connections.html).
@@ -57,7 +56,5 @@ Open up the `salesforce_to_redshift.py` file from the repo you just cloned in a 
 ### 5. Test + Deploy
 
 Once you have those credentials plugged into your DAG, test and deploy it!
-
-
 
 If you don't have Airflow already set up in your production environment, head over to [our app](https://app.astronomer.io/signup) to get spun up with your own managed instance!

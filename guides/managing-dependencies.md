@@ -21,16 +21,16 @@ Dependencies can be set syntactically or through bitshift operators.
 
 ![title](https://cdn.astronomer.io/website/img/guides/simple_scheduling.png)
 
-
 This logic can be set three ways:
+
 - `d1.set_downstream(d2)`<br> `d2.set_downstream(d3)` <br> `d3.set_downstream(d4)`<br> <br>
 - `d4.set_upstream(d3)` <br> `d3.set_upstream(d2)` <br> `d2.set_upstream(d1)`<br> <br>
 - `d1 >> d2 >> d3 >> d4` <br> <br>
 - `d4 << d3 << d2 << d1`
 
 All three are in line with best practice as long as it is written consistently - do **not** do:
-- `d1.set_downstream(d2)`<br> `d2 >>d3` <br> `d4.set_upstream(d3)`<br>
 
+- `d1.set_downstream(d2)`<br> `d2 >>d3` <br> `d4.set_upstream(d3)`<br>
 
 ## Dynamically Setting Dependencies
 
@@ -38,9 +38,7 @@ For a large number of tasks, dependencies can be set in loops:
 
 ![title](https://cdn.astronomer.io/website/img/guides/loop_dependencies.png)
 
-
 Recall that tasks are identified by their `task_id` and associated `DAG` object - not by the type of operator. Consider this:
-
 
 ```python
 with dag:
@@ -59,7 +57,7 @@ with dag:
 
 _ What happens here?_
 
-##  Trigger Rules
+## Trigger Rules
 
 _Complex Dependencies_
 
@@ -82,8 +80,8 @@ TriggerRules are defined as Airlfow Utils:
 _Extendability vs Safety_
 
 ### The `one_failed` rule
-When you have a critically important but _brittle_ task in a workflow (i.e. a large machine learning job, some reporting task, etc.), a good safety check would be adding a task that handles the failure logic. This logic can be implemented dynamically based on how the DAG is being generated.
 
+When you have a critically important but _brittle_ task in a workflow (i.e. a large machine learning job, some reporting task, etc.), a good safety check would be adding a task that handles the failure logic. This logic can be implemented dynamically based on how the DAG is being generated.
 
 ```python
 # Define the tasks that are "brittle."
@@ -111,9 +109,9 @@ def fail_logic(**kwargs):
 with dag:
     for job in job_info:
         d1 = DummyOperator(task_id=job['job_name'])
-        
+
         # Generate a task based on a condition
-        
+
         if job['brittle']:
             d2 = PythonOperator(task_id='{0}_{1}'.format(job['job_name'],
                                                          'fail_logic',),
@@ -128,21 +126,19 @@ with dag:
             d1 >> downstream
 ```
 
-
 ![one_failed](https://cdn.astronomer.io/website/img/guides/fail_logic_notification.png)
-
 
 **Note:** Similar logic can be implemented by specifying an `on_failure_callback` if using a PythonOperator. The `trigger_rule` is better used when triggering a custom operator.
 
 Though trigger rules can be convenient, they can also be unsafe and the same logic can usually be implemented using safer features.
 
-A common use case of exotic trigger rules is a task downstream of all  other tasks that kicks off the necessary logic. 
+A common use case of exotic trigger rules is a task downstream of all  other tasks that kicks off the necessary logic.
 
 ### The `one_success` rule
+
 This rule is particulary helpful when setting up a "safety check" DAG - a DAG that runs as a safetycheck to all your data. If one of the "disaster checks" come back as `True`, the downstream disaster task can run the necessary logic.
 
 **Note:** The same logic can be implemented with the `one_failed` rule.
-
 
 ### The `all_failed` rule
 
@@ -157,10 +153,9 @@ Once again, the same functionality can be achieved by using the `PythonBranchOpe
 
 ## Triggers with LatestOnlyOperator
 
-When scheduling tasks with complex trigger rules with dates in the past, there may be instances where certain tasks can run independely of time and others shouldn't. 
+When scheduling tasks with complex trigger rules with dates in the past, there may be instances where certain tasks can run independely of time and others shouldn't.
 
 The parameters can also be set in the DAG configuration as above - the scheduling may get a bit messy, but it can save computing resources and add a layer of safety.
-
 
 ```python
 job_info = [

@@ -26,7 +26,7 @@ Visit the Google [cloud console](https://console.cloud.google.com/)
 
 If you already have an existing project you want to use, you can skip to Step 3
 
-In the top nav, you will have a dropdown with a label of either a currently selected project or `Select a project`.  
+In the top nav, you will have a dropdown with a label of either a currently selected project or `Select a project`.
 
 ![select-project](https://cdn.astronomer.io/website/img/guides/google-oauth-creds/select-project.png)
 
@@ -78,12 +78,12 @@ Once these fields have been filled out, click the `Create` button in the bottom 
 
 ### Step 7: Copy your "clientID" and "clientSecret"
 
-After creating your credentials, Google will redirect you back to the credentials page and popup a window with your newly created OAuth client credentials.  
+After creating your credentials, Google will redirect you back to the credentials page and popup a window with your newly created OAuth client credentials.
 
 ![copy-client-id-secret](https://cdn.astronomer.io/website/img/guides/google-oauth-creds/copy-client-id-secret.png)
 
 If you accidentally close this, or need to refer to them at a later date, clicking the name of the credentials you just created in the list of credentials on this page will display them.
 
-You'll want to copy the clientID and clientSecret into the helm config file you are prepping for the Astronomer Helm install.  
+You'll want to copy the clientID and clientSecret into the helm config file you are prepping for the Astronomer Helm install.
 
 That's it!

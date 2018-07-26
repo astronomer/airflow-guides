@@ -25,8 +25,7 @@ Oozie is an open-source workflow scheduling system written in Java for Hadoop sy
 
 While it has been used successfully by a few teams, [it has been reported](https://stackoverflow.com/questions/47928995/which-one-to-choose-apache-oozie-or-apache-airflow-need-a-comparison) that Oozie has difficulty handling complex pipelines and has an underdeveloped GUI that is challenging to navigate.
 
-
-# Key Differences 
+# Key Differences
 
 ## Python vs. Java
 
@@ -40,11 +39,9 @@ Airflow is the most active workflow management tool on the market and has 8,636 
 
 ![airflow](https://s3.amazonaws.com/astronomer-cdn/website/img/guides/Screen+Shot+2018-07-10+at+4.26.28+PM.png)
 
-
 Oozie has 386 stars and 16 active contributors on Github. See below for an image documenting code changes caused by recent commits to the project.
 
 ![oozie](https://s3.amazonaws.com/astronomer-cdn/website/img/guides/Screen+Shot+2018-07-10+at+4.26.17+PM.png)
-
 
 Note that, with open source projects, community contributions are significant in that they're reflective of the community's faith in the future of the project and indicate that features are actively being developed.
 
@@ -52,19 +49,18 @@ Note that, with open source projects, community contributions are significant in
 
 As pointed out by [Stack Overflow user Michele De Simoni](https://stackoverflow.com/users/8050556/michele-ubik-de-simoni), there are a few reasons why Airflow is preferred over Oozie by the community for workflow management.
 
-
 ### Airflow
 
-+ Python Code for DAGs (+)
-+ Has connectors for every major service/cloud provider (+)
-+ More versatile (+)
-+ Advanced metrics (+)
-+ Better UI and API (+)
-+ Capable of creating extremely complex workflows (+)
-+ Jinja Templating (+)
-+  Can be parallelized (=)
-+ Native Connections to HDFS, HIVE, PIG etc.. (=)
-+  Graph as DAG (=)
+- Python Code for DAGs (+)
+- Has connectors for every major service/cloud provider (+)
+- More versatile (+)
+- Advanced metrics (+)
+- Better UI and API (+)
+- Capable of creating extremely complex workflows (+)
+- Jinja Templating (+)
+- Can be parallelized (=)
+- Native Connections to HDFS, HIVE, PIG etc.. (=)
+- Graph as DAG (=)
 
 ### Oozie
 
