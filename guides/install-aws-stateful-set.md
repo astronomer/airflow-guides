@@ -15,7 +15,7 @@ apiVersion: storage.k8s.io/v1
 metadata:
   name: gp2
   annotations:
-    storageclass.kubernetes.io/is-default-class": "true"
+    storageclass.kubernetes.io/is-default-class: "true"
 provisioner: kubernetes.io/aws-ebs
 parameters:
   type: gp2
