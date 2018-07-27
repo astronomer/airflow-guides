@@ -23,10 +23,10 @@ tags: ["admin-docs"]
   You may need to run `helm repo update` and/or `helm init --client-only`
 * Download Astronomer helm charts locally
 
-	```
+	```shell
 	git clone git@github.com:astronomerio/helm.astronomer.io.git
 	cd helm.astronomer.io
-	git checkout v0.3.1
+	git checkout <latest tag>
 	```
 
 > Note: if you work with multiple Kubernetes clusters, `kubectx` is a nice utility

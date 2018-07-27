@@ -133,7 +133,7 @@ Replace `<your-client-id>` and `<your-client-secret>` with the values from the p
 ```shell
 git clone git@github.com:astronomerio/helm.astronomer.io.git
 cd helm.astronomer.io
-git checkout v0.3.1
+git checkout <latest tag>
 
 helm install -f config.yaml . --namespace astronomer
 ```
