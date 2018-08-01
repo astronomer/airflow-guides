@@ -9,5 +9,6 @@ tags: ["Astronomer Platform", "Airflow", "Getting Started"]
 
 Please follow the guide for your cloud:
 
-- [Amazon Web Services](/guides/install-aws)
-- [Google Cloud Platform](/guides/install-gcp)
+- [Amazon Web Services EKS](/guides/install-aws)
+- [Google Cloud Platform GKE](/guides/install-gcp)
+- Azure AKS (coming soon)
