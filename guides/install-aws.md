@@ -9,7 +9,7 @@ tags: ["Astronomer Platform", "Getting Started"]
 
 This guide describes the prerequisite steps to install Astronomer on Amazon Web Services (AWS).
 
-## Are you admin-y enough to do this alone?
+## Are you devops-y enough to do this alone?
 
 You will need to be able to:
 
