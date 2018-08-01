@@ -10,7 +10,7 @@ tags: ["admin-docs"]
 This guide describes the process to install Astronomer on Google Cloud Platform
 (GCP).
 
-## Are you admin-y enough to do this alone?
+## Are you devops-y enough to do this alone?
 
 You will need to be able to:
 
