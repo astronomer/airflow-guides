@@ -10,7 +10,7 @@ tags: ["admin-docs"]
 ## Create a Kubernetes secret with your PostgreSQL connection
 
 If you do not already have a PostgreSQL cluster, we recommend using a service
-like Compose, Amazon RDS, or Google Cloud SQL.
+like Compose, Amazon RDS, or [Google Cloud SQL](/guides/install-gcp-cloudsql/).
 
 The PostgreSQL user needs permissions to create users, schemas, databases, and tables.
 

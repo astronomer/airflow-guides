@@ -44,4 +44,9 @@ Your final step is to setup your DNS to route traffic to your airflow resources 
 
 Click the link in the output notes to log in to the Astronomer app.
 
+<!-- ## Troubleshooting
+
+* Postgres pod is stuck initializing:  Ensure you've created your stateful set following the guide above -->
+
+
 ---

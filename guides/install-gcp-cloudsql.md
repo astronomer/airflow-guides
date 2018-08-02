@@ -10,7 +10,7 @@ tags: ["admin-docs"]
 
 ## CloudSQL
 
-CloudSQL may be used in place of stable postgres in your Astronomer EE instance. In order to use the CloudSQL database, we'll need to configure the SQLProxy service to ensure the Kubernetes cluster can communicate with the CloudSQL database. 
+CloudSQL is an alternative option to stable postgres if deploying your Astronomer instance in GCP. In order to use the CloudSQL database, we'll need to configure the SQLProxy service to ensure the Kubernetes cluster can communicate with the CloudSQL database. 
 
 ### Step 1. Enable the CloudSQL service
 
@@ -24,6 +24,10 @@ To ensure the kubernetes cluster can communicate with your postgres database, we
 
 Head over to the [SQLProxy helm chart](https://github.com/helm/charts/tree/master/stable/gcloud-sqlproxy) and review the requirements.
 
+```
+Note: The `--set cloudsql.instances[0].instance=INSTANCE \` field is the last part of your CloudSQL connection name, just after the last colon.
+```
+
 You'll need to follow steps 1-4 of the Connection to Kubernets engine guide [here](https://cloud.google.com/sql/docs/postgres/connect-kubernetes-engine) as well. The remaining steps are not necessary as these involve configuring individual pods to communicate with the postgres database which is not sufficient for our use. 
 
 After following these steps you should have:
@@ -31,7 +35,7 @@ After following these steps you should have:
 1. A Postgres database hosted in CloudSQL
 1. A google service account with role access to the CloudSQL service
 1. The service account private key as a JSON file
-1. A new `proxyuser` user in your postgres database
+1. A new `proxyuser` user in your postgres database. You can give this user whatever name you would like such as `astronomer_proxy`, just be sure to use this username in later steps. 
 1. Your instance connection name
 
 You're now ready to install the SQLProxy helm chart, providing the necessary parameters you retrieved in the previous step. 

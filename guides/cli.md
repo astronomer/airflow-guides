@@ -18,6 +18,36 @@ See [docker download](https://www.docker.com/community-edition#/download) to dow
 
 You should also make sure you Go installed (pip and Python too, but they're packaged with most operating systems).
 
+# Astronomer EE + Cloud CLI
+
+To interact with your Enterprise Edition or the Cloud edition of the Astronomer platform start here.
+
+`NOTE: If you are looking to run airflow locally or interact with the SaaS edition, see the Astronomer Local CLI steps below. `
+
+Begin by [installing the CLI](https://github.com/astronomerio/astro-cli) based on your opertating system.
+
+Once you've verified the CLI is running you can authenticate to your instance using this command:
+
+```
+astro auth login -d [BASE DOMAIN] 
+```
+
+Once authenticated you can create a new deployment by running:
+
+```
+astro create deployment [DEPLOYMENT NAME]
+```
+Now you're ready to deploy your existing DAGs to the instance, or create a new example project directory by running:
+
+```
+astro init
+```
+Run this init command in a new working directory and deploy the example DAG to your instance to verifying everything is working as expected. 
+
+
+
+# Astronomer Local CLI
+
 ```
 brew install go
 ```
