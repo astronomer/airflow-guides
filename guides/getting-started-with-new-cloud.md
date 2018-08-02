@@ -1,8 +1,8 @@
 ---
 title: "Getting Started with Astronomer Cloud 2.0"
 description: "Migrate over to our new cloud"
-date: 2018-05-21T00:00:00.000Z
-slug: "astronomer-cloud"
+date: 2018-08-01T00:00:00.000Z
+slug: "getting-started-with-new-cloud"
 heroImagePath: "https://cdn.astronomer.io/website/img/guides/TheAirflowUI_preview.png"
 tags: ["Astronomer Platform", "admin-docs", "Cloud"]
 ---
