@@ -1,17 +1,10 @@
 ---
 title: "Getting Started with Astronomer Cloud 2.0"
 description: "Migrate over to our new cloud"
-<<<<<<< HEAD
-date:
-slug: "astronomer-cloud"
-heroImagePath: "https://cdn.astronomer.io/website/img/guides/TheAirflowUI_preview.png"
-tags: ["astronomer", "end-user-docs", "migration"]
-=======
 date: 2018-08-01T00:00:00.000Z
 slug: "getting-started-with-new-cloud"
 heroImagePath: "https://cdn.astronomer.io/website/img/guides/TheAirflowUI_preview.png"
 tags: ["Astronomer Platform", "admin-docs", "Cloud"]
->>>>>>> cec8647efc1fc95ec058d9e1f3e0533117a1fb4c
 ---
 
 ## Download the CLI
@@ -59,13 +52,8 @@ Our base image runs Alpine Linux, so it is very slim by default.
 If you are unfaimiliar with Alpine Linux, look here for some examples of what
 you will need to add based on your use-case:
 
-<<<<<<< HEAD
 - [GCP](https://github.com/astronomerio/airflow-guides/tree/master/example_code/gcp/example_code)
 - [Snowflake](https://github.com/astronomerio/airflow-guides/tree/master/example_code/snowflake/example_code)
-=======
-- GCP
-- Snowflake
->>>>>>> cec8647efc1fc95ec058d9e1f3e0533117a1fb4c
 - More coming soon!
 
 Once you've added everything you need, runs
@@ -82,11 +70,7 @@ __Tips & Gotchas:__
 - The old Astronomer Cloud ran on Python 3.4. New Cloud runs Python 3.6.3.
 - Make sure your variables and connections made it over.
 - Old Cloud was Airflow 1.8, while New Cloud is Airflow 1.9. Refer to the Airflow [updating guide](https://github.com/apache/incubator-airflow/blob/master/UPDATING.md#airflow-19) for differences between 1.8 and 1.9
-<<<<<<< HEAD
 - The Airflow UI doesn't always show the full stacktrace. To get some more information when developing locally, you can run:
-=======
-- The Airflow UI doesn't always show the full stacktrace. To get some more errors when developing locally, you can run:
->>>>>>> cec8647efc1fc95ec058d9e1f3e0533117a1fb4c
 
 ```
 bash
