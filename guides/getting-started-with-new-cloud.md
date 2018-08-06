@@ -63,7 +63,7 @@ This will spin up a local Airflow for you to develop on.
 
 ## Migrate your DAGs
 
-If you're a previous user of Astronomer Cloud or have a pre-existing Airflow instance, migrating your DAGs should be straightforward.
+If you're a previous user of Astronomer Cloud or have a pre-existing Airflow instance, migrating your DAGs should be straightforward. 
 
 __Tips & Gotchas:__
 - The old Astronomer Cloud ran on Python 3.4. New Cloud runs Python 3.6.3.
@@ -71,7 +71,7 @@ __Tips & Gotchas:__
 - Old Cloud was Airflow 1.8, while New Cloud is Airflow 1.9. Refer to the Airflow [updating guide](https://github.com/apache/incubator-airflow/blob/master/UPDATING.md#airflow-19) for differences between 1.8 and 1.9
 - There's a known current issue that limits your ability to rebuild the docker image while running locally after modifying packages.txt or requirements.txt. We're working on a fix for the next release! For now, you'll need to kill the container with an `astro airflow kill` and rebuild it with the new package/requirement (The image does rebuild every time you deploy, so you can still get your package in prod even if it isn't picked up locally).
 
-- The Airflow UI doesn't always show the full stacktrace. To get some more information when developing locally, you can run:
+- The Airflow UI doesn't always show the full stacktrace. To get some more information while you're developing locally, you can run:
 
 ```
 bash
