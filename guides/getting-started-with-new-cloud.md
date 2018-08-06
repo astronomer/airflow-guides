@@ -86,7 +86,7 @@ Once you can get your DAGs working locally, you are ready to deploy them.
 
 Run:
 
-  `astro auth login -d cloud.astronomer.io`
+  `astro auth login -d astronomer.cloud`
 
 Visit `app.cloud.astronomer.io` to view your workspace.
 
