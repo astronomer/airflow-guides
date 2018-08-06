@@ -43,20 +43,19 @@ Run `astro airflow init` in a project directory. This will generate some skeleto
 ## Customizing your image
 Our base image runs Alpine Linux, so it is very slim by default.
 
-
 - Add DAGs in the `dags` directory,
 - Add custom airflow plugins in the `plugins` directory
 - Python packages and os-level packages in `requirements.txt` and `packages.txt`, respectively.
 - Any envrionment variable overrides can go in `Dockerfile`
 
-If you are unfaimiliar with Alpine Linux, look here for some examples of what
+If you are unfamiliar with Alpine Linux, look here for some examples of what
 you will need to add based on your use-case:
 
 - [GCP](https://github.com/astronomerio/airflow-guides/tree/master/example_code/gcp/example_code)
 - [Snowflake](https://github.com/astronomerio/airflow-guides/tree/master/example_code/snowflake/example_code)
 - More coming soon!
 
-Once you've added everything you need, runs
+Once you've added everything you need, run:
 
   `astro airflow start`
 
@@ -64,19 +63,21 @@ This will spin up a local Airflow for you to develop on.
 
 ## Migrate your DAGs
 
-If you're a previous user of Astronomer Cloud or have a pre-existing Airflow instance, migrating your DAGs should be straight forward.
+If you're a previous user of Astronomer Cloud or have a pre-existing Airflow instance, migrating your DAGs should be straightforward.
 
 __Tips & Gotchas:__
 - The old Astronomer Cloud ran on Python 3.4. New Cloud runs Python 3.6.3.
 - Make sure your variables and connections made it over.
 - Old Cloud was Airflow 1.8, while New Cloud is Airflow 1.9. Refer to the Airflow [updating guide](https://github.com/apache/incubator-airflow/blob/master/UPDATING.md#airflow-19) for differences between 1.8 and 1.9
+- There's a known current issue that limits your ability to rebuild the docker image while running locally after modifying packages.txt or requirements.txt. We're working on a fix for the next release! For now, you'll need to kill the container with an `astro airflow kill` and rebuild it with the new package/requirement (The image does rebuild every time you deploy, so you can still get your package in prod even if it isn't picked up locally).
+
 - The Airflow UI doesn't always show the full stacktrace. To get some more information when developing locally, you can run:
 
 ```
 bash
 docker logs $(docker ps | grep scheduler | awk '{print $1}')
 ```
-Before you deploy a new DAG, verify that everything runs as expected locally.
+- Before you deploy a new DAG, verify that everything runs as expected locally.
 As you add DAGs to your new project's `dags` directory, check the UI for any error messages that come up.
 
 
