@@ -8,7 +8,7 @@ These are stepwise instructions for using Astronomer and Apache Airflow, and use
 
 ## How to use this repo for contributions to www.astronomer.io/guides
 
-The Astronomer website uses the `/guides` directory in this repo as a CRM for it's "Airflow Guides" content. On every build, the website will pull the latest list of guides from `master` on this repo, convert those guides to JSON, and statically build a series of styled guides accordingly. Until the Astronomer website is rebuilt, no changes to this repo will be reflected there. Also, only content from the `/guides` directory will be parsed and used - no other files or directories will affect the site.
+The Astronomer website uses the `/guides` directory in this repo as a CRM for it's "Airflow Guides" content. Until the Astronomer website is rebuilt, no changes to this repo will be reflected there. Also, only content from the `/guides` directory will be parsed and used - no other files or directories will affect the site.
 
 *Note: ONLY `.md` files may be added to the `/guides` directory - no subdirectories or other file-types may be used. The rest of the repo may include files and directories of any kind.*
 
