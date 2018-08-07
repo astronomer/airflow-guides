@@ -19,7 +19,7 @@ The Astronomer website uses the `/guides` directory in this repo as a CMS for it
 4) The filename and slug _must match_: i.e `astronomer-roadmap.md` and `slug: "astronomer-roadmap"`
 5) Store all images (inline and hero) in the `astronomer-cdn` bucket on s3 in the `/website/img/guides` directory, and reference them using  `https://cdn.astronomer.io/website/img/guides/{filename}`
 6) When the guide is finished, commit all changes to `master`
-7) Rebuilt the Astronomer website using the `How to deploy guides` steps below
+7) Rebuild the Astronomer website using the `How to deploy guides` steps below
 
 ## How to deploy guides
 
