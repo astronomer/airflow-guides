@@ -1,10 +1,10 @@
 ---
-title: "Introduction to Apache Airflow"
-description: "A crash-course in introductory Airflow concepts."
+title: "Using Apache Airflow Plugins"
+description: "A crash-course in using Airflow Plugins."
 date: 2018-05-21T00:00:00.000Z
-slug: "intro-to-airflow"
+slug: "using-airflow-plugins"
 heroImagePath: "https://cdn.astronomer.io/website/img/guides/bestpractices.png"
-tags: ["Airflow", "Best Practices"]
+tags: ["Airflow", "Best Practices", "Plugins"]
 ---
 
 ## Introduction
