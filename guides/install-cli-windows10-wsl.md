@@ -2,7 +2,7 @@
 title: "The Astronomer CLI on the Windows Subsystem for Linux"
 description: "Using our CLI on the Windows Subsystem for Linux"
 date: 2018-05-23T00:00:00.000Z
-slug: "cli-wsl"
+slug: "install-cli-windows10-wsl"
 heroImagePath: "https://cdn.astronomer.io/website/img/guides/markus-spiske-207946-unsplash.jpg"
 tags: ["Airflow", "CLI", "Product Documentation"]
 ---
