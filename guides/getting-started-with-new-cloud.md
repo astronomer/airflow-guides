@@ -77,6 +77,7 @@ __Tips & Gotchas:__
 - Make sure your variables and connections made it over.
 - Old Cloud was Airflow 1.8, while New Cloud is Airflow 1.9. Refer to the Airflow [updating guide](https://github.com/apache/incubator-airflow/blob/master/UPDATING.md#airflow-19) for differences between 1.8 and 1.9
 - There's a known current issue that limits your ability to rebuild the docker image while running locally after modifying packages.txt or requirements.txt. We're working on a fix for the next release! For now, you'll need to kill the container with an `astro airflow kill` and rebuild it with the new package/requirement (The image does rebuild every time you deploy, so you can still get your package in prod even if it isn't picked up locally).
+- For the sake of not over-exposing data and credentials, there's no current functionality that allows you to automatically port over connections and variables from a prior Apache Airflow instance. You'll have to do this manually as you complete the migration. 
 
 - The Airflow UI doesn't always show the full stacktrace. To get some more information while you're developing locally, you can run:
 
