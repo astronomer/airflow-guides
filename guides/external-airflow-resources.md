@@ -49,7 +49,7 @@ or shoot over an email to [humans@astronomer.io](mailto:humans@astronomer.io)
 * ["Airflow on Kubernetes: A Different Kind of Operator | Tech At Bloomberg"][30] - Daniel Imberman, Bloomberg LP
 * ["SQL based Sanity check in Airflow before kicking off machine learning model"][31] - Rajnish Kumar Garg, Epic
 * ["La conquête de nos workflows avec Apache Airflow (Conquering our Workflows with Apache Airflow)"][32] - Germain Tanguy & Cedric Hourcade, Dailymotion
-* ["Productionizing ML Workflows at Twitter"][33] - Samuel Ngahane and Devin Goodsell
+* ["Productionizing ML Workflows at Twitter"][33] - Samuel Ngahane and Devin Goodsell, Twitter
 
 ## Data Engineering
 
