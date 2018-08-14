@@ -7,7 +7,7 @@ heroImagePath: null
 tags: ["Resources", "Airflow"]
 ---
 
-Below, you'll find a categorized selection of blog posts, decks, guides and use cases written by and for the Airflow community. We've been aggregating this collection over the past few months, and think it's a good snapshot of challenges, best practices, gotchas, and use cases for teams and orgs of all kinds adapting Airflow.
+Below, you'll find a categorized selection of blog posts, decks, guides and use cases written by and for the Airflow community. We've been aggregating this collection over the past few months, and think it's a good snapshot of challenges, best practices, gotchas, and use cases for teams and orgs of all kinds adopting Airflow.
 
 If you've read or written something that you think should be on here,
 tweet us at [@astronomerio](https://twitter.com/astronomerio/)
@@ -55,7 +55,7 @@ or shoot over an email to [humans@astronomer.io](mailto:humans@astronomer.io)
 
 * [“A Beginner’s Guide to Data Engineering — Part I”][10] - Robert Chang, Airbnb
 * [“A Beginner’s Guide to Data Engineering — Part II”][9] - Robert Chang, Airbnb
-* [A Beginner's Guide to Data Engineering - The Series Finale][29] - Robert Chang, Airbnb
+* ["A Beginner's Guide to Data Engineering - The Series Finale"][29] - Robert Chang, Airbnb
 * [“Functional Data Engineering — a modern paradigm for batch data processing”][11] - Maxime Beauchemin, Lyft
 * [“Why data automation matters for open data portals”][18] - Maksim Pecherskiy, City of San Diego
 
