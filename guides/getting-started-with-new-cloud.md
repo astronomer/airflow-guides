@@ -16,8 +16,7 @@ _Note_: If you get an error the first time you click that link - try a refresh.
 
 ## Download the CLI
 
-Download the new CLI here:
-https://github.com/astronomerio/astro-cli
+To download the CLI, run the following command: `curl -sL https://install.astronomer.io | sudo bash -s -- v0.2.3`
 
 **Optional**
 
