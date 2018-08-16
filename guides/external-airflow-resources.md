@@ -7,7 +7,7 @@ heroImagePath: null
 tags: ["Resources", "Airflow"]
 ---
 
-Below, you'll find a categorized selection of blog posts, decks, guides and use cases written by and for the Airflow community. We've been aggregating this collection over the past few months, and think it's a good snapshot of challenges, best practices, gotchas, and use cases for teams and orgs of all kinds adopting Airflow.
+Below, you'll find a categorized selection of blog posts, decks, guides, and use cases written by and for the Airflow community. We've been aggregating this collection over the past few months, and think it's a good snapshot of challenges, best practices, gotchas, and use cases for teams and orgs of all kinds adopting Airflow.
 
 If you've read or written something that you think should be on here,
 tweet us at [@astronomerio](https://twitter.com/astronomerio/)
