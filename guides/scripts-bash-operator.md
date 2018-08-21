@@ -35,31 +35,7 @@ If we try to `chmod +x test.sh` inside of the container's bash terminal, we get:
 chmod: test.sh: Read-only file system.
 ```
 
-Looking at a snippet of the `execute` function for the BashOperator, we see that operator searches for the script in a temporary directory. The `cwd` argument of the `Popen` function allows the child process to change its working directory. In Airflow, this parameter is set to `None` by default. To work around this, we need to specify the full file path within the `Dockerfile`, which we'll come back to below.
-
-```
-def execute(self, context):
-        ...
-        ...
-        ...
-                def pre_exec():
-                    # Restore default signal disposition and invoke setsid
-                    for sig in ('SIGPIPE', 'SIGXFZ', 'SIGXFSZ'):
-                        if hasattr(signal, sig):
-                            signal.signal(getattr(signal, sig), signal.SIG_DFL)
-                    os.setsid()
-                self.log.info("Running command: %s", bash_command)
-                sp = Popen(
-                    ['bash', fname],
-                    stdout=PIPE, stderr=STDOUT,
-                    cwd=tmp_dir, env=self.env,
-                    preexec_fn=pre_exec)
-
-                self.sp = sp
-                ...
-                ...
-        ...
-```
+Looking at a snippet of the `execute` function for the BashOperator, we see that operator searches for the script in a temporary directory. That exact line in the source code is [here](https://github.com/apache/incubator-airflow/blob/27309b13f17402eaa61d4e4fede8785effa8bbb7/airflow/operators/bash_operator.py#L90). The `cwd` argument of the `Popen` function allows the child process to change its working directory. In Airflow, this parameter is set to `None` by default. To work around this, we need to specify the full file path within the `Dockerfile`, which we'll come back to below.
 
 [Access the full BashOperator source code](https://airflow.apache.org/_modules/bash_operator.html)
 
@@ -68,6 +44,8 @@ def execute(self, context):
 There are two possible solutions.
 
 1. Chmod before building the container from the docker image.
+
+[The entire project directory is already copied over here in the Dockerfile.](https://github.com/astronomerio/astronomer/blob/a2b0936a96344ee8762572c27498dc1dd5955176/docker/platform/airflow/onbuild/Dockerfile#L32)
 
 Before we run `docker exec -it container_name bash`, we can chmod the shell script. Then, once we're in the bash terminal in the docker container, we can run the script no problem.
 
@@ -79,12 +57,6 @@ In the `Dockerfile`, add the line:
 
 ```
 RUN chmod +x /full/file/path/test.sh
-```
-
-You could also copy over the entire project directory using:
-
-```
-ONBUILD COPY . .
 ```
 
 The full file path is required, as specified above. You can type `pwd` inside the Docker container to get the file path to the directory where the `test.sh` script is located. An example of this may be:
