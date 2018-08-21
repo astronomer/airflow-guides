@@ -7,7 +7,7 @@ heroImagePath: "https://cdn.astronomer.io/website/img/guides/TheAirflowUI_previe
 tags: ["Building DAGs", "BashOperator", "Airflow"]
 ---
 
-[Apache Airflow's BashOperator](https://airflow.apache.org/code.html#operator-api) is an easy way to execute bash commands in your workflow. This is the method of choice if the DAG you wrote executes a bash command or script.
+[Apache Airflow's BashOperator](https://airflow.apache.org/code.html#operator-api) is an easy way to execute bash commands in your workflow. If the DAG you wrote executes a bash command or script, this is the operator you will want to use to define the task.
 
 However, running shell scripts can always run into trouble with permissions, particularly with `chmod`.
 
@@ -35,6 +35,34 @@ If we try to `chmod +x test.sh` inside of the container's bash terminal, we get:
 chmod: test.sh: Read-only file system.
 ```
 
+Looking at a snippet of the `execute` function for the BashOperator, we see that operator searches for the script in a temporary directory. The `cwd` argument of the `Popen` function allows the child process to change its working directory. In Airflow, this parameter is set to `None` by default. To work around this, we need to specify the full file path within the `Dockerfile`, which we'll come back to below.
+
+```
+def execute(self, context):
+        ...
+        ...
+        ...
+                def pre_exec():
+                    # Restore default signal disposition and invoke setsid
+                    for sig in ('SIGPIPE', 'SIGXFZ', 'SIGXFSZ'):
+                        if hasattr(signal, sig):
+                            signal.signal(getattr(signal, sig), signal.SIG_DFL)
+                    os.setsid()
+                self.log.info("Running command: %s", bash_command)
+                sp = Popen(
+                    ['bash', fname],
+                    stdout=PIPE, stderr=STDOUT,
+                    cwd=tmp_dir, env=self.env,
+                    preexec_fn=pre_exec)
+
+                self.sp = sp
+                ...
+                ...
+        ...
+```
+
+[Access the full BashOperator source code](https://airflow.apache.org/_modules/bash_operator.html)
+
 ## Solution
 
 There are two possible solutions.
@@ -43,7 +71,7 @@ There are two possible solutions.
 
 Before we run `docker exec -it container_name bash`, we can chmod the shell script. Then, once we're in the bash terminal in the docker container, we can run the script no problem.
 
-2. The Run command
+2. The RUN command
 
 If you don't want to run chmod from the command line, you can add the command to the `Dockerfile` in one line.
 
@@ -53,8 +81,16 @@ In the `Dockerfile`, add the line:
 RUN chmod +x /full/file/path/test.sh
 ```
 
-The full file path is required, but it needs to be within the Docker container itself. You can type `pwd` inside the Docker container to get the file path to the directory where the `test.sh` script is located. An example of this may be:
+You could also copy over the entire project directory using:
+
+```
+ONBUILD COPY . .
+```
+
+The full file path is required, as specified above. You can type `pwd` inside the Docker container to get the file path to the directory where the `test.sh` script is located. An example of this may be:
 
 ```
 RUN chmod +x /usr/local/airflow/test.sh
 ```
+
+The RUN command will execute every time the container builds, and every time it is deployed, so keeping the container as lean as possible is advantageous.
