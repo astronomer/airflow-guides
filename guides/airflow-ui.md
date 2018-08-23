@@ -7,11 +7,13 @@ heroImagePath: "https://cdn.astronomer.io/website/img/guides/PausedDags_Preview.
 tags: ["DAGs", "Data Pipelines", "Airflow"]
 ---
 
-A notable part of Apache Airflow is its built in UI, which allows you to see the status of your jobs, their underlying code, and even some meta-data on their execution time. This will help you both monitor and troubleshoot your workflows.
+A notable part of Apache Airflow is its built-in UI, which allows you to see the status of your jobs, their underlying code, and even some meta-data on their execution time. It'll help you both monitor and troubleshoot your workflows and, if used correctly, can make your use of Airflow that more effective. 
 
-With that said, the UI is not always the most intuitive.
+Since the UI isn't always the most intuitive, here's a guide that'll walk you through it. 
 
-Upon signing into the UI, you're taken to the DAGs dashboard
+## Getting Started
+
+Upon signing into the UI, you'll immediately land on the DAGs dashboard. 
 
 ![dashboard](https://cdn.astronomer.io/website/img/guides/dags_dashboard.png)
 
@@ -49,16 +51,18 @@ This view won't be helpful for much at the moment, but it will be roped into the
 
 ### Connections
 
-Airflow needs to know how to connect to your environment. Connections is where you can store that information - anything from hostname, to port, to logins to other systems. The pipeline code you will author will reference the ‘conn_id’ of the Connection objects.
+Airflow needs to know how to connect to your environment. `Connections` is the place to store that information - anything from hostname, to port, to logins to other systems. The pipeline code you will author will reference the ‘conn_id’ of the Connection objects.
 
-The Airflow Variables section can also hold such information, but storing them as Connections allows:
+The Airflow `Variables` section can also hold that information, but storing them as Connections allows:
 
 - Encryption on passwords and extras.
 - Common JSON structure for connections:
 
-![users](https://cdn.astronomer.io/website/img/guides/airflow_connections.png)
+**Note**: When you save a connection, expect the password field to be empty the next time you return to it. That's just Airflow encrypting the password - it does not need to be reset. 
 
-**Note:** Some connections will have different fields in the UI, but they can all be called from the BaseHook. For example, a Postgres connection may look like:
+![users](https://cdn.astronomer.io/website/img/guides/airflow_connections.png) 
+
+**Note**: Some connections will have different fields in the UI, but they can all be called from the BaseHook. For example, a Postgres connection may look like:
 
 ![postgres](https://cdn.astronomer.io/website/img/guides/postgres_connection.png)
 
@@ -76,6 +80,8 @@ hook = BaseHook.get_connection('CONNECTION_NAME').extra_dejson
 # Hook now contains the information in the extras field as a JSON object
 # The Connection Name is the name of the connection.
 ```
+
+For more on Connections, check out this guide: [Managing Your Connections in Airflow](https://www.astronomer.io/guides/connections/).
 
 ### Variables
 
