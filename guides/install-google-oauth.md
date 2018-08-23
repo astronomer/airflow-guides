@@ -7,9 +7,9 @@ heroImagePath: null
 tags: ["Astronomer EE", "Install", "OAuth"]
 ---
 
-As of Astronomer v0.3, it uses Google [OAuth](https://auth0.com/) to authenticate users. In order to get this setup you will need to create credentials to securely communicate with Google services
+As of Astronomer v0.3, it uses Google OAuth to authenticate users. In order to get this setup you will need to create credentials to securely communicate with Google services
 
-> Note: We're also adding support for Auth0 very soon as an alternative OAuth provider to simplify installation.
+> Note: We're also adding support for [Auth0](https://auth0.com/) very soon as an alternative OAuth provider to simplify installation.
 
 ## Create OAuth Credentials
 
