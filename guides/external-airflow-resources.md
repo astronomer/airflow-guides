@@ -24,6 +24,7 @@ or shoot over an email to [humans@astronomer.io](mailto:humans@astronomer.io)
 * [“Integrating Apache Airflow and Databricks: Building ETL pipelines with Apache Spark”][21] - Peyman Mohajerian, Databricks
 * [“Installing and Configuring Apache Airflow”][22] - Robert Sanders, Clairvoyant
 * [“Airflow: A Beautiful Cron Alternative (or replacement) for Data Pipelines and Workflows”][23] - rbahaguejr, cp-union.com
+* ["Apache Airflow 1.10.0 Released | Highlights"][35] - Kaxil Naik, Data Reply UK
 
 ## Airflow Learnings
 
@@ -50,6 +51,7 @@ or shoot over an email to [humans@astronomer.io](mailto:humans@astronomer.io)
 * ["SQL based Sanity check in Airflow before kicking off machine learning model"][31] - Rajnish Kumar Garg, Epic
 * ["La conquête de nos workflows avec Apache Airflow (Conquering our Workflows with Apache Airflow)"][32] - Germain Tanguy & Cedric Hourcade, Dailymotion
 * ["Productionizing ML Workflows at Twitter"][33] - Samuel Ngahane and Devin Goodsell, Twitter
+* ["Airflow, Meta Data Engineering, and a Data Platform for the World’s Largest Democracy"][34]- Vinayak Mehta, SocialCops
 
 ## Data Engineering
 
@@ -97,3 +99,5 @@ or shoot over an email to [humans@astronomer.io](mailto:humans@astronomer.io)
 [31]: https://medium.com/coinmonks/sql-based-sanity-check-in-airflow-before-kicking-off-machine-learning-model-2733868b1cf2 "SQL based Sanity check in Airflow before kicking off machine learning model"
 [32]: https://www.youtube.com/watch?v=NEtmrJWZbXQ "La conquête de nos workflows avec Apache Airflow - Germain Tanguy & Cedric Hourcade"
 [33]: https://blog.twitter.com/engineering/en_us/topics/insights/2018/ml-workflows.html "Productionizing ML with workflows at Twitter"
+[34]: https://hackernoon.com/airflow-meta-data-engineering-and-a-data-platform-for-the-worlds-largest-democracy-3b49a3efd5e8 "Airflow, Meta Data Engineering, and a Data Platform for the World’s Largest Democracy"
+[35]: https://medium.com/datareply/apache-airflow-1-10-0-released-highlights-6bbe7a37a8e1 "Apache Airflow 1.10.0 Released | Highlights"
