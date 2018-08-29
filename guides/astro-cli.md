@@ -1,5 +1,5 @@
 ---
-title: "Debugging DAGs with the Astronomer CLI"
+title: "A Guide to the Astronomer CLI"
 description: "Get your DAGs to run locally"
 date: 2018-07-17T00:00:00.000Z
 slug: "astro-cli"
@@ -7,23 +7,44 @@ heroImagePath: "https://cdn.astronomer.io/website/img/guides/TheAirflowUI_previe
 tags: ["admin-docs", "cli-docs", "debugging"]
 ---
 
-# Debugging DAGs with the Astronomer CLI
+# A Guide to the Astronomer CLI
 
-The Astronomer CLI provides a local, dockerized version of Apache Airflow to write your DAGs. It is an easy way to use Apache  Airflow on your local machine even if you are not using Astronomer.
+The Astronomer CLI provides a local, dockerized version of Apache Airflow to write your DAGs. It's an easy way to use Apache  Airflow on your local machine - even if you are not using Astronomer.
 
-## Getting Started
+## PART I: Set Up
 
-To install, you'll need Docker and Go on your machine.
+### Pre-requisites 
 
-Follow the guide found here to install and learn the files that are generated:
+To install the Astronomer CLI, you'll need the following on your machine:
 
-https://github.com/astronomerio/astro-cli
+1. **Docker**
+    - To download, go [here](https://www.docker.com/get-started) 
 
-If you are on Windows, check out our Windows guide:
 
-https://www.astronomer.io/guides/install-cli-windows10-wsl/
+2. **Go**
+    - To download Go, run the following:
+    ```
+    brew install go
+    ``` 
+    - For more info, go [here](https://golang.org/doc/install)
 
-Once you are installed, open a terminal and run `astro`. You should see something like this:
+(_Note_: You'll also need Pip and Python, but those are packaged with msot operating systems). 
+
+
+### Install 
+
+To move forward with the install, follow the guide in this README:  
+
+- https://github.com/astronomerio/astro-cli
+
+If you're running Windows, check out our separate Windows guide:
+
+- https://www.astronomer.io/guides/install-cli-windows10-wsl/
+
+### Getting Started
+
+To confirm the install worked, open a terminal and run `astro`. You should see something like this:
+
 ```
 astro is a command line interface for working with the Astronomer Platform.
 
@@ -46,13 +67,21 @@ Flags:
   -h, --help   help for astro
 ```
 
-## Building your image.
+From here, the [README](https://github.com/astronomerio/astro-cli) in our CLI repo (mentioned above) will walk you through the remaining few steps to get you acquainated and make sure you're up and running. 
+
+The rest of this guide will walk you through some additional use cases. 
+
+## PART II: Debugging DAGs with the CLI
+
+### Building your image.
+
 Once you've run `astro airflow init` and start developing your DAGs, you can run `astro airflow start` to build your image.
 
 - This will build a base image using Alpine Linux and from Astronomer's fork of Apache-Airflow.
 - The build process will include [everything in your project directory](https://github.com/astronomerio/astronomer/blob/master/docker/platform/airflow/onbuild/Dockerfile#L32). This makes it easy to include any shell scripts, static files, or anything else you want to include in your code.
 
-## Finding the right dependencies
+### Finding the right dependencies
+
 If your image fails to build after running `astro airflow start`, usually indicated by an error message in your console or airflow not being accessible on `localhost:8080/admin`,  it is probably due to missing OS-level packages in `packages.txt` needed for any python packages specified in `requirements.txt`.
 
 Check out these examples for an idea of what `packages` and `requirements` are needed for simple use cases:

@@ -16,7 +16,14 @@ _Note_: If you get an error the first time you click that link - try a refresh.
 
 ## Download the CLI
 
-To download the CLI, run the following command: `curl -sL https://install.astronomer.io | sudo bash -s -- v0.2.3`
+To download the CLI, run the following command:
+
+```
+curl -sL https://install.astronomer.io | sudo bash -s -- v0.2.3
+```
+For additional steps and a rundown of commands, follow our [Astro CLI guide](https://www.astronomer.io/guides/astro-cli/)
+
+For Windows users, we have a separate guide [here](https://www.astronomer.io/guides/install-cli-windows10-wsl/).
 
 **Optional**
 
