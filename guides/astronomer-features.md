@@ -13,6 +13,46 @@ When you install the Astronomer platform, a number of components are deployed
 including NGINX, Prometheus, Grafana, our GraphQL API (Houston), our React UI
 (Orbit), and a Docker Registry (used by deployment process).
 
+Helm charts here: https://github.com/astronomerio/helm.astronomer.io
+
+## Commander GRPC
+
+Commander is the provisioning component of the Astronomer Platform. It is
+responsible for interacting with the underlying Kubernetes infrastructure layer.
+
+Link: https://github.com/astronomerio/commander
+
+## Houston API
+
+Houston API is the source of truth for the Astronomer Platform.
+
+Link: https://github.com/astronomerio/houston-api
+
+## Orbit UI
+
+Open-source UI for Astronomer's managed Apache Airflow platform. For Enterprise Edition - a production-ready Airflow stack deployable to any Kubernetes cluster. For Cloud Edition - a fully managed service hosted on our infrastructure.
+
+Link: https://github.com/astronomerio/orbit-ui
+
+## dbBootstrapper
+
+Utility to initialize databases and create Kubernetes secrets for Astronomer EE.
+
+Link: https://github.com/astronomerio/db-bootstrapper
+
+## CLI
+
+The Astronomer CLI is the recommended way to get started developing and deploying on Astronomer Enterprise Edition.
+
+Link: https://github.com/astronomerio/astro-cli
+
+## Authentication
+
+* Local (username/password)
+* Auth0
+* Google
+* Github
+
 ## Airflow Clusters
 
 When you create a new Airflow deployment in Astronomer interface, Commander
@@ -21,11 +61,6 @@ workers, a small Redis instance (that backs Celery), and a statsd pod that
 streams metrics to Prometheus and Grafana. A script is automatically run
 (db-bootstrapper) to setup Postgres databases and users to support the cluster.
 
-## Astronomer CLI
-
-The [Astronomer CLI](https://github.com/astronomerio/astro-cli) is
-under very active development and you can do everything in our CLI
-that you can do in our UI.
 
 ## DAG Deployment
 
