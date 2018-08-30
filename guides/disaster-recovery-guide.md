@@ -2,7 +2,7 @@
 title: "Disaster Recovery Guide"
 description: "How do you restore service to a private installation of Astronomer?"
 date: 2018-08-24T00:00:00.000Z
-slug: "disaster-reovery-guide"
+slug: "disaster-recovery-guide"
 heroImagePath: null
 tags: ["admin-docs"]
 ---
