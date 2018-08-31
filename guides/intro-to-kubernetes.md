@@ -40,7 +40,7 @@ If implementing a modern microservice architecture, containers are probably runn
 
 As system requirements change, move container workloads in Kubernetes can be moved from one cloud provider or hosting infrastructure to another without changing any applicatoin level code.
 
-![move_to_kubes](img/move_to_kubes.jpg_large)
+![move_to_kubes](https://cdn.astronomer.io/website/img/guides/move_to_kubes.jpg)
 
 
 ## Key Terms
@@ -61,7 +61,7 @@ As system requirements change, move container workloads in Kubernetes can be mov
 
 **Kubectl**: The command line configuration tool for Kubernetes. For an overview detailing kubectl syntax, command operations, and examples, check out the [documentation here](https://kubernetes.io/docs/reference/kubectl/overview/).
 
-![ui-dashboard](img/ui-dashboard.png)
+![ui-dashboard](https://cdn.astronomer.io/website/img/guides/ui-dashboard.png)
 
 
 
