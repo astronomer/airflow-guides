@@ -145,7 +145,7 @@ The Airflow executor executes top level code on every heartbeat, so a small amou
 
 ### Task Dependencies
 
-Task dependencies are set using `set_upstream()` and `set_upstream()`. Using either will depend on your preferences, but it is best to stay consistent with which one you use.
+Task dependencies are set using `set_upstream()` and `set_downstream()`. Using either will depend on your preferences, but it is best to stay consistent with which one you use.
 
 #### Example
 
