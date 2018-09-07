@@ -92,7 +92,7 @@ As you add DAGs to your new project's `dags` directory, check the UI for any err
 
 Once you can get your DAGs working locally, you are ready to deploy them.
 
-**Step 1: CLI Login + Auth**
+### **Step 1: CLI Login + Auth**
 
 To log in and pass our authorization flow via the CLI, you'll have to run the following command:
 
@@ -104,7 +104,7 @@ To log in and pass our authorization flow via the CLI, you'll have to run the fo
   - 2. You _can_ login via app.cloud.astronomer.io directly, but our UI currently does not display the workspace ID you'll need to complete a deployment.
 
 
-** Step 2: Pull your list of workspaces**
+### **Step 2: Pull your list of workspaces**
 
 In order to deploy, you'll first need to verify your default workspace by pulling a list of all workspaces associated with your account.
 
@@ -112,22 +112,21 @@ To do so, run:
 
   `astro workspace list`
 
-  ** Step 3: Create a new deployment**
+### **Step 3: Create a new deployment**
   
   If you're a new user, you can create a new deployment by running:
 
   `astro deployment create <deployment name>`
 
-
-  ** Step 4: View Deployments
+### **Step 4: View Deployments**
   
   Once you've run your first deploy and you've made sure you're in the right workspace, all you'll have to do moving forward is list your active deployments by running:
 
   `astro deployment list`
 
   This commnand will return a list of Airflow instances you're authorized to deploy to. 
-
-** Step 5: Deploy!**
+  
+### **Step 5: Deploy!**
 
 When you're ready to deploy, run:
 
