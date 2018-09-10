@@ -10,7 +10,8 @@ tags: ["admin-docs"]
 This guide describes the process to install Astronomer on Google Cloud Platform
 (GCP).
 
-## Are you devops-y enough to do this alone?
+
+## Are you admin-y enough to do this alone?
 
 You will need to be able to:
 
@@ -31,7 +32,7 @@ Before running the Astronomer install command you must:
 1. [Obtain SSL](/guides/install-ssl)
 1. [Setup DNS](/guides/install-dns)
 1. [Set a few Kubernetes secrets](/guides/install-k8s-secrets)
-1. [Create Google OAuth Creds](/guides/install-google-oauth)
+1. [Create Google OAuth Creds ](/guides/install-google-oauth)
 1. [Build your config.yaml](/guides/install-config)
 
 ## Install Astronomer
@@ -39,7 +40,7 @@ Before running the Astronomer install command you must:
 You're ready to go!
 
 ```shell
-helm install -f config.yaml . --namespace astronomer
+$ helm install -f config.yaml . --namespace astronomer
 ```
 
 Click the link in the output notes to log in to the Astronomer app.
