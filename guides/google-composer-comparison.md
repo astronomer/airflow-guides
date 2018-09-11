@@ -41,9 +41,10 @@ As of the [1.0.0 release](https://cloud.google.com/composer/docs/release-notes#j
 
 
 ### Cost
-It’s hard to compare costs between the two services as Astronomer charges a fixed, annual license fee (although we do also have a SaaS offering that is billed monthly) that covers unlimited users and airflow instances while Composer bills at a per minute rate based on web core hours, database core hours, web and database storage, and network egress in addition to Cloud Storage and Compute Engine charges.
+It’s hard to compare costs between the two services as Astronomer charges a fixed, annual license fee* that covers unlimited users and airflow instances while Composer bills at a per minute rate based on web core hours, database core hours, web and database storage, and network egress in addition to Cloud Storage and Compute Engine charges.
 
 Based on the [estimates provided](https://cloud.google.com/composer/pricing), a single, full-time instance of Composer should cost ~$300/month (in addition to the Storage and Compute Engine costs) but that also assumes the three workers use the relatively low powered n1-standard-1 (1 vCPU; 3.75GB) machine type.
 
+*Although it's worth noting that Astronomer also has a SaaS offering that is billed monthly.
 ### Support and Training
-Along with everything available through the Astronomer platform, you also have access to support, and a wealth of Airflow experts. We’ve been using Airflow internally for 2 years and have helped many companies improve their data processes using Airflow. We offer Airflow training on the Astronomer platform through our [SpaceCamp](www.astronomer.io/spacecamp) program to help supercharge your Airflow endeavors.
+Along with everything available through the Astronomer platform, you also have access to support and a wealth of Airflow experts. We’ve been using Airflow internally for 2 years and have helped many companies improve their data processes using Airflow. We offer Airflow training on the Astronomer platform through our [SpaceCamp](www.astronomer.io/spacecamp) program to help supercharge your Airflow endeavors.
