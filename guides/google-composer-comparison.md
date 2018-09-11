@@ -9,7 +9,7 @@ tags: ["Astronomer Platform", "Google Composer"]
 
 It looks like 2018 may just be turning out to be the year of Apache Airflow. Since starting in its first incarnation back in 2014, the need for a reliable and scalable scheduler has become much more widely acknowledged while “competitors” -- there should be a different term for that when it comes to open-source projects -- such as Luigi and Azkaban have slowed in development and adoption.
 
-As it happens, 2018 just so happens to be the year [we announced our Enterprise offering](https://www.astronomer.io/blog/announcing-astronomer-enterprise-edition/) for a self-hosted Airflow management solution and Google announced their entry into the market with the Cloud based “Composer”. We’re incredibly excited that wider commercialization of the project is occurring but for the sake of clarity as [both platforms continue to develop](https://www.astronomer.io/blog/announcing-astronomer-v0-3-0/), we wanted to answer some quick questions we’ve gotten on how Astronomer is different from Composer.
+As it happens, 2018 just so happens to be the year [we announced our Enterprise offering](https://www.astronomer.io/blog/announcing-astronomer-enterprise-edition/) for a self-hosted Airflow management solution and Google announced their entry into the market with the Cloud based “Composer”. We’re incredibly excited that wider commercialization of the project is occurring but for the sake of clarity as [both platforms continue to develop](https://www.astronomer.io/blog/astronomer-v0-4-1-release/), we wanted to answer some quick questions we’ve gotten on how Astronomer is different from Composer.
 
 *NOTE: As you might expect, we’re not heavy users of Composer and this comparison is derived from customer feedback and what we could find in the public documentation and associated StackOverflow, etc. communities at the time of this writing. If anything appears incorrect, please let us know and we’ll address ASAP.*
 
@@ -39,10 +39,9 @@ Monitoring on Astronomer is handled via a Grafana dashboard (backed by Prometheu
 
 As of the [1.0.0 release](https://cloud.google.com/composer/docs/release-notes#july_19_2018_composer-100-airflow-190), logging in Composer is handled by Stackdriver and based on [fluentd](https://www.fluentd.org). In contrast, logging in Astronomer is handled by [Elasticsearch](https://www.elastic.co/products/elasticsearch).
 
-### Security and Authentication
 
 ### Cost
-It’s hard to say what the cost comparison between the two services as Astronomer charges a fixed, annual license fee that covers unlimited users and airflow instances while Composer bills at a per minute rate based on web core hours, database core hours, web and database storage, and network egress in addition to Cloud Storage and Compute Engine charges.
+It’s hard to say what the cost comparison between the two services as Astronomer charges a fixed, annual license fee (although we do also have a SaaS offering that is billed monthly) that covers unlimited users and airflow instances while Composer bills at a per minute rate based on web core hours, database core hours, web and database storage, and network egress in addition to Cloud Storage and Compute Engine charges.
 
 Based on the [estimates provided](https://cloud.google.com/composer/pricing), a single, full-time instance of Composer should cost ~$300/month (in addition to the Storage and Compute Engine costs) but that also assumes the three workers use the relatively low powered n1-standard-1 (1 vCPU; 3.75GB) machine type.
 
