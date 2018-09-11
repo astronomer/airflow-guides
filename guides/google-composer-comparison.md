@@ -1,13 +1,11 @@
 ---
 title: "Astronomer vs. Google Cloud Composer"
-description: "A high-level comparison of Astronomer and Composer"
+description: "A high-level comparison of Astronomer and Google Cloud Composer"
 date: 2018-08-30T00:00:00.000Z
-slug: "composer-comparison"
+slug: "google-composer-comparison"
 heroImagePath: null
 tags: ["Astronomer Platform", "Google Composer"]
 ---
-
-
 
 It looks like 2018 may just be turning out to be the year of Apache Airflow. Since starting in its first incarnation back in 2014, the need for a reliable and scalable scheduler has become much more widely acknowledged while “competitors” -- there should be a different term for that when it comes to open-source projects -- such as Luigi and Azkaban have slowed in development and adoption.
 
