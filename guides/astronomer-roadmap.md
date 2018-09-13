@@ -7,7 +7,7 @@ heroImagePath: null
 tags: ["user-docs", "admin-docs"]
 ---
 
-# Upcoming features:
+Upcoming features:
 
 * [Support for multiple Airflow versions](https://github.com/astronomerio/astronomer/issues/131)
   * Airflow 1.8, 1.9, 1.10
