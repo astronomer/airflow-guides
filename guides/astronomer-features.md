@@ -7,11 +7,14 @@ heroImagePath: null
 tags: ["astronomer"]
 ---
 
-## Astronomer Installation
+## Easy Installation
+
+Self-install the platform on cloud Kubernetes following our
+[guides](https://www.astronomer.io/guides/install/).
 
 When you install the Astronomer platform, a number of components are deployed
-including NGINX, Prometheus, Grafana, our GraphQL API (Houston), our React UI
-(Orbit), and a Docker Registry (used by deployment process).
+including NGINX, Prometheus, Grafana, a GraphQL API (Houston), a React UI
+(Orbit), and a Docker Registry (used by DAG deployment process).
 
 Helm charts here: https://github.com/astronomerio/helm.astronomer.io
 

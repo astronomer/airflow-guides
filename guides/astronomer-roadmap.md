@@ -11,8 +11,6 @@ Upcoming features:
 
 * [Support for multiple Airflow versions](https://github.com/astronomerio/astronomer/issues/131)
   * Airflow 1.8, 1.9, 1.10
-* [Improve Grafana dashboard](https://github.com/astronomerio/astronomer/issues/150)
-  * Improve the Grafana dashboard for monitoring a system with multiple airflows deployed
 * [KubernetesPodOperator support](https://github.com/astronomerio/astronomer-ee/issues/116)
   * Better alternative to DockerOperator for Kubernetes environment
 * [Override environment variables on airflow deployments](https://github.com/astronomerio/astronomer-ee/issues/117)
