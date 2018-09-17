@@ -18,7 +18,7 @@ You will need to be able to:
 * Create resources on AWS
 * Install/run Kubernetes command line tools to your machine
 
-## Pre-requisites
+## Prerequisites
 
 Before running the Astronomer install command you must:
 
