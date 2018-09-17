@@ -10,7 +10,7 @@ tags: ["admin-docs"]
 ## GCP
 
 * Install Google Cloud CLI [Google Cloud SDK](https://cloud.google.com/sdk/install)
-* Initialize gcloud to use your Google Cloud Project [gclouf init](https://cloud.google.com/sdk/gcloud/reference/init)
+* Initialize gcloud to use your Google Cloud Project [gcloud init](https://cloud.google.com/sdk/gcloud/reference/init)
 
 ## AWS
 
