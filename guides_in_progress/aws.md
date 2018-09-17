@@ -25,8 +25,8 @@ Make sure you have correctly installed the following tools, and can run a test c
 - Helm: `helm version`
   - Output: `Client: &version.Version{SemVer:"v2.9.1", GitCommit:"20adb27c7c5868466912eebdf6664e7390ebe710", GitTreeState:"clean"}`
 
-- AWS CLI: `aws -version`
-  - Output: `Client: &version.Version{SemVer:"v2.9.1", GitCommit:"20adb27c7c5868466912eebdf6664e7390ebe710", GitTreeState:"clean"}`
+- AWS CLI: `aws --version`
+  - Output: `aws-cli/1.15.24 Python/3.6.4 Darwin/17.7.0 botocore/1.10.24`
 
 - Kubectl: `kubectl version`
   - Output: `Client Version: version.Info{Major:"1", Minor:"10", GitVersion:"v1.10.3", GitCommit:"2bba0127d85d5a46ab4b778548be28623b32d0b0", GitTreeState:"clean", BuildDate:"2018-05-21T09:17:39Z"`
