@@ -14,7 +14,7 @@ tags: ["admin-docs"]
 
 ## AWS
 
-* Install the [AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/installing.html) and [Heptio Authenticator](https://docs.aws.amazon.com/eks/latest/userguide/configure-kubectl.html)
+* Install the [AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/installing.html) and [AWS IAM Authenticator for Kubernetes](https://docs.aws.amazon.com/eks/latest/userguide/configure-kubectl.html)
 
 ## General
 
