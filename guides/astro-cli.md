@@ -95,7 +95,7 @@ Future releases of the Astronomer CLI will have cleaner ways of overwriting envi
 
 - Any bash scripts you want to run as `sudo` when the image builds can be added as such:
 `RUN COMMAND_HERE`
-- Airflow configuration variables found in [`airflow.cfg`](https://github.com/apache/incubator-airflow/blob/master/airflow/config_templates/default_airflow.cfg) can be overriten with the following format:
+- Airflow configuration variables found in [`airflow.cfg`](https://github.com/apache/incubator-airflow/blob/master/airflow/config_templates/default_airflow.cfg) can be overwritten with the following format:
 ```
  ENV AIRFLOW__SECTION__PARAMETER VALUE
 ```
