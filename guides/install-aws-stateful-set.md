@@ -7,7 +7,7 @@ heroImagePath: null
 tags: ["Airflow", "AWS", "Product Documentation"]
 ---
 
-Create a new `.yaml` filem you can call it `storageclass.yaml` and add the following:
+Create a new `.yaml` file you can call it `storageclass.yaml` and add the following:
 
 ```
 kind: StorageClass
