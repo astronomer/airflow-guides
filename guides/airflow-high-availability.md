@@ -8,7 +8,7 @@ tags: ["Airflow", "Best Practices", "High-Availability"]
 ---
 
 ## Overview
-High-Availability (HA) is a concept that refers to a particular service or cluster meeting a specified amount of uptime. In order to meet more stringent uptime requirements, a service or cluster will often leverage a more complex architecture to ensure that downtime is rare and brief when it does occur.
+High-Availability (HA) is a concept which refers to a particular service or cluster meeting a specified amount of uptime. In order to meet more stringent uptime requirements, a service or cluster will often leverage a more complex architecture to ensure that downtime is rare and brief when it does occur.
 
 While the Apache Airflow project does not discuss specifics of HA, some in the community have discussed [Airflow HA previously](http://site.clairvoyantsoft.com/making-apache-airflow-highly-available/). Unlike those previous discussions, this article will focus on HA for an Airflow cluster orchestrated by Kubernetes. 
 
@@ -16,7 +16,7 @@ Kubernetes is an open-source container-orchestration tool, ["providing basic mec
 
 ## Components
 
-Apache Airflow contains several core components that we must consider when we talk about a highly-availability Airflow cluster. This section discusses each component and the best effort scenario for ensuring that it's uptime meets your high-availability needs.
+Apache Airflow contains several core components that we must consider when writing about the availability of an Airflow cluster. This section discusses each component and the best effort scenario for ensuring that it's uptime meets your high-availability needs.
 
 ### Webserver
 
@@ -28,14 +28,14 @@ Kubernetes provides some abstractions around these concepts to help developers e
 
 Airflow provides the user an abstraction around how the work is "executed", known as [executors](https://airflow.apache.org/code.html#executors). 
 
-The [LocalExecutor](https://airflow.apache.org/code.html#airflow.executors.local_executor.LocalExecutor) runs on the same node as the scheduler and therefore can only be scaled up, preventing a user from creating a redundant cluster one would see if they scaled out.
+The [LocalExecutor](https://airflow.apache.org/code.html#airflow.executors.local_executor.LocalExecutor) runs on the same node as the scheduler and therefore can only be scaled up, preventing a user from creating execution redundancy one would see if they were able to scaled out.
 
-The [CeleryExecutor](https://airflow.apache.org/code.html#airflow.executors.celery_executor.CeleryExecutor) is a common choice for a distributed executor that allows a user to spin up many worker nodes. If a single node goes down other workers are available to pick up the work. If workers begin to fall behind, one can scale out the workers to meet the current demand.
+The [CeleryExecutor](https://airflow.apache.org/code.html#airflow.executors.celery_executor.CeleryExecutor) is a common choice for a distributed executor that allows a user to spin up many worker nodes. If a single node goes down, other workers remain available. If workers begin to fall behind, one can scale out the workers to meet the current demand.
 
-The [KubernetesExecutor](https://airflow.apache.org/kubernetes.html?highlight=kubernetes%20executor) removes the need to run individual workers, allowing work to be evenly distributed across the entire Kubernetes cluster. The work is executed inside a docker container managed by a [Kubernetes Pod](https://kubernetes.io/docs/concepts/workloads/pods/pod/). Pods represent a unique service running on one or more containers and provide a clean abstraction around the creation, starting, stopping and deleting of that service.
+The [KubernetesExecutor](https://airflow.apache.org/kubernetes.html?highlight=kubernetes%20executor) removes the need to run individual workers, instead allowing work to be evenly distributed across the entire Kubernetes cluster. The work is executed inside a Docker container managed by a [Kubernetes Pod](https://kubernetes.io/docs/concepts/workloads/pods/pod/). Pods represent a unique service running on one or more containers and provide a clean abstraction around the creation, execution, termination and deletion of that service.
 
 ### Scheduler
 
-At the time of writing, the scheduler is the only component of Airflow that cannot truly be highly-available. This is the result of it not being designed as a distributed service, therefore only one scheduler can be running at any given time. This leaves us focusing on how to minimize downtime in the event of a scheduler failing. 
+At the time of writing, the scheduler is the only component of Airflow that cannot truly be highly-available. This is the result of it not being designed as a distributed service, therefore only one scheduler can be running at any given time. This leaves us focusing on how to minimize downtime in the event of a scheduler failing.
 
 The first step one can take is setting appropriate [health checks and liveness probes](https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-probes/) to allow Kubernetes to appropriately manage the state of the scheduler pod and containers. Once configured, one can begin to explore [Pod Disruption Budgets](https://kubernetes.io/docs/concepts/workloads/pods/disruptions/#how-disruption-budgets-work) to ensure that there is always a scheduler available for failover in the event of a failure. 
