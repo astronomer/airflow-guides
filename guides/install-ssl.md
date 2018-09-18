@@ -21,11 +21,19 @@ We recommend purchasing a TLS certificate signed by a Trusted CA. Alternatively 
 
 > Note: Self-signed certificates are not supported on the Astronomer Platform.
 
-Run:
+Run (Linux):
 
 ```shell
 docker run -it --rm --name letsencrypt -v /etc/letsencrypt:/etc/letsencrypt -v /var/lib/letsencrypt:/var/lib/letsencrypt certbot/certbot:latest certonly -d "*.astro.mycompany.com" --manual --preferred-challenges dns --server https://acme-v02.api.letsencrypt.org/directory
 ```
+
+Run (macOS):
+
+```shell
+docker run -it --rm --name letsencrypt -v /Users/<my-username>/<my-project>/letsencrypt1:/etc/letsencrypt -v /Users/<my-username>/<my-project>/letsencrypt2:/var/lib/letsencrypt certbot/certbot:latest certonly -d "*.astro.mycompany.com" --manual --preferred-challenges dns --server https://acme-v02.api.letsencrypt.org/directory
+```
+
+Note: This changes the 2 volume mount paths (beginning with `-v` before the colon) to host paths accessible to Docker for Mac.
 
 Sample output:
 
