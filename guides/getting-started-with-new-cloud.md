@@ -16,7 +16,7 @@ _Note_: If you get an error the first time you click that link - try a refresh.
 
 ## Download the CLI
 
-To download the CLI, run the following command: `curl -sL https://install.astronomer.io | sudo bash -s -- v0.2.3`
+To download the CLI, run the following command: `curl -o- https://cli.astronomer.io/install.sh | bash`
 
 **Optional**
 
