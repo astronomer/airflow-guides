@@ -99,7 +99,7 @@ query GetWorkspaces2 {
 
 ### Listing A Workspace's Deployments
 
-```
+```graphql
 query GetDeployments {
   deployments(workspaceUuid:"WORKSPACE-UUID") {
     uuid
@@ -112,7 +112,7 @@ query GetDeployments {
 
 In some cases, the query may return a nested object, you can access the nested object attributes using a query similar to the example below
 
-```
+```graphql
 query GetDeployments {
   deployments(workspaceUuid:"WORKSPACE-UUID") {
     uuid
@@ -133,7 +133,7 @@ query GetDeployments {
 
 In this example we create a new Airflow deployment.
 
-```
+```graphql
 mutation CreateDeployment {
   createDeployment(
     type: "airflow", label: "EXAMPLE LABEL", workspaceUuid:"WORKSPACE UUID", version: "1.9.0")
@@ -150,7 +150,7 @@ mutation CreateDeployment {
 
 When updating an existing object you may need to pass in a JSON payload of attributes. Notice how the `payload` parameter is unquotes raw json.
 
-```
+```graphql
 mutation UpdateDeployment {
   updateDeployment(deploymentUuid:"DEPLOYMENT UUID", payload: {label: "MY NEW LABEL"}) {
     uuid
