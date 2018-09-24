@@ -2,7 +2,7 @@
 title: "Using Houston Playground"
 description: "How to write queries against the Houston playground directly"
 date: 2018-09-21T00:00:00.000Z
-slug: "houston-playground"
+slug: "using-houston-playground"
 heroImagePath: null
 tags: ["astronomer, houston, api, playground"]
 ---
