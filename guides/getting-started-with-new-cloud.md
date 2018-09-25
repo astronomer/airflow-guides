@@ -1,5 +1,5 @@
 ---
-title: "Getting Started with Astronomer Cloud 2.0"
+title: "Getting Started with Astronomer Cloud"
 description: "Migrate over to our new cloud"
 date: 2018-08-01T00:00:00.000Z
 slug: "getting-started-with-new-cloud"
