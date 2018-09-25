@@ -18,19 +18,6 @@ _Note_: If you get an error the first time you click that link - try a refresh.
 
 To download the CLI, run the following command: `curl -sL https://install.astronomer.io | sudo bash -s -- v0.5.1`
 
-**Optional**
-
-If you have the old CLI, you can alias the old CLI in your `.bashrc`.
-
-Find the path to your cloud-cli binary. It usually looks like:
-`~/.astro/astro/astro`
-
-Open your `.bashrc` and add:
-
-`alias astro-cld=PATH_TO_FILE/astro`
-
-This will allow you to use the old CLI as `astro-cld`
-
 ## Get started with the new CLI
 
 Run `astro airflow init` in a project directory. This will generate some skeleton files:
