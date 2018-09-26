@@ -1,5 +1,5 @@
 ---
-title: "Getting Started with Astronomer Cloud 2.0"
+title: "Getting Started with Astronomer Cloud"
 description: "Migrate over to our new cloud"
 date: 2018-08-01T00:00:00.000Z
 slug: "getting-started-with-new-cloud"
@@ -17,19 +17,6 @@ _Note_: If you get an error the first time you click that link - try a refresh.
 ## Download the CLI
 
 To download the CLI, run the following command: `curl -sL https://install.astronomer.io | sudo bash -s -- v0.5.1`
-
-**Optional**
-
-If you have the old CLI, you can alias the old CLI in your `.bashrc`.
-
-Find the path to your cloud-cli binary. It usually looks like:
-`~/.astro/astro/astro`
-
-Open your `.bashrc` and add:
-
-`alias astro-cld=PATH_TO_FILE/astro`
-
-This will allow you to use the old CLI as `astro-cld`
 
 ## Get started with the new CLI
 
