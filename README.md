@@ -24,4 +24,4 @@ The Astronomer website uses the `/guides` directory in this repo as a CMS for it
 ## How to deploy guides
 
 1. All changes pushed to airflow-guides will trigger a webhook to rebuild preview.astronomer.io.
-2. To deploy to www.astronomer.io, publish a new release. We are starting at v1.0.0, using semantic versioning. This means, if you publish a new guide, bumb the 3rd number eg `v1.1.0`. If you have to edit a guide, bump the 3rd number `v1.1.1`.
+2. To deploy to www.astronomer.io, publish a new release. We are starting at v1.0.0, using semantic versioning. This means, if you publish a new guide, bumb the 2nd number eg `v1.1.0`. If you have to edit a guide, bump the 3rd number `v1.1.1`.
