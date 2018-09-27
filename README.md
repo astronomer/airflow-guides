@@ -23,6 +23,5 @@ The Astronomer website uses the `/guides` directory in this repo as a CMS for it
 
 ## How to deploy guides
 
-1. Open <https://circleci.com/gh/astronomerio/workflows/website/tree/dato-production>.
-1. In CircleCI, click `Rerun > Rerun from beginning` on the latest build marked "succeeded".
-1. After the build succeeds, open <https://www.astronomer.io/guides/> to verify.
+1. All changes pushed to airflow-guides will trigger a webhook to rebuild preview.astronomer.io.
+2. To deploy to www.astronomer.io, publish a new release.
