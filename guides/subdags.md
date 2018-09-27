@@ -57,7 +57,7 @@ This object should then be called when instanstiating the SubDagOperator:
 ```python
 load_tasks = SubDagOperator(
         task_id='load_tasks',
-        subdag=extract_subdag('example_subdag_operator',
+        subdag=load_subdag('example_subdag_operator',
                            'load_tasks', default_args),
         default_args=default_args,
         dag=dag,
