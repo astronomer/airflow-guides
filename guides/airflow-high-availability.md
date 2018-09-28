@@ -6,11 +6,11 @@ slug: "airflow-high-availability"
 heroImagePath: "https://assets.astronomer.io/website/img/guides/bestwritingpractices.png"
 tags: ["Airflow", "Best Practices", "High-Availability"]
 ---
-test
+
 ## Overview
 High-Availability (HA) is a concept which refers to a particular service or cluster meeting a specified amount of uptime. In order to meet more stringent uptime requirements, a service or cluster will often leverage a more complex architecture to ensure that downtime is rare and brief when it does occur.
 
-While the Apache Airflow project does not discuss specifics of HA, some in the community have discussed [Airflow HA previously](http://site.clairvoyantsoft.com/making-apache-airflow-highly-available/). Unlike those previous discussions, this article will focus on HA for an Airflow cluster orchestrated by Kubernetes.
+While the Apache Airflow project does not discuss specifics of HA, some in the community have discussed [Airflow HA previously](http://site.clairvoyantsoft.com/making-apache-airflow-highly-available/). Unlike those previous discussions, this article will focus on HA for an Airflow cluster orchestrated by Kubernetes. 
 
 Kubernetes is an open-source container-orchestration tool, ["providing basic mechanisms for deployment, maintenance, and scaling of applications."](https://github.com/kubernetes/kubernetes/#kubernetes) It provides abstractions that simplify highly-available Airflow clusters for our customers.
 
@@ -26,7 +26,7 @@ Kubernetes provides some abstractions around these concepts to help developers e
 
 ### Executors
 
-Airflow provides the user an abstraction around how the work is "executed", known as [executors](https://airflow.apache.org/code.html#executors).
+Airflow provides the user an abstraction around how the work is "executed", known as [executors](https://airflow.apache.org/code.html#executors). 
 
 The [LocalExecutor](https://airflow.apache.org/code.html#airflow.executors.local_executor.LocalExecutor) runs on the same node as the scheduler and therefore can only be scaled up, preventing a user from creating execution redundancy one would see if they were able to scaled out.
 
@@ -38,4 +38,4 @@ The [KubernetesExecutor](https://airflow.apache.org/kubernetes.html?highlight=ku
 
 At the time of writing, the scheduler is the only component of Airflow that cannot truly be highly-available. This is the result of it not being designed as a distributed service, therefore only one scheduler can be running at any given time. This leaves us focusing on how to minimize downtime in the event of a scheduler failing.
 
-The first step one can take is setting appropriate [health checks and liveness probes](https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-probes/) to allow Kubernetes to appropriately manage the state of the scheduler pod and containers. Once configured, one can begin to explore [Pod Disruption Budgets](https://kubernetes.io/docs/concepts/workloads/pods/disruptions/#how-disruption-budgets-work) to ensure that there is always a scheduler available for failover in the event of a failure.
+The first step one can take is setting appropriate [health checks and liveness probes](https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-probes/) to allow Kubernetes to appropriately manage the state of the scheduler pod and containers. Once configured, one can begin to explore [Pod Disruption Budgets](https://kubernetes.io/docs/concepts/workloads/pods/disruptions/#how-disruption-budgets-work) to ensure that there is always a scheduler available for failover in the event of a failure. 
