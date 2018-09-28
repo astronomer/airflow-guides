@@ -1,9 +1,12 @@
 ---
-layout: page
-title: Deploying DAGs with CI/CD
-permalink: /guides/deploying-dags-with-cicd/
-hide: true
+title: "Deploying Dags with CI/CD"
+description: "How to deploy your DAGs using CI/CD tools to your Astronomer Airflow cluster.
+date: 2018-08-24T00:00:00.000Z
+slug: "deploying-dags-with-cicd"
+heroImagePath: null
+tags: ["admin-docs","Astronomer"]
 ---
+
 
 # Deploying DAGS with CI/CD
 
