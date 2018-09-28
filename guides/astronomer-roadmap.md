@@ -7,11 +7,11 @@ heroImagePath: null
 tags: ["user-docs", "admin-docs"]
 ---
 
-Coming in 0.6.2:
+## v0.6.2
 
 * Platform closed for signups by default
 
-Coming in 0.7:
+## v0.7
 
 * [Override environment variables on airflow deployments](https://github.com/astronomerio/astronomer-ee/issues/117)
   * As a user, I need to configure my SMTP settings (email alerts), settings for parallelism, and other ENV level settings without exposing credentials in my dockerfile.
@@ -21,7 +21,7 @@ Coming in 0.7:
 * [Control worker termination grace period](https://github.com/astronomerio/astronomer-ee/issues/123)
   * As a deployment.owner I should be able to set the grace period for my workers to restart during a code push.
 
-Coming in 0.8 (subject to change):
+## v0.8 (subject to change)
 
 * Logging
   * Add elasticsearch and fluentd components w/ helm as part of the Astronomer Platform initial deployment
@@ -32,7 +32,7 @@ Coming in 0.8 (subject to change):
 * [Container Status](https://github.com/astronomerio/astronomer-ee/issues/124)
   * As a deployment.user, I want to see the status of my airflow cluster components in real time: Webserver, Scheduler, Workers.
 
-Coming in 0.9 (subject to change):
+## v0.9 (subject to change)
 
 * [Support for multiple Airflow versions](https://github.com/astronomerio/astronomer/issues/131)
   * Airflow 1.8, 1.9, 1.10
@@ -42,7 +42,7 @@ Coming in 0.9 (subject to change):
   * Cluster owner CRUD custom task pod sizes
   * User can change concurrency and worker size for an Airflow cluster
 
-Later:
+## Later
 
 * Other OAuth providers, as requested
 * Audit Logging. Collect audit logs, present in UI.
