@@ -3,7 +3,7 @@ title: "Setting up GCP for Astronomer"
 description: "Setting up GCP for Astronomer"
 date: 2018-07-17T00:00:00.000Z
 slug: "install-gcp-setup"
-heroImagePath: "https://cdn.astronomer.io/website/img/guides/TheAirflowUI_preview.png"
+heroImagePath: "https://assets.astronomer.io/website/img/guides/TheAirflowUI_preview.png"
 tags: ["admin-docs"]
 ---
 

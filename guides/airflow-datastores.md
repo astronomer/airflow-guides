@@ -3,7 +3,7 @@ title: "Using Airflow Datastores"
 description: "Use Apache Airflow's internal datastores to build more powerful DAGs"
 date: 2018-05-21T00:00:00.000Z
 slug: "airflow-datastores"
-heroImagePath: "https://cdn.astronomer.io/website/img/guides/datastores.png"
+heroImagePath: "https://assets.astronomer.io/website/img/guides/datastores.png"
 tags: ["Datastores", "Airflow"]
 ---
 
@@ -75,7 +75,7 @@ set_confg = Variable.set(db_config)
 
 Variables can also be created from the UI.
 
-![variable_ui](https://cdn.astronomer.io/website/img/guides/variable_ui.png)
+![variable_ui](https://assets.astronomer.io/website/img/guides/variable_ui.png)
 
 **Note:** Although variables are fernet key encrypted in the database, they are accessible in the UI and therefore should not be used to store passwords or other sensitve data.
 
@@ -93,14 +93,14 @@ _Everything is stored in the database._
 
 In the example above - XCom values can be seen for every task.
 
-![task_instance](https://cdn.astronomer.io/website/img/guides/xcom_push.png)
+![task_instance](https://assets.astronomer.io/website/img/guides/xcom_push.png)
 
 Under "View Logs"
-![view_xcom](https://cdn.astronomer.io/website/img/guides/xcom_encrypt.png)
+![view_xcom](https://assets.astronomer.io/website/img/guides/xcom_encrypt.png)
 
 **Note:** Encryption and character settings may show misleading values in the UI. However, the values will be preserverd when working with them:
 
-![view_xcom](https://cdn.astronomer.io/website/img/guides/xcom_pull_logs.png)
+![view_xcom](https://assets.astronomer.io/website/img/guides/xcom_pull_logs.png)
 
 XCom data can be deleted straight from the database.
 

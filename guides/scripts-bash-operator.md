@@ -3,7 +3,7 @@ title: "Running scripts using the BashOperator"
 description: "Learn and troubleshoot how to run shell scripts using the Bash Operator in Airflow"
 date: 2018-07-17T00:00:00.000Z
 slug: "scripts-bash-operator"
-heroImagePath: "https://cdn.astronomer.io/website/img/guides/TheAirflowUI_preview.png"
+heroImagePath: "https://assets.astronomer.io/website/img/guides/TheAirflowUI_preview.png"
 tags: ["Building DAGs", "BashOperator", "Airflow"]
 ---
 

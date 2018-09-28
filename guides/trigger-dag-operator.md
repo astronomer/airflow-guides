@@ -3,7 +3,7 @@ title: "Trigger DAGs in Airflow"
 description: "How to use DAGs to trigger secondary DAG kickoffs in Airflow."
 date: 2018-05-23T00:00:00.000Z
 slug: "trigger-dag-operator"
-heroImagePath: "https://cdn.astronomer.io/website/img/guides/trigger.png"
+heroImagePath: "https://assets.astronomer.io/website/img/guides/trigger.png"
 tags: ["Building DAGs", "Operators", "Airflow"]
 ---
 
@@ -109,7 +109,7 @@ for check in checks:
     first_task >> sensor >> trigger
 ```
 
-![system_check_controller](https://cdn.astronomer.io/website/img/guides/system_check_controller.png)
+![system_check_controller](https://assets.astronomer.io/website/img/guides/system_check_controller.png)
 
 #### Adding Trigger Rules
 
@@ -140,4 +140,4 @@ with dag:
         first_task >> sensor >> trigger
 ```
 
-![system_check_controller](https://cdn.astronomer.io/website/img/guides/trigger_rule_sensor_dag.png)
+![system_check_controller](https://assets.astronomer.io/website/img/guides/trigger_rule_sensor_dag.png)

@@ -3,7 +3,7 @@ title: "Salesforce API to Redshift with Apache Airflow"
 description: "Use Airflow to ingest CRM data from the Salesforce API to Redshift"
 date: 2018-05-23T00:00:00.000Z
 slug: "salesforce-to-redshift"
-heroImagePath: "https://cdn.astronomer.io/website/img/guides/SalesforceToRedshift_preview.png"
+heroImagePath: "https://assets.astronomer.io/website/img/guides/SalesforceToRedshift_preview.png"
 tags: ["Building DAGs", "Redshift", "Salesforce"]
 ---
 

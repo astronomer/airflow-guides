@@ -3,7 +3,7 @@ title: "Using Apache Airflow Plugins"
 description: "A crash-course in using Airflow Plugins."
 date: 2018-05-21T00:00:00.000Z
 slug: "using-airflow-plugins"
-heroImagePath: "https://cdn.astronomer.io/website/img/guides/bestpractices.png"
+heroImagePath: "https://assets.astronomer.io/website/img/guides/bestpractices.png"
 tags: ["Airflow", "Best Practices", "Plugins"]
 ---
 

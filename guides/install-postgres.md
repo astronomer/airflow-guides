@@ -3,7 +3,7 @@ title: "Install Postgres for Astronomer"
 description: "Install Postgres for Astronomer"
 date: 2018-07-17T00:00:00.000Z
 slug: "install-postgres"
-heroImagePath: "https://cdn.astronomer.io/website/img/guides/TheAirflowUI_preview.png"
+heroImagePath: "https://assets.astronomer.io/website/img/guides/TheAirflowUI_preview.png"
 tags: ["admin-docs"]
 ---
 

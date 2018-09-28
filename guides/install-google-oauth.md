@@ -28,13 +28,13 @@ If you already have an existing project you want to use, you can skip to Step 3
 
 In the top nav, you will have a dropdown with a label of either a currently selected project or `Select a project`.
 
-![select-project](https://cdn.astronomer.io/website/img/guides/google-oauth-creds/select-project.png)
+![select-project](https://assets.astronomer.io/website/img/guides/google-oauth-creds/select-project.png)
 
 Click this dropdown, which will open a project selection window.  In this window, click the `Create project` button in the top right.
 
 This will direct you to a page to create a new project.  Fill in the `Project Name` field and click `Create`
 
-![create-project](https://cdn.astronomer.io/website/img/guides/google-oauth-creds/create-project.png)
+![create-project](https://assets.astronomer.io/website/img/guides/google-oauth-creds/create-project.png)
 
 Now you should have a new project and it should automatically be selected as your active project.
 
@@ -46,7 +46,7 @@ In the main menu, hover over the `APIs & Services` item, and click on the sub-me
 
 On the `Credentials` page there will be three tabs.  Click the center tab `OAuth consent screen`.  In this form, fill out the `Product name shown to users` field.  The value doesn't matter, but it must be set to create credentials.
 
-![update-consent](https://cdn.astronomer.io/website/img/guides/google-oauth-creds/update-consent.png)
+![update-consent](https://assets.astronomer.io/website/img/guides/google-oauth-creds/update-consent.png)
 
 Hit save in the bottom left of the form, and you should be ready to create your credentials
 
@@ -54,7 +54,7 @@ Hit save in the bottom left of the form, and you should be ready to create your 
 
 On the `Credentials` page, click the left tab labeled `Credentials`.  Down the page will be a button labeled `Create credentials`.  Click this, which will open a dropdown.  Hit the option labeled `OAuth client ID`
 
-![create-creds](https://cdn.astronomer.io/website/img/guides/google-oauth-creds/create-creds.png)
+![create-creds](https://assets.astronomer.io/website/img/guides/google-oauth-creds/create-creds.png)
 
 ### Step 6: Create the OAuth credentials
 
@@ -80,7 +80,7 @@ Once these fields have been filled out, click the `Create` button in the bottom 
 
 After creating your credentials, Google will redirect you back to the credentials page and popup a window with your newly created OAuth client credentials.
 
-![copy-client-id-secret](https://cdn.astronomer.io/website/img/guides/google-oauth-creds/copy-client-id-secret.png)
+![copy-client-id-secret](https://assets.astronomer.io/website/img/guides/google-oauth-creds/copy-client-id-secret.png)
 
 If you accidentally close this, or need to refer to them at a later date, clicking the name of the credentials you just created in the list of credentials on this page will display them.
 

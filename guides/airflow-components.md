@@ -3,7 +3,7 @@ title: "Airflow's Components"
 description: "How all of Apache Airflow's components fit together."
 date: 2018-05-21T00:00:00.000Z
 slug: "airflow-components"
-heroImagePath: "https://cdn.astronomer.io/website/img/guides/components.png"
+heroImagePath: "https://assets.astronomer.io/website/img/guides/components.png"
 tags: ["Airflow", "Components"]
 ---
 
@@ -21,7 +21,7 @@ At the core,  Airflow consists of 4 core components:
 
 **Metadata Database:** A database (usually Postgres, but can be anything with SQLAlchemy support) that powers how the other components interact. The scheduler stores and updates task statuses, which the webserver then uses to display job information
 
-![title](https://cdn.astronomer.io/website/img/guides/airflow_component_relationship.png)
+![title](https://assets.astronomer.io/website/img/guides/airflow_component_relationship.png)
 
 ## How does work get scheduled?
 

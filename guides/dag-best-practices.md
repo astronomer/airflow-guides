@@ -3,7 +3,7 @@ title: "DAG Writing Best Practices in Apache Airflow"
 description: "How to create effective, clean, and functional DAGs."
 date: 2018-05-21T00:00:00.000Z
 slug: "dag-best-practices"
-heroImagePath: "https://cdn.astronomer.io/website/img/guides/bestwritingpractices.png"
+heroImagePath: "https://assets.astronomer.io/website/img/guides/bestwritingpractices.png"
 tags: ["DAGs", "Data Pipelines", "Airflow"]
 ---
 

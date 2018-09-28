@@ -3,7 +3,7 @@ title: "Intro to Apache Airflow DAGs"
 description: "What are DAGs and how they are constructed in Apache Airflow?"
 date: 2018-05-21T00:00:00.000Z
 slug: "dags"
-heroImagePath: "https://cdn.astronomer.io/website/img/guides/IntroToDAG_preview.png"
+heroImagePath: "https://assets.astronomer.io/website/img/guides/IntroToDAG_preview.png"
 tags: ["UI", "Frontend", "Airflow"]
 ---
 
@@ -27,7 +27,7 @@ Directed Graph: A directed graph is any graph where the vertices and edges have 
 
 Directed Acyclic Graph: Finally, a directed acyclic graph is a directed graph without any cycles. A cycle is just a series of vertices that connect back to each other in a closed chain.
 
-![title](https://cdn.astronomer.io/website/img/guides/dag_example.png)
+![title](https://assets.astronomer.io/website/img/guides/dag_example.png)
 
 In Airflow, each node in a DAG (soon to be known as a task) represents some form of data processing:
 
@@ -51,7 +51,7 @@ Node B is  _downstream_ from Node A - it won't execute until Node A finishes.
 
 Workflows, particularly around those processing data, have to have a point of "completion." This especially holds true in batch architectures to be able to say that a certain "batch" ran successfully.
 
-![title](https://cdn.astronomer.io/website/img/guides/cycle_example.png)
+![title](https://assets.astronomer.io/website/img/guides/cycle_example.png)
 
 ### Recap
 

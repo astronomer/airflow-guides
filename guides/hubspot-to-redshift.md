@@ -3,7 +3,7 @@ title: "Hubspot API to Redshift with Airflow"
 description: "Use Airflow to ingest CRM data from the Hubspot API into Redshift"
 date: 2018-05-23T00:00:00.000Z
 slug: "hubspot-to-redshift"
-heroImagePath: "https://cdn.astronomer.io/website/img/guides/HubspotToRedshift_preview.png"
+heroImagePath: "https://assets.astronomer.io/website/img/guides/HubspotToRedshift_preview.png"
 tags: ["Building DAGs", "Redshift", "Hubspot"]
 ---
 

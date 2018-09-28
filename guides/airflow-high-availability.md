@@ -3,7 +3,7 @@ title: "Airflow High-Availability"
 description: "Best practice for running a high-availability Airflow cluster"
 date: 2018-09-11T00:00:00.000Z
 slug: "airflow-high-availability"
-heroImagePath: "https://cdn.astronomer.io/website/img/guides/bestwritingpractices.png"
+heroImagePath: "https://assets.astronomer.io/website/img/guides/bestwritingpractices.png"
 tags: ["Airflow", "Best Practices", "High-Availability"]
 ---
 

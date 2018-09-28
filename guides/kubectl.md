@@ -3,7 +3,7 @@ title: "Intro to Kubectl"
 description: "Getting setup and basic commands on kubectl"
 date: 2018-05-21T00:00:00.000Z
 slug: "kubectl"
-heroImagePath: "https://cdn.astronomer.io/website/img/guides/IntroToDAG_preview.png"
+heroImagePath: "https://assets.astronomer.io/website/img/guides/IntroToDAG_preview.png"
 tags: ["UI", "Frontend", "Airflow"]
 ---
 

@@ -3,7 +3,7 @@ title: "Managing Dependencies in Apache Airflow"
 description: "An overview of dependencies and triggers in Airflow."
 date: 2018-05-21T00:00:00.000Z
 slug: "managing-dependencies"
-heroImagePath: "https://cdn.astronomer.io/website/img/guides/dependencies.png"
+heroImagePath: "https://assets.astronomer.io/website/img/guides/dependencies.png"
 tags: ["Airflow", "Dependencies", "Triggers"]
 ---
 
@@ -19,7 +19,7 @@ Dependencies are one of Airflow's most powerful and popular features - they allo
 
 Dependencies can be set syntactically or through bitshift operators.
 
-![title](https://cdn.astronomer.io/website/img/guides/simple_scheduling.png)
+![title](https://assets.astronomer.io/website/img/guides/simple_scheduling.png)
 
 This logic can be set three ways:
 
@@ -36,7 +36,7 @@ All three are in line with best practice as long as it is written consistently -
 
 For a large number of tasks, dependencies can be set in loops:
 
-![title](https://cdn.astronomer.io/website/img/guides/loop_dependencies.png)
+![title](https://assets.astronomer.io/website/img/guides/loop_dependencies.png)
 
 Recall that tasks are identified by their `task_id` and associated `DAG` object - not by the type of operator. Consider this:
 
@@ -126,7 +126,7 @@ with dag:
             d1 >> downstream
 ```
 
-![one_failed](https://cdn.astronomer.io/website/img/guides/fail_logic_notification.png)
+![one_failed](https://assets.astronomer.io/website/img/guides/fail_logic_notification.png)
 
 **Note:** Similar logic can be implemented by specifying an `on_failure_callback` if using a PythonOperator. The `trigger_rule` is better used when triggering a custom operator.
 
@@ -145,7 +145,7 @@ This rule is particulary helpful when setting up a "safety check" DAG - a DAG th
 `all_failed` tells a task to run when all upstream tasks have failed and can be used to execute a fail condition for a workflow.
 
 The workflow may look something like this:
-![all_failed](https://cdn.astronomer.io/website/img/guides/trigger_notification_fail.png)
+![all_failed](https://assets.astronomer.io/website/img/guides/trigger_notification_fail.png)
 
 **Note:** The final task was set to `skipped`
 
@@ -201,10 +201,10 @@ with dag:
                 d1 >> downstream
 ```
 
-![skipped](https://cdn.astronomer.io/website/img/guides/trigger_rule_latest_only_skipped.png)
+![skipped](https://assets.astronomer.io/website/img/guides/trigger_rule_latest_only_skipped.png)
 <br>
 Computing resources would be saved on past DAG runs.
 <br>
 
-![tree](https://cdn.astronomer.io/website/img/guides/trigger_latest_only_tree.png)
+![tree](https://assets.astronomer.io/website/img/guides/trigger_latest_only_tree.png)
 The latest run would execute the necessary downstream logic.

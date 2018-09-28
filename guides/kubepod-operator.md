@@ -3,7 +3,7 @@ title: "KubernetesPodOperator on Astronomer"
 description: "Use the KubernetesPodOperator on Astronomer"
 date: 2018-07-17T00:00:00.000Z
 slug: "kubepod-operator"
-heroImagePath: "https://cdn.astronomer.io/website/img/guides/TheAirflowUI_preview.png"
+heroImagePath: "https://assets.astronomer.io/website/img/guides/TheAirflowUI_preview.png"
 tags: ["Astronomer Platform", "Airflow", "Kubernetes"]
 ---
 

@@ -17,19 +17,19 @@ Depending on your set up, using a subdag operator could make your DAG cleaner.
 
 Suppose the DAG looks like:
 
-![no_subdag](https://cdn.astronomer.io/website/img/guides/workflow_no_subdag.png)
+![no_subdag](https://assets.astronomer.io/website/img/guides/workflow_no_subdag.png)
 
 The pattern between extracting and loading the data is clear. The same workflow can be generated through subdags:
 
-![subdag](https://cdn.astronomer.io/website/img/guides/subdag_dag.png)
+![subdag](https://assets.astronomer.io/website/img/guides/subdag_dag.png)
 
 Each of the subdags can be zoomed in on:
 
-![zoom](https://cdn.astronomer.io/website/img/guides/zoomed_in.png)
+![zoom](https://assets.astronomer.io/website/img/guides/zoomed_in.png)
 
 The zoomed view reveals a granular view of the task:
 
-![tasks](https://cdn.astronomer.io/website/img/guides/subdag_tasks.png)
+![tasks](https://assets.astronomer.io/website/img/guides/subdag_tasks.png)
 
 Subdags should be generated through a "DAG factory" - an external file that returns dag objects.
 

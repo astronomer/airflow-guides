@@ -3,7 +3,7 @@ title: "Facebook Ads API to Redshift with Airflow"
 description: "Use Airflow to ingest ad data from the Facebook Ads API into Redshift"
 date: 2018-05-21T00:00:00.000Z
 slug: "facebook-ads-to-redshift"
-heroImagePath: "https://cdn.astronomer.io/website/img/guides/FBToRedshift_preview.png"
+heroImagePath: "https://assets.astronomer.io/website/img/guides/FBToRedshift_preview.png"
 tags: ["Building DAGs", "Redshift", "Facebook Ads"]
 ---
 

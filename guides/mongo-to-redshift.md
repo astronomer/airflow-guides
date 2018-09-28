@@ -3,7 +3,7 @@ title: "MongoDB to Redshift with Apache Airflow"
 description: "Use Apache Airflow to ingest data from MongoDB to Redshift"
 date: 2018-05-23T00:00:00.000Z
 slug: "mongo-to-redshift"
-heroImagePath: "https://cdn.astronomer.io/website/img/guides/MongoDBToRedshift_preview.png"
+heroImagePath: "https://assets.astronomer.io/website/img/guides/MongoDBToRedshift_preview.png"
 tags: ["Building DAGs", "Redshift", "MongoDB"]
 ---
 

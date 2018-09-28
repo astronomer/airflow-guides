@@ -25,11 +25,11 @@ If hosting Kubernetes on a managed service, Astronomer recommends also using a h
 
 Once restored, all DAG states will be set to the state they were at when this backup was made. If running DAGs at a greater frequency and it is critical to be able to restore with a finer granularity, simply set the Postgres backup to a more frequent back up schedule. More information regarding control and pricing of backups on GCP can be found here: https://cloud.google.com/sql/docs/postgres/backup-recovery/backups
 
-![GCP Postgres Backup](https://cdn.astronomer.io/website/img/guides/disaster-recovery-guide/gcp-postgres-backup.png)
+![GCP Postgres Backup](https://assets.astronomer.io/website/img/guides/disaster-recovery-guide/gcp-postgres-backup.png)
 
 Simply click on the three vertical dots of the most recent backup and click 'restore', choosing the appropriate Target Instance.
 
-![GCP Postgres Backup](https://cdn.astronomer.io/website/img/guides/disaster-recovery-guide/gcp-postgres-restore.png)
+![GCP Postgres Backup](https://assets.astronomer.io/website/img/guides/disaster-recovery-guide/gcp-postgres-restore.png)
 
 ## Restoring Prometheus
 Prometheus data is stored on the network volumes with the relevant Kubernetes cluster. Due to the reporting nature of Prometheus, Astronomer does not currently feel it necessary to back up Prometheus as any lost metrics will not affect overall recovery or future performance of the platform.  

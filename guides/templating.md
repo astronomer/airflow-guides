@@ -97,11 +97,11 @@ get_individual_issue_counts = \
 
 Notice that the `execution_date` template and the `timedelta` macro (to make up for the time difference) is being written into the SQL. The runtime values for this task can be seen from the UI:
 
-![task_details](https://cdn.astronomer.io/website/img/guides/task_details.png)
+![task_details](https://assets.astronomer.io/website/img/guides/task_details.png)
 
 On the *Rendered* tab
 
-![rendered_sql](https://cdn.astronomer.io/website/img/guides/rendered_sql.png)
+![rendered_sql](https://assets.astronomer.io/website/img/guides/rendered_sql.png)
 
 The corresponding timestamp has been rendered into the TaskInstance.
 

@@ -3,7 +3,7 @@ title: "Google Analytics API to Redshift with Airflow"
 description: "Use Airflow to ingest data from the Google Analytics API to Redshift"
 date: 2018-05-21T00:00:00.000Z
 slug: "google-analytics-to-redshift"
-heroImagePath: "https://cdn.astronomer.io/website/img/guides/GoogleAnalyticsToRedshift_preview.png"
+heroImagePath: "https://assets.astronomer.io/website/img/guides/GoogleAnalyticsToRedshift_preview.png"
 tags: ["Building DAGs", "Redshift", "Google Analytics"]
 ---
 

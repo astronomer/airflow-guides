@@ -3,7 +3,7 @@ title: "Introduction to Kubernetes"
 description: "High-level overview of introductory concepts in Kubernetes."
 date: 2018-08-30T00:00:00.000Z
 slug: "intro-to-kubernetes"
-heroImagePath: "https://cdn.astronomer.io/website/img/guides/TheAirflowUI_preview.png"
+heroImagePath: "https://assets.astronomer.io/website/img/guides/TheAirflowUI_preview.png"
 tags: ["Airflow", "Kubernetes", "Infrastructure"]
 ---
 
@@ -40,7 +40,7 @@ If implementing a modern microservice architecture, containers are probably runn
 
 As system requirements change, move container workloads in Kubernetes can be moved from one cloud provider or hosting infrastructure to another without changing any applicatoin level code.
 
-![move_to_kubes](https://cdn.astronomer.io/website/img/guides/move_to_kubes.jpg)
+![move_to_kubes](https://assets.astronomer.io/website/img/guides/move_to_kubes.jpg)
 
 
 ## Key Terms
@@ -61,7 +61,7 @@ As system requirements change, move container workloads in Kubernetes can be mov
 
 **Kubectl**: The command line configuration tool for Kubernetes. For an overview detailing kubectl syntax, command operations, and examples, check out the [documentation here](https://kubernetes.io/docs/reference/kubectl/overview/).
 
-![ui-dashboard](https://cdn.astronomer.io/website/img/guides/ui-dashboard.png)
+![ui-dashboard](https://assets.astronomer.io/website/img/guides/ui-dashboard.png)
 
 
 

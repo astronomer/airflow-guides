@@ -3,7 +3,7 @@ title: "Marketo API to Redshift with Airflow"
 description: "Use Airflow to ingest data from the Marketo API to Redshift"
 date: 2018-05-23T00:00:00.000Z
 slug: "marketo-to-redshift"
-heroImagePath: "https://cdn.astronomer.io/website/img/guides/MarketoToRedshift_preview.png"
+heroImagePath: "https://assets.astronomer.io/website/img/guides/MarketoToRedshift_preview.png"
 tags: ["Building DAGs", "Redshift", "Marketo"]
 ---
 

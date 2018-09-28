@@ -3,7 +3,7 @@ title: "Dynamically Generating DAGs in Airflow"
 description: "Using a base DAG template to create multiple DAGs."
 date: 2018-05-21T00:00:00.000Z
 slug: "dynamically-generating-dags"
-heroImagePath: "https://cdn.astronomer.io/website/img/guides/dynamicdags.png"
+heroImagePath: "https://assets.astronomer.io/website/img/guides/dynamicdags.png"
 tags: ["Airflow", "DAGS"]
 ---
 The simplest way of creating a DAG in Airflow is to define it in the DAGs folder. Anything with a .py suffix will be scanned to see if it contains the definition of a new DAG.
@@ -35,7 +35,7 @@ with dag:
         python_callable=hello_world_py)
 ```
 
-![title](https://cdn.astronomer.io/website/img/guides/hello_world.png)
+![title](https://assets.astronomer.io/website/img/guides/hello_world.png)
 
 ## Add DAGs dynamically based on input parameter
 
@@ -127,13 +127,13 @@ for n in range(1, 10):
                                   default_args)
 ```
 
-![title](https://cdn.astronomer.io/website/img/guides/hello_world_1_thru_10.png)
+![title](https://assets.astronomer.io/website/img/guides/hello_world_1_thru_10.png)
 
 ## Adding DAGs based on Variable value
 
 Taking this a step further, the input parameters don't have to exist in the dag file itself. Another common form of generating dags is by setting values in a Variable object.
 
-![title](https://cdn.astronomer.io/website/img/guides/dag_number_var.png)
+![title](https://assets.astronomer.io/website/img/guides/dag_number_var.png)
 
 We can retrieve this value by importing the Variable class and passing it into our `range`. Because we want the interpreter to register this file as valid regardless of whether the variable exists, the `default_var` is set to 10.
 
@@ -192,11 +192,11 @@ for n in range(1, number_of_dags):
 
 If we look at the scheduler logs, we can see this variable is being pulled into the DAG and added an additional DAG to the DagBag based on the value.
 
-![title](https://cdn.astronomer.io/website/img/guides/dag_logs.png)
+![title](https://assets.astronomer.io/website/img/guides/dag_logs.png)
 
 Then we can go to the main UI and see all of the new DAGs that have been created.
 
-![title](https://cdn.astronomer.io/website/img/guides/hello_world_1_thru_15.png)
+![title](https://assets.astronomer.io/website/img/guides/hello_world_1_thru_15.png)
 
 ## Adding DAGs based on Connections
 
@@ -204,7 +204,7 @@ Creating DAGs based on a varible or set of variables is a very powerful feature 
 
 Instead, we can pull the connections we have in our database by instantiating the "Session" and querying the "Connection" table. We can even filter our query so that this only pulls connections that match a certain criteria.
 
-![title](https://cdn.astronomer.io/website/img/guides/connections.png)
+![title](https://assets.astronomer.io/website/img/guides/connections.png)
 
 ```python
 from datetime import datetime
@@ -263,6 +263,6 @@ for conn in conns:
 
 Notice that like before we are accessing the Models library to bring in the `Connection` class (as we did previously with the `Variable` class). We are also accessing the `Session()` class from `settings`, which will allow us to query the current database session.
 
-![title](https://cdn.astronomer.io/website/img/guides/connection_dags.png)
+![title](https://assets.astronomer.io/website/img/guides/connection_dags.png)
 
 We can see that all of the connections that match our filter have now been created as a unique DAG. The one connection we had which did not match (`SOME_OTHER_DATABASE`) has been ignored.
