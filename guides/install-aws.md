@@ -56,13 +56,41 @@ Click the link in the output notes to log in to the Astronomer app.
 
     Once you have a base domain set up, you can use a cert manager to generate a short-lived wildcard, which should be relatively easy.
 
-2. **What about EKS?**
+2. **How is the DNS configured? If I wanted to chance or replace my base domain, could I?**
+
+    Yes, you could! Currently, we have the domain setup with a wildcard CNAME record that points to the ELB DNS route. Swapping out domains would just require adding that CNAME record to your DNS, and recreating the `astronomer-tls` secret to use the updated wildcard certificate for your domain. 
+
+3. **What about EKS?**
 
     You'll need to spin up a default EKS cluster (Amazon's managed Kubernetes Service), on top of which the Astronomer platform is deployed.
     
     As it’s a relatively new product, most of our resources are outlinked to EKS itself.
     
     Here’s our version of an EKS getting started guide: http://enterprise.astronomer.io/guides/aws/index.html (We’ll be porting over that guide to our official docs site soon)
+
+4. **Does it matter if I run either RDS postgres, or stable postrgres to run in Kubernetes**
+
+    In the long-term, a RDS instance is probably the best approach, but stable postgres should be more than enough. Make sure to use the most explicit route to that RDS to ensure the Kubernetes cluster can connect to it.
+
+5. **How do I get access to the Grafana dashboard?**
+
+    Once you've registered, let us know and we'll add you as an administrator on our end. 
+
+6. **Anything I should know about running things locally?**
+
+    The EC2 instance is what you’ll use to deploy the Astronomer platform into that cluster. The UI is hosted in an nginx pod, and you’ll use the EC3 to communicate to that cluster and deploy.
+    
+    To run a local version of Airflow, you’re free to download and use our CLI, which comes built with local testing functionality, and scale from there as needed.
+    
+    Here's a huide to our CLI: https://www.astronomer.io/guides/cli/
+    
+    Whatever machine you’re going to use, apply it to the kubectl CLI, and make sure to create a storage class.
+7. **Does the size of my EC2 instance matter?**
+
+    Not much, we just need as much power from a virtual machine as your standard laptop. You can stick to a standard or small machine type for the EC2.
+    
+    A low base machine type should be fine for that, and you’ll just need to be able to run : (1) Heptio authenticator (2) Astronomer CLI and (3) Kubectl. 
+
 
 
 
