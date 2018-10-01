@@ -27,7 +27,7 @@ To set the secret, run:
 
 ```shell
 $ kubectl create secret generic astronomer-bootstrap /
-  --from-literal connection="postgres://postgres:${PGPASSWORD}@astro-db-postgresql:5432" /
+  --from-literal connection="postgres://postgres:${PGPASSWORD}@astro-db-postgresql.astronomer.svc.cluster.local:5432" /
   --namespace astronomer
 ```
 
