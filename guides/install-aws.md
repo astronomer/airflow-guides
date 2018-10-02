@@ -72,7 +72,7 @@ Yes, you could! Currently, we have the domain setup with a wildcard CNAME record
 
 ### How does Astronomer command the cluster? (Add and remove pods, etc.)
 
-You'll need a role for EKS to manage the cluster, which will be done through Kubectl. Kubectl is the command line interface that can manipulate the cluster as needed, and setup helm/tiller services to deploy the astronomer platform.
+You'll need a role for EKS to manage the cluster, which will be done through Kubectl. Kubectl is the command line interface that can manipulate the cluster as needed, and setup helm/tiller services to deploy the astronomer platform. [Our Kubectl guide](https://www.astronomer.io/guides/kubectl/) might help.
 
 For the IAM policy, we should only need the `AmazonEKSServicePolicy` and the `AmazonEKSServicePolicy`.
 
