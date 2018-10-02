@@ -53,13 +53,9 @@ Click the link in the output notes to log in to the Astronomer app.
 
 Yes. There is unfortunately no work-around to the base domain requirement. In order to properly install each part of our platform, we absolutely need a base domain as a foundation.
 
-For example, if companyx.com was your base domain, we’d create houston.companyx.com (our API), or astronomer.companyx.cloud.io etc, and there’s unfortunately no way to abstract that.
+For example, if companyx.com was your base domain, we’d create houston.companyx.com (our API), or astronomer.companyx.cloud.io etc. for you to access all parts of your deployment, and there’s unfortunately no way to abstract that.
 
-Once you have a base domain set up, you can use a cert manager to generate a short-lived wildcard, which should be relatively easy.
-
-### How is the DNS configured? If I wanted to chance or replace my base domain, could I?
-
-Yes, you could! Currently, we have the domain setup with a wildcard CNAME record that points to the ELB DNS route. Swapping out domains would just require adding that CNAME record to your DNS, and recreating the `astronomer-tls` secret to use the updated wildcard certificate for your domain.
+Once you have a base domain set up, you can use a cert manager to generate a short-lived wildcard, which should be relatively easy. (Check this out a blog from LetsEncrypt that might help [here](https://www.bennadel.com/blog/3420-obtaining-a-wildcard-ssl-certificate-from-letsencrypt-using-the-dns-challenge.htm])). 
 
 ### What about EKS?
 
@@ -68,6 +64,11 @@ You'll need to spin up a default EKS cluster (Amazon's managed Kubernetes Servic
 As it’s a relatively new product, most of our resources are outlinked to EKS itself.
 
 Here’s our version of an EKS getting started guide: http://enterprise.astronomer.io/guides/aws/index.html (We’ll be porting over that guide to our official docs site soon)
+
+### How is the DNS configured? If I wanted to change or replace my base domain, could I?
+
+Yes, you could! Currently, we have the domain setup with a wildcard CNAME record that points to the ELB DNS route. Swapping out domains would just require adding that CNAME record to your DNS, and recreating the `astronomer-tls` secret to use the updated wildcard certificate for your domain.
+
 
 ### How does Astronomer command the cluster? (Add and remove pods, etc.)
 
@@ -79,11 +80,11 @@ Once the kubernetes cluster is created, the IAM user will need to be added to th
 
 ### Do I really need to give Astronomer that much access?
 
-Yes and no. The above permissions are primiarly to help troubleshoot while you're getting setting up. There are some added dependencies which need to be configured, such as grabbing the DNS name from the provisioned ELB and creating a CNAME record in the DNS, but that can be done by someone on your side if broad access is a concern.
+Yes and no. The above permissions are primiarly to help troubleshoot while you're getting setting up. There are a few added dependencies that need to be configured, such as grabbing the DNS name from the provisioned ELB and creating a CNAME record in the DNS. If broad access is a coner, that can be done by someone on your end.
 
 As long as we're able to authenticate an IAM user against the kubernetes cluster using those EKS policies, that should keep us moving.
 
-### Does it matter if I run either RDS postgres, or stable postrgres to run in Kubernetes?
+### Does it matter if I run RDS postgres or stable postrgres to run in Kubernetes?
 
 In the long-term, a RDS instance is probably the best approach, but stable postgres should be more than enough. Make sure to use the most explicit route to that RDS to ensure the Kubernetes cluster can connect to it.
 
@@ -95,9 +96,9 @@ Once you've registered, let us know and we'll add you as an administrator on our
 
 The EC2 instance is what you’ll use to deploy the Astronomer platform into that cluster. The UI is hosted in an nginx pod, and you’ll use the EC3 to communicate to that cluster and deploy.
 
-To run a local version of Airflow, you’re free to download and use our CLI, which comes built with local testing functionality, and scale from there as needed.
+To run a local version of Airflow, you’re free to download and use our CLI, which comes built with local testing functionality. You can scale from there as needed.
 
-Here's a huide to our CLI: https://www.astronomer.io/guides/cli/
+Here's a guide to our CLI: https://www.astronomer.io/guides/cli/
 
 Whatever machine you’re going to use, apply it to the kubectl CLI, and make sure to create a storage class.
 
@@ -114,3 +115,9 @@ As soon as you've verified UI and CLI access and can create a test deployment, y
 ### What authorization can I expect?
 
 AuthO is included in the platform install, so no need for additional creds.
+
+### Do you support MFA Authentication?
+
+Yes, Multi-factor Authentication is pluggable with auth0 - you'll just have to enable it on your end. 
+
+Check out these docs: https://auth0.com/docs/multifactor-authentication
