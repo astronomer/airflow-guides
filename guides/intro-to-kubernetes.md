@@ -3,7 +3,7 @@ title: "Introduction to Kubernetes"
 description: "High-level overview of introductory concepts in Kubernetes."
 date: 2018-08-30T00:00:00.000Z
 slug: "intro-to-kubernetes"
-heroImagePath: "https://assets.astronomer.io/website/img/guides/TheAirflowUI_preview.png"
+heroImagePath: null
 tags: ["Airflow", "Kubernetes", "Infrastructure"]
 ---
 

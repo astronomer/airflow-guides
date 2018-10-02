@@ -3,7 +3,7 @@ title: "Getting SSL certificate for Astronomer"
 description: "Getting SSL certificate for Astronomer"
 date: 2018-07-17T00:00:00.000Z
 slug: "install-ssl"
-heroImagePath: "https://assets.astronomer.io/website/img/guides/TheAirflowUI_preview.png"
+heroImagePath: null
 tags: ["admin-docs"]
 ---
 
