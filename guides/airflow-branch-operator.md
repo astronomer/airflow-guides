@@ -3,7 +3,7 @@ title: "Using BranchOperator in Airflow"
 description: "Use Apache Airflow's BranchOperator to execute conditional branches in your workflow"
 date: 2018-05-21T00:00:00.000Z
 slug: "airflow-branch-operator"
-heroImagePath: "https://assets.astronomer.io/website/img/guides/TheAirflowUI_preview.png"
+heroImagePath: null
 tags: ["Building DAGs", "BranchOperator", "Airflow"]
 ---
 

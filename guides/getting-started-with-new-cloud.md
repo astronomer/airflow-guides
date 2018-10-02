@@ -3,7 +3,7 @@ title: "Getting Started with Astronomer Cloud"
 description: "Migrate over to our new cloud"
 date: 2018-08-01T00:00:00.000Z
 slug: "getting-started-with-new-cloud"
-heroImagePath: "https://assets.astronomer.io/website/img/guides/TheAirflowUI_preview.png"
+heroImagePath: null
 tags: ["Astronomer Platform", "admin-docs", "Cloud"]
 ---
 
