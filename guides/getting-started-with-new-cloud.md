@@ -3,7 +3,7 @@ title: "Getting Started with Astronomer Cloud"
 description: "Migrate over to our new cloud"
 date: 2018-08-01T00:00:00.000Z
 slug: "getting-started-with-new-cloud"
-heroImagePath: "https://assets.astronomer.io/website/img/guides/TheAirflowUI_preview.png"
+heroImagePath: null
 tags: ["Astronomer Platform", "admin-docs", "Cloud"]
 ---
 
@@ -86,9 +86,9 @@ To log in and pass our authorization flow via the CLI, you'll have to run the fo
   `astro auth login astronomer.cloud`
 
   Two notes: 
-  - 1. If you don't already have an account, running this command will automatically create one for you - and a default workspace as well, based on the name associated with your Google email address.
+  1. If you don't already have an account, running this command will automatically create one for you - and a default workspace as well, based on the name associated with your Google email address.
 
-  - 2. You _can_ login via app.cloud.astronomer.io directly, but our UI currently does not display the workspace ID you'll need to complete a deployment.
+  2. You _can_ login via app.cloud.astronomer.io directly, but our UI currently does not display the workspace ID you'll need to complete a deployment.
 
 
 ### **Step 2: Pull your list of workspaces**

@@ -3,7 +3,7 @@ title: "The Astronomer CLI"
 description: "Get your DAGs to run locally"
 date: 2018-07-17T00:00:00.000Z
 slug: "astro-cli"
-heroImagePath: "https://assets.astronomer.io/website/img/guides/TheAirflowUI_preview.png"
+heroImagePath: null
 tags: ["admin-docs", "cli-docs", "debugging"]
 ---
 

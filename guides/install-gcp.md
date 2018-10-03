@@ -3,7 +3,7 @@ title: "Install Astronomer to Google Cloud Platform"
 description: "Install Astronomer to Google Cloud Platform"
 date: 2018-07-17T00:00:00.000Z
 slug: "install-gcp"
-heroImagePath: "https://assets.astronomer.io/website/img/guides/TheAirflowUI_preview.png"
+heroImagePath: null
 tags: ["admin-docs"]
 ---
 
