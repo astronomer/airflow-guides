@@ -121,4 +121,20 @@ When you're ready to deploy, run:
 
 This command will return a list of deployments available in that workspace, and prompt you to pick one. 
 
+## Frequently Asked Questions
 
+### What are the specs of the workers?
+
+Our team may be able to change these one way or the other depending on your use case, but the default is: `1GB RAM, 1.5 CPU`
+
+### Can we SSO with Google or will I need to setup and maintain a list of users?
+
+You can use Google right out of the box for auth. The only list of users you'll need to maintain is the users who have access to a workspace (or a set of Airflow instances).
+
+### Can I have a NAT or single IP for each deployment?
+
+You might be wondering whether or not we're able to dedicate an Internet gateway / NAT to your org and pin it to your Kubernetes workers so that other customers aren’t able to send traffic to you.
+
+In cloud, we run a single NAT that all internet bound traffic flows through, but unfortunately not at a customer level. We pretty much run solely at the Kubernetes layer, and Kubernetes doesn't have a NAT resource of any nature. For now, this is something you'll have to run in your own cloud.
+
+We're increasingly getting this request and are looking into solutions, so if you'd like to dive into this deeper with our engineers shoot us an email at support@astronomer.io

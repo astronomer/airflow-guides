@@ -63,7 +63,7 @@ You'll need to spin up a default EKS cluster (Amazon's managed Kubernetes Servic
 
 As it’s a relatively new product, most of our resources are outlinked to EKS itself.
 
-Here’s our version of an EKS getting started guide: http://enterprise.astronomer.io/guides/aws/index.html (We’ll be porting over that guide to our official docs site soon)
+Here’s our version of an EKS getting started guide: http://enterprise.astronomer.io/guides/aws/index.html (We’ll be porting over that guide to this page soon)
 
 ### How is the DNS configured? If I wanted to change or replace my base domain, could I?
 
