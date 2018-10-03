@@ -47,6 +47,7 @@ tweet us at [@astronomerio](https://twitter.com/astronomerio/).
 * ["La conquête de nos workflows avec Apache Airflow (Conquering our Workflows with Apache Airflow)"][32] - Germain Tanguy & Cedric Hourcade, Dailymotion
 * ["Productionizing ML Workflows at Twitter"][33] - Samuel Ngahane and Devin Goodsell, Twitter
 * ["We’re All Using Airflow Wrong and How to Fix It"][34] - Jessica Laughlin, Bluecore
+* ["Airflow Tips, Tricks & Pitfalls"][37] - Dovy Paukstys, Caserta
 
 ## Data Engineering 101
 
@@ -96,3 +97,4 @@ tweet us at [@astronomerio](https://twitter.com/astronomerio/).
 [34]: https://medium.com/bluecore-engineering/were-all-using-airflow-wrong-and-how-to-fix-it-a56f14cb0753 "We’re All Using Airflow Wrong and How to Fix It"
 [35]: https://www.solita.fi/en/blogs/apache-airflow-why-everyone-working-on-data-domain-should-be-interested-of-it/ "Apache Airflow – why everyone working on data domain should be interested of it"
 [36]: https://medium.com/videoamp/what-we-learned-migrating-off-cron-to-airflow-b391841a0da4 "What we learned migrating off Cron to Airflow"
+[37]: https://caserta.com/data-blog/airflow-tips-tricks-pitfalls/ "Airflow Tips, Tricks & Pitfalls"
