@@ -12,7 +12,7 @@ tags: ["Astronomer Platform", "admin-docs", "Cloud"]
 - If this is your first time on Astronomer, make sure you're signed up here: https://app.astronomer.cloud/
 - You'll be able to create a workspace, and go straight to the CLI Install from there. 
 
-_Note_: If you get an error the first time you click that link - try a refresh. 
+_Note_: If you get an error the first time you click that link, try a refresh. 
 
 ## Download the CLI
 

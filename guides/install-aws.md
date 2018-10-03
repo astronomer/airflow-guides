@@ -55,7 +55,7 @@ Yes. There is unfortunately no work-around to the base domain requirement. In or
 
 For example, if companyx.com was your base domain, we’d create houston.companyx.com (our API), or astronomer.companyx.cloud.io etc. for you to access all parts of your deployment, and there’s unfortunately no way to abstract that.
 
-Once you have a base domain set up, you can use a cert manager to generate a short-lived wildcard, which should be relatively easy. (Check this out a blog from LetsEncrypt that might help [here](https://www.bennadel.com/blog/3420-obtaining-a-wildcard-ssl-certificate-from-letsencrypt-using-the-dns-challenge.htm])). 
+Once you have a base domain set up, you can use a cert manager to generate a short-lived wildcard, which should be relatively easy. (Check out a blog from LetsEncrypt that might help [here](https://www.bennadel.com/blog/3420-obtaining-a-wildcard-ssl-certificate-from-letsencrypt-using-the-dns-challenge.htm])). 
 
 ### What about EKS?
 
@@ -84,7 +84,7 @@ Yes and no. The above permissions are primiarly to help troubleshoot while you'r
 
 As long as we're able to authenticate an IAM user against the kubernetes cluster using those EKS policies, that should keep us moving.
 
-### Does it matter if I run RDS postgres or stable postrgres to run in Kubernetes?
+### Does it matter if I run RDS postgres or stable postgres to run in Kubernetes?
 
 In the long-term, a RDS instance is probably the best approach, but stable postgres should be more than enough. Make sure to use the most explicit route to that RDS to ensure the Kubernetes cluster can connect to it.
 
@@ -121,3 +121,129 @@ AuthO is included in the platform install, so no need for additional creds.
 Yes, Multi-factor Authentication is pluggable with auth0 - you'll just have to enable it on your end. 
 
 Check out these docs: https://auth0.com/docs/multifactor-authentication
+
+### What limits and quotas do you default to on our instance?
+
+Here's a breakdown of the specs you'll see in your instance by default. For troubleshooting purposes, we might talk to your team about adjusting these one way or another depending on your use case, but this is what you can expect to start with.
+
+
+```
+{
+        "workers": {
+          "resources": {
+            "limits": {
+              "cpu": "2",
+              "memory": "6Gi"
+            },
+            "requests": {
+              "cpu": "500m",
+              "memory": "1024Mi"
+            }
+          },
+          "replicas": 1,
+          "terminationGracePeriodSeconds": 600
+        },
+        "scheduler": {
+          "resources": {
+            "limits": {
+              "cpu": "500m",
+              "memory": "1024Mi"
+            },
+            "requests": {
+              "cpu": "100m",
+              "memory": "256Mi"
+            }
+          }
+        },
+        "webserver": {
+          "resources": {
+            "limits": {
+              "cpu": "500m",
+              "memory": "1024Mi"
+            },
+            "requests": {
+              "cpu": "100m",
+              "memory": "256Mi"
+            }
+          }
+        },
+        "flower": {
+          "resources": {
+            "limits": {
+              "cpu": "500m",
+              "memory": "1024Mi"
+            },
+            "requests": {
+              "cpu": "100m",
+              "memory": "256Mi"
+            }
+          }
+        },
+        "statsd": {
+          "resources": {
+            "limits": {
+              "cpu": "500m",
+              "memory": "1024Mi"
+            },
+            "requests": {
+              "cpu": "100m",
+              "memory": "256Mi"
+            }
+          }
+        },
+        "pgbouncer": {
+          "metadataPoolSize": 5,
+          "resultBackendPoolSize": 2,
+          "resources": {
+            "limits": {
+              "cpu": "500m",
+              "memory": "1024Mi"
+            },
+            "requests": {
+              "cpu": "100m",
+              "memory": "256Mi"
+            }
+          }
+        },
+        "redis": {
+          "resources": {
+            "limits": {
+              "cpu": "500m",
+              "memory": "1024Mi"
+            },
+            "requests": {
+              "cpu": "100m",
+              "memory": "256Mi"
+            }
+          }
+        },
+        "quotas": {
+          "pods": 100,
+          "requests.cpu": "4000m",
+          "requests.memory": "16Gi",
+          "limits.cpu": "16000m",
+          "limits.memory": "64Gi"
+        },
+        "limits": [{
+          "type": "Pod",
+          "max": {
+            "cpu": "4",
+            "memory": "8Gi"
+          }
+        }, {
+          "type": "Container",
+          "default": {
+            "cpu": "100m",
+            "memory": "256Mi"
+          },
+          "defaultRequest": {
+            "cpu": "100m",
+            "memory": "256Mi"
+          },
+          "min": {
+            "cpu": "100m",
+            "memory": "128Mi"
+          }
+        }]
+      }),
+      ```
