@@ -31,13 +31,13 @@ curl -sL https://install.astronomer.io | sudo bash -s -- v0.5.1
 
 To confirm the install worked, do two things:
 
-1. Run the following:
+1. **Run the following**:
 
 ```
 $astro
 ```
 
-2. Create a project:
+2. **Create a project**:
 
 ```
 $ mkdir hello-astro && cd hello-astro
@@ -169,11 +169,11 @@ This command will return a list of deployments available in that workspace, and 
 
 ### How do I know when there's a new version of the CLI I have to download?
 
-We're constantly building more functionality to our CLI and unfortunately don't have an automated way to let you know to upgrade, but you'll more than likely hear from us when this is the case - especially for a bigger release.
+We're constantly building more functionality to our CLI and will shoot you an email for major releases (think 0.5.0 to 0.6.0). 
 
-We'd recommend running `astro version` on a bi-weekly basis to see what the latest is.
+We don't have an automated way to do so for minor relases, so we'd recommend running `astro version` on a bi-weekly basis to see what the latest is just in case.
 
-If you're behind, you can run `astro upgrade` or the curl command listed above to install the latest.
+If you do happen to be behind, you can run `astro upgrade` or the curl command listed above to install the latest.
 
 ### When will Astronomer run Airflow 1.10?
 
