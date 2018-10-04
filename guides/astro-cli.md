@@ -138,7 +138,7 @@ Run the following command from your project root directory:
 
 ```
 bash
-astro auth login -d [baseDomain]
+astro auth login [baseDomain]
 ```
 
 At this point you will be prompted for your registry username and password. These credentials are the same as what you supplied to the `registry-auth` [secret](http://enterprise.astronomer.io/guides/google-cloud/index.html#secrets) during your Astronomer EE install.
