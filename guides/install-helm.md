@@ -1,8 +1,10 @@
 ---
-layout: page
-title: Helm
-permalink: /guides/helm/
-hide: true
+title: "Install Helm for Astronomer"
+description: "Install Helm and Tiller"
+date: 2018-07-17T00:00:00.000Z
+slug: "install-helm"
+heroImagePath: null
+tags: ["admin-docs"]
 ---
 
 
