@@ -122,6 +122,12 @@ Yes, Multi-factor Authentication is pluggable with auth0 - you'll just have to e
 
 Check out these docs: https://auth0.com/docs/multifactor-authentication
 
+### Can Astronomer use AWS ECR (Elastic Container Registry) instead of its own private registry?
+
+Unfortunately, that is not something we currently support. We use a private registry in order to leverage webhooks which auto-update deployments with the latest image. 
+
+If you've looked into private/public zones in your cluster, the cluster should in theory have one nodepool on the VPN and one nodepool publickly available. If you're trying to reach the private registry from something like circle-ci, that might solve your problem.
+
 ### What limits and quotas do you default to on our instance?
 
 Here's a breakdown of the specs you'll see in your instance by default. For troubleshooting purposes, we might talk to your team about adjusting these one way or another depending on your use case, but this is what you can expect to start with.
@@ -247,3 +253,4 @@ Here's a breakdown of the specs you'll see in your instance by default. For trou
         }]
       }),
       ```
+      
