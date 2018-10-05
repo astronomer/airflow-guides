@@ -3,7 +3,7 @@ title: "Astronomer Features"
 description: "What are the components of the Astronomer platform"
 date: 2018-05-21T00:00:00.000Z
 slug: "astronomer-features"
-heroImagePath: "https://cdn-images-1.medium.com/max/2000/1*41u5qaOgNI5k8DgYr6u1gg.png"
+heroImagePath: "https://cdn-images-1.medium.com/max/1600/1*G_Os0eGm4jwMbgkKDcMHSA.png"
 tags: ["astronomer"]
 ---
 
