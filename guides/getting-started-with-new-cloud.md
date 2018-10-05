@@ -33,15 +33,15 @@ To confirm the install worked, do two things:
 
 1. Run the following:
 
-```
-$ astro
+```bash
+astro
 ```
 
 2. Create a project:
 
-```
-$ mkdir hello-astro && cd hello-astro
-$ astro airflow init
+```bash
+mkdir hello-astro && cd hello-astro
+astro airflow init
 ```
 
 _Note_: To install the CLI, you'll need to have both Docker and Go on your machine.
