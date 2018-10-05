@@ -172,7 +172,7 @@ We're constantly building more functionality to our CLI and unfortunately don't 
 
 We'd recommend running `astro version` on a bi-weekly basis to see what the latest is.
 
-If you're behind, you can run `astro upgrade` and run the curl command that will output.
+If you're behind, you can run `astro upgrade` and follow the instructions from it.
 
 ### When will Astronomer run Airflow 1.10?
 
