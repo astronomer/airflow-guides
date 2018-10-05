@@ -97,6 +97,21 @@ docker logs $(docker ps | grep scheduler | awk '{print $1}')
 
 (You can switch out scheduler for webserver if you are more interested in those).
 
+## Using Airflow CLI Commands
+You can still use all native Airflow CLI commands with the astro cli when developing DAGs locally, they just need to be wrapped around docker commands.
+
+Run `docker ps` after your image has been built to see a list of containers running. You should see one for the scheduler, webserver, and Postgres. 
+
+For example, a connection can be added with:
+```bash
+docker exec -it SCHEDULER_CONTAINER bash -c "airflow connections -a --conn_id test_three  --conn_type ' ' --conn_login etl --conn_password pw --conn_extra {"account":"blah"}"
+```
+
+Refer to the native [airflow cli](https://airflow.apache.org/cli.html) for a list of all commands. 
+
+**Note**: This will only work for the local dev environment. 
+
+
 ## Overriding Environment Variables
 
 Future releases of the Astronomer CLI will have cleaner ways of overwriting environment variables. Until then, any overrides can go in the `Dockerfile`.
