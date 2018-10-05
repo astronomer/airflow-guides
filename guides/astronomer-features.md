@@ -3,11 +3,9 @@ title: "Astronomer Features"
 description: "What are the components of the Astronomer platform"
 date: 2018-05-21T00:00:00.000Z
 slug: "astronomer-features"
-heroImagePath: null
+heroImagePath: "https://cdn-images-1.medium.com/max/2000/1*41u5qaOgNI5k8DgYr6u1gg.png"
 tags: ["astronomer"]
 ---
-
-![Astronomer Platform Overview Diagram](https://cdn-images-1.medium.com/max/2000/1*41u5qaOgNI5k8DgYr6u1gg.png "Astronomer Platform Overview Diagram")
 
 ## Airflow Clusters
 
