@@ -10,7 +10,7 @@ tags: ["admin-docs","Astronomer"]
 With the introduction of service accounts in v0.6.0 you can now deploy DAGs with your continuous integration/continuous deployment (CI/CD) tool of choice. This guide will walk you through configuring your CI/CD tool to use a Astronomer EE service accounts in order to build and push your Airflow project Docker images to the private Docker registry that is installed with Astronomer EE.
 
 
-For background information and best practices on CI/CD, we recommend reading the article [An Introduction to CI/CD Best Practices][0] from DigitalOcean.
+For background information and best practices on CI/CD, we recommend reading the article [An Introduction to CI/CD Best Practices](https://www.digitalocean.com/community/tutorials/an-introduction-to-ci-cd-best-practices) from DigitalOcean.
 
 ## Steps for Setting up CI/CD with Your Astronomer EE Airflow Project
 Before we get started, this guide assumed you have installed Astronomer Enterprise Edition or are using Astronomer Cloud Edition, have the [astro-cli](https://github.com/astronomerio/astro-cli) v0.6.0 or newer installed locally and are familiar with your CI/CD tool of choice. You can check your astro-cli version with the `astro version` command.
