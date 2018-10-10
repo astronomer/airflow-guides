@@ -19,6 +19,8 @@ For background information and best practices on CI/CD, we recommend reading the
 ## Steps for Setting up CI/CD with Your Astronomer EE Airflow Project
 Before we get started, this guide assumed you have installed Astronomer Enterprise Edition or are using Astronomer Cloud Edition, have the [astro-cli](https://github.com/astronomerio/astro-cli) v0.6.0 or newer installed locally and are familiar with your CI/CD tool of choice. You can check your astro-cli version with the `astro version` command.
 
+
+
 ### Create a Service Account
 
 In order to authenticate your CI/CD pipeline to the private Docker registry you will need to create a service account. This service account access can be revoked at any time by deleting the service account through the astro-cli or orbit-ui.
@@ -43,33 +45,70 @@ astro service-account create -s --label [SERVICEACCOUNTLABEL]
 
 If you prefer to provision a service account through the orbit-ui you can create a service account on the project configuration page at the following link (replacing [BaseDomain] for your configured base domain).
 
+In both cases, this will spit out an API key that will be used for the CI/CD process.
+
 https://app.[BaseDomain]/login
 
 ### Configuring Your CI/CD Pipeline
 
-Depending on your CI/CD tool, configuration will be slightly different. This section will focus on outlining what needs to be accomplished, not the specifics of how. At the end you can find an example to a drone-ci project which demonstrates a properly configured Astronomer EE Airflow Project CI/CD.
-
+Depending on your CI/CD tool, configuration will be slightly different. This section will focus on outlining what needs to be accomplished, not the specifics of how. 
 At it's core, your CI/CD pipeline will be authenticating to the private registry installed with the platform, then building, tagging and pushing an image to that registry.
 
+An example pipeline could look like:
+
+```yaml
+pipeline:
+  build:
+    image: astronomerio/ap-build:0.0.7
+    commands:
+      - docker build -t registry.astronomer.cloud/infrared-photon-7780/airflow:ci-${DRONE_BUILD_NUMBER} .
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    when:
+      event: push
+      branch: [ master, release-* ]
+
+  push:
+    image: astronomerio/ap-build:0.0.7
+    commands:
+      - echo $${DOCKER_PASSWORD_TEST}
+      - docker login registry.astronomer.cloud -u _ -p $${DOCKER_PASSWORD_TEST}
+      - docker push registry.astronomer.cloud/infrared-photon-7780/airflow:ci-${DRONE_BUILD_NUMBER}
+    secrets: [ docker_password_test ]
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    when:
+      event: push
+      branch: [ master, release-* ]
+```
+
+Breaking this down:
+
 #### Authenticating to Docker
-After you have created a service account, you will want to store the generated API key in an environment variable, or your secret management tool of choice.
+After you have created a service account, you will want to store the generated API key in an environment variable, or your secret management tool of choice.'
+
+The first step of this pipeline is to authenticate against the registry:
 
 ex
 ```bash
 docker login registry.$${BASE_DOMAIN} -u _ -p $${API_KEY_SECRET}
 ```
+In this example, the BASE_DOMAIN is `astronomer.cloud` (for Astronomer Cloud). The `API_KEY_SECRET` is the API Key that you got from the CLI or the UI stored in your secret manager
+
 
 #### Building and Pushing an Image
 Once you are authenticated you can build, tag and push your Airflow image to the private registry, where a webhook will trigger an update of your Airflow deployment on the platform.
-
-There are a couple key variables you will need to pay attention to when building and pushing your image.
 
 
 __Registry Address__
 The registry address tells Docker where to push images to. In this case it will be the private registry installed with Astronomer EE, which will be located at registry.${BASE_DOMAIN}.
 
+For example, if you are using Astronomer's cloud platform, you will use:
+`registry.astronomer.cloud`
+
 __Release Name__
-Release name refers to the release name of your Airflow Deployment. It will follow the pattern of [SPACE THEMED ADJ.]-[SPACE THEMED NOUN]-[4-DIGITS]. For example, lunar-asteroid-1234 or parabolic-moonshot-6789. This release name is used as the repository name for your Airflow deployment. This means all image tags for that deployment will live under the respository name.
+Release name refers to the release name of your Airflow Deployment. It will follow the pattern of [SPACE THEMED ADJ.]-[SPACE THEMED NOUN]-[4-DIGITS] (in this example, `infrared-photon-7780`). 
+
 
 __Tag Name__
 Tag name allows you to track all Airflow deployments made for that cluster over time. While the tag name can be whatever you want, we recommend denoting the source and the build number in the name.
