@@ -12,7 +12,6 @@ tags: ["admin-docs","Astronomer"]
 
 With the introduction of service accounts in v0.6.0 you can now deploy DAGs with your continuous integration/continuous deployment (CI/CD) tool of choice. This guide will walk you through configuring your CI/CD tool to use a Astronomer EE service accounts in order to build and push your Airflow project Docker images to the private Docker registry that is installed with Astronomer EE.
 
-This guide will focuse on DroneCI, but the principles can be applied to CircleCI, Travis CI, Jenkins, Codeship, TeamCity, GitLab CI/CD, or any other CI/CD system.
 
 For background information and best practices on CI/CD, we recommend reading the article [An Introduction to CI/CD Best Practices][0] from DigitalOcean.
 
@@ -54,7 +53,7 @@ https://app.[BaseDomain]/login
 Depending on your CI/CD tool, configuration will be slightly different. This section will focus on outlining what needs to be accomplished, not the specifics of how. 
 At it's core, your CI/CD pipeline will be authenticating to the private registry installed with the platform, then building, tagging and pushing an image to that registry.
 
-An example pipeline could look like:
+An example pipeline (using DroneCI) could look like:
 
 ```yaml
 pipeline:
