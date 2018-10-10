@@ -7,8 +7,6 @@ heroImagePath: null
 tags: ["Airflow", "admin-docs", "Astronomer Platform"]
 ---
 
-# Using the Airflow CLI within Astronomer Enterprise
-
 Although Airflow's UI supports the majority of the behavior you would need when setting up your environment and building DAGs, there are cases when you want to use the Airflow CLI.
 
 ## Configuring kubectl
