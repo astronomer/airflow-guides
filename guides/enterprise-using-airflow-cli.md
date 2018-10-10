@@ -10,7 +10,7 @@ tags: ["Airflow", "admin-docs", "Astronomer Platform"]
 Although Airflow's UI supports the majority of the behavior you would need when setting up your environment and building DAGs, there are cases when you want to use the Airflow CLI.
 
 ## Configuring kubectl
-Before interacting directly with the Kubernetes pods that are created for each Airflow deployment on the Astronomer platform, it is necessary to first configure the Kubernetes command line `kubetcl`. Instructions on how to install `kubectl` can be found: [here](https://kubernetes.io/docs/tasks/tools/install-kubectl/). Connecting to your Kubernetes cluster will be different depending on where it is installed.
+Before interacting directly with the pods that are created with each Airflow deployment, it is necessary to first configure the Kubernetes command line `kubectl`. Instructions on how to install `kubectl` can be found: [here](https://kubernetes.io/docs/tasks/tools/install-kubectl/). Connecting to your Kubernetes cluster will be different depending on where it is installed.
 - [Configuring GKE (Google) Access for kubectl](https://cloud.google.com/kubernetes-engine/docs/how-to/cluster-access-for-kubectl)
 - [Configuring EKS (Amazon) Access for kubectl](https://docs.aws.amazon.com/eks/latest/userguide/configure-kubectl.html)
 - [Configuring AKS (Microsoft) Access for kubectl](https://docs.microsoft.com/en-us/azure/aks/tutorial-kubernetes-deploy-cluster#connect-to-cluster-using-kubectl)
