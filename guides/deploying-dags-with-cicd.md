@@ -119,3 +119,6 @@ docker build -t registry.${BASE_DOMAIN}/${RELEASE_NAME}/airflow:ci-${DRONE_BUILD
 
 
 If you would like to see a more complete working example please visit our [full example using Drone-CI](https://github.com/astronomerio/example-dags/blob/master/.drone.yml).
+
+Check out this video for a full walkthrough of this process:
+<iframe width="560" height="315" src="https://www.youtube.com/embed/8h9lXzGa4sQ" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
