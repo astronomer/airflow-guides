@@ -53,7 +53,7 @@ bundle exec jekyll serve
 
 The Astronomer Airflow module consists of seven components, and you must bring your own Postgres and Redis database, as well as a container deployment strategy for your cloud.
 
-![Airflow Module](https://s3.console.aws.amazon.com/s3/object/astronomer-cdn/website/img/guides/airflow_module.png?region=us-east-2&tab=overview)
+![Airflow Module](https://s3.amazonaws.com/astronomer-cdn/website/img/guides/airflow_module.png)
 
 ## Quickstart
 
