@@ -8,8 +8,8 @@ tags: ["Docker"]
 
 ## Overview
 
-You can use our Docker images however you'd like (subject to standard Apache 2.0
-restrictions).
+You can use [our Docker images](https://github.com/astronomerio/astronomer)
+however you'd like (subject to standard Apache 2.0 restrictions).
 
 You may also be interested to look at
 [Astronomer Enterprise Edition](https://www.astronomer.io/enterprise) which
