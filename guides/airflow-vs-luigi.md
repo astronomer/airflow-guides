@@ -35,8 +35,6 @@ As pointed out by [Quora user Angela Zhang](https://www.quora.com/Which-is-a-bet
 - Creating and testing tasks is difficult (-)
 - The UI is challenging to navigate (-)
 - Not scalable due to tight coupling with cron jobs; the number of worker processes is bounded by number of cron workers assigned to a job (-)
-- No scheduler (-)
-- Relies heavily on cron (-)
 - Re-running pipelines is not possible
 
 
