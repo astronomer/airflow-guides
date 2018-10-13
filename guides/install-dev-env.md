@@ -21,6 +21,9 @@ tags: ["admin-docs"]
 * [Install Kubernetes CLI](https://kubernetes.io/docs/tasks/tools/install-kubectl/), `kubectl` (On Mac: `brew install kubernetes-cli`)
 * [Install Helm CLI](https://docs.helm.sh/using_helm/#installing-helm), `helm` (On Mac: `brew install kubernetes-helm`)
   You may need to run `helm repo update` and/or `helm init --client-only`
+  
+  * Note: follow these instructions: https://docs.helm.sh/using_helm/#tiller-and-role-based-access-control if you run into this error: `User "system:serviceaccount:kube-system:default" cannot get namespaces in the namespace "<your-namespace>"`
+  
 * Download Astronomer helm charts locally
 
 	```shell
