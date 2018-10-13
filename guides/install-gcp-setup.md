@@ -24,13 +24,13 @@ Note the name of it.
 Choose a name for your static IP, in this example we choose `astronomer-ip`.
 
 ```shell
-$ gcloud compute addresses create astronomer-ip /
-  --region us-east4 /
+$ gcloud compute addresses create astronomer-ip \
+  --region us-east4 \
   --project astronomer-project-190903
 
-$ gcloud compute addresses describe astronomer-ip /
-  --region us-east4 /
-  --project astronomer-project-190903 /
+$ gcloud compute addresses describe astronomer-ip \
+  --region us-east4 \
+  --project astronomer-project-190903 \
   --format 'value(address)'
 ```
 
