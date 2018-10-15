@@ -72,7 +72,7 @@ Enter any name you want to give the credentials.  This is just a label for the G
 
 You need to whitelist the page in our Orbit UI your users will be redirected to after authenticating.  This value should be: `https://app.[baseDomain]/oauth/google`.
 
-So for instance, if your `baseDomain` is `astro.yourdomain.com`, the value should be `https://app.astro.yourdomain.com/oauth/google`.
+So for instance, if your `baseDomain` is `astro.yourdomain.com`, the value should be `https://houston.astro.yourdomain.com/oauth_redirect`.
 
 Once these fields have been filled out, click the `Create` button in the bottom left of the form.
 
