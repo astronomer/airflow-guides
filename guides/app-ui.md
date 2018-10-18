@@ -1,13 +1,11 @@
 ---
-title: "Workspace, Deployment, and User Management with Astronomer"
+title: "Workspace, Deployment, and User Management via the Astronomer UI"
 description: "A walkthrough of our app's UI features."
 date: 2018-07-17T00:00:00.000Z
 slug: "app-ui"
 heroImagePath: null
 tags: ["Astronomer", "admin-docs", "Airflow"]
 ---
-
-# Overview
 
 To help achieve Astronomer's goal of improving Airflow's usability, we have built a custom UI that makes user access and deployment management dead simple. In this guide, we'll walk through the specific components of the Astronomer UI and discuss the design principles that led to their creation.
 
