@@ -26,8 +26,8 @@ echo $PGPASSWORD
 To set the secret, run:
 
 ```shell
-$ kubectl create secret generic astronomer-bootstrap /
-  --from-literal connection="postgres://postgres:${PGPASSWORD}@astro-db-postgresql.astronomer.svc.cluster.local:5432" /
+$ kubectl create secret generic astronomer-bootstrap \
+  --from-literal connection="postgres://postgres:${PGPASSWORD}@astro-db-postgresql.astronomer.svc.cluster.local:5432" \
   --namespace astronomer
 ```
 
@@ -36,8 +36,8 @@ $ kubectl create secret generic astronomer-bootstrap /
 ## 2. TLS Secret
 
 ```shell
-$ kubectl create secret tls astronomer-tls /
-  --key /etc/letsencrypt/live/astro.mycompany.com/privkey.pem /
-  --cert /etc/letsencrypt/live/astro.mycompany.com/fullchain.pem /
+$ kubectl create secret tls astronomer-tls \
+  --key /etc/letsencrypt/live/astro.mycompany.com/privkey.pem \
+  --cert /etc/letsencrypt/live/astro.mycompany.com/fullchain.pem \
   --namespace astronomer
 ```
