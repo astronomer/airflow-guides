@@ -7,21 +7,48 @@ heroImagePath: null
 tags: ["admin-docs", "cli-docs", "debugging"]
 ---
 
-The Astronomer CLI provides a local, dockerized version of Apache Airflow to
-write your DAGs. It is an easy way to use Apache  Airflow on your local
-machine even if you are not using Astronomer.
+The Astronomer CLI provides a local and dockerized version of Apache Airflow to use while writing your DAGs. It is an easy way to use Apache Airflow on your local machine even if you are not using Astronomer.
 
-## Getting Started
+To install the CLI, you'll need [Docker](https://www.docker.com/) and [Go](https://golang.org/) on your machine. **All the steps needed are below, but check out the links below for the full install guides:**
 
-To install, you'll need Docker and Go on your machine.
+ - Follow the guide found here to install and learn the files that are generated: https://github.com/astronomerio/astro-cli
+ - If you are on Windows, check out our Windows guide:https://www.astronomer.io/guides/install-cli-windows10-wsl/
 
-Follow the guide found here to install and learn the files that are generated:
-https://github.com/astronomerio/astro-cli
+## Installing the CLI
 
-If you are on Windows, check out our Windows guide:
-https://www.astronomer.io/guides/install-cli-windows10-wsl/
+To install the most recent version of our CLI on your machine, run the following command.
 
-Once you are installed, open a terminal and run `astro`.
+Via `curl`:
+  ```
+   curl -sSL https://install.astronomer.io | sudo bash
+   ```
+
+### Previous Versions
+
+If you'd like to install a previous version of our CLI, the following command should do the trick.
+
+Via `curl`:
+   ```
+    curl -sSL https://install.astronomer.io | sudo bash -s -- [TAGNAME]
+   ```
+   
+For example:
+   ```
+curl -sSL https://install.astronomer.io | sudo bash -s -- v0.3.1
+   ```
+
+
+**Note:** If you get mkdir error during installation please download and run [godownloader](https://raw.githubusercontent.com/astronomerio/astro-cli/master/godownloader.sh) script locally. 
+
+    $ cat godownloader.sh | bash -s -- -b /usr/local/bin
+
+## Getting Started with the CLI
+
+**1. Confirm the install worked. Open an terminal and run:**
+
+ ```
+  $ astro
+  ```
 
 You should see something like this:
 
@@ -47,14 +74,36 @@ Flags:
   -h, --help   help for astro
 ```
 
-## Building your image.
-Once you've run `astro airflow init` and start developing your DAGs, you can
-run `astro airflow start` to build your image.
+**2. Create a project:**
+
+ ```
+$ mkdir hello-astro && cd hello-astro
+$ astro airflow init
+ ```
+    
+This will generate a skeleton project directory:
+```py
+.
+├── dags #Where your DAGs go
+│   ├── example-dag.py
+├── Dockerfile #For runtime overrides
+├── include #For any other files you'd like to include
+├── packages.txt #For OS-level packages
+├── plugins #For any custom or community Airflow plugins
+└── requirements.txt #For any python packages
+
+```
+
+
+**3. Start Airflow**
+
+Once you've run `astro airflow init` and start developing your DAGs, you can run `astro airflow start` to build your image.
 
 - This will build a base image using Alpine Linux and from Astronomer's fork of Apache-Airflow.
 - The build process will include [everything in your project directory](https://github.com/astronomerio/astronomer/blob/master/docker/platform/airflow/onbuild/Dockerfile#L32). This makes it easy to include any shell scripts, static files, or anything else you want to include in your code.
 
-## Finding the right dependencies
+### Debugging
+
 If your image fails to build after running `astro airflow start`, usually indicated by an error message in your console or airflow not being accessible on `localhost:8080/admin`,  it is probably due to missing OS-level packages in `packages.txt` needed for any python packages specified in `requirements.txt`.
 
 Check out these examples for an idea of what `packages` and `requirements` are needed for simple use cases:
@@ -80,22 +129,32 @@ g++
 make
 musl-dev
 ```
+**Notes to consider**:
+- The image will take some time to build the first time. Right now, you have to rebuild the image each time you want to add an additional package or requirement.
+- By default, there won't be webserver or scheduler logs in the terminal since everything is hidden away in Docker containers. You can see these logs by running: `docker logs $(docker ps | grep scheduler | awk '{print $1}')`
 
-**Note**: The image will take some time to build the first time. Right now, you have to rebuild the image each time you want to add an additional package or requirement.
 
+### CLI Help
 
+The CLI includes a help command, descriptions, as well as usage info for subcommands.
 
-
-## Debugging
-
-By default, there won't be webserver or scheduler logs in the terminal since everything is hidden away in Docker containers. You can see these logs by running:
-
-```
-docker logs $(docker ps | grep scheduler | awk '{print $1}')
+To see the help overview:
 
 ```
+$ astro help
+```
 
-(You can switch out scheduler for webserver if you are more interested in those).
+Or for subcommands:
+
+```
+$ astro airflow --help
+```
+
+```
+$ astro airflow deploy --help
+```
+
+
 
 ## Using Airflow CLI Commands
 You can still use all native Airflow CLI commands with the astro cli when developing DAGs locally, they just need to be wrapped around docker commands.
@@ -133,7 +192,7 @@ These commands should go after the `FROM` line that pulls down the Airflow image
 
 **Note:** Be sure configurations are names match up with the version of Airflow used.
 
-## Deploying to Astronomer EE
+## Deploying to Astronomer Enterprise
 
 **Note:** If you're looking for steps on how to deploy to your Astronomer Cloud account, check out our [Getting Started with Cloud](https://www.astronomer.io/guides/getting-started-with-new-cloud/) guide.
 
