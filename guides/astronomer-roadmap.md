@@ -7,10 +7,6 @@ heroImagePath: null
 tags: ["user-docs", "admin-docs"]
 ---
 
-## v0.6.2
-
-* Platform closed for signups by default
-
 ## v0.7
 
 * [Override environment variables on airflow deployments](https://github.com/astronomerio/astronomer-ee/issues/117)
@@ -20,13 +16,14 @@ tags: ["user-docs", "admin-docs"]
   * [Control worker size](https://github.com/astronomerio/astronomer-ee/issues/120)
 * [Control worker termination grace period](https://github.com/astronomerio/astronomer-ee/issues/123)
   * As a deployment.owner I should be able to set the grace period for my workers to restart during a code push.
+* Logging
+  * Add elasticsearch and fluentd components w/ helm as part of the Astronomer Platform initial deployment
 
 ## v0.8 (subject to change)
 
 * Logging
-  * Add elasticsearch and fluentd components w/ helm as part of the Astronomer Platform initial deployment
-  * Use fluentd and elasticsearch to pipe Airflow task logs to Airflow UI
-  * Use fluentd and elasticsearch to pipe scheduler and web-server logs to Astronomer UI
+  * Pipe Airflow task logs to Airflow UI
+  * Pipe scheduler and web-server logs to Astronomer UI
 * [Improve StatsD metrics](https://github.com/astronomerio/incubator-airflow/issues/29)
   * Add counters for success and failed dag_runs, tracking dag_id and execution_date
 * [Container Status](https://github.com/astronomerio/astronomer-ee/issues/124)
