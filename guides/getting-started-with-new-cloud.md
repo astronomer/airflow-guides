@@ -172,11 +172,7 @@ We're constantly building more functionality to our CLI and will shoot you an em
 
 We don't have an automated way to do so for minor relases, so we'd recommend running `astro version` on a bi-weekly basis to see what the latest is just in case.
 
-<<<<<<< HEAD
 If you do happen to be behind, you can run `astro upgrade` or the curl command listed above to install the latest.
-=======
-If you're behind, you can run `astro upgrade` and follow the instructions from it.
->>>>>>> 71f6ea5c88b8a6bf6b93a8fba938cb6dc28d5f05
 
 ### When will Astronomer run Airflow 1.10?
 
@@ -199,6 +195,12 @@ The first time you authenticated (via our UI or directly through our CLI), you h
 If you set up an additional workspace, you'll effectively have to specify that you're "pointing" at it. 
 
 By default, you're authenticated against the last workspace you deployed to. 
+
+### How do I get rid of any `example_dag`'s that initially show up in my deployment's DAG list?
+
+For now, this is unfortunately something someone on the Astronomer team has to do directly. If you'd like us to remove any `example_dag`'s, let us know and we'll be quick to remove them. 
+
+Airflow 1.10's functionality actually does allow users to do this directly, so you can expect to be able to do so in the future. Stay peeled! 
 
 ### Can I have a NAT or single IP for each deployment?
 
