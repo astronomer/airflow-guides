@@ -94,6 +94,8 @@ _Note_: Most of your constants and variables should be defined in code, but it's
 https://airflow.apache.org/concepts.html#variables
 ![airflow_variables](https://assets.astronomer.io/website/img/guides/airflow_variables.png)
 
+PRO TIP: If the key contains any of the following words (`password`, `secret`, `passwd`, `authorization`, `api_key`, `apikey`, `access_token`), that particular variable will be encrypted or hidden in the UI by default. If you want it to show in clear-text, you are indeed able to configure it.
+
 ### XComs
 
 Similar to Variables, Xcoms can be used as places to store information on the fly.
