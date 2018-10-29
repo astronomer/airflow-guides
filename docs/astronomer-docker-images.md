@@ -2,9 +2,9 @@
 title: "Astronomer Docker Images"
 description: "How to use the Astronomer Docker images"
 date: 2018-10-12T00:00:00.000Z
-slug: "astronomer-docker-images"
-heroImagePath: null
-tags: ["Docker"]
+slug: "docker"
+menu: ["root"]
+position: [3]
 ---
 
 ## Overview
