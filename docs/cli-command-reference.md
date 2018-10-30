@@ -1,5 +1,5 @@
 ---
-title: "Astro CLI Command Reference"
+title: "Astro CLI Commands"
 description: "Command reference for the Astronomer CLI"
 date: 2018-10-12T00:00:00.000Z
 slug: "cli-command-reference"
