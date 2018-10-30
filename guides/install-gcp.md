@@ -31,6 +31,7 @@ Before running the Astronomer install command you must:
 1. [Get a Postgres server running](/guides/install-postgres)
 1. [Obtain SSL](/guides/install-ssl)
 1. [Setup DNS](/guides/install-dns)
+1. [Install Helm and Tiller](/guides/install-helm)
 1. [Set a few Kubernetes secrets](/guides/install-k8s-secrets)
 1. [Create Google OAuth Creds ](/guides/install-google-oauth)
 1. [Build your config.yaml](/guides/install-config)
