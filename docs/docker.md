@@ -1,5 +1,5 @@
 ---
-title: "Astronomer Docker Images"
+title: "Docker Usage"
 description: "How to use the Astronomer Docker images"
 date: 2018-10-12T00:00:00.000Z
 slug: "docker"
