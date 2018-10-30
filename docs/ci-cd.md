@@ -2,7 +2,7 @@
 title: "CI/CD"
 description: "Using CI/CD with Astronomer."
 date: 2018-10-12T00:00:00.000Z
-slug: "cicd"
+slug: "ci-cd"
 menu: ["root"]
 position: [8]
 ---
@@ -47,7 +47,7 @@ https://app.[BaseDomain]/login
 
 ### Configuring Your CI/CD Pipeline
 
-Depending on your CI/CD tool, configuration will be slightly different. This section will focus on outlining what needs to be accomplished, not the specifics of how. 
+Depending on your CI/CD tool, configuration will be slightly different. This section will focus on outlining what needs to be accomplished, not the specifics of how.
 At it's core, your CI/CD pipeline will be authenticating to the private registry installed with the platform, then building, tagging and pushing an image to that registry.
 
 An example pipeline (using DroneCI) could look like:
@@ -103,7 +103,7 @@ For example, if you are using Astronomer's cloud platform, you will use:
 `registry.astronomer.cloud`
 
 __Release Name__
-Release name refers to the release name of your Airflow Deployment. It will follow the pattern of [SPACE THEMED ADJ.]-[SPACE THEMED NOUN]-[4-DIGITS] (in this example, `infrared-photon-7780`). 
+Release name refers to the release name of your Airflow Deployment. It will follow the pattern of [SPACE THEMED ADJ.]-[SPACE THEMED NOUN]-[4-DIGITS] (in this example, `infrared-photon-7780`).
 
 
 __Tag Name__
