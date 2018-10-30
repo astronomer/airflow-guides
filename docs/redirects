@@ -1,2 +1,4 @@
 /guides/astronomer-docker-images /docs/docker
 /guides/install-k8s-secrets /docs/enterprise/install-k8s-secrets
+/guides/deploying-dags-with-cicd /docs/cicd
+/guides/astronomer-features /docs/overview
