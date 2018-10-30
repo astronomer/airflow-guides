@@ -2,9 +2,7 @@
 title: "Setting Kubernetes Secrets for Astronomer"
 description: "Setting Kubernetes Secrets for Astronomer"
 date: 2018-07-17T00:00:00.000Z
-slug: "install-k8s-secrets"
-heroImagePath: null
-tags: ["admin-docs"]
+slug: "enterprise-install-k8s-secrets"
 ---
 
 ## 1. Postgres Secret
