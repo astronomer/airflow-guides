@@ -1,6 +1,6 @@
 ---
-title: "Getting Started with Astronomer"
-description: "Getting started with your Astronomer account."
+title: "Getting Started"
+description: "Getting started with your Astronomer account"
 date: 2018-10-12T00:00:00.000Z
 slug: "getting-started"
 menu: ["root"]

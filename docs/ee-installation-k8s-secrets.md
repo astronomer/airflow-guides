@@ -1,5 +1,5 @@
 ---
-title: "Setting Kubernetes Secrets for Astronomer"
+title: "Kubernetes Secrets"
 description: "Setting Kubernetes Secrets for Astronomer"
 date: 2018-07-17T00:00:00.000Z
 slug: "ee-installation-k8s-secrets"
