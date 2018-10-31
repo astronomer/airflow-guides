@@ -9,7 +9,7 @@ tags: ["admin-docs"]
 
 ## 1. Postgres Secret
 
-Depending on where your Postgres cluster is running, you may need to adjust the connection string in the next step to match your environment. If you installed via the helm chart, you can run the command that was output by helm to set the `${PGPASSWORD}` environment variable, which can be used in the next step. Once that variable is set, you can run this command directly to create the bootstrap secret.
+Depending on where your Postgres cluster is running, you may need to adjust the connection string in the next step to match your environment. If you installed via the helm chart,you can run the command that was output by helm to set the `${PGPASSWORD}` environment variable, which can be used in the next step. Once that variable is set, you can run this command directly to create the `astronomer-bootstrap` secret.
 
 ```
 helm list
@@ -31,9 +31,12 @@ $ kubectl create secret generic astronomer-bootstrap \
   --namespace astronomer
 ```
 
-> Note: Change user from `postgres` if you're creating a user instead of using the default, it needs permission to create databases, schemas, and users.
+**Two notes:** 
+- Change user from `postgres` if you're creating a user instead of using the default. It needs permission to create databases, schemas, and users. You'll also have to modify the connection string
+- Make sure to modify the connection strip to match your namespace (e.g. if you're installing everything in a default namespace, you'll have to replace `astronomer` with `default`)
 
 ## 2. TLS Secret
+
 
 ```shell
 $ kubectl create secret tls astronomer-tls \
