@@ -67,4 +67,4 @@ If different user groups are required both of these projects, it may make sense 
 
 ## Reusing Code
 
-All code that is re-used between projects (e.g. plugins, DAG templates, etc) should live in separate directories in your version control tool (e.g. Astronomer houses all airflow plugins in this [repo](www.github.com/airflow-plugins)). This way, changes made outside of the project can be easily roped in, while changes specific to the project (e.g. changes to a plugin, or a specific dag template) are always housed with the project.
+All code that is re-used between projects (e.g. plugins, DAG templates, etc) should live in separate directories in your version control tool (e.g. Astronomer houses all airflow plugins in [our airflow plugins repo](https://github.com/airflow-plugins/) ). This way, changes made outside of the project can be easily roped in, while changes specific to the project (e.g. changes to a plugin, or a specific dag template) are always housed with the project.
