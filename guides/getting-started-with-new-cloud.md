@@ -204,6 +204,9 @@ Airflow 1.10's functionality actually does allow users to do this directly, so y
 
 ### Can I have a NAT or single IP for each deployment?
 
+### How is SSL handled?
+We handle ssl termination at the ssl layer, and the proxy request back to the SSL server is HTTP - so you don't need to do any SSL stuff from your end!
+
 You might be wondering whether or not we're able to dedicate an Internet gateway / NAT to your org and pin it to your Kubernetes workers so that other customers aren’t able to send traffic to you.
 
 In cloud, we run a single NAT that all internet bound traffic flows through, but unfortunately not at a customer level. We pretty much run solely at the Kubernetes layer, and Kubernetes doesn't have a NAT resource of any nature. For now, this is something you'll have to run in your own cloud.
