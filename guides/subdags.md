@@ -82,4 +82,4 @@ In mathematical terms, each SubDag is behaving like a _vertex_ (a single point i
 
 Depending on the scale and infrastructure, a specialized queue can be added just for SubDags (assuming a CeleryExecutor), but a cleaner workaround is to avoid subdags entirely.
 
-**Astronomer highly recommends staying away from SubDags.**
+**Astronomer highly recommends staying away from SubDags. Airflow 1.10 has changed the default SubDag execution method to use the Sequential Executor to work around deadlocks caused by SubDags**
