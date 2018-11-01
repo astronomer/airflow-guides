@@ -2,8 +2,8 @@
 title: "A Welcome to Astronomer"
 description: "Are you our newest customer? Here's a guide to everything you need to get started"
 date: 2018-10-31T00:00:00.000Z
-slug: "astronomer-welcome"
-heroImagePath: "https://cdn-images-1.medium.com/max/2000/1*NOdESVh32nq5mbs_Nj46pA.png"
+slug: "astro-customer-onboarding"
+heroImagePath: null
 tags: ["astronomer"]
 ---
 
