@@ -7,13 +7,15 @@ heroImagePath: null
 tags: ["astronomer"]
 ---
 
-Welcome to Astronomer. You might be here because you're our newest customer, or because you're wondering what working with Astronomer would look like for your team. 
+Welcome to Astronomer. 
 
-To help you hit the ground running, this guide will walk you through what you need to know and do to get started as an Astronomer Customer. 
+Whether you're here because you're our newest customer, or because you're wondering what working with Astronomer would look like for your team, we're excited to be with you on your Airflow journey.
+
+To help you hit the ground running, this guide will walk you through what you need to know (and do) to get started as an Astronomer Customer. 
 
 # What You Get
 
-In case you already forgot, here's a breakdown of what you get with each of our two products. 
+In case you need a refresher, here's a breakdown of what you get with each of our two products. 
 
 ## Astronomer: Cloud Edition
 
@@ -27,14 +29,14 @@ Astronomer Cloud gives you:
 
 - Resource Controls (soon adjustable directly through the Astronomer UI)
 
-- Enteprise-level support from a group of Airflow aficionados dedicated to keep your workflows up and running (get in touch with us for pricing details)
+- Access to our team of Airflow aficionados dedicated to keep your workflows up and running (read about our support options on our [pricing page](https://preview.astronomer.io/pricing/), and below)
 
 
 ## Astronomer: Enterprise Edition
 
 Astronomer Enterprise allows you to run a private version of our platform on your own Kubernetes.
 
-You get:
+It includes:
 
 - Astronomer Command Center that includes an Astronomer-built UI, CLI, and a GraphQL API for easy cluster and deployment management on Kubernetes
 
@@ -42,7 +44,7 @@ You get:
 
 - Enterprise Authentication that supports Google Suite, SAML, Office 365, Active Directory, and more
 
-- A dedicated Astronomer support team (additional cost)
+- Enteprise-grade business day or business critical support
 
 Read [here](https://www.astronomer.io/guides/astronomer-features/) for more details on each of these components. 
 
@@ -58,7 +60,7 @@ Ready to get hit the ground running? Here's a breakdown of immediate next steps.
 
 - Once you're there, this guide will walk you through deployment, CLI installation, image customization etc. as well as give you a short list of tips and gotchas you can watch out for.
 
-#### Step 2: Follow this Guide
+#### Step 2: Follow [this](https://www.astronomer.io/guides/getting-started-with-new-cloud/) Guide
 
 - Once you've created a workspace, [this](https://www.astronomer.io/guides/getting-started-with-new-cloud/) guide will walk you through the rest (CLI installation,deployment, DAG migration, etc.)
 
@@ -88,23 +90,23 @@ Our team of Data Engineers are here to help. For all-things support, we currentl
 
 - If you have a specific feature request or are curious about platform-wide issues our engineering team is tackling, you can track and open up issues in this repo
 
-### (2) Slack Channel Support (Paid)
+### (2) Slack Channel Support
 
-- If you're looking for 1:1 attention from us, we've found that a private, shared slack channel between our two teams is very much worth the cost. We'll walk you through troubleshooting in real-time, hop on a screenshare if necessary, and share insights, gotchas and best practices that other customers might not get easy access to
+- If you're looking for 1:1 attention from us, we've found that a private, shared slack channel between our two teams is a worthwile investment. We'll walk you through troubleshooting in real-time, hop on a screenshare if necessary, and share insights, gotchas and best practices that other customers might not get easy access to.
 
-- If you're interested in this option, reach out to our Head of Sales, Brad Kirn (brad@astronomer.io)
+- If you're interested in this option, reach out to our Head of Customer, Paola Peraza (paola@astronomer.io)
 
 ### (3) Astronomer SpaceCamp
 
-SpaceCamp is our Apache Airflow training and education program for teams looking to run Airflow at scale. (Think: We come to your office for a few days, and get your team ramped up on Airflow).
+[SpaceCamp](https://www.astronomer.io/spacecamp/) is our Apache Airflow training and education program for teams looking to run Airflow at scale. (Think: We come to your office for a few days, and get your team ramped up on Airflow).
 
 For more info, check out [this](https://www.astronomer.io/spacecamp/) page, or fill out [this](https://www.astronomer.io/spacecamp/#request-spacecamp) interest form to chat with us.
 
 ## Astronomer Documentation
 
-This Guides page is our current hub of documentation. We're working hard to add more product-specific docs, so expect those to be added soon. 
+This Guides page is our current hub of documentation. We're working hard to add more product-specific docs, so expect to see those soon.
 
-For now, here are a few guides that should help you kick things off:
+For now, here are a few Astronomer-written guides that should help you kick things off:
 
 - UI Guides
     - [The Astronomer UI](https://www.astronomer.io/guides/app-ui/)
