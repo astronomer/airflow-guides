@@ -29,7 +29,7 @@ Astronomer Cloud gives you:
 
 - Resource Controls (soon adjustable directly through the Astronomer UI)
 
-- Enterprise-level support from a group of Airflow aficionados dedicated to keep your workflows up and running (get in touch with us for pricing details)
+- Access to a group of Airflow aficionados dedicated to keep your workflows up and running (read more about our different flavors of support below, or check out our [pricing page](https://astronomer.io/pricing/))
 
 
 ## Astronomer: Enterprise Edition
@@ -44,7 +44,7 @@ It includes:
 
 - Enterprise Authentication that supports Google Suite, SAML, Office 365, Active Directory, and more
 
-- Enteprise-grade business day or business critical support
+- Enterprise-grade business day or business critical support
 
 Read [here](https://www.astronomer.io/guides/astronomer-features/) for more details on each of these components. 
 
@@ -84,17 +84,17 @@ Need some help troubleshooting and not sure where to turn? Here are a few things
 
 Our team of Data Engineers are here to help. For all-things support, we currently have 3 offerings:
 
-### (1) General Support (Free)
+### (1) Standard Support (Included)
 
 - Generally, if you run into a one-off technical issue, you can file a support ticket by shooting an email to **support@astronomer.io**. You can expect to hear back from us within 24 hours (usually sooner).
 
 - If you have a specific feature request or are curious about platform-wide issues our engineering team is tackling, you can track and open up issues in this repo
 
-### (2) Slack Channel Support
+### (2) Premium Slack Channel Support
 
 - If you're looking for 1:1 attention from us, we've found that a private, shared slack channel between our two teams is a worthwile investment. We'll walk you through troubleshooting in real-time, hop on a screenshare if necessary, and share insights, gotchas and best practices that other customers might not get easy access to.
 
-- If you're interested in this option, reach out to our Head of Customer, Paola Peraza (paola@astronomer.io)
+- If you're interested in this option, check out our [pricing page](https://preview.astronomer.io/pricing/). If you're interested, reach out to our Head of Customer, Paola Peraza (paola@astronomer.io)
 
 ### (3) Astronomer SpaceCamp
 
