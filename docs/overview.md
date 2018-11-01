@@ -7,6 +7,39 @@ menu: ["root"]
 position: [1]
 ---
 
+Welcome to Astronomer. Whether you're here because you're our newest customer or because you're wondering what exactly it means to work with us, we're excited to be with you on your Airflow journey.
+
+Here's a breakdown of what you get with each of our two products.
+
+# Product Overview
+
+## Astronomer: Cloud Edition
+
+Astronomer Cloud is a managed instance of Apache Airflow on an Astronomer-hosted cluster for ultimate abstraction from all-things infrastructure. It includes:
+
+- A custom CLI for easy DAG deployment and management
+
+- Access to our Astronomer UI with secure authentication for easy deployment, user, and workspace management. You can read more about the components of our UI below.
+
+- Resource Controls from the UI
+
+- Multiple [support options](https://astronomer.io/pricing) pending your team's needs
+
+
+## Astronomer: Enterprise Edition
+
+Astronomer Enterprise allows you to run a private version of our platform on your own Kubernetes cluster It includes:
+
+- Astronomer Command Center that includes an Astronomer-built UI, CLI, and a GraphQL API for easy cluster and deployment management on Kubernetes
+
+- Access to a Prometheus and Grafana monitoring stack for metrics on your Airflow activity
+
+- Enterprise Authentication that supports Google Suite, SAML, Office 365, Active Directory, and more
+
+- Enterprise-grade business day or business critical support
+
+# The Astronomer UI
+
 To help achieve Astronomer's goal of improving Airflow's usability, we have built a custom UI that makes user access and deployment management dead simple. In this guide, we'll walk through the specific components of the Astronomer UI and discuss the design principles that led to their creation.
 
 ## Getting Started

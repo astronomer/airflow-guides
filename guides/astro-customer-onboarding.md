@@ -29,7 +29,7 @@ Astronomer Cloud gives you:
 
 - Resource Controls (soon adjustable directly through the Astronomer UI)
 
-- Access to our team of Airflow aficionados dedicated to keep your workflows up and running (read about our support options on our [pricing page](https://preview.astronomer.io/pricing/), and below)
+- Enterprise-level support from a group of Airflow aficionados dedicated to keep your workflows up and running (get in touch with us for pricing details)
 
 
 ## Astronomer: Enterprise Edition
