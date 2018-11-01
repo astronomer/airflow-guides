@@ -6,3 +6,4 @@ slug: "resources-release-notes"
 menu: ["Resources"]
 position: [1]
 ---
+Coming soon...

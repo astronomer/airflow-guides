@@ -6,3 +6,4 @@ slug: "resources-pricing"
 menu: ["Resources"]
 position: [3]
 ---
+Coming soon...

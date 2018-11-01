@@ -6,3 +6,4 @@ slug: "ee-metrics"
 menu: ["Enterprise Edition"]
 position: [6]
 ---
+Coming soon...

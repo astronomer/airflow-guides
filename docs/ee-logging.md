@@ -6,3 +6,4 @@ slug: "ee-logging"
 menu: ["Enterprise Edition"]
 position: [5]
 ---
+Coming soon...

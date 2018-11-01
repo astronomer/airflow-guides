@@ -6,3 +6,4 @@ slug: "ee-getting-started-with-ee"
 menu: ["Enterprise Edition"]
 position: [3]
 ---
+Coming soon...

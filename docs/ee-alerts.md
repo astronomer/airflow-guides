@@ -6,3 +6,4 @@ slug: "ee-alerts"
 menu: ["Enterprise Edition"]
 position: [7]
 ---
+Coming soon...
