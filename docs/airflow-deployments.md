@@ -1,9 +1,11 @@
 ---
-title: "Airflow Deploymemnts"
-description: "Choosing your executor and resource constraints within Astronomer."
+title: "Airflow Deployments"
 date: 2018-10-12T00:00:00.000Z
 slug: "airflow-deployments"
 menu: ["root"]
 position: [5]
 ---
-Coming soon...
+
+Within your Astronomer Workspace, you can deploy one or more Airflow deployments.
+
+Configuration...
