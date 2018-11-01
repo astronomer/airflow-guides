@@ -1,5 +1,5 @@
 ---
-title: "A Welcome to Astronomer"
+title: "Welcome to Astronomer"
 description: "Are you our newest customer? Here's a guide to everything you need to get started"
 date: 2018-10-31T00:00:00.000Z
 slug: "astro-customer-onboarding"
@@ -7,9 +7,9 @@ heroImagePath: null
 tags: ["astronomer"]
 ---
 
-Welcome to Astronomer. You might be here because you're our newest customer, or because you're wondering what exactly it means to work with us. 
+Welcome to Astronomer. You might be here because you're our newest customer, or because you're wondering what working with Astronomer would look like for your team. 
 
-In lieu of sending a wall of text in an on-boarding email, here's what you need to get started as an Astronomer Customer. 
+To help you hit the ground running, this guide will walk you through what you need to know and do to get started as an Astronomer Customer. 
 
 # What You Get
 
