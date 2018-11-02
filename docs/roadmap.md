@@ -6,32 +6,14 @@ menu: ["Resources"]
 position: [2]
 ---
 
-| Release                   | Airflow Core | Airflow Enterprise |
-|---------------------------|:------------:|:------------------:|
-| Airflow scheduler         | x            | x                  |
-| Airflow webserver         | x            | x                  |
-| PostgreSQL                | x            | x                  |
-| [Redis][redis]            |              | x                  |
-| [Celery][celery]          |              | x                  |
-| [Flower][flower]          |              | x                  |
-| [Prometheus][prometheus]  |              | x                  |
-| [Grafana][grafana]        |              | x                  |
-| [StatsD exporter][statsd] |              | x                  |
-| [cAdvisor][cadvisor]      |              | x                  |
+| Release | Features |
+|---------------------------|------------|
+| v0.7 | <ul><li>[Override environment variables on airflow deployments](https://github.com/astronomerio/astronomer-ee/issues/117)</li></ul> |
 
-+---------------+---------------+--------------------+
-| Fruit         | Price         | Advantages         |
-+===============+===============+====================+
-| Bananas       | $1.34         | - built-in wrapper |
-|               |               | - bright color     |
-+---------------+---------------+--------------------+
-| Oranges       | $2.10         | - cures scurvy     |
-|               |               | - tasty            |
-+---------------+---------------+--------------------+
 
 ## v0.7
 
-* [Override environment variables on airflow deployments](https://github.com/astronomerio/astronomer-ee/issues/117)
+
   * As a user, I need to configure my SMTP settings (email alerts), settings for parallelism, and other ENV level settings without exposing credentials in my dockerfile.
 * Worker scaling
   * [Control worker count](https://github.com/astronomerio/astronomer-ee/issues/119)
