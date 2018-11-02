@@ -10,20 +10,10 @@ Alerts are available in Astronomer v0.7 and higher.
 
 ## Airflow Alerts
 
-| First Header  | Second Header |
-| ------------- | ------------- |
-| Content Cell  | Content Cell  |
-| Content Cell  | Content Cell  |
-
-----------------------------  --------------------------------------------------
-Alert                         Description
-----------------------------  --------------------------------------------------
-AirflowDeploymentUnhealthy    Release deployment is unhealthy, not completely
-                              available.
-
-AirflowFailureRate            Airflow tasks are failing at a higher rate than
-                              normal.
-----------------------------  --------------------------------------------------
+| Alert                       | Description |
+| -------------               | ------------- |
+| AirflowDeploymentUnhealthy  | Release deployment is unhealthy, not completely available. |
+| AirflowFailureRate          | Airflow tasks are failing at a higher rate than normal. |
 
 * `AirflowSchedulerUnhealthy` — Airflow scheduler is unhealthy, heartbeat has dropped below the acceptable rate.
 * `AirflowPodQuota` — Deployment is near its pod quota, has been using over 95% of it's pod quota for over 10 minutes.
