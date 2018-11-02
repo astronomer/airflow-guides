@@ -1,6 +1,6 @@
 ---
 title: "Are you Astronomer Enterprise ready?"
-description: "Ensure you meet the pre-requisists to run the Astronomer Enterprise platform"
+description: "Ensure you meet the pre-requisites to run the Astronomer Enterprise platform"
 date: 2018-11-01T00:00:00.000Z
 slug: "enterprise-ready"
 heroImagePath: null
