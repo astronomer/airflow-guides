@@ -6,7 +6,8 @@ menu: ["root"]
 position: [9]
 ---
 
-Alerts are available in Astronomer v0.7 and higher.
+Get emails for common Airflow deployment issues, before you experience a failure.
+Available in Astronomer v0.7 and higher.
 
 ## Airflow Alerts
 
