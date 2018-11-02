@@ -3,7 +3,7 @@
 /guides/deploying-dags-with-cicd /docs/ci-cd
 /guides/astronomer-features /docs/overview
 /guides/install-helm /docs/ee-installation-helm
-/guides/install-gcip /docs/ee-installation-gke
+/guides/install-gcp /docs/ee-installation-gke
 /guides/install-aws /docs/ee-installation-eks
 /guides/getting-started-with-new-cloud /docs/getting-started
 /guides/astro-cli /docs/cli-getting-started
