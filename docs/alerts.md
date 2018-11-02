@@ -24,9 +24,9 @@ Available in Astronomer v0.7 and higher.
 
 | Alert | Description |
 | ------------- | ------------- |
-| `PrometheusDiskUsage` | Prometheus High Disk Usage — Prometheus has less than 10% disk space available. |
-| `RegistryDiskUsage` | Docker Registry High Disk Usage — Docker Registry has less than 10% disk space available. |
-| `ElasticsearchDiskUsage` | Elasticsearch High Disk Usage — Elasticsearch has less than 10% disk space available. |
-| `IngessCertificateExpiration` | TLS Certificate Expiring Soon — The TLS Certificate is expiring in less than a week. |
+| `PrometheusDiskUsage` | Prometheus high disk usage, has less than 10% disk space available. |
+| `RegistryDiskUsage` | Docker Registry high disk usage, has less than 10% disk space available. |
+| `ElasticsearchDiskUsage` | Elasticsearch high disk usage, has less than 10% disk space available. |
+| `IngessCertificateExpiration` | TLS Certificate expiring soon, expiring in less than a week. |
 
 View [full source code](https://github.com/astronomerio/helm.astronomer.io/blob/master/charts/prometheus/values.yaml#L41-L148) for alerts.
