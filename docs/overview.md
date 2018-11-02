@@ -1,17 +1,10 @@
 ---
-title: "Overview"
-description: "Features of the Astronomer Platform"
+title: "Overview of Astronomer"
 date: 2018-10-12T00:00:00.000Z
 slug: "overview"
 menu: ["root"]
 position: [1]
 ---
-
-Welcome to Astronomer. Whether you're here because you're our newest customer or because you're wondering what exactly it means to work with us, we're excited to be with you on your Airflow journey.
-
-Here's a breakdown of what you get with each of our two products.
-
-# Product Overview
 
 ## Astronomer: Cloud Edition
 
@@ -53,7 +46,7 @@ Before we dive in, here are some quick definitions for terms that we'll use when
 
 ![Account Dashboard](https://s3.amazonaws.com/astronomer-cdn/website/img/guides/account_dashboard.png)
 
-You can think of your Workspaces the same way you'd think of teams- they're just collections of Airflow clusters that specific user groups have access to. From this dashboard, you can spin up new Workspaces and get a high-level overview of active Airflow deployments in your current workspaces. 
+You can think of your Workspaces the same way you'd think of teams- they're just collections of Airflow clusters that specific user groups have access to. From this dashboard, you can spin up new Workspaces and get a high-level overview of active Airflow deployments in your current workspaces.
 
 Once you click into a workspace, you'll land on another dashboard that we'll call the `Workspace Dashboard`:
 
@@ -79,7 +72,7 @@ Note that, in an upcoming release, you'll be able to designate DAG-level permiss
 
 ## Service Accounts
 
-If you're interested in integrating your deployment process into your CI/CD system, [check out this guide](https://astronomer.io/guides/deploying-dags-with-cicd/). Through the `Services Account` tab in your Workspace Dashboard, you can generate API keys that you can plug into your CI/CD secrets manager. 
+If you're interested in integrating your deployment process into your CI/CD system, [check out this guide](https://astronomer.io/guides/deploying-dags-with-cicd/). Through the `Services Account` tab in your Workspace Dashboard, you can generate API keys that you can plug into your CI/CD secrets manager.
 
 Note that you're able to create Service Accounts at both the Workspace and Deployment level. Creating them at the Workspace level allows you to customize how your deployment pipeline works and allows you to deploy to multiple Airflow instances with one push, while creating them at the Deployment level ensures that your CI/CD pipeline will only deploy to that specific cluster. Check out [this video](https://www.youtube.com/watch?time_continue=2&v=8h9lXzGa4sQ) for a more detailed walkthrough of Service Accounts and CI/CD with Astronomer.
 
