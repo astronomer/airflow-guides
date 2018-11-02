@@ -1,11 +1,34 @@
 ---
-title: "Roadmap"
-description: "Astronomer Roadmap"
-date: 2018-10-12T00:00:00.000Z
+title: "Astronomer Roadmap"
+date: 2018-11-02T00:00:00.000Z
 slug: "roadmap"
 menu: ["Resources"]
 position: [2]
 ---
+
+| Release                   | Airflow Core | Airflow Enterprise |
+|---------------------------|:------------:|:------------------:|
+| Airflow scheduler         | x            | x                  |
+| Airflow webserver         | x            | x                  |
+| PostgreSQL                | x            | x                  |
+| [Redis][redis]            |              | x                  |
+| [Celery][celery]          |              | x                  |
+| [Flower][flower]          |              | x                  |
+| [Prometheus][prometheus]  |              | x                  |
+| [Grafana][grafana]        |              | x                  |
+| [StatsD exporter][statsd] |              | x                  |
+| [cAdvisor][cadvisor]      |              | x                  |
+
++---------------+---------------+--------------------+
+| Fruit         | Price         | Advantages         |
++===============+===============+====================+
+| Bananas       | $1.34         | - built-in wrapper |
+|               |               | - bright color     |
++---------------+---------------+--------------------+
+| Oranges       | $2.10         | - cures scurvy     |
+|               |               | - tasty            |
++---------------+---------------+--------------------+
+
 ## v0.7
 
 * [Override environment variables on airflow deployments](https://github.com/astronomerio/astronomer-ee/issues/117)
