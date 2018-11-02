@@ -21,6 +21,8 @@ Alerts are available in Astronomer v0.7 and higher.
 
 ## Platform Alerts
 
+| Alert | Description |
+| ------------- | ------------- |
 | `PrometheusDiskUsage` | Prometheus High Disk Usage — Prometheus has less than 10% disk space available. |
 | `RegistryDiskUsage` | Docker Registry High Disk Usage — Docker Registry has less than 10% disk space available. |
 | `ElasticsearchDiskUsage` | Elasticsearch High Disk Usage — Elasticsearch has less than 10% disk space available. |
