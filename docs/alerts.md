@@ -10,6 +10,11 @@ Alerts are available in Astronomer v0.7 and higher.
 
 ## Airflow Alerts
 
+| First Header  | Second Header |
+| ------------- | ------------- |
+| Content Cell  | Content Cell  |
+| Content Cell  | Content Cell  |
+
 ----------------------------  --------------------------------------------------
 Alert                         Description
 ----------------------------  --------------------------------------------------
