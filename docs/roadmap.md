@@ -6,6 +6,9 @@ menu: ["Resources"]
 position: [2]
 ---
 
+Below is a summary of our current release plan. If you'd like to request a feature
+or upvote something you really want, visit [our Github](https://github.com/astronomerio/astronomer-ee/issues).
+
 | Release | Features |
 |---------------------------|------------|
 | v0.7 | [Override environment variables on airflow deployments](https://github.com/astronomerio/astronomer-ee/issues/117) As a user, I need to configure my SMTP settings (email alerts), settings for parallelism, and other ENV level settings without exposing credentials in my dockerfile.<br />Worker scaling: [Control worker count](https://github.com/astronomerio/astronomer-ee/issues/119), [Control worker size](https://github.com/astronomerio/astronomer-ee/issues/120)<br />[Control worker termination grace period](https://github.com/astronomerio/astronomer-ee/issues/123) As a deployment.owner I should be able to set the grace period for my workers to restart during a code push.<br />Logging: Add elasticsearch and fluentd components w/ helm as part of the Astronomer Platform initial deployment |
