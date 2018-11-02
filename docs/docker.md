@@ -70,9 +70,8 @@ We provide two examples for Apache Airflow.  Each will spin up a handful of cont
 
 Here's a comparison of the components included in the Airflow Core vs Airflow Enterprise examples:
 
-{:.table.table-striped.table-bordered.table-hover}
 | Component                 | Airflow Core | Airflow Enterprise |
-|---------------------------|:------------:|:------------------:|
+|---------------------------| ------------ | ------------------ |
 | Airflow scheduler         | x            | x                  |
 | Airflow webserver         | x            | x                  |
 | PostgreSQL                | x            | x                  |
