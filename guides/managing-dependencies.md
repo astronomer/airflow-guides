@@ -28,9 +28,21 @@ This logic can be set three ways:
 - `d1 >> d2 >> d3 >> d4` <br> <br>
 - `d4 << d3 << d2 << d1`
 
+
+To set groups of dependencies, you can use lists or tuples as well.
+
+```
+d1 >> d2 >> (d3, d4)
+
+d1 >> d2 >> [d3, d4]
+```
+
+Both of these are equivalent, and set `d3` and `d4` downstream of d2.
+
 All three are in line with best practice as long as it is written consistently - do **not** do:
 
 - `d1.set_downstream(d2)`<br> `d2 >>d3` <br> `d4.set_upstream(d3)`<br>
+
 
 ## Dynamically Setting Dependencies
 
