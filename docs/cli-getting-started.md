@@ -7,7 +7,7 @@ menu: ["Astro CLI"]
 position: [2]
 ---
 
-**1. Confirm the install worked. Open an terminal and run:**
+**1. Confirm the install worked. Open a terminal and run:**
 
  ```
   $ astro
@@ -63,6 +63,36 @@ Once you've run `astro airflow init` and start developing your DAGs, you can run
 
 - This will build a base image using Alpine Linux and from Astronomer's fork of Apache-Airflow.
 - The build process will include [everything in your project directory](https://github.com/astronomerio/astronomer/blob/master/docker/platform/airflow/onbuild/Dockerfile#L32). This makes it easy to include any shell scripts, static files, or anything else you want to include in your code.
+
+### For WSL (Windows Subsystem for Linux) Users
+
+- If you're running WSL, you might see the following error when trying to call `astro airflow start`:
+
+```
+Sending build context to Docker daemon  8.192kB
+Step 1/1 : FROM astronomerinc/ap-airflow:latest-onbuild
+# Executing 5 build triggers
+ ---> Using cache
+ ---> Using cache
+ ---> Using cache
+ ---> Using cache
+ ---> Using cache
+ ---> f28abf18b331
+Successfully built f28abf18b331
+Successfully tagged hello-astro/airflow:latest
+INFO[0000] [0/3] [postgres]: Starting
+Pulling postgres (postgres:10.1-alpine)...
+panic: runtime error: index out of range
+goroutine 52 [running]:
+github.com/astronomerio/astro-cli/vendor/github.com/Nvveen/Gotty.readTermInfo(0xc4202e0760, 0x1e, 0x0, 0x0, 0x0)
+....
+```
+
+This is an issue pulling Postgres that should be fixed by running the following:
+
+```
+Docker pull postgres:10.1-alpine
+```
 
 ### Debugging
 

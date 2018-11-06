@@ -22,11 +22,34 @@ The first step is to create a workspace on our platform.
 
 ## Download the CLI
 
-To download the CLI, run the following command:
+To download the CLI, you'll need the following installed on your machine:
 
-```
-curl -sL https://install.astronomer.io | sudo bash -s -- v0.5.1
-```
+- [Docker](https://www.docker.com/get-started)
+- [Go](https://golang.org/)
+
+### CLI Version Control 
+
+If you're ready to install our CLI, you're most likely looking for our latest version. If for any reason you need to run an earlier version, you can find the command below.
+
+#### Latest Version 
+
+To download the latest version of our CLI, run the following command:
+
+Via `curl`:
+  ```
+   curl -sSL https://install.astronomer.io | sudo bash
+   ```
+
+#### Previous Version 
+
+If you'd like to install a previous version of our CLI, the following command should do the trick:
+
+Via `curl`:
+   ```
+    curl -sSL https://install.astronomer.io | sudo bash -s -- [TAGNAME]
+   ```
+
+### Confirm CLI Install
 
 To confirm the install worked, do two things:
 
@@ -43,26 +66,53 @@ mkdir hello-astro && cd hello-astro
 astro airflow init
 ```
 
-_Note_: To install the CLI, you'll need to have both Docker and Go on your machine.
+### For WSL (Windows Subsystem for Linux) Users
+
+- If you're running WSL, you might see the following error when trying to call `astro airflow start` on your newly created workspace.
+
+```
+Sending build context to Docker daemon  8.192kB
+Step 1/1 : FROM astronomerinc/ap-airflow:latest-onbuild
+# Executing 5 build triggers
+ ---> Using cache
+ ---> Using cache
+ ---> Using cache
+ ---> Using cache
+ ---> Using cache
+ ---> f28abf18b331
+Successfully built f28abf18b331
+Successfully tagged hello-astro/airflow:latest
+INFO[0000] [0/3] [postgres]: Starting
+Pulling postgres (postgres:10.1-alpine)...
+panic: runtime error: index out of range
+goroutine 52 [running]:
+github.com/astronomerio/astro-cli/vendor/github.com/Nvveen/Gotty.readTermInfo(0xc4202e0760, 0x1e, 0x0, 0x0, 0x0)
+....
+```
+
+This is an issue pulling Postgres. To fix it, you should be able to run the following:
+
+```
+Docker pull postgres:10.1-alpine
+```
 
 ## Get started with the new CLI
 
 For a breakdown of subcommands and corresponding descriptions, you can run: `$ astro help`
 
-
 When you're ready, run the following in a project directory: `astro airflow init`
 
 This will generate some skeleton files:
 
-```
+```py
 .
-├── dags
-│   └── example-dag.py
-├── Dockerfile
-├── include
-├── packages.txt
-├── plugins
-└── requirements.txt
+├── dags #Where your DAGs go
+│   ├── example-dag.py
+├── Dockerfile #For runtime overrides
+├── include #For any other files you'd like to include
+├── packages.txt #For OS-level packages
+├── plugins #For any custom or community Airflow plugins
+└── requirements.txt #For any python packages
 ```
 
 For more specific guidance on working with our CLI, go [here](https://github.com/astronomerio/airflow-guides/blob/master/guides/astro-cli.md) or [here](https://github.com/astronomerio/astro-cli/blob/master/README.md).
@@ -175,12 +225,15 @@ If you do happen to be behind, you can run `astro upgrade` or the curl command l
 
 ### When will Astronomer run Airflow 1.10?
 
-We're excited about Airflow 1.10. We have it slated to go live in v0.9.
-Sign up for our mailing list to be notified.
+We're excited about Airflow 1.10, and we have it slated to go live in Astronomer v0.9 (check out our roadmap [here](https://www.astronomer.io/guides/astronomer-roadmap/)).
+
+To be notified, sign up for our mailing list (for now, you can find it at the footer on our [blog](https://www.astronomer.io/blog/)).
 
 ### What are the specs of the workers?
 
-Our team may be able to change these one way or the other depending on your use case, but the default is: `1GB RAM, 1.5 CPU`
+Astronomer v0.7.0 (coming out soon!) will allow you to adjust these directly in the UI, but the default for workers is: `1GB RAM, .5 CPU`
+
+To put in a request to change them for your use case in the meantime, reach out to paola@astronomer.io. 
 
 ### Can we SSO with Google or will I need to setup and maintain a list of users?
 

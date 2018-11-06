@@ -7,12 +7,14 @@ heroImagePath: null
 tags: ["admin-docs", "cli-docs", "debugging"]
 ---
 
-The Astronomer CLI provides a local and dockerized version of Apache Airflow to use while writing your DAGs. It is an easy way to use Apache Airflow on your local machine even if you are not using Astronomer.
+The Astronomer CLI provides a local and dockerized version of Apache Airflow to use while writing your DAGs. Even if you're not using Astronomer, our CLI is an easy way to use Apache Airflow on your local machine.
 
-To install the CLI, you'll need [Docker](https://www.docker.com/) and [Go](https://golang.org/) on your machine. **All the steps needed are below, but check out the links below for the full install guides:**
+To install the CLI, you'll need [Docker](https://www.docker.com/) and [Go](https://golang.org/) on your machine. 
 
- - Follow the guide found here to install and learn the files that are generated: https://github.com/astronomerio/astro-cli
- - If you are on Windows, check out our Windows guide:https://www.astronomer.io/guides/install-cli-windows10-wsl/
+**All the steps needed are below, but check out the links below for the full install guides:**
+
+ - Follow the guide found [here](https://github.com/astronomerio/astro-cli) to install and learn the files that are generated
+ - If you are on Windows, check out [our Windows guide](https://www.astronomer.io/guides/install-cli-windows10-wsl/)
 
 ## Installing the CLI
 
@@ -94,7 +96,6 @@ This will generate a skeleton project directory:
 
 ```
 
-
 **3. Start Airflow**
 
 Once you've run `astro airflow init` and start developing your DAGs, you can run `astro airflow start` to build your image.
@@ -154,8 +155,6 @@ $ astro airflow --help
 $ astro airflow deploy --help
 ```
 
-
-
 ## Using Airflow CLI Commands
 You can still use all native Airflow CLI commands with the astro cli when developing DAGs locally, they just need to be wrapped around docker commands.
 
@@ -214,12 +213,34 @@ Run `astro workspace list` to see a list of all the workspaces you have access t
 
 ### Deployment
 
-We have now configured the astro-cli to point at your Astronomer EE deploy and are ready to push your first DAG. You will need the release name of your Astronomer EE deployment. This release name was created by the Helm package manager during your Astronomer EE deploy. If you are unsure of what release
-name was created for your deploy, you can run `helm ls` to get a list of all Helm releases and find the one that has an "Updated" timestamp corresponding to the time at which you deployed Astronomer EE. If it is still unclear which Helm release you should deploy to, it is best to contact your cluster Administrator.
+Now that you've configured the astro-cli to point at your Astronomer EE deployment, you're ready to push your first DAG. 
+
+#### 1. Find your Release Name
+
+To push your DAG, you'll need the release name of your Astronomer EE deployment. A few notes:
+
+- This release name was created by the Helm package manager during your Astronomer EE deploy
+
+- If you are unsure of what release
+name was created for your deploy, you can run `helm ls` to get a list of all Helm releases and find the one that has an "Updated" timestamp corresponding to the time at which you deployed Astronomer EE. 
+
+- If you're still not sure which Helm release you should deploy to, reach out to your cluster Administrator.
+
+#### 2. Run our deploy command
 
 ```bash
 astro airflow deploy [release-name]
 ```
 
-If you do not include a release name, you will be prompted to choose from a deployment in the workspace you are pointing to. After deploying, you will see some stdout as the CLI builds and pushes images to your private registry. After a deploy, you can view your updated instance. Go to `app.[baseDomain]` to view a list of deployments and your workspace. 
+If you do NOT include a release name, you will be prompted to choose from a deployment in the workspace you are pointing to. 
+
+After deploying, you'll see some stdout as the CLI builds and pushes images to your private registry. 
+
+### Check your Instance
+
+After a deploy, you should see your updated instance.
+
+If you're running our Enterprise Edition, go to `app.[baseDomain]` to view your list of deployments and workspace. 
+
+If you're running our Cloud Edition, go to: https://app.astronomer.cloud/deployments
 

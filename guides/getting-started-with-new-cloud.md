@@ -23,11 +23,32 @@ The first step is to create a workspace on our platform.
 
 ## Download the CLI
 
-To download the CLI, run the following command:
+To download the CLI, you'll need the following installed on your machine:
 
-```
-curl -sL https://install.astronomer.io | sudo bash -s -- v0.5.1
-```
+- [Docker](https://www.docker.com/get-started)
+- [Go](https://golang.org/)
+
+### CLI Version Control 
+
+#### Latest Version 
+
+To download the latest version of our CLI, run the following command:
+
+Via `curl`:
+  ```
+   curl -sSL https://install.astronomer.io | sudo bash
+   ```
+
+#### Previous Version 
+
+If you'd like to install a previous version of our CLI, the following command should do the trick:
+
+Via `curl`:
+   ```
+    curl -sSL https://install.astronomer.io | sudo bash -s -- [TAGNAME]
+   ```
+
+### Confirm CLI Install
 
 To confirm the install worked, do two things:
 
@@ -44,27 +65,56 @@ mkdir hello-astro && cd hello-astro
 astro airflow init
 ```
 
-_Note_: To install the CLI, you'll need to have both Docker and Go on your machine.
+### For WSL (Windows Subsystem for Linux) Users
+
+- If you're running WSL, you might see the following error when trying to call `astro airflow start` on your newly created workspace.
+
+```
+Sending build context to Docker daemon  8.192kB
+Step 1/1 : FROM astronomerinc/ap-airflow:latest-onbuild
+# Executing 5 build triggers
+ ---> Using cache
+ ---> Using cache
+ ---> Using cache
+ ---> Using cache
+ ---> Using cache
+ ---> f28abf18b331
+Successfully built f28abf18b331
+Successfully tagged hello-astro/airflow:latest
+INFO[0000] [0/3] [postgres]: Starting
+Pulling postgres (postgres:10.1-alpine)...
+panic: runtime error: index out of range
+goroutine 52 [running]:
+github.com/astronomerio/astro-cli/vendor/github.com/Nvveen/Gotty.readTermInfo(0xc4202e0760, 0x1e, 0x0, 0x0, 0x0)
+....
+```
+
+This is an issue pulling Postgres. To fix it, you should be able to run the following:
+
+```
+Docker pull postgres:10.1-alpine
+```
 
 ## Get started with the new CLI
 
 For a breakdown of subcommands and corresponding descriptions, you can run: `$ astro help`
 
-
 When you're ready, run the following in a project directory: `astro airflow init`
 
 This will generate some skeleton files:
 
-```
+
+```py
 .
-├── dags
-│   └── example-dag.py
-├── Dockerfile
-├── include
-├── packages.txt
-├── plugins
-└── requirements.txt
+├── dags #Where your DAGs go
+│   ├── example-dag.py
+├── Dockerfile #For runtime overrides
+├── include #For any other files you'd like to include
+├── packages.txt #For OS-level packages
+├── plugins #For any custom or community Airflow plugins
+└── requirements.txt #For any python packages
 ```
+
 
 For more specific guidance on working with our CLI, go [here](https://github.com/astronomerio/airflow-guides/blob/master/guides/astro-cli.md) or [here](https://github.com/astronomerio/astro-cli/blob/master/README.md).
 

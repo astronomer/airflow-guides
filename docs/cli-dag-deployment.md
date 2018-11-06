@@ -11,7 +11,7 @@ position: [3]
 
 **Note:** If you're looking for steps on how to deploy to your Astronomer Cloud account, check out our [Getting Started with Cloud](https://www.astronomer.io/guides/getting-started-with-new-cloud/) guide.
 
-You have created and tested your Airflow DAG locally via the [astro-cli](https://github.com/astronomerio/astro-cli). Now, we'll walk through how to deploy the DAG to your Astronomer EE cluster.
+If you're here, you've created and tested your Airflow DAG locally via the [astro-cli](https://github.com/astronomerio/astro-cli). Now, we'll walk through how to deploy the DAG to your Astronomer EE cluster.
 
 ### Authenticating With Your Registry
 
