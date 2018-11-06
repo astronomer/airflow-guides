@@ -9,9 +9,9 @@ tags: ["Airflow", "CLI", "Product Documentation"]
 
 ## Astronomer CLI in WSL
 
-This guide will walk you through the setup and configuration process for using the Astronomer CLI in the Windows Subsystem for Linux (WSL) on Windows 10. In this guide, we assume you have already [enabled the WSL](https://docs.microsoft.com/en-us/windows/wsl/install-win10) and are running in the bash terminal. 
+This guide will walk you through the setup and configuration process for using the Astronomer CLI in the Windows Subsystem for Linux (WSL) on Windows 10. At this point, you should be running in the bash terminal and have the [the WSL enabled](https://docs.microsoft.com/en-us/windows/wsl/install-win10).
 
-We're using Ubuntu as our linux flavor of choice, but this giude should work for other distrubutions as well.
+(*Note:* We're using Ubuntu as our Linux flavor of choice,but this giude should work for other distrubutions as well).
 
 Much of the setup process is borrowed from a guide written by Nick Janetakis. Find the full guide here: [Setting Up Docker for Windows and WSL to Work Flawlessly](https://docs.microsoft.com/en-us/windows/wsl/install-win10)
 

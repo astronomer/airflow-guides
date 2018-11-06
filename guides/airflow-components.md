@@ -11,13 +11,19 @@ tags: ["Airflow", "Components"]
 
 _How everything fits together_
 
-At the core,  Airflow consists of 4 core components:
+At the core, Apache Airflow consists of 4 core components:
 
-**Webserver:** Airflow's UI. At it's core, this is just a Flask app that displays the status of your jobs and provides an interface to interact with the database and reads logs from a remote file store (S3, Google Cloud Storage, AzureBlobs, ElasticSearch etc.).
+**Webserver:** Airflow's UI. 
 
-**Scheduler:** This is responsible for scheduling jobs. It is a multithreaded Python process that uses the DAG object with the state of tasks in the metadata database to decide what tasks need to be run, when they need to be run, and where they are run.
+At its core, this is just a Flask app that displays the status of your jobs and provides an interface to interact with the database and reads logs from a remote file store (S3, Google Cloud Storage, AzureBlobs, ElasticSearch etc.).
 
-**Executor:** The mechanism by which work actually gets done. There are a few different varieties of executors, each wtih their own strengths and weaknesses.
+**Scheduler:** This is responsible for scheduling jobs. 
+
+It is a multithreaded Python process that uses the DAG object with the state of tasks in the metadata database to decide what tasks need to be run, when they need to be run, and where they are run.
+
+**Executor:** The mechanism by which work actually gets done. 
+
+There are a few different varieties of executors,each wtih their own strengths and weaknesses.
 
 **Metadata Database:** A database (usually Postgres, but can be anything with SQLAlchemy support) that powers how the other components interact. The scheduler stores and updates task statuses, which the webserver then uses to display job information
 
@@ -90,13 +96,13 @@ This file is well documented, but a few notes:
 
 ### Executors:
 
-By default, Airflow can use the LocalExecutor, SequentialExecutor, or the CelelryExecutor.
+By default, Airflow can use the LocalExecutor, SequentialExecutor, or the CeleryExecutor.
 
 - The SequentialExecutor just executes tasks sequentially, with no parallelism or concurrency. It is good for a test environment or when debugging deeper Airflow bugs.
 
 - The LocalExecutor supports parallelism and hyperthreading and is a good fit for Airflow running on local machine or a single node.
 
-- The CeleryExecutor is the preferred method to run a distrubted Airflow cluster. It requires Redis, RabbitMq, or another message queue system to coordinate tasks between workers.
+- The CeleryExecutor is the preferred method to run a distributed Airflow cluster. It requires Redis, RabbitMq, or another message queue system to coordinate tasks between workers.
 
 There is a communinty contributed MesosExecutors and KubernetesExexcutor that can execute tasks across  larger clusters, but neither of them are _currently_ production ready.
 

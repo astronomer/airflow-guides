@@ -16,7 +16,7 @@ Via `curl`:
 
 ## Previous Versions
 
-If you'd like to install a previous version of our CLI, the following command should do the trick.
+If you'd like to install a previous version of our CLI, the following command should do the trick:
 
 Via `curl`:
    ```
