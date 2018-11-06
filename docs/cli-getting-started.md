@@ -7,6 +7,10 @@ menu: ["Astro CLI"]
 position: [2]
 ---
 
+If you've gotten the Astronomer CLI installed and want to know what's next, you're in teh right place.
+
+Here are some next steps:
+
 **1. Confirm the install worked. Open a terminal and run:**
 
  ```
@@ -96,9 +100,14 @@ Docker pull postgres:10.1-alpine
 
 ### Debugging
 
-If your image fails to build after running `astro airflow start`, usually indicated by an error message in your console or airflow not being accessible on `localhost:8080/admin`,  it is probably due to missing OS-level packages in `packages.txt` needed for any python packages specified in `requirements.txt`.
+Is your image failing to build after running `astro airflow start`?
 
-Check out these examples for an idea of what `packages` and `requirements` are needed for simple use cases:
+ - You might be getting an error message in your console, or finding that Airflow is not accessible on `localhost:8080/admin`)
+ - If so, you're likely missing OS-level packages in `packages.txt` that are needed for any python packages specified in `requirements.text`
+
+
+Not sure what `packages` and `requirements` you need for your use case? Check out these examples.
+
 - [Snowflake](https://github.com/astronomerio/airflow-guides/tree/master/example_code/snowflake)
 - [Google Cloud](https://github.com/astronomerio/airflow-guides/tree/master/example_code/gcp)
 
@@ -123,7 +132,9 @@ musl-dev
 ```
 
 **Notes to consider**:
+
 - The image will take some time to build the first time. Right now, you have to rebuild the image each time you want to add an additional package or requirement.
+
 - By default, there won't be webserver or scheduler logs in the terminal since everything is hidden away in Docker containers. You can see these logs by running: `docker logs $(docker ps | grep scheduler | awk '{print $1}')`
 
 ### CLI Help
@@ -157,7 +168,7 @@ For example, a connection can be added with:
 docker exec -it SCHEDULER_CONTAINER bash -c "airflow connections -a --conn_id test_three  --conn_type ' ' --conn_login etl --conn_password pw --conn_extra {"account":"blah"}"
 ```
 
-Refer to the native [airflow cli](https://airflow.apache.org/cli.html) for a list of all commands.
+Refer to the native [Airflow CLI](https://airflow.apache.org/cli.html) for a list of all commands.
 
 **Note**: This will only work for the local dev environment.
 
@@ -167,7 +178,7 @@ Future releases of the Astronomer CLI will have cleaner ways of overwriting envi
 
 - Any bash scripts you want to run as `sudo` when the image builds can be added as such:
 `RUN COMMAND_HERE`
-- Airflow configuration variables found in [`airflow.cfg`](https://github.com/apache/incubator-airflow/blob/master/airflow/config_templates/default_airflow.cfg) can be overwritten with the following format:
+- Airflow configuration variables can be found in [`airflow.cfg`](https://github.com/apache/incubator-airflow/blob/master/airflow/config_templates/default_airflow.cfg) can be overwritten with the following format:
 
 ```
  ENV AIRFLOW__SECTION__PARAMETER VALUE
@@ -180,4 +191,4 @@ AIRFLOW__CORE__MAX_ACTIVE_RUNS 3
 
 These commands should go after the `FROM` line that pulls down the Airflow image.
 
-**Note:** Be sure configurations are names match up with the version of Airflow used.
+**Note:** Be sure your configuration names match up with the version of Airflow you're using.
