@@ -17,8 +17,7 @@ centralized Prometheus and Grafana.
 
 ## Easy Installation
 
-You can self-install Astronomer onto Kubernetes by following our
-[install guides](https://www.astronomer.io/guides/install/).
+You can self-install Astronomer onto Kubernetes by following our [install guides](https://www.astronomer.io/guides/install/).
 
 When you install the Astronomer platform, a number of components
 are deployed including NGINX, Prometheus, Grafana, a GraphQL API
