@@ -78,6 +78,7 @@ Note that you're able to create Service Accounts at both the Workspace and Deplo
 
 
 # Astronomer Features
+
 ## Airflow Clusters
 
 When you create a new Airflow deployment on Astronomer, the

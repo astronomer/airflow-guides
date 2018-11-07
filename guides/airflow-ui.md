@@ -29,7 +29,7 @@ Your initial options:
 
 - **DAG Runs** are a history of how that DAG has run in the past.
 
-**Note**: If a DAG has a small _i_ next to it, it means that a DAG with that name was once there, but is no longer found in the database. We will expand on this later.
+**Note**: If a DAG has a small _i_ next to it, it means that a DAG with that name was once there, but is no longer found in the database. We'll expand on this later.
 
 Paused DAGs can be toggled to be hidden from the UI - but we would advise against this. There's usually a reason why something is paused
 
@@ -51,14 +51,14 @@ This view won't be helpful for much at the moment, but it will be roped into the
 
 ### Connections
 
-Airflow needs to know how to connect to your environment. `Connections` is the place to store that information - anything from hostname, to port, to logins to other systems. The pipeline code you will author will reference the ‘conn_id’ of the Connection objects.
+Airflow needs to know how to connect to your environment. `Connections` is the place to store that information - anything from hostname, to port to logins to other systems. The pipeline code you will author will reference the ‘conn_id’ of the Connection objects.
 
 The Airflow `Variables` section can also hold that information, but storing them as Connections allows:
 
 - Encryption on passwords and extras.
-- Common JSON structure for connections:
+- Common JSON structure for connections below:
 
-**Note**: When you save a connection, expect the password field to be empty the next time you return to it. That's just Airflow encrypting the password - it does not need to be reset. 
+(**Note**: When you save a connection, expect the password field to be empty the next time you return to it. That's just Airflow encrypting the password - it does not need to be reset). 
 
 ![users](https://assets.astronomer.io/website/img/guides/airflow_connections.png) 
 
@@ -87,7 +87,7 @@ For more on Connections, check out this guide: [Managing Your Connections in Air
 
 Variables are a generic way to store and retrieve arbitrary content or settings as a simple key value store within Airflow. Any DAG running in your Airflow instance can access, reference, or edit a Variable as a part of the workflow.
 
-The data is stored in Airflow's underyling Postgres, so while it's not a great spot to store large amounts of data -  it is a goodd fit for storing configuration information, lists of external tables, or constants.
+The data is stored in Airflow's underyling Postgres, so while it's not a great spot to store large amounts of data -  it is a good fit for storing configuration information, lists of external tables, or constants.
 
 _Note_: Most of your constants and variables should be defined in code, but it's useful to have some variables or configuration items accessible and modifiable through the UI itself.
 
@@ -100,7 +100,7 @@ PRO TIP: If the key contains any of the following words (`password`, `secret`, `
 
 Similar to Variables, Xcoms can be used as places to store information on the fly.
 
-However, Variables are designed to be a place to store constands, whereas Xcoms are designed to communicate between tasks.
+However, Variables are designed to be a place to store constants, whereas Xcoms are designed to communicate between tasks.
 
 https://airflow.apache.org/concepts.html#xcoms
 
