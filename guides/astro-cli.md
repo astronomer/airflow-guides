@@ -9,12 +9,18 @@ tags: ["admin-docs", "cli-docs", "debugging"]
 
 The Astronomer CLI provides a local and dockerized version of Apache Airflow to use while writing your DAGs. Even if you're not using Astronomer, our CLI is an easy way to use Apache Airflow on your local machine.
 
-To install the CLI, you'll need [Docker](https://www.docker.com/) and [Go](https://golang.org/) on your machine. 
+*Note*: This guide will walk you through the rest, but feel free to check out these supplementary guides below:
 
-**All the steps needed are below, but check out the links below for the full install guides:**
+ - [Astro CLI README](https://github.com/astronomerio/astro-cli)
+ - [Our Windows Guide](https://www.astronomer.io/guides/install-cli-windows10-wsl/) for WSL (Windows Subsystem for Linux)
 
- - Follow the guide found [here](https://github.com/astronomerio/astro-cli) to install and learn the files that are generated
- - If you are on Windows, check out [our Windows guide](https://www.astronomer.io/guides/install-cli-windows10-wsl/)
+
+## Pre-Requisites
+
+To install the CLI, make sure you have the following on your machine:
+
+- [Docker](https://www.docker.com/)
+- [Go](https://golang.org/)
 
 ## Installing the CLI
 
@@ -40,13 +46,15 @@ curl -sSL https://install.astronomer.io | sudo bash -s -- v0.3.1
    ```
 
 
-**Note:** If you get mkdir error during installation please download and run [godownloader](https://raw.githubusercontent.com/astronomerio/astro-cli/master/godownloader.sh) script locally. 
+**Note:** If you get mkdir error while trying to run the install, download and run [godownloader](https://raw.githubusercontent.com/astronomerio/astro-cli/master/godownloader.sh) script locally. 
 
     $ cat godownloader.sh | bash -s -- -b /usr/local/bin
 
 ## Getting Started with the CLI
 
-**1. Confirm the install worked. Open an terminal and run:**
+**1. Confirm the install worked.** 
+
+To confirm it's successfully installed, open a terminal and run:
 
  ```
   $ astro
@@ -98,16 +106,22 @@ This will generate a skeleton project directory:
 
 **3. Start Airflow**
 
-Once you've run `astro airflow init` and start developing your DAGs, you can run `astro airflow start` to build your image.
+Once you've run `astro airflow init` and started developing your DAGs, you can run `astro airflow start` to build your image.
 
 - This will build a base image using Alpine Linux and from Astronomer's fork of Apache-Airflow.
+
 - The build process will include [everything in your project directory](https://github.com/astronomerio/astronomer/blob/master/docker/platform/airflow/onbuild/Dockerfile#L32). This makes it easy to include any shell scripts, static files, or anything else you want to include in your code.
 
 ### Debugging
 
-If your image fails to build after running `astro airflow start`, usually indicated by an error message in your console or airflow not being accessible on `localhost:8080/admin`,  it is probably due to missing OS-level packages in `packages.txt` needed for any python packages specified in `requirements.txt`.
+Is your image failing to build after running `astro airflow start`?
 
-Check out these examples for an idea of what `packages` and `requirements` are needed for simple use cases:
+ - You might be getting an error message in your console, or finding that Airflow is not accessible on `localhost:8080/admin`)
+ - If so, you're likely missing OS-level packages in `packages.txt` that are needed for any python packages specified in `requirements.text`
+
+
+Not sure what `packages` and `requirements` you need for your use case? Check out these examples.
+
 - [Snowflake](https://github.com/astronomerio/airflow-guides/tree/master/example_code/snowflake)
 - [Google Cloud](https://github.com/astronomerio/airflow-guides/tree/master/example_code/gcp)
 
@@ -130,6 +144,7 @@ g++
 make
 musl-dev
 ```
+
 **Notes to consider**:
 - The image will take some time to build the first time. Right now, you have to rebuild the image each time you want to add an additional package or requirement.
 - By default, there won't be webserver or scheduler logs in the terminal since everything is hidden away in Docker containers. You can see these logs by running: `docker logs $(docker ps | grep scheduler | awk '{print $1}')`
@@ -137,7 +152,7 @@ musl-dev
 
 ### CLI Help
 
-The CLI includes a help command, descriptions, as well as usage info for subcommands.
+The CLI includes a help command and descriptions, as well as usage info for subcommands.
 
 To see the help overview:
 
@@ -156,19 +171,23 @@ $ astro airflow deploy --help
 ```
 
 ## Using Airflow CLI Commands
-You can still use all native Airflow CLI commands with the astro cli when developing DAGs locally, they just need to be wrapped around docker commands.
 
-Run `docker ps` after your image has been built to see a list of containers running. You should see one for the scheduler, webserver, and Postgres. 
+You can still use all native Airflow CLI commands with the Astro CLI when developing DAGs locally - but they'll need to be wrapped around docker commands. For a list of all commands, refer to the native [Airflow CLI](https://airflow.apache.org/cli.html).
+
+To see a list of containers running, run:
+
+```
+ docker ps
+ ```
+ 
+ You should see a container for the scheduler, webserver, and Postgres. 
 
 For example, a connection can be added with:
 ```bash
 docker exec -it SCHEDULER_CONTAINER bash -c "airflow connections -a --conn_id test_three  --conn_type ' ' --conn_login etl --conn_password pw --conn_extra {"account":"blah"}"
 ```
 
-Refer to the native [airflow cli](https://airflow.apache.org/cli.html) for a list of all commands. 
-
 **Note**: This will only work for the local dev environment. 
-
 
 ## Overriding Environment Variables
 
@@ -176,6 +195,7 @@ Future releases of the Astronomer CLI will have cleaner ways of overwriting envi
 
 - Any bash scripts you want to run as `sudo` when the image builds can be added as such:
 `RUN COMMAND_HERE`
+
 - Airflow configuration variables found in [`airflow.cfg`](https://github.com/apache/incubator-airflow/blob/master/airflow/config_templates/default_airflow.cfg) can be overwritten with the following format:
 
 ```
@@ -189,17 +209,25 @@ AIRFLOW__CORE__MAX_ACTIVE_RUNS 3
 
 These commands should go after the `FROM` line that pulls down the Airflow image.
 
-**Note:** Be sure configurations are names match up with the version of Airflow used.
+**Note:** Be sure configuration names match up with the version of Airflow you're using.
 
 ## Deploying to Astronomer Enterprise
 
-**Note:** If you're looking for steps on how to deploy to your Astronomer Cloud account, check out our [Getting Started with Cloud](https://www.astronomer.io/guides/getting-started-with-new-cloud/) guide.
+Once you've created and tested your Airflow DAG locally via the [astro-cli](https://github.com/astronomerio/astro-cli), you're ready to deploy that DAG to your Astronomer EE cluster.
 
-You have created and tested your Airflow DAG locally via the [astro-cli](https://github.com/astronomerio/astro-cli). Now, we'll walk through how to deploy the DAG to your Astronomer EE cluster.
+(**Note:** If you're looking for steps on how to deploy to your Astronomer Cloud account, check out our [Getting Started with Cloud](https://www.astronomer.io/guides/getting-started-with-new-cloud/) guide).
 
 ### Authenticating With Your Registry
 
-The first setting we need to configure is the location of your private Docker registry. This houses all Docker images pushed to your Astronomer EE deploy. By default it is located at `registry.[baseDomain]`. If you are unsure about which domain you deployed Astronomer EE to, you can refer back to the `baseDomain` in your [`config.yaml`](http://enterprise.astronomer.io/guides/google-cloud/index.html#configuration-file).
+**1) Configure the location of your Private Docker Registry**
+
+The first setting we need to configure is the location of your private Docker registry. 
+
+This houses all Docker images pushed to your Astronomer EE deploy. By default, it's located at `registry.[baseDomain]`. 
+
+- If you're not sure which domain you deployed Astronomer EE to, you can refer back to the `baseDomain` in your [`config.yaml`](http://enterprise.astronomer.io/guides/google-cloud/index.html#configuration-file).
+
+### Authenticate
 
 Run the following command from your project root directory:
 
@@ -207,11 +235,15 @@ Run the following command from your project root directory:
 astro auth login [baseDomain]
 ```
 
-Depending on the type of authentication you are using, the process will be a little different. If you are using the default Google OAuth, leave the Username field blank and continue follow the instructions on the terminal.
+*Note:* Depending on the type of authentication you're using, the process will be a little different. If you are using the default Google OAuth, leave the Username field blank and continue follow the instructions on the terminal.
 
-Run `astro workspace list` to see a list of all the workspaces you have access to. You can switch between workspaces with `astro workspace switch [UUID]`. 
+### List your Workspaces
 
-### Deployment
+Run `astro workspace list` to see a list of all the workspaces you have access to. 
+
+To switch between workspaces, run: `astro workspace switch [UUID]`
+
+## DAG Deployment
 
 Now that you've configured the astro-cli to point at your Astronomer EE deployment, you're ready to push your first DAG. 
 
