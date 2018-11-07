@@ -44,3 +44,10 @@ $ kubectl create secret tls astronomer-tls \
   --cert /etc/letsencrypt/live/astro.mycompany.com/fullchain.pem \
   --namespace astronomer
 ```
+
+### Update SSL certificate
+If you need to update your `astronomer-tls` secret after you've deployed your platform, here are the steps. Verify your `astronomer-tls` secret name and namespace with `kubectl get secrets --all-namespaces`
+- Next delete your current secret `kubcetl delete secret astronomer-tls --namespace astronomer`
+- Create your updated secret using the same command as above.
+
+Once your new secret is created, restart your `houston`, `registry` and `nginx` pods to ensure they pull the latest secret.
