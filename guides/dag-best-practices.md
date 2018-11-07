@@ -7,6 +7,10 @@ heroImagePath: "https://assets.astronomer.io/website/img/guides/bestwritingpract
 tags: ["DAGs", "Data Pipelines", "Airflow"]
 ---
 
+Welcome to our guide on writing Airflow DAGs. In this piece, we'll walk through some high-level concepts involved in Airflow DAGs, explain what to stay away from, and cover some useful tricks that will hopefully be helpful to you.
+
+If you're interested in further DAG writing help or general Airflow assistance, we offer support packages that give you on-demand access to Airflow experts. [Drop us a line](https://www.astronomer.io/#request) if you'd like to chat.
+
 ### Idempotency
 
 Data pipelines are a messy business with a lot of various components that can fail. [Idempotent](https://en.wikipedia.org/wiki/Idempotence) DAGs allow you to deliver results faster when something breaks and can save you from losing data down the road.
