@@ -6,6 +6,7 @@ menu: ["root"]
 position: [5]
 ---
 
-Within your Astronomer Workspace, you can deploy one or more Airflow deployments.
+In the context of Astronomer, the term _Airflow Deployment_ is used to describe an instance of Airflow that you've spun up either via our [app UI](ttps://astronomer.io/docs/overview) or [command line](https://astronomer.io/docs/cli-getting-started). Within your Astronomer Workspace, you can create one or more Airflow deployments. Under the hood, each deployment gets its own Kubernetes namespace and has a set isolated resources reserved for itself.
 
-Configuration...
+You will soon be able to control specific resource allocations and choose your executor (local or celery) directly from our app's UI. This functionality will allow you to easily provision additional resources for specific Airflow deployments as you scale up.
+
