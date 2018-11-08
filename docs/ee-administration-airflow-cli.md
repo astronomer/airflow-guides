@@ -2,7 +2,7 @@
 title: "Using the Airflow CLI in Astronomer Enterprise"
 description: "Access Airflow CLI commands via the kubectl CLI"
 date: 2018-10-09T12:00:00.000Z
-slug: "ee-administration-using-airflow-cli"
+slug: "ee-administration-airflow-cli"
 menu: ["Administration"]
 position: [3]
 ---
