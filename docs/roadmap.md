@@ -1,7 +1,7 @@
 ---
 title: "Astronomer Roadmap"
 date: 2018-11-02T00:00:00.000Z
-slug: "resources-roadmap"
+slug: "roadmap"
 menu: ["Resources"]
 position: [2]
 ---

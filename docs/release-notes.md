@@ -2,7 +2,7 @@
 title: "Release Notes"
 description: "Documentation of product updates."
 date: 2018-10-12T00:00:00.000Z
-slug: "resources-release-notes"
+slug: "release-notes"
 menu: ["Resources"]
 position: [1]
 ---
@@ -15,7 +15,6 @@ Initial product releases:
 - [Astronomer v0.4.1 Release](https://www.astronomer.io/blog/astronomer-v0-4-1-release/)
 - [Astronomer v0.5.0 Release](https://www.astronomer.io/blog/astronomer-v0-5-0-release/)
 - [Astronomer v0.6.0 Release](https://www.astronomer.io/blog/astronomer-v0-6-0-release/)
- 
+
 
 Interested in seeing what's next for us? Check out our [Roadmap doc](https://astronomer.io/docs/resources-roadmap).
- 
