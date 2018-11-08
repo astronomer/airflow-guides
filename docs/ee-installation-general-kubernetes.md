@@ -2,7 +2,7 @@
 title: "General Kubernetes"
 description: "Installing Astronomer Enterprise to your Kubernetes cluster."
 date: 2018-10-12T00:00:00.000Z
-slug: "ee-installation-helm"
+slug: "ee-installation-general-kubernetes"
 menu: ["Installation"]
 position: [1]
 ---
