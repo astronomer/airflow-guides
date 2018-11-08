@@ -2,9 +2,9 @@
 title: "Using the Airflow CLI in Astronomer Enterprise"
 description: "Access Airflow CLI commands via the kubectl CLI"
 date: 2018-10-09T12:00:00.000Z
-slug: "enterprise-using-airflow-cli"
-heroImagePath: null
-tags: ["Airflow", "admin-docs", "Astronomer Platform"]
+slug: "ee-administration-using-airflow-cli"
+menu: ["Administration"]
+position: [3]
 ---
 
 Although Airflow's UI supports the majority of the behavior you would need when setting up your environment and building DAGs, there are cases when you want to use the Airflow CLI.

@@ -40,3 +40,4 @@ subjects:
 ```
 
 Then, run `kubectl create -f rbac-config.yaml` to create the resources in your cluster. After that, run `helm init --service-account tiller` to install `tiller` with the new service account. `tiller` should now have permissions to deploy charts.
+
