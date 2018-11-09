@@ -116,6 +116,7 @@ All of this is important to remember when it comes to custom logging.
 ### Available Handlers in Airflow
 In the `incubator-airflow` project, all available handlers are located in `/airflow/utils/log`.
 **Airflow 1.9**
+
 |         Handler name        | Remote Storage | Default |
 |:---------------------------:|----------------|---------|
 | `file_processor_handler.py` | No             | Yes     |
@@ -124,6 +125,7 @@ In the `incubator-airflow` project, all available handlers are located in `/airf
 | `s3_task_handler.py`        | Yes            | No      |
 
 **Airflow 1.10**
+
 |         Handler name        | Remote Storage | Default |
 |:---------------------------:|----------------|---------|
 | `file_processor_handler.py` | No             | Yes     |
