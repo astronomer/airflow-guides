@@ -1,6 +1,5 @@
 ---
-title: "Getting Started"
-description: "Getting started with Astronomer Enterprise."
+title: "Getting Started with Astronomer Enterprise Edition"
 date: 2018-10-12T00:00:00.000Z
 slug: "ee-getting-started"
 menu: ["Enterprise Edition"]
