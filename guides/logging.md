@@ -13,7 +13,7 @@ Airflow provides a ton of flexibility in configuring its logging system. All of 
 
 A lot of the information on logging in Airflow can be found in the official documentation, but we've added a bit more flavor and detail about the logging module that Airflow utilizes. Given that our product is built on Airflow, we've thought a lot about how logs should be structured, and where they should be sent.
 
-**This guide is built for logging in Airflow 1.9, but a 1.10 version is coming soon~**
+**This guide is built for logging in Airflow 1.9, but a 1.10 version is coming soon**
 
 ### An Overview of Logging
 If you just want to get more information on logging handlers, skip this section. This is merely more information to understand how the logging system is implemented in Airflow.
@@ -138,7 +138,9 @@ In the `incubator-airflow` project, all available handlers are located in `/airf
 
 ### Setting up custom logging in Airflow
 Configuring logging is done through both `env` variables and setting up a new `log_config.py` file. We'll outline the steps one by one:
+
 1. Create a new directory to store the new log config file. The new directory should be called `config`. Airflow's docs require you place the new directory in the `PYTHONPATH`, so it should be created as such: `$AIRFLOW_HOME/config`.
+
 2. Inside your new directory called `config`, place two new files, `__init__.py` and a `log_config.py`. It should look something like this:
 ```
 ├── config
@@ -146,9 +148,12 @@ Configuring logging is done through both `env` variables and setting up a new `l
 │   ├── log_config.py
 
 ```
+
 3. Copy the entire contents of `airflow_local_settings.py` from the `config_templates` directory into `log_config.py`. Change the variable name called `DEFAULT_LOGGING_CONFIG` to `LOGGING_CONFIG`.
+
 4. Inside `airflow.cfg`, locate the environmental variable called `LOGGING_CONFIG_CLASS`, inside the Airflow Core settings. Change this to reflect the path to your new `log_config,py` file. In most cases, this will be as such, but adapt to your own needs:
 ```
  LOGGING_CONFIG_CLASS = airflow.config.log_config.LOGGING_CONFIG
 ```
+
 5. Also take note of the environmental variable in `airflow.cfg` called `TASK_LOG_READER`. This is an important variable to set if you want to configure a custom logger to read task logs, to pipe them to standard out instead of files, if you wish.
