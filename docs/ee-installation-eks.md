@@ -21,14 +21,14 @@ You will need to be able to:
 
 Before running the Astronomer install command you must:
 
-1. [Select a base domain](/guides/install-base-domain)
-1. [Get your machine setup with needed dev tools](/guides/install-dev-env)
-1. [Create a stateful storage set](/guides/install-aws-stateful-set)
-1. [Get a Postgres server running](/guides/install-postgres)
-1. [Obtain SSL](/guides/install-ssl)
-1. [Install Helm and Tiller](/guides/install-helm)
-1. [Set a few Kubernetes secrets](/guides/install-k8s-secrets)
-1. [Build your config.yaml](/guides/install-config)
+1. [Select a base domain](/guides/ee-installation-base-domain)
+2. [Get your machine setup with needed dev tools](/docs/ee-installation-dev-env)
+3. [Create a stateful storage set](/docs/ee-installation-aws-stateful-set)
+4. [Get a Postgres server running](/docs/ee-installation-postgres)
+5. [Obtain SSL](/docs/ee-installation-ssl)
+6. [Install Helm and Tiller](/docs/ee-installation-helm)
+7. [Set a few Kubernetes secrets](/docs/ee-installation-k8s-secrets)
+8. [Build your config.yaml](/docs/ee-installation-config)
 
 
 ## Install Astronomer
@@ -41,7 +41,7 @@ helm install -f config.yaml . --namespace astronomer
 
 ## DNS routing
 
-Your final step is to setup your DNS to route traffic to your airflow resources following [these steps](/guides/install-aws-dns).
+Your final step is to setup your DNS to route traffic to your airflow resources following [these steps](/docs/ee-installation-aws-dns).
 
 Click the link in the output notes to log in to the Astronomer app.
 
