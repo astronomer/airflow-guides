@@ -21,7 +21,7 @@ It includes:
 
 - Enterprise-grade business day or business critical support
 
-Read [here](https://www.astronomer.io/guides/astronomer-features/) for more details on each of these components. 
+Read [here](https://www.astronomer.io/docs/ee-overview) for more details on each of these components. 
 
 ## Prerequisites
 
@@ -37,7 +37,7 @@ The Astronomer platform is Kubernetes agnostic. This means that any Kubernetes m
 * A wildcard DNS A record
 
 
-Need help installing the Astronomer platform? [Reach out](https://www.astronomer.io/contact/?from=/) to discuss install solutions. 
+Need help installing the Astronomer platform? [Reach out](https://www.astronomer.io/contact/?from=/) to discuss install solutions.
 
 ## Installing Astronomer Enterprise
 
