@@ -7,8 +7,6 @@ heroImagePath: null
 tags: ["Airflow", "Logging"]
 ---
 
-# Logging in Airflow
-
 Airflow provides a ton of flexibility in configuring its logging system. All of the logging in Airflow is implemented through Python's standard `logging` library. Logs can be piped to remote storage, including Google Cloud Storage and Amazon S3 buckets, and most recently in Airflow 1.10, ElasticSearch.
 
 A lot of the information on logging in Airflow can be found in the official documentation, but we've added a bit more flavor and detail about the logging module that Airflow utilizes. Given that our product is built on Airflow, we've thought a lot about how logs should be structured, and where they should be sent.
