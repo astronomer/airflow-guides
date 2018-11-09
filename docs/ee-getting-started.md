@@ -7,28 +7,40 @@ menu: ["Enterprise Edition"]
 position: [3]
 ---
 
-## Overview
-
-Astronomer Enterprise allows you to run a private version of our platform on your own Kubernetes.
+Astronomer Enterprise Edition allows you to run a private version of Astronomer
+on your own Kubernetes.
 
 It includes:
 
-- Astronomer Command Center that includes an Astronomer-built UI, CLI, and a GraphQL API for easy cluster and deployment management on Kubernetes
+* Astronomer Command Center that includes an Astronomer-built UI, CLI, and a
+  GraphQL API for easy cluster and deployment management on Kubernetes
+* Access to our Prometheus and Grafana monitoring stack
+* Enterprise Authentication that supports Google Suite, SAML, Office 365, Active Directory, and more
+* Enterprise-grade business day or business critical support
 
-- Access to our Prometheus and Grafana monitoring stack
+Read [here](/docs/ee-overview) for more details on
+each of these components.
 
-- Enterprise Authentication that supports Google Suite, SAML, Office 365, Active Directory, and more
+## Installing
 
-- Enterprise-grade business day or business critical support
+We've written installation docs for various Kubernetes distributions:
 
-Read [here](https://www.astronomer.io/docs/ee-overview) for more details on each of these components. 
+* [Astronomer on Kubernetes](/docs/ee-installation-general-kubernetes)
+* [Amazon Web Services - EKS](/docs/ee-installation-eks)
+* [Google Cloud Platform - GKE](/docs/installation-ee-gke)
+
+Coming Soon: Guides for Azure AKS, Pivotal PKE, Redhat OpenShift, and
+Digital Ocean Kubernetes.
 
 ## Prerequisites
 
-The Astronomer platform is Kubernetes agnostic. This means that any Kubernetes management solution should support the installation, and management of the Astronomer platform. To ensure the platform can be effectively installed and managed, ensure your team can meet the following requirements.
+The Astronomer platform is Kubernetes agnostic. This means that any Kubernetes
+management solution should support the installation, and management of the
+Astronomer platform. To ensure the platform can be effectively installed and
+managed, ensure your team can meet the following requirements.
 
-
-* A kubernetes cluster managed by one of these solutions: https://kubernetes.io/docs/setup/pick-right-solution/
+* A Kubernetes cluster managed by one of these solutions:
+  https://kubernetes.io/docs/setup/pick-right-solution/
 * Admin level access to the Kubernetes cluster
 * Ability to provision a Tiller service account for use with Helm
 * A base domain
@@ -36,17 +48,5 @@ The Astronomer platform is Kubernetes agnostic. This means that any Kubernetes m
 * A postgres database
 * A wildcard DNS A record
 
-
-Need help installing the Astronomer platform? [Reach out](https://www.astronomer.io/contact/?from=/) to discuss install solutions.
-
-## Installing Astronomer Enterprise
-
-We have a collection of guides, depending on the cloud you're working on. To get started, find yours below:
-
-- [Astronomer on Amazon Web Services - EKS](https://www.astronomer.io/docs/ee-installation-eks)
-
-- [Astronomer on Google Cloud Platform - GKE](https://www.astronomer.io/docs/installation-ee-gke)
-
-- [Astronomer on Kubernetes](https://www.astronomer.io/docs/ee-installation-general-kubernetes)
-
-(*Coming Soon*: Azure AKS, Pivotal PKE, Redhat OpenShift, Digital Ocean Kubernetes)
+Need help installing the Astronomer platform?
+[Reach out](https://www.astronomer.io/contact/?from=/) to discuss install solutions.
