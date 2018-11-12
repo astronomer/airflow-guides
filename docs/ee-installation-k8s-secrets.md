@@ -21,6 +21,12 @@ PGPASSWORD=$(kubectl get secret --namespace astronomer pod-name-postgresql -o js
 echo $PGPASSWORD
 ```
 
+**Note:** If the first command does not work for you, try running:
+
+```
+PGPASSWORD=$(kubectl get secret --namespace astronomer pod-name-postgresql -o jsonpath="{.data.postgresql-password}" | base64 --decode; echo)
+```
+
 To set the secret, run:
 
 ```shell
