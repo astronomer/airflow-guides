@@ -1,9 +1,10 @@
 ---
 title: "Astronomer EE DevOps"
-description: "Debugging Airflow in context to a Kubernetes cluster"
-date: 2018-05-21T00:00:00.000Z
+description: "Logging in Astronomer Enterprise."
+date: 2018-10-12T00:00:00.000Z
 slug: "ee-operator"
 menu: ["Enterprise Edition"]
+position: [5]
 ---
 
 
