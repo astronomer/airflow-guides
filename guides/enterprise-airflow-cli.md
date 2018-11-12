@@ -16,7 +16,7 @@ Before interacting directly with the pods that are created with each Airflow dep
 - [Configuring AKS (Microsoft) Access for kubectl](https://docs.microsoft.com/en-us/azure/aks/tutorial-kubernetes-deploy-cluster#connect-to-cluster-using-kubectl)
 
 ### Switching to the correct context  
-Once connected to your cluster, you will need to set the appropriate context.
+Once connected to your cluster, you will need to set the appropriate context. We highly recommend using [kubectx](https://github.com/ahmetb/kubectx) to easily switch between Kubernetes clusters and namespaces.
 ```
 $ kubectx
 gke_astronomer-demo_us-west2-a_astronomer-demo-ltgzkozwnr
