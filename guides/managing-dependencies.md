@@ -220,3 +220,4 @@ Computing resources would be saved on past DAG runs.
 
 ![tree](https://assets.astronomer.io/website/img/guides/trigger_latest_only_tree.png)
 The latest run would execute the necessary downstream logic.
+ 
