@@ -94,3 +94,4 @@ Furthermore, this association should filter down into all metadata - logs, runti
 Mathematically, this idea of clarity and directness is intuitive:
 
 `$f(x) = y$`
+ 
