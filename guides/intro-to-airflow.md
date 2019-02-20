@@ -1,13 +1,13 @@
 ---
 title: "Introduction to Apache Airflow"
-description: "A crash course to get you started with Apache Airflow"
+description: "Everything you need to know to get started with Apache Airflow."
 date: 2018-05-21T00:00:00.000Z
 slug: "intro-to-airflow"
 heroImagePath: null
 tags: ["Airflow"]
 ---
 
-If you're at all involved in the data engineering space, you've probably head of [Apache Airflow](https://github.com/apache/airflow). Since its [inception as an open-source project at AirBnb in 2015](https://medium.com/airbnb-engineering/airflow-a-workflow-management-platform-46318b977fd8), Airflow has quickly become the gold standard for data engineering, getting public contributions from folks at major orgs like [Bloomberg](https://www.techatbloomberg.com/blog/airflow-on-kubernetes/), [Lyft](https://eng.lyft.com/running-apache-airflow-at-lyft-6e53bb8fccff), [Robinhood](https://robinhood.engineering/why-robinhood-uses-airflow-aed13a9a90c8), and [many more](https://github.com/apache/airflow#who-uses-apache-airflow).
+If you're at all involved in the data engineering space, you've probably heard of [Apache Airflow](https://github.com/apache/airflow). Since its [inception as an open-source project at AirBnb in 2015](https://medium.com/airbnb-engineering/airflow-a-workflow-management-platform-46318b977fd8), Airflow has quickly become the gold standard for data engineering, getting public contributions from folks at major orgs like [Bloomberg](https://www.techatbloomberg.com/blog/airflow-on-kubernetes/), [Lyft](https://eng.lyft.com/running-apache-airflow-at-lyft-6e53bb8fccff), [Robinhood](https://robinhood.engineering/why-robinhood-uses-airflow-aed13a9a90c8), and [many more](https://github.com/apache/airflow#who-uses-apache-airflow).
 
 If you're just getting your feet wet, you're probably wondering what all the hype is about. We're here to walk you through the basic concepts that you need to know to get started with Airflow.
 
@@ -21,7 +21,7 @@ Since Maxime's first commit way back then, Airflow has come a long way. As of Fe
 
 [Apache Airflow](https://airflow.apache.org/index.html) is a platform for programmatically authoring, scheduling, and monitoring workflows. It is completely open-source and is especially useful in architecting complex data pipelines. It's written in Python, so you're able to interface with any third party python API or database to extract, transform, or load your data into its final destination. It was created to solve the issues that come with long-running cron tasks that execute hefty scripts.
 
-With Airflow, you architect your workflows as things called DAGs, with each step of the workflow designated as a specific Task. It is designed with the belief that all ETL is best expressed as code, and as such is a code-first platform that allows you to surgically iterate on yoru workflows quickly and efficiently. Since all DAGs are expressed as code under the hood, Airflow also allows for a degree of customizibility and extensibility that other ETL tools do not support.
+With Airflow, you architect your workflows as things called DAGs, with each step of the workflow designated as a specific Task. It is designed with the belief that all ETL is best expressed as code, and as such is a code-first platform that allows you to surgically iterate on your workflows quickly and efficiently. Since all DAGs are expressed as code under the hood, Airflow also allows for a degree of customizibility and extensibility that other ETL tools do not support.
 
 ## Use Cases
 
@@ -38,6 +38,8 @@ DAG stands for "Directed Acyclic Graph". Each DAG represents a collection of all
 1. Directed: If multiple tasks exist, etch must have at least one defined upstream or downstream task.
 2. Acyclic: Tasks are not allowed to create data that goes on to self-reference. This is to avoid creating infinite loops.
 3. Graph: All tasks are laid out in a clear structure with processes occurring at clear points with set relationships to other tasks.
+
+For a more in-depth review on DAGs, check out our [Intro to DAGs guide](https://astronomer.io/guides/dags).
 
 ### Tasks
 
