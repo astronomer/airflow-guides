@@ -7,9 +7,7 @@ heroImagePath: "https://assets.astronomer.io/website/img/guides/IntroToDAG_previ
 tags: ["UI", "Frontend", "Airflow"]
 ---
 
-# Functional Data Engineering
-
-## What is a DAG
+## Overview
 
 _Core definitions._
 

@@ -15,25 +15,25 @@ If you're just getting your feet wet, you're probably wondering what all the hyp
 
 In 2015, Airbnb experienced a problem. They were growing like crazy and had a massive amount of data that was only getting larger. To achieve the vision of becoming a fully data-driven organization, they had to grow their workforce of data engineers, data scientists, and analysts- all of whom had to regularly work to automate processes by writing scheduled batch jobs. To satisfy the need for a robust scheduling tool, [Data Engineer Maxime Beauchemin](https://soundcloud.com/the-airflow-podcast/the-origins-of-airflow) created and open-sourced Airflow with the idea that it would allow them to quickly author, iterate on, and monitor their batch data pipelines.
 
-Since Maxime's first commit way back then, Airflow has come a long way. As of February 2019, Airflow has 715 contributors, 5958 commits, and 11,108 stars on Github. It's used by almost every major d[]Data Engineering team around the world and is only getting more powerful as the community grows stronger. 
+Since Maxime's first commit way back then, Airflow has come a long way. As of February 2019, Airflow has 715 contributors, 5958 commits, and 11,108 stars on Github. It's used by almost every major Data Engineering team around the world and is only getting more powerful as the community grows stronger. 
 
 ## Overview
 
 [Apache Airflow](https://airflow.apache.org/index.html) is a platform for programmatically authoring, scheduling, and monitoring workflows. It is completely open-source and is especially useful in architecting complex data pipelines. It's written in Python, so you're able to interface with any third party python API or database to extract, transform, or load your data into its final destination. It was created to solve the issues that come with long-running cron tasks that execute hefty scripts.
 
-With Airflow, you architect your workflows as things called DAGs, with each step of the workflow designated as a specific Task. It is designed with the belief that all ETL is best expressed as code, and as such is a code-first platform that allows you to surgically iterate on your workflows quickly and efficiently. Since all DAGs are expressed as code under the hood, Airflow also allows for a degree of customizibility and extensibility that other ETL tools do not support.
+With Airflow, workflows are architected and expressed as DAGs, with each step of the DAG defined as a specific Task. It is designed with the belief that all ETL is best expressed as code, and as such is a code-first platform that allows you to iterate on your workflows quickly and efficiently. As a result of its code-first design philosophy, Airflow allows for a degree of customizibility and extensibility that other ETL tools do not support.
 
 ## Use Cases
 
-There are a ton of [documented use cases for Airflow](https://github.com/jghoman/awesome-apache-airflow#best-practices-lessons-learned-and-cool-use-cases)- everyone needs a workflow orchestrator and, since such a wide variety of orgs use it, there seems to be no one standard use case it addresses. That being said, it's really good for just about any ETL you need to do- since every stage of your pipeline is expressed as code, it's easy to tailor your pipelines to fully fit your needs. Whether it be pinging specific API endpoints or performing custom transformations that clean the data in the way you need it done, there is truly any way you can tailor things to fit your use case.
+There are a ton of [documented use cases for Airflow](https://github.com/jghoman/awesome-apache-airflow#best-practices-lessons-learned-and-cool-use-cases). While there are a pletorha of different use cases Airflow can address, it's particularly good for just about any ETL you need to do- since every stage of your pipeline is expressed as code, it's easy to tailor your pipelines to fully fit your needs. Whether it be pinging specific API endpoints or performing custom transformations that clean the data according to your custom specifications, there is truly any way you can tailor things to fit your use case.
 
 We further discuss Airflow's use cases in our [podcast episode here](https://soundcloud.com/the-airflow-podcast/use-cases) if you're interested in diving deeper!
 
 ## Core Concepts
 
-### DAGs
+### DAG
 
-DAG stands for "Directed Acyclic Graph". Each DAG represents a collection of all the tasks you want to run and is organized to show relationships between tasks directly in the Airflow UI[5]. They are architected as DAGs for the following reasons:
+DAG stands for "Directed Acyclic Graph". Each DAG represents a collection of all the tasks you want to run and is organized to show relationships between tasks directly in the Airflow UI. They are defined this way for the following reasons:
 
 1. Directed: If multiple tasks exist, etch must have at least one defined upstream or downstream task.
 2. Acyclic: Tasks are not allowed to create data that goes on to self-reference. This is to avoid creating infinite loops.
@@ -43,7 +43,7 @@ For a more in-depth review on DAGs, check out our [Intro to DAGs guide](https://
 
 ### Tasks
 
-Tasks represent each node of a defined DAG. They often do some sort of work, such as interfacing with a third party API, loading into a database, or pulling things from a file bucket. The work that they represent is defined by Operators.
+Tasks represent each node of a defined DAG. They are visual representations of the work being done at each step of the workflow, with the actual work that they represent being defined by Operators.
 
 ### Operators
 
