@@ -15,17 +15,23 @@ If you're just getting your feet wet, you're probably wondering what all the hyp
 
 In 2015, Airbnb experienced a problem. They were growing like crazy and had a massive amount of data that was only getting larger. To achieve the vision of becoming a fully data-driven organization, they had to grow their workforce of data engineers, data scientists, and analysts- all of whom had to regularly work to automate processes by writing scheduled batch jobs. To satisfy the need for a robust scheduling tool, [Data Engineer Maxime Beauchemin](https://soundcloud.com/the-airflow-podcast/the-origins-of-airflow) created and open-sourced Airflow with the idea that it would allow them to quickly author, iterate on, and monitor their batch data pipelines.
 
-Since Maxime's first commit way back then, Airflow has come a long way. As of February 2019, Airflow has 715 contributors, 5958 commits, and 11,108 stars on Github. It's used by almost every major Data Engineering team around the world and is only getting more powerful as the community grows stronger. 
+Since Maxime's first commit way back then, Airflow has come a long way. The project joined the official Apache Foundation Incubator in April of 2016, where it lived and grew until it graduated as a top-level project on January 8th, 2019. As of February 2019, Airflow has 715 contributors, 5958 commits, and 11,108 stars on Github. It's used by almost every major Data Engineering team around the world and is only getting more powerful as the community grows stronger. 
 
 ## Overview
 
 [Apache Airflow](https://airflow.apache.org/index.html) is a platform for programmatically authoring, scheduling, and monitoring workflows. It is completely open-source and is especially useful in architecting complex data pipelines. It's written in Python, so you're able to interface with any third party python API or database to extract, transform, or load your data into its final destination. It was created to solve the issues that come with long-running cron tasks that execute hefty scripts.
 
-With Airflow, workflows are architected and expressed as DAGs, with each step of the DAG defined as a specific Task. It is designed with the belief that all ETL is best expressed as code, and as such is a code-first platform that allows you to iterate on your workflows quickly and efficiently. As a result of its code-first design philosophy, Airflow allows for a degree of customizibility and extensibility that other ETL tools do not support.
+With Airflow, workflows are architected and expressed as DAGs, with each step of the DAG defined as a specific Task. It is designed with the belief that all ETL (Extract, Transform, Load data processing) is best expressed as code, and as such is a code-first platform that allows you to iterate on your workflows quickly and efficiently. As a result of its code-first design philosophy, Airflow allows for a degree of customizibility and extensibility that other ETL tools do not support.
 
 ## Use Cases
 
-There are a ton of [documented use cases for Airflow](https://github.com/jghoman/awesome-apache-airflow#best-practices-lessons-learned-and-cool-use-cases). While there are a pletorha of different use cases Airflow can address, it's particularly good for just about any ETL you need to do- since every stage of your pipeline is expressed as code, it's easy to tailor your pipelines to fully fit your needs. Whether it be pinging specific API endpoints or performing custom transformations that clean the data according to your custom specifications, there is truly any way you can tailor things to fit your use case.
+There are a ton of [documented use cases for Airflow](https://github.com/jghoman/awesome-apache-airflow#best-practices-lessons-learned-and-cool-use-cases). While there are a plethora of different use cases Airflow can address, it's particularly good for just about any ETL you need to do- since every stage of your pipeline is expressed as code, it's easy to tailor your pipelines to fully fit your needs. Whether it be pinging specific API endpoints or performing custom transformations that clean the data according to your custom specifications, there is truly any way you can tailor things to fit your use case.
+
+If you're interested in getting more specific, here are a few cool things we've seen folks do with Airflow:
+
+- Aggregate daily sales team updates from Salesforce to send a daily report to executives at the company.
+- Use Airflow to organize and kick off machine learning jobs running on external Spark clusters.
+- Load website/applicaiton analytics data into a data warehouse on an hourly basis.
 
 We further discuss Airflow's use cases in our [podcast episode here](https://soundcloud.com/the-airflow-podcast/use-cases) if you're interested in diving deeper!
 
@@ -66,4 +72,6 @@ Connections are where Airflow stores information that allows you to connect to e
 
 ## Learn by Doing
 
-If you'd like to get started playing around with Airflow on your local machine, check out our [Astronomer CLI](https://github.com/astronomer/astro-cli) it's open source and completely free to use. With the CLI, you can spin up Airflow locally and start getting your hands dirty with the core concepts mentioned above in just a few minutes. And, as always, please feel free to [reach out to us](https://astronomer.io/contact) if you have any questions or if there's anything we can do to help you on your Airflow journey!
+If you'd like to get started playing around with Airflow on your local machine, check out our [Astronomer CLI](https://github.com/astronomer/astro-cli)- it's open source and completely free to use. With the CLI, you can spin up Airflow locally and start getting your hands dirty with the core concepts mentioned above in just a few minutes. 
+
+As always, please feel free to [reach out to us](https://astronomer.io/contact) if you have any questions or if there's anything we can do to help you on your Airflow journey!
