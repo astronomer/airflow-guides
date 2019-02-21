@@ -9,16 +9,16 @@ tags: ["Luigi", "Competition"]
 
 We often get questions regarding the differences between [Airflow](https://airflow.apache.org/) and [Luigi](https://github.com/spotify/luigi). Below you'll find a summary of the two tools and a comparison of the two communities surrounding the projects.
 
-# Airflow Overview
+## Airflow Overview
 
 Created by [Airbnb Data Engineer Maxime Beauchemin](https://www.linkedin.com/in/maximebeauchemin), Airflow is an open source workflow management system designed for authoring, scheduling, and monitoring workflows as [DAGs, or directed acyclic graphs](https://www.astronomer.io/guides/dags/). All workflows are designed in python and it is currently the most popular open source workflow management tool on the market.
 
-# Luigi Overview
+## Luigi Overview
 
 Luigi is a python package developed by ex-Spotify engineer [Erik Bernhardsson](https://erikbern.com/). Originally created to run complex pipelines that powered Spotify's music recommendation engine, Luigi's design philosophy is to generalize complexities in workflow orchestration as much as possible, allowing it to be extended with other tasks such as Hive queries, Spark jobs, and more. Luigi is based in Python and allows you to parallelize workflows. It doesn't have a scheduler and users still have to rely on cron for scheduling jobs.
 
 
-# Comparison
+## Comparison
 
 As pointed out by [Quora user Angela Zhang](https://www.quora.com/Which-is-a-better-data-pipeline-scheduling-platform-Airflow-or-Luigi), Airflow and Luigi have a few key differences that are worth noting.
 
@@ -38,7 +38,7 @@ As pointed out by [Quora user Angela Zhang](https://www.quora.com/Which-is-a-bet
 - Re-running pipelines is not possible
 
 
-# Conclusions
+## Conclusions
 
 While both Luigi and Airflow are viable options for workflow management, the Airflow community has grown to be much stronger than that of Luigi in recent years. As a result, Airflow features have been developing as a much quicker pace, and we've seen a "snowball effect" of companies migrating from Luigi to Airflow in order to reap the benefits of the strong community. Check out the photos below for code contributions to the two projects, and note the scale of the y axis in each:
 
