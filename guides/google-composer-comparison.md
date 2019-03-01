@@ -7,43 +7,34 @@ heroImagePath: null
 tags: ["Astronomer Platform", "Google Composer"]
 ---
 
-It looks like 2019 may just be turning out to be the year of Apache Airflow. Since the project started at Airbbnb in 2014, the need for a reliable and scalable scheduler has become much more widely acknowledged while “competitors” -- there should be a different term for that when it comes to open-source projects -- such as Luigi and Azkaban have slowed in development and adoption.
+It looks like 2019 may just be turning out to be the year of Apache Airflow. Since the project started at Airbnb in 2014, the need for a reliable and scalable scheduler has become much more widely acknowledged while “competitors” -- there should be a different term for that when it comes to open-source projects -- such as [Luigi](https://github.com/spotify/luigi) and [Azkaban](https://azkaban.github.io/) have slowed in development and adoption.
 
 As it happens, in 2018, [we announced our Enterprise offering](https://www.astronomer.io/blog/announcing-astronomer-enterprise-edition/) for a self-hosted Airflow management solution and Google announced their entry into the market with the Cloud based “Composer”. We’re incredibly excited that wider commercialization of the project is occurring but for the sake of clarity as both platforms continue to develop, we wanted to answer some quick questions we’ve gotten on how Astronomer is different from Composer.
 
-We've since developed [Astronomer Cloud](https://astronomer.io/cloud), a fully-managed Airflow service that's a direct competitor to Google Composer.
+We've since also developed [Astronomer Cloud](https://astronomer.io/cloud), a fully-managed Airflow service.
 
 *NOTE: As you might expect, we’re not heavy users of Composer and this comparison is derived from customer feedback and what we could find in the public documentation and associated StackOverflow, etc. communities at the time of this writing. If anything appears incorrect, please let us know and we’ll address ASAP.*
 
 ## At a Glance
 
-|---|Google Composer|Astronomer Cloud|Astronomer Enterprise|
-|-----------|-----------------|------------------|-----------------------|
-|Cost|~$300 base (based on user feedback)|$110 base running local executor|Annual license pending cluster CPU|
+||Google Composer|Astronomer Cloud|Astronomer Enterprise|
+|-|--------------|----------------|---------------------|
+|Cost|~$300 base|$110 base running local executor|Annual license pending cluster CPU and support structure|
 |Hosting|Managed service hosted in Google's cloud environment|Managed service hosted in Astronomer's Cloud environment|Self-hosted service hosted on customer's Kubernetes cluster|
-|Python Version|2.7|3.6|Whatever you choose|
 |Monitoring and Logging|Google Stackdriver|Elasticsearch, Fluentd, Kibana (EFK) stack for log text search and filtering|EFK Stack for logs and Prometheus/Grafana stack to track resource usage across all Airflow deployments|
 |Support|Community support via Stack Overflow|Standard support ticketing system, [our community forum](https:/forum.astronomer.io), and premium support option for real-time support via a shared slack channel |24x7 Business-Critical SLAs available|
 |Training|None|[Astronomer SpaceCamp](https://astronomer.io/spacecamp) for on-site Airflow training.|[Astronomer SpaceCamp](https://astronomer.io/spacecamp) for on-site Airflow training|
 
 
 ### Cost
-It's hard to nail down a specific cost for Cloud Composer, as they measure the resources your deployments use and tack it onto your standard GCP bill. Based on the [estimates provided](https://cloud.google.com/composer/pricing), a single, full-time instance of Composer should cost ~$300/month (in addition to the Storage and Compute Engine costs) but that also assumes the three workers use the relatively low powered n1-standard-1 (1 vCPU; 3.75GB) machine type.
+It's hard to nail down a specific cost for Cloud Composer, as they measure the resources your deployments use and tack the total cost onto your GCP bill. Based on the [estimates provided](https://cloud.google.com/composer/pricing), a single, full-time instance of Composer should cost ~$300/month (in addition to the Storage and Compute Engine costs) but that also assumes the three workers use the relatively low powered n1-standard-1 (1 vCPU; 3.75GB) machine type.
 
-Astronomer Cloud is billed based on pure resource utilization. You can find our [standard pricing here](https://astronomer.io/pricing), but it costs $110/mo for a deployment with the local executor and $250/mo for a deployment with the Celery executor. You can also toggle resource allocation to your Airflow deployment's scheduler, webserver, and workers to make it run as efficiently as possible and save costs.
+Astronomer Cloud is billed based on pure resource utilization. You can find our [standard pricing here](https://astronomer.io/pricing), but it costs $110/mo for a default deployment with the local executor and $250/mo for a default deployment with the Celery executor. You can also toggle resource allocation to your Airflow deployment's scheduler, webserver, and workers to make it run as efficiently as possible and save costs.
 
 Astronomer Enterprise is priced based on an annual subscription license. Please [contact us](https://astronomer.io/contact) if you'd like to see a pricing sheet.
 
-### Python Version
-The first thing you’ll notice if you try to run the same dags in Astronomer and Composer is that some unexpected errors get thrown depending on what version of Python you’re using. This is because the version of Python that Astronomer ships with is Python 3.6 while Composer uses [Python 2.7](https://stackoverflow.com/questions/50122366/how-do-i-select-my-airflow-or-python-version-with-cloud-composer) (as of Aug 23, 2018). It’s reasonable to expect that there is still a hefty amount of Python 2 based code floating around out there but given Python 3 has seen wider adoption since coming out about 10 years ago and Python 2’s [“End of Life” date is Jan 1, 2020](https://pythonclock.org), Astronomer decided to go with Python 3. Note that we can also run Python 2 for you if you'd like, it just takes some tweaking under the hood that our team can handle.
-
-### Python Packages
-As soon as you `astro airflow init` a new project, a requirements.txt file with be created for you to add any package at any version that's needed to run your dags. If you want to pull in a distributed package on Github but not on PyPi, you can specify the repo and pull it in directly.
-
-In Composer, you can add packages by either specifying the name and version in a requirements.txt or adding them via the Google Cloud CLI. Custom packages not distributed to PyPi can be added via a “dependencies” folder within the “dags” folder.
-
 ### System Packages
-The base operating system running underneath the Astronomer platform is a distribution of [Linux called Alpine](https://alpinelinux.org/about/), chosen for it’s small size and resource efficiency. As opposed to Debian (123MB) or CentOS (193MB), Alpine comes in at just 3.98MB. For a more in-depth comparison (and how this translates to $$$ when deployed to a cloud that charges for transfer cost), check out this [great post](https://nickjanetakis.com/blog/the-3-biggest-wins-when-using-alpine-as-a-base-docker-image) by Nick Janetakis.
+The base operating system running underneath the Astronomer platform is a distribution of [Linux called Alpine](https://alpinelinux.org/about/), chosen for it’s small size and resource efficiency. As opposed to Debian (is yo123MB) or CentOS (193MB), Alpine comes in at just 3.98MB. For a more in-depth comparison (and how this translates to cost when deployed to a cloud that charges for transfer cost), check out this [great post](https://nickjanetakis.com/blog/the-3-biggest-wins-when-using-alpine-as-a-base-docker-image) by Nick Janetakis.
 
 
 ### Deployment
