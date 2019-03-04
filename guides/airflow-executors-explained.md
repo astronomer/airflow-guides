@@ -3,11 +3,9 @@ title: "Airflow Executors: Explained"
 description: "A thorough breakdown of Apache Airflow's Executors: Celery, Local and Kubernetes."
 date: 2019-03-04T00:00:00.000Z
 slug: "airflow-executors-explained"
-heroImagePath: "https://assets.astronomer.io/website/img/guides/datastores.png"
+heroImagePath: null
 tags: ["Executor", "Airflow"]
 ---
-
-## Airflow Executors: Explained
 
 If you're new to Apache Airflow, the world of Executors is difficult to navigate. Even if you're a veteran user overseeing 20+ DAGs, knowing what Executor best suits your use case at any given time isn't black and white - especially as the OSS project (and its utilities) continues to grow and develop.
 
@@ -19,22 +17,25 @@ This guide will do 3 things:
 
 We'll give the Sequential Executor an honorable mention, too.
 
+## Airflow Executors 101 
+
 ### What is an Executor?
 
 Once a DAG is defined (perhaps with the help of an _Operator_), the following needs to happen in order for a single or set of "tasks" within that DAG to execute and be completed from start to finish:
 
-1. The _Metadata Database_ (in Astronomer, that's PostgreSQL) keeps a record of all tasks within a DAG and their corresponding status (`queued`, `scheduled`, `running`, `success`, `failed`, etc) behind the scenes.
-2. The _Scheduler_ reads from the Metadatabase to check on the status of each task and decide what needs to get done (and in what order).
+**1.** The _Metadata Database_ (in Astronomer, that's PostgreSQL) keeps a record of all tasks within a DAG and their corresponding status (`queued`, `scheduled`, `running`, `success`, `failed`, etc) behind the scenes.
+
+**2.** The _Scheduler_ reads from the Metadatabase to check on the status of each task and decide what needs to get done (and in what order).
 
 This is where the Executor traditionally comes in.
 
-3. The _Executor_ works closely with the _Scheduler_ to figure out what resources will actually complete those tasks (via a worker process or otherwise) as they're queued.
+**3.** The _Executor_ works closely with the _Scheduler_ to figure out what resources will actually complete those tasks (via a worker process or otherwise) as they're queued.
 
 The difference _between_ executors comes down to the resources they have at hand and how they choose to utilize those resources to distribute work (or not distribute it at all).
 
 ### Related Definitions
 
-When we're talking about task execution, you'll want to be familiar with these [somewhat confusing](https://issues.apache.org/jira/browse/AIRFLOW-57) terms, all of which we call "Environment Variables."
+When we're talking about task execution, you'll want to be familiar with these [somewhat confusing](https://issues.apache.org/jira/browse/AIRFLOW-57) terms, all of which we call "Environment Variables." The terms themselves have changed a bit over Airflow versions, but this list is compatible with 1.10.
 
 **Environment Variables**: Env variables are a set of configurable values that allow you to dynamically fine tune your Airflow deployment. They're defined in your `airflow.cfg` (or directly through Astronomer's UI) and encompass everything from [email alerts](https://www.astronomer.io/docs/setting-up-airflow-emails/) to DAG concurrency (see below).
 
@@ -62,9 +63,9 @@ _Pro-Tip_: Rather than trying to find one set of configurations that work for _a
 
 Running Apache Airflow on a LocalExecutor exemplifies single-node architecture.
 
-The LocalExecutor completes tasks in parallel that run on a local machine - the same machine as that of the Scheduler. A single LocalWorker picks up and runs jobs as they're scheduled and is fully responsible for all task execution. All computing power is sourced locally from your machine.
+The LocalExecutor completes tasks in parallel that run on a single machine (think: your laptop, an EC2 instance, etc.) - the same machine that houses the Scheduler and all code necessary to execute. A single LocalWorker picks up and runs jobs as they’re scheduled and is fully responsible for all task execution.
 
-In practice, this means that you don't need resources outside of your local machine to run a DAG or a set of DAGs (even heavy workloads). For example, you might hear: "We are running the LocalExecutor for development on a t3.xlarge AWS EC2 instance." 
+In practice, this means that you don't need resources outside of that machine to run a DAG or a set of DAGs (even heavy workloads). For example, you might hear: "We are running the LocalExecutor for development on a t3.xlarge AWS EC2 instance."
 
 ### Bottom Line
 
