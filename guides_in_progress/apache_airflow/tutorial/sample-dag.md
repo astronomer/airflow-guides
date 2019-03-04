@@ -128,4 +128,4 @@ t1 >> t2
 t2 >> t3
 ~~~
 
-With that, we have successfully written an Airflow DAG! Head [here](/v2/apache_airflow/tutorial/dag-deployment) to see how to deploy this DAG. Or, check out our docs on [example DAGS](https://github.com/astronomerio/example-dags) and [DAG Writing Best Practices](/v2/apache_airflow/tutorial/best-practices).
+With that, we have successfully written an Airflow DAG! Head [here](https://astronomer.io/docs/getting-started) to see how to deploy this DAG. Or, check out our docs on [example DAGS](https://github.com/astronomerio/example-dags) and [DAG Writing Best Practices](https://www.astronomer.io/guides/dag-best-practices/).
