@@ -23,12 +23,13 @@ We'll give the Sequential Executor an honorable mention, too.
 
 Once a DAG is defined (perhaps with the help of an _Operator_), the following needs to happen in order for a single or set of "tasks" within that DAG to execute and be completed from start to finish:
 
-1. The _Metadata Database_ (in Astronomer, that's PostgreSQL) keeps a record of all tasks within a DAG and their corresponding status (`queued`, `scheduled`, `running`, `success`, `failed`, etc) behind the scenes.
-2. The _Scheduler_ reads from the Metadatabase to check on the status of each task and decide what needs to get done (and in what order).
+**1.** The _Metadata Database_ (in Astronomer, that's PostgreSQL) keeps a record of all tasks within a DAG and their corresponding status (`queued`, `scheduled`, `running`, `success`, `failed`, etc) behind the scenes.
+
+**2.** The _Scheduler_ reads from the Metadatabase to check on the status of each task and decide what needs to get done (and in what order).
 
 This is where the Executor traditionally comes in.
 
-3. The _Executor_ works closely with the _Scheduler_ to figure out what resources will actually complete those tasks (via a worker process or otherwise) as they're queued.
+**3.** The _Executor_ works closely with the _Scheduler_ to figure out what resources will actually complete those tasks (via a worker process or otherwise) as they're queued.
 
 The difference _between_ executors comes down to the resources they have at hand and how they choose to utilize those resources to distribute work (or not distribute it at all).
 
