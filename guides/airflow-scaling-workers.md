@@ -55,7 +55,7 @@ Finally, **pools** are a way of limiting the number of concurrent instances of a
 For example, with the default settings above, and a dag with 50 tasks to pull data from a REST api, when the dag starts, you would get 16 workers hitting the api at once and you may get some throttling errors back from your api. You can create a pool and give it a limit of 5. Then assign all of the tasks to that pool. Even though you have plenty of free workers, only 5 will run at one time.
 
 You can create a pool directly in the Admin section of the Airflow web UI
-![image](assets2.astronomer.io/main/guides/airflow-scaling-workers/create_pool.png)
+![image](https://assets2.astronomer.io/main/guides/airflow-scaling-workers/create_pool.png)
 
 And then assign your task to the pool
 ```python
