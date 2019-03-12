@@ -48,7 +48,7 @@ On Astronomer, simply increase the slider on the workers to give them more resou
 If you decide to increase these settings, airflow will be able to scale up and process many tasks in parallel. This could however put a strain on the scheduler. The **max_threads = 2** setting can be used to increase the number of threads running on the scheduler. This can prevent the scheduler from getting behind, but may also require more resources. If you increase this, you may need to increase CPU and/or memory on your scheduler.
 
 On Astronomer, simply increase the slider on the Scheduler to handle more threads
-![image](https://assets2.astronomer.io/main/guides/airflow-scaling-workers/scheduler.png)
+![image](https://assets2.astronomer.io/main/guides/airflow-scaling-workers/scheduler_slider.png)
 
 Finally, **pools** are a way of limiting the number of concurrent instances of a specific type of task. This is great if you have a lot of workers in parallel, but you don’t want to overwhelm an endpoint you are connecting to.
 
