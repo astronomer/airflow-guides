@@ -8,9 +8,9 @@ Here are the settings and their default values.
 
 <table>
   <tr>
-    <td align="center">**airflow.cfg name**</td>
-    <td align="center">**Environment Variable**</td>
-    <td align="center">**Default Value**</td>
+    <td align="center"><b>airflow.cfg name</b></td>
+    <td align="center"><b>Environment Variable</b></td>
+    <td align="center"><b>Default Value</b></td>
   </tr>
   <tr>
     <td>parallelism</td>
