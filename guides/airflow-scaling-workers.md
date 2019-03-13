@@ -7,8 +7,6 @@ heroImagePath: null
 tags: ["Workers", "Concurrency", "Parallelism", "Airflow"]
 ---
 
-## Scaling out Airflow
-
 Airflow makes it easy to scale out workers horizontally when you need to execute a lot of tasks in parallel. The CeleryExecutor handles assigning tasks to workers when a worker is available. A common question though, is "Why aren’t more tasks running after I add a lot of workers"
 
 This common issue is the result of a number of different Airflow settings you can tweak in airflow.cfg to reach max parallelism and performance. The settings can also be overridden using environment variables.
