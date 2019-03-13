@@ -51,9 +51,9 @@ On Astronomer, simply increase the slider on the workers to give them more resou
 
 ### Scheduler Impact
 
-If you decide to increase these settings, airflow will be able to scale up and process many tasks in parallel. This could however put a strain on the scheduler. You may notice delays in task execution, tasks waiting in queue for a while or gaps in the gannt chart on in the UI.
+If you decide to increase these settings, airflow will be able to scale up and process many tasks in parallel. This could however put a strain on the scheduler. You may notice delays in task execution, tasks waiting in queue for a while or gaps in the Gannt chart on in the UI.
 
-The **max_threads = 2** setting can be used to increase the number of threads running on the scheduler. This can prevent the scheduler from getting behind, but may also require more resources. If you increase this, you may need to increase CPU and/or memory on your scheduler. This should be set to n-1 where n is the number of CPUs of your scheduler.
+The **max_threads = 2** setting can be used to increase the number of threads running on the scheduler. This can prevent the scheduler from getting behind, but may also require more resources. If you increase this, you may need to increase CPU and/or memory on your scheduler. This should be set to n-1 where n is the number of CPUs of your scheduler. If you aren't noticing scheduler delays, 2 may be enough, as increasing m
 
 On Astronomer, simply increase the slider on the Scheduler to handle increase CPU and memory.
 
