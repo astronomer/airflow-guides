@@ -7,9 +7,9 @@ heroImagePath: null
 tags: ["Workers", "Concurrency", "Parallelism", "Airflow"]
 ---
 
-Airflow makes it easy to scale out workers horizontally when you need to execute a lot of tasks in parallel. The CeleryExecutor handles assigning tasks to workers when a worker is available. A common question though, is "Why aren’t more tasks running after I add a lot of workers"
+As data pipelines grow in complexity, the need to have a flexible and scalable architecture is more important than ever. Airflow's Celery Executor makes it easy to scale out workers horizontally when you need to execute lots of tasks in parallel. There are however some "gotchas" to look out for. Even folks familiar with using the Celery Executor might wonder, "Why are more tasks not running even after I add workers?""
 
-This common issue is the result of a number of different Airflow settings you can tweak in airflow.cfg to reach max parallelism and performance. The settings can also be overridden using environment variables.
+This common issue is the result of a number of different Airflow settings you can tweak to reach max parallelism and performance. Settings are maintained in the airflow.cfg file and can also be overridden using environment variables.
 
 See the guide on [Airflow Executors](https://www.astronomer.io/guides/airflow-executors-explained/) for more info on which executor is right for you.
 
@@ -44,31 +44,35 @@ Here are the settings and their default values.
 </table>
 
 
-**parallelism** is the max number of task instances that can run concurrently on airflow. This means across all running dags, no more than 32 instances will run at one time.
+**parallelism** is the max number of task instances that can run concurrently on airflow. This means that across all running DAGs, no more than 32 tasks will run at one time.
 
-**dag_concurrency** is the number of task instances allowed to run concurrently within a *specific dag*. So you could have 2 dags each running 16 tasks in parallel, but if you had only 1 dag with 50 tasks, it would only allow 16 tasks to run concurrently. (not 32)
+**dag_concurrency** is the number of task instances allowed to run concurrently within a *specific dag*. In other words, you could have 2 DAGs running 16 tasks each in parallel, but a single DAG with 50 tasks would also only run 16 tasks - not 32
 
-These are the main two settings that can be tweaked to fix the common "Why aren’t more tasks running after I added lots of workers"
+These are the main two settings that can be tweaked to fix the common "Why are more tasks not running even after I add workers?"
 
-**worker_concurrency** is related, but it sets how many tasks a single worker can process. So if you have 4 workers running, you can process up to 64 tasks at once. However, with the default settings above, only 32 would actually run in parallel. (and only 16 if all the tasks are in the same dag) If you increase worker_concurrency, make sure your worker has enough resources to handle the load. You may need to increase CPU and/or memory on your workers. Note: This setting only impacts the CeleryExecutor
+**worker_concurrency** is related, but it determines how many tasks a single worker can process. So, if you have 4 workers running at a worker concurrency of 16, you could process up to 64 tasks at once. Configured with the defaults above, however, only 32 would actually run in parallel. (and only 16 if all tasks are in the same DAG)
 
-On Astronomer, simply increase the slider on the workers to give them more resources!
+**Pro tip:** If you increase worker_concurrency, make sure your worker has enough resources to handle the load. You may need to increase CPU and/or memory on your workers. Note: This setting only impacts the CeleryExecutor
+
+If you're using Astronomer, you can configure both worker resources and environment variables directly through the UI. For more info and screenshots of our sweet sliders, check out our Astronomer UI guide [here](https://www.astronomer.io/docs/astronomer-ui/).
 
 ![image](https://assets2.astronomer.io/main/guides/airflow-scaling-workers/worker_slider.png)
 
 ### Scheduler Impact
 
-If you decide to increase these settings, airflow will be able to scale up and process many tasks in parallel. This could however put a strain on the scheduler. You may notice delays in task execution, tasks waiting in queue for a while or gaps in the Gannt chart on in the UI.
+If you decide to increase these settings, Airflow will be able to scale up and process many tasks in parallel. This could however put a strain on the scheduler. For example, you may notice delays in task execution, tasks remaining a in `queued` state for longer than expected, or gaps in the Gantt chart of the Airflow UI.
 
-The **max_threads = 2** setting can be used to increase the number of threads running on the scheduler. This can prevent the scheduler from getting behind, but may also require more resources. If you increase this, you may need to increase CPU and/or memory on your scheduler. This should be set to n-1 where n is the number of CPUs of your scheduler. If you aren't noticing scheduler delays, 2 may be enough, as increasing m
+The **max_threads = 2** setting can be used to increase the number of threads running on the scheduler. This can prevent the scheduler from getting behind, but may also require more resources. If you increase this, you may need to increase CPU and/or memory on your scheduler. This should be set to n-1 where n is the number of CPUs of your scheduler.
 
-On Astronomer, simply increase the slider on the Scheduler to handle increase CPU and memory.
+On Astronomer, simply increase the slider on the Scheduler to increase CPU and memory.
 
 ![image](https://assets2.astronomer.io/main/guides/airflow-scaling-workers/scheduler_slider.png)
 
+### Pools
+
 Finally, **pools** are a way of limiting the number of concurrent instances of a specific type of task. This is great if you have a lot of workers in parallel, but you don’t want to overwhelm a source or destination.
 
-For example, with the default settings above, and a dag with 50 tasks to pull data from a REST api, when the dag starts, you would get 16 workers hitting the api at once and you may get some throttling errors back from your api. You can create a pool and give it a limit of 5. Then assign all of the tasks to that pool. Even though you have plenty of free workers, only 5 will run at one time.
+For example, with the default settings above, and a DAG with 50 tasks to pull data from a REST API, when the DAG starts, you would get 16 workers hitting the API at once and you may get some throttling errors back from your API. You can create a pool and give it a limit of 5. Then assign all of the tasks to that pool. Even though you have plenty of free workers, only 5 will run at one time.
 
 You can create a pool directly in the Admin section of the Airflow web UI
 
