@@ -93,7 +93,7 @@ with dag:
 
     # Set the dependencies for both possibilities
     kick_off_dag >> branch
-    branch >> kickoff_summary >> run_condition >> downstream_task
+    branch >> kickoff_summary_tables >> sql_statement_one >> downstream_task
     branch >> trigger_warning
 ```
 
