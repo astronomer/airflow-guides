@@ -6,7 +6,7 @@ slug: "airflow-wsl"
 heroImagePath: null
 tags: ["Airflow", "Windows"]
 ---
-Windows has come a long way in the last few years by caterting to open source software and developers in an increasing capacity. Nothing illustrates this more than their development of WSL (Windows Subsystem for Linux), which allows you to install a Linux distribution on your PC alongside Windows without having to worry about VMs or containers. This is great for developers that work with tools that only run in Linux, such as Apache Airflow.
+Windows has come a long way in the last few years by catering to open source software and developers in an increasing capacity. Nothing illustrates this more than their development of WSL (Windows Subsystem for Linux), which allows you to install a Linux distribution on your PC alongside Windows without having to worry about VMs or containers. This is great for developers that work with tools that only run in Linux, such as Apache Airflow.
 
 Airflow is top-level Apache project used for orchestrating workflows and data pipelines. It is quickly becoming a popular choice for organizations of all sizes and industries. Airflow is built in Python but contains some libraries that will only work in Linux, so workarounds using virtual machines or Docker are required for fully-functional usage. While both VMs and Docker are great options, this post will talk about setting up Airflow in WSL for very simple access to Airflow with little overhead.
 
