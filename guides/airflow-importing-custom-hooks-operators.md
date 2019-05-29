@@ -11,6 +11,7 @@ Custom hooks and operators are a powerful way to extend Airflow to meet your nee
 
 Note: The `Plugins` mechanism still must be used for plugins that make changes to the webserver UI.
 
+### How it works
 Let’s assume you have an `Airflow Home` directory with the following structure.
 
 ```
@@ -28,7 +29,7 @@ Let’s assume you have an `Airflow Home` directory with the following structure
         └── my_sensor.py
 ```
 
-We will assume that `my_dag` wants to use `my_operator` and `my_sensor`. Also, `my_operator` wants to use `my_hook`. When Airflow is running, it will add `dags/`, `plugins/`, `and config/` to PATH. So any python files in those folders should be accessible to import. So from our `my_dag.py` file, we can simply use
+We will assume that `my_dag` wants to use `my_operator` and `my_sensor`. Also, `my_operator` wants to use `my_hook`. When Airflow is running, it will add `dags/`, `plugins/`, and `config/` to PATH. So any python files in those folders should be accessible to import. So from our `my_dag.py` file, we can simply use
 
 ```
 from operators.my_operator import MyOperator
@@ -120,5 +121,5 @@ from airflow.hooks.base_hook import BaseHook
 class MyHook(BaseHook):
 
     def my_method(self):
-        print("Hello World")s
+        print("Hello World")
 ```
