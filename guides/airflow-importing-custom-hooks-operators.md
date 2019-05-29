@@ -42,7 +42,7 @@ Note: If you use an IDE and don't want to get import errors, add the `plugins` d
 Below is the code for each the files so you can see how all the imports work
 
 ##### my_dag.py
-```
+```python
 from airflow import DAG
 from datetime import datetime, timedelta
 from operators.my_operator import MyOperator
@@ -76,7 +76,7 @@ with DAG('example_dag',
 	sens >> op
 ```
 ##### my_sensor.py
-```
+```python
 from airflow.sensors.base_sensor_operator import BaseSensorOperator
 from airflow.utils.decorators import apply_defaults
 
@@ -93,7 +93,7 @@ class MySensor(BaseSensorOperator):
         return True
 ```
 ##### my_operator.py
-```
+```python
 from airflow.operators.bash_operator import BaseOperator
 from airflow.utils.decorators import apply_defaults
 from hooks.my_hook import MyHook
@@ -114,7 +114,7 @@ class MyOperator(BaseOperator):
         hook.my_method()
 ```
 ##### my_hook.py
-```
+```python
 from airflow.hooks.base_hook import BaseHook
 
 
