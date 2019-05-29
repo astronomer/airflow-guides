@@ -2,7 +2,7 @@
 title: "Importing Custom Hooks & Operators"
 description: "How to correctly import custom hooks and operators"
 date: 2019-05-29T00:00:00.000Z
-slug: "airflow-importing-custom-hooks-operators
+slug: "airflow-importing-custom-hooks-operators"
 heroImagePath: null
 tags: ["Airflow"]
 ---
