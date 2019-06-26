@@ -82,23 +82,23 @@ Astronomer Enterprise is entirely Cloud agnostic and can be installed on any Kub
 
 ### Monitoring and Logging
 
-#### Google Cloud Composer
+**Google Cloud Composer**
 
 As of the [1.0.0 release](https://cloud.google.com/composer/docs/release-notes#july_19_2018_composer-100-airflow-190), logging in Composer is handled by Stackdriver and based on [fluentd](https://www.fluentd.org).
 
-#### Astronomer
+**Astronomer**
 
 Logging in Astronomer is handled by [Elasticsearch](https://www.elastic.co/products/elasticsearch).
 
 Astronomer Cloud has leverages a few features on the logging and metrics front. 
 
-**1. Real-time Scheduler, Webserver, Worker Logs**
+#### 1. Real-time Scheduler, Webserver, Worker Logs
 
 Astronomer pulls searchable, real-time logs from your Airflow Scheduler, Webserver, and Worker directly into the Astronomer UI.
 
 ![logging](https://assets2.astronomer.io/main/guides/logging.png)
 
-**2. Deployment Level Metrics**
+#### 2. Deployment Level Metrics
 
 As of Astronomer v0.9, we've also pulled a variety of deployment level metrics into the Astronomer UI, including:
 
@@ -108,9 +108,9 @@ As of Astronomer v0.9, we've also pulled a variety of deployment level metrics i
 - CPU and Memory usage
 - Database connections
 
-![logging](https://assets2.astronomer.io/main/guides/metrics.gif)
+![logging](https://assets2.astronomer.io/main/blog/metrics.gif)
 
-**3. Cluster Wide Metrics** (*Enterprise only*)
+#### 3. Cluster Wide Metrics (*Enterprise only*)
 
 Astronomer Enterprise offers the same logging and metrics features incorporated in Astronomer Cloud but also comes with access to a Grafana/Prometheus monitoring stack (the basis for the deployment level metrics above) to keep an eye on health and metadata *across* Airflow deployments.
 
