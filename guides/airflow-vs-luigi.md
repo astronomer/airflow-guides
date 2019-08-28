@@ -40,7 +40,7 @@ As pointed out by [Quora user Angela Zhang](https://www.quora.com/Which-is-a-bet
 
 ## Conclusions
 
-While both Luigi and Airflow are viable options for workflow management, the Airflow community has grown to be much stronger than that of Luigi in recent years. As a result, Airflow features have been developing as a much quicker pace, and we've seen a "snowball effect" of companies migrating from Luigi to Airflow in order to reap the benefits of the strong community. Check out the photos below for code contributions to the two projects, and note the scale of the y axis in each:
+While both Luigi and Airflow are viable options for workflow management, the Airflow community has grown to be much stronger than that of Luigi in recent years. As a result, Airflow features have been developing at a much quicker pace, and we've seen a "snowball effect" of companies migrating from Luigi to Airflow in order to reap the benefits of the strong community. Check out the photos below for code contributions to the two projects, and note the scale of the y axis in each:
 
 ![Airflow](https://s3.amazonaws.com/astronomer-cdn/website/img/guides/Screen+Shot+2018-10-12+at+10.36.27+AM.png)
 
