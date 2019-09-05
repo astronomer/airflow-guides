@@ -23,7 +23,7 @@ _Static and Dynamic information stores_
 
 _Cross Communication_
 
-XComs, or short for "cross communication" are stores of key, value, and timestamps meant to communicate between tasks. XComs are stored in Airflow's metadata database with an associated `execution_date`, `TaskInstance` and `DagRun`.
+XComs, short for "cross communication," are stores of key, value, and timestamps meant to communicate between tasks. XComs are stored in Airflow's metadata database with an associated `execution_date`, `TaskInstance` and `DagRun`.
 
 XComs can be "pushed" or "pulled" by all TaskInstances (by using `xcom_push()` or `xcom_pull()`, respectively).
 
@@ -77,11 +77,11 @@ Variables can also be created from the UI.
 
 ![variable_ui](https://assets.astronomer.io/website/img/guides/variable_ui.png)
 
-**Note:** Although variables are fernet key encrypted in the database, they are accessible in the UI and therefore should not be used to store passwords or other sensitve data.
+**Note:** Although variables are Fernet key encrypted in the database, they are accessible in the UI and therefore should not be used to store passwords or other sensitve data.
 
 ### When to use each
 
-In general - since XComs are meant to be used to communicate between tasks, and store the "conditions" that led to that value being created, they should be used for values that are going to be changing each time a workflow runs.
+In general - since XComs are meant to be used to communicate between tasks and store the "conditions" that led to that value being created, they should be used for values that are going to be changing each time a workflow runs.
 
 Variables on the other hand are much more natural places for constants like a list of tables that need to be synced, a configuration file that needs to be pulled from, or a list of IDs to dynamically generate tasks from.
 
@@ -91,7 +91,7 @@ Both can be very powerful where appropriate, but can also be dangerous if misuse
 
 _Everything is stored in the database._
 
-In the example above - XCom values can be seen for every task.
+In the example below - XCom values can be seen for every task.
 
 ![task_instance](https://assets.astronomer.io/website/img/guides/xcom_push.png)
 
