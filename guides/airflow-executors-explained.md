@@ -124,7 +124,7 @@ _Astronomer Note_: This is a Kubernetes-only function that Astronomer leverages 
 
 While the LocalExecutor is a great way to save on engineering resources for testing even with a heavy workload, we generally recommend going with Celery for running DAGs in production, especially if you're running anything that's time sensitive.
 
-## Kubernetes Executor: Coming soon on Astronomer
+## Kubernetes Executor: Now Available on Astronomer*
 
 The fresh-off-the-press [Kubernetes Executor](https://github.com/apache/airflow/blob/master/docs/kubernetes.rst) leverages the power of [Kubernetes](https://kubernetes.io/) for ultimate resource optimization. 
 
@@ -138,6 +138,8 @@ This means a few things:
     *   Memory allocation
     *   Service accounts
     *   Airflow image
+
+**Note**: The Kubernetes Executor is now available on Astronomer Enterprise v0.9+. Astronomer Cloud will be upgraded soon.
 
 ### Scale to Zero
 
