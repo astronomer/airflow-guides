@@ -101,6 +101,20 @@ delete from dag_run where dag_id = 'my_dag_id';
 delete from dag where dag_id = 'my_dag_id';
 ```
 
+For Airflow 1.10, two additional tables have been added where the DAG also needs to be removed.
+
+```sql
+delete from xcom where dag_id = 'my_dag_id';
+delete from task_instance where dag_id = 'my_dag_id';
+delete from task_reschedule where dag_id = 'my_dag_id';
+delete from task_fail where dag_id = 'my_dag_id';
+delete from sla_miss where dag_id = 'my_dag_id';
+delete from log where dag_id = 'my_dag_id';
+delete from job where dag_id = 'my_dag_id';
+delete from dag_run where dag_id = 'my_dag_id';
+delete from dag where dag_id = 'my_dag_id';
+```
+
 ## Rewinding a DAG
 
 To rewind a DAG:
