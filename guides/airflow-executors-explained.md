@@ -102,7 +102,7 @@ _Astronomer Note_: Astronomer Cloud runs on top of Google's managed Kubernetes s
 
 ### Worker Termination Grace Period
 
-Airflow has what we call a "Worker Termination Grace Period" (otherwise known as the "Celery Flush Period") that helps minimize task disruption upon deployment by continuing to run tasks for an x number of minutes (configurable via the Astro UI) after you push up a deploy. Under a LocalExecutor, your workers will start immediately upon deployment regardless of whether or not tasks were mid-execution, which could be disruptive if any of your DAGs are on a tight schedule. If you're careful to plan code pushes and deploys you should be ok, but just something of note that our heavy users certainly appreciate.
+Airflow has what we call a "Worker Termination Grace Period" (otherwise known as the "Celery Flush Period") that helps minimize task disruption upon deployment by continuing to run tasks for an x number of minutes (configurable via the Astro UI) after you push up a deploy. Under a LocalExecutor, your workers will start immediately upon deployment regardless of whether or not tasks were mid-execution, which could be disruptive if any of your DAGs are on a tight schedule. You should be okay if you're careful to plan code pushes and deploys, this is just something of note that our heavy users certainly appreciate.
 
 _Astronomer Note_: This is a Kubernetes-only function that Astronomer leverages and exposes to give our users maximum control over their deployments. If you're running native Airflow without Kubernetes, you won't have access to this feature.
 
@@ -124,7 +124,7 @@ _Astronomer Note_: This is a Kubernetes-only function that Astronomer leverages 
 
 While the LocalExecutor is a great way to save on engineering resources for testing even with a heavy workload, we generally recommend going with Celery for running DAGs in production, especially if you're running anything that's time sensitive.
 
-## Kubernetes Executor: Now Available on Astronomer*
+## Kubernetes Executor: Now Available on Astronomer
 
 The fresh-off-the-press [Kubernetes Executor](https://github.com/apache/airflow/blob/master/docs/kubernetes.rst) leverages the power of [Kubernetes](https://kubernetes.io/) for ultimate resource optimization. 
 
@@ -167,8 +167,8 @@ Via the Kubernetes "Watcher" API, the scheduler reads event logs for anything wi
 
 **When you should use it**
 
-While arguably not production-ready just yet, the Kubernetes Executor offers extraordinary potential. If you're familiar with Kubernetes and want to give it a shot, we'd highly recommend doing so to be at the forefront of the modern Apache Airflow configuration.
+The Kubernetes Executor offers extraordinary capabilities. If you're familiar with Kubernetes and want to give it a shot, we'd highly recommend doing so to be at the forefront of the modern Apache Airflow configuration.
 
 ### Honorable Mention
 
-**Sequential Executor:** The Sequential Executor runs a _single_ task instance at a time in a linear fashion with no parallelism functionality (A → B → C). It does identify a single point of failure, making it helpful for debugging. Otherwise, the Sequential Executor is not recommended for any use cases minimally robust that require more than a single task execution at a time.
+**Sequential Executor:** The Sequential Executor runs a _single_ task instance at a time in a linear fashion with no parallelism functionality (A → B → C). It does identify a single point of failure, making it helpful for debugging. Otherwise, the Sequential Executor is not recommended for any use cases that require more than a single task execution at a time.
