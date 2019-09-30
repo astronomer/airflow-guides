@@ -88,7 +88,7 @@ with dag:
     # I.e. slack notification, trigger DAG, etc.
     trigger_warning = DummyOperator(task_id='trigger_warning')
 
-    run_condiiton = DummyOperator(task_id = 'sql_statement_one')
+    run_conditon = DummyOperator(task_id = 'sql_statement_one')
     downstream_task = DummyOperator(task_id = 'sql_statement_two')
 
     # Set the dependencies for both possibilities
