@@ -41,7 +41,7 @@ We further discuss Airflow's use cases in our [podcast episode here](https://sou
 
 DAG stands for "Directed Acyclic Graph". Each DAG represents a collection of all the tasks you want to run and is organized to show relationships between tasks directly in the Airflow UI. They are defined this way for the following reasons:
 
-1. Directed: If multiple tasks exist, etch must have at least one defined upstream or downstream task.
+1. Directed: If multiple tasks exist, each must have at least one defined upstream or downstream task.
 2. Acyclic: Tasks are not allowed to create data that goes on to self-reference. This is to avoid creating infinite loops.
 3. Graph: All tasks are laid out in a clear structure with processes occurring at clear points with set relationships to other tasks.
 
