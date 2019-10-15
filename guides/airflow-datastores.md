@@ -100,8 +100,6 @@ Under "View Logs"
 
 **Note:** Encryption and character settings may show misleading values in the UI. However, the values will be preserverd when working with them:
 
-![view_xcom](https://assets.astronomer.io/website/img/guides/xcom_pull_logs.png)
-
 XCom data can be deleted straight from the database.
 
 ## Generating DAGs from Variables
@@ -126,7 +124,9 @@ Define the variable:
  ```
 
 <br>
+
 Call the Variable in the dag file
+
 <br>
 
 ```python
@@ -146,6 +146,6 @@ with dag:
         start >> d1
 ```
 
-![variable_dag](img/variable_dag.png)
+![variable_dag](http://assets.astronomer.io/website/img/guides/variable_dag.png)
 
 This can be an especially powerful method of defining any database sync workflows - the first step in the DAG can generate a list of tables and schemas with their corresponding transformation, and downstream tasks can perform the necessary queries.
