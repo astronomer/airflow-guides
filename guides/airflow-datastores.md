@@ -146,6 +146,6 @@ with dag:
         start >> d1
 ```
 
-![variable_dag](http://assets.astronomer.io/website/img/guides/variable_dag.png)
+![variable_dag](https://assets.astronomer.io/website/img/guides/variable_dag.png)
 
 This can be an especially powerful method of defining any database sync workflows - the first step in the DAG can generate a list of tables and schemas with their corresponding transformation, and downstream tasks can perform the necessary queries.
