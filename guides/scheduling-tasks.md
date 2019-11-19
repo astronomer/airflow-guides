@@ -95,7 +95,7 @@ t3.set_upstream(t2)
 
 When the scheduler taps this DAG, it will generate a DAG run for each day from the `start_date` to 4/30/18, and then for each day going forward up until the current day:
 
-![scheduling_ex](https://assets.astronomer.io/website/img/guidesucg_scheduling.png)
+![scheduling_ex](https://assets.astronomer.io/website/img/guides/ucg_scheduling.png)
 
 In this example DAG it won't really cause many problems, but if this DAG were hitting an external system (e.g. making API calls, querying a database, etc.) it could get problematic.
 
@@ -150,7 +150,7 @@ t3.set_upstream(t2)
 
 This DAG only gets one DAG run scheduled once on 4/30 due to the catchup parameter:
 
-![once_scheduled](https://assets.astronomer.io/website/img/guidesucg_scheduling_catchup.png)
+![once_scheduled](https://assets.astronomer.io/website/img/guides/ucg_scheduling_catchup.png)
 
 ### Using catchup effectively
 
@@ -208,7 +208,7 @@ with dag:
 
 All tasks downstream of the LatestOnlyOperator are skipped on all DagRuns _past_ DagRuns.
 
-![latest_only_example](https://assets.astronomer.io/website/img/guideslatest_only_scheduling.png)
+![latest_only_example](https://assets.astronomer.io/website/img/guides/latest_only_scheduling.png)
 At the task level, skipped downstream tasks:
-![latest_only_detail](https://assets.astronomer.io/website/img/guidesskipped_latest_only.png)
+![latest_only_detail](https://assets.astronomer.io/website/img/guides/skipped_latest_only.png)
 
