@@ -7,94 +7,129 @@ heroImagePath: null
 tags: ["Building DAGs", "BranchOperator", "Airflow"]
 ---
 
-[Apache Airflow's BranchOperator](https://airflow.apache.org/code.html#operator-api) is a great way to execute conditional branches in your workflow.
+# Branching
 
-These can be used for safety checks, notifications, etc.
+Another powerful tool that can be used is branching - usually with the `BranchPythonOperator`. The `BranchPytonOperator` is similar to the `PythonOperator` in that it takes a Python function as an input, but it returns a task id (or list of task_ids) to decide which part of the graph to go down. This can be used to iterate down certain paths in a DAG based off the result of a function. 
 
-At it's core, a BranchOperator is just a PythonOperator that returns the next task to be executed.
+```python
 
-In the past, Astronomer has used it to make requests to a IP-geolocation API when there has been at least 500 new visits to a website to get around API call restrictions and other such use cases.
+def return_branch(**kwargs):
 
-https://airflow.incubator.apache.org/concepts.html?highlight=branch#branching
+    branches = ['branch_0,''branch_1', 'branch_2', 'branch_3', 'branch_4']
 
-_This example will show executing a set of steps based on the results of a query._
+    return random.choice(branches)
+```
 
-```py
-"""
-BranchOperator.
+In a DAG, the `BranchOperator` will take this function as an argument
 
-Can be used for safety checks or notifications.
-
-This was written when we were having issues with the Bing/Google Ads APIs. Lack of data would lead to
-inaccurate downstream aggregations.
-
-Astronomer related logic was taken out and replaced with Dummy tasks.
-"""
-
-from airflow import DAG
+```python
+from airflow.operators.python_operator import BranchPythonOperator
 from airflow.operators.dummy_operator import DummyOperator
-from airflow.operators.python_operator import PythonOperator, BranchPythonOperator
-from airflow.hooks.postgres_hook import PostgresHook
 from datetime import datetime, timedelta
+from airflow.models import DAG
+import random
+
 
 default_args = {
     'owner': 'airflow',
     'depends_on_past': False,
-    'start_date': datetime(2017, 7, 31),
-    'email': ['viraj@astronomer.io'],
-    'email_on_failure': True,
+    'start_date': datetime(2018, 5, 26),
+    'email_on_failure': False,
     'email_on_retry': False,
     'retries': 1,
-    'retry_delay': timedelta(minutes=1)
+    'retry_delay': timedelta(minutes=5),
 }
 
-# instantiate dag
-dag = DAG(dag_id='check_api_runs',
-          default_args=default_args,
-          schedule_interval='0 10 * * *')
 
 
-def get_recent_date():
-    """
-    Python function that grabs the latest date from 3 data sources from internal reporting.
-    The rest of the DAG does not execute unless each one has successfully run.
-    """
+def return_branch(**kwargs):
 
-    bing_date = PostgresHook('astro_redshift').get_pandas_df(
-        """ SELECT max(gregorian_date) FROM dev.aa_bing_ads.conversion;""")['max'][0]
-    google_date = PostgresHook('astro_redshift').get_pandas_df(
-        """ SELECT max(day) FROM dev.aa_google_adwords.cc_search_query_performance_report   ; """)['max'][0]
-    sf_date = PostgresHook('astro_redshift').get_pandas_df(
-        """ SELECT max(created_date) FROM aa_salesforce.sf_lead; """)['max'][0].to_pydatetime().date()
-    # Salesforce is never easy to work with.
-    # Makes sense their API is called simple-salesforce in the same way
-    # the s in SOAP stands for simple.
+    branches = ['branch_0,''branch_1', 'branch_2', 'branch_3', 'branch_4']
 
-    yesterday = datetime.today().date() - timedelta(1)
-
-    if yesterday != (bing_date and google_date and sf_date):
-        return 'trigger_warning'
-    return 'kickoff_summary_tables'
-
+    return random.choice(branches)
 
 with dag:
-    kick_off_dag = DummyOperator(task_id='kick_off_dag')
+    kick_off_dag = DummyOperator(task_id='run_this_first')
 
-    branch = BranchPythonOperator(task_id='check_for_data', python_callable=get_recent_date)
+    branching = BranchPythonOperator(
+        task_id='branching',
+        python_callable=return_branch,
+        provide_context=True)
 
-    kickoff_summary_tables = DummyOperator(task_id='kickoff_summary_tables')
+    kick_off_dag >> branching
 
-    # Replace this with the type of warning you want to trigger.
-    # I.e. slack notification, trigger DAG, etc.
-    trigger_warning = DummyOperator(task_id='trigger_warning')
+    for i in range(0, 5):
+        d = DummyOperator(task_id='branch_{0}'.format(i))
+        for j in range(0, 3):
+            m = DummyOperator(task_id='branch_{0}_{1}'.format(i, j))
 
-    run_conditon = DummyOperator(task_id = 'sql_statement_one')
-    downstream_task = DummyOperator(task_id = 'sql_statement_two')
+            d >> m
 
-    # Set the dependencies for both possibilities
-    kick_off_dag >> branch
-    branch >> kickoff_summary_tables >> run_condition >> downstream_task
-    branch >> trigger_warning
+        branching >> d
+```
+![skipped](https://assets.astronomer.io/website/img/guides/branching.png)
+The DAG will proceed based on the output of the function passed in. 
+
+**Note:** You **cannot** have an empty path when skipping tasks - the `skipped` state will apply to all tasks immediately donwstream of whatever task is skipped. Depending on your use case, it may make sense to add a DummyOperator downstream of a task that can be skipped before the branches from the `BranchPythonOperator` meet.
+
+
+Under the hood, the `BranchPythonOperator` simply inherits the PythonOperator:
+
+```
+class BranchPythonOperator(PythonOperator, SkipMixin):
+    """
+    Allows a workflow to "branch" or follow a path following the execution
+    of this task.
+    It derives the PythonOperator and expects a Python function that returns
+    a single task_id or list of task_ids to follow. The task_id(s) returned
+    should point to a task directly downstream from {self}. All other "branches"
+    or directly downstream tasks are marked with a state of ``skipped`` so that
+    these paths can't move forward. The ``skipped`` states are propagated
+    downstream to allow for the DAG state to fill up and the DAG run's state
+    to be inferred.
+    """
+    def execute(self, context):
+        branch = super().execute(context)
+        self.skip_all_except(context['ti'], branch)
+
 ```
 
-![](https://assets.astronomer.io/website/img/guides/branch_operator_dag.png)
+https://github.com/apache/airflow/blob/master/airflow/operators/python_operator.py#L133
+
+
+
+## ShortCircuit Operator
+
+The `BranchOperator` is great for any sort of _conditional_ logic to determine which  dependency to respect. Other use cases may call for the `ShortCircuitOperator`:
+
+```python
+class ShortCircuitOperator(PythonOperator, SkipMixin):
+    """
+    Allows a workflow to continue only if a condition is met. Otherwise, the
+    workflow "short-circuits" and downstream tasks are skipped.
+    The ShortCircuitOperator is derived from the PythonOperator. It evaluates a
+    condition and short-circuits the workflow if the condition is False. Any
+    downstream tasks are marked with a state of "skipped". If the condition is
+    True, downstream tasks proceed as normal.
+    The condition is determined by the result of `python_callable`.
+    """
+    def execute(self, context):
+        condition = super().execute(context)
+        self.log.info("Condition result is %s", condition)
+
+        if condition:
+            self.log.info('Proceeding with downstream tasks...')
+            return
+
+        self.log.info('Skipping downstream tasks...')
+
+        downstream_tasks = context['task'].get_flat_relatives(upstream=False)
+        self.log.debug("Downstream task_ids %s", downstream_tasks)
+
+        if downstream_tasks:
+            self.skip(context['dag_run'], context['ti'].execution_date, downstream_tasks)
+
+        self.log.info("Done.")
+```
+
+Notice that given the base `PythonOperator`, children operators can be easily written to incorporate more specific logic.
