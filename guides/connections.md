@@ -72,7 +72,6 @@ postgres_query = PostgresOperator(
 
 
 **Note**: The `Schema` field in Airflow can potentially be a source of confusion as many databases have different meanings for the term.  In Airflow a schema refers to the database name to which a connection is being made.  For example, for a Postgres connection the name of the database should be entered into the `Schema` field and the Postgres idea of schemas should be ignored (or put into the `Extras` field) when defining a connection.
-The `conn_id` is **not** a primary key
 
 #### Programatically Modifying Connections
 The Airflow Connections class can be modified programatically to sync with an external secrets manager:
@@ -117,4 +116,4 @@ def create_connections(session=None):
 				
 ```
 
-**Note:** Several connections with the same `conn_id` can exist, so be sure to delete exist connections before programatically creating new ones.
+**Note:** The `conn_id` does not have a uniqueness constraint within Airflow, so be sure to delete exist connections before programatically creating new ones. If two `Connections` have the same name, Airflow will randomly pick which one to use.
