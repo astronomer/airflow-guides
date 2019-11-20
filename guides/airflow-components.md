@@ -112,7 +112,7 @@ There is a also communinty contributed MesosExecutor, but it is not _currently_ 
 
 The `parallelism`, `dag_concurrency` and `max_active_runs_per_dag` settings can be tweaked to determine how many tasks can be executed at once.
 
-It is important to note that `parallelism` determines how many task instances can run in parallel in the executor, while `dag_concurrency` determines the number of tasks that can be scheduled by the scheduler. These two numbers should be fine tuned together when optimizing an Airflow deployment, with the ratio depending on the number of DAGs.
+It is important to note that `parallelism` determines how many task instances can run in parallel in the executor, while `dag_concurrency` determines the maximum number of tasks that can run within each DAG. These two numbers should be fine tuned together when optimizing an Airflow deployment, with the ratio depending on the number of DAGs.
 
 `max_active_runs_per_dag` determines how many DagRuns across time can be scheduled for each particular DAG. This number should depend on how how long DAGs take to execute, their schedule interval, and scheduler performance.
 
