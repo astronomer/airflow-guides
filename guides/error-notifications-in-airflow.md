@@ -35,7 +35,7 @@ with DAG('sample_dag',
     ...
 ```
 
-Any task in this DAG's context will throw a failure email to all addresses in the emails array
+Any task in this DAG's context will send a failure email to all addresses in the emails array
 
 ## Different Levels of Notifications
 
@@ -202,7 +202,7 @@ def failure_email(context):
 
 ## Setting Up Alerts in Slack
 
-At Astronomer, we drop Airflow notifications in shared slack channels instead of emails. We find that public channels that are available to everyone add clarity and help crowd-source solutions. There are a few ways to accomplish this:
+At Astronomer, we drop Airflow notifications in shared slack channels instead of emails. There are a few ways to accomplish this:
 
 ### Adding a Slack Integration
 
