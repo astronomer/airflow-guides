@@ -50,7 +50,7 @@ t3 = PostgresOperator(
         autocommit=False
     )
 ```
-This operator will issue a sql statement against a postgres database. Credentials for the database are stored hose are stored in an airflow connection called `my_postgres_connection`. If you look at the code for the `PostgresOperator`, it uses a `PostgresHook` to actually interact with the database.
+This operator will issue a sql statement against a postgres database. Credentials for the database are stored in an airflow connection called `my_postgres_connection`. If you look at the code for the `PostgresOperator`, it uses a `PostgresHook` to actually interact with the database.
 
 [PostgresOperator](https://github.com/apache/airflow/blob/master/airflow/operators/postgres_operator.py)
 ## SSH Operator
@@ -61,9 +61,9 @@ t4 = SSHOperator(
         command='echo "Hello from SSH Operator"'
     )
 ```
-Like the `BashOperator`, the `SSHOperator` allows you to run a bash command, but has built in support to ssh into a remote machine and run the command there.
+Like the `BashOperator`, the `SSHOperator` allows you to run a bash command, but has built in support to ssh into a remote machine to run commands there.
 
-The private key to authenticate to the remote server is stored in Airflow Connections as `my_ssh_conenction`. This key can be referred to in all DAGs, so the operator itself only needs  the command you want to run. This operator uses an `SSHHook` to establish the ssh connection and run the command.
+The private key to authenticate to the remote server is stored in Airflow Connections as `my_ssh_conenction`. This key can be referred to in all DAGs, so the operator itself only needs the command you want to run. This operator uses an `SSHHook` to establish the ssh connection and run the command.
 
 [SSHOperator Code](https://github.com/apache/airflow/blob/master/airflow/contrib/operators/ssh_operator.py)
 ## S3 To Redshift Operator
@@ -78,13 +78,11 @@ t5 = S3ToRedshiftTransfer(
         aws_conn_id='my_aws_connection'
     )
 ```
-This operator loads data from S3 to Redshift via Redshift's COPY command. This is in a family of operators called `Transfer Operators` - operators designed to move data from one system (S3) to another (Redshift). Notice it has two Airlfow connections in the parameters, one for Redshift and one for s3.
+This operator loads data from S3 to Redshift via Redshift's COPY command. This is in a family of operators called `Transfer Operators` - operators designed to move data from one system (S3) to another (Redshift). Notice it has two Airlfow connections in the parameters, one for Redshift and one for S3.
 
-This also uses another concept - [macros and templates](https://www.astronomer.io/guides/templating/). In the `s3_key` parameter, jinja template notation is used to pass in the execution date for this DAG run formatted as a string with no dashes (`ds_nodash` - a predefined macro in Airflow). It will look for a key formatted similarly to `my_s3_bucket/20190711/my_file.csv`, with the timestamp dependent on when the file ran. 
+This also uses another concept - [macros and templates](https://www.astronomer.io/guides/templating/). In the `s3_key` parameter, jinja template notation is used to pass in the execution date for this DAG Run formatted as a string with no dashes (`ds_nodash` - a predefined macro in Airflow). It will look for a key formatted similarly to `my_s3_bucket/20190711/my_file.csv`, with the timestamp dependent on when the file ran. 
 
  Templates can be used to determine runtime parameters (e.g. the range of data for an API call) and also make your code idempotent (each intermediary file is named for the data range it contains).
 
-[S3ToRedshiftTransfer Code](https://github.com/apache/airflow/blob/master/airflow/operators/s3_to_redshift_operator.py)
-
-[Macros](https://airflow.apache.org/macros.html)
+[S3ToRedshiftTransfer Code](https://github.com/apache/airflow/blob/master/airflow/operators/s3_to_redshif
 
