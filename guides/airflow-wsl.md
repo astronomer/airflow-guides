@@ -90,7 +90,7 @@ Docker is required to use Astronomer's CLI. [Here](https://nickjanetakis.com/blo
 
 Install the CLI via `curl -sSL https://install.astronomer.io | sudo bash`.
 
-Running `astro version` will test if it's installed correctly. You can now navigate to your `AIRFLOW_HOME` directory and run `astro airflow init`, creating an initialized Astronomer project in that directory. Running `astro airlfow start` will spin up some docker containers and launch a local environment with a webserver and scheduler, which you can view in your browser at `localhost:8080`. There, you will also see your Airflow UI and your example_dag. Running `astro airlfow stop` will take down the containers. [Here](https://www.astronomer.io/docs/cli-quickstart/) is the quickstart guide for the Astro CLI if you'd like a more detailed rundown of how to get started with it.
+Running `astro version` will test if it's installed correctly. You can now navigate to your `AIRFLOW_HOME` directory and run `astro airflow init`, creating an initialized Astronomer project in that directory. Running `astro aiflow start` will spin up some docker containers and launch a local environment with a webserver and scheduler, which you can view in your browser at `localhost:8080`. There, you will also see your Airflow UI and your example_dag. Running `astro airflow stop` will take down the containers. [Here](https://www.astronomer.io/docs/cli-quickstart/) is the quickstart guide for the Astro CLI if you'd like a more detailed rundown of how to get started with it.
 
 **Note:** If you get a Postgres error, try running `Docker pull postgres:10.1-alpine`
 
@@ -130,7 +130,7 @@ Click the `+` to add a new configuration and give it a name.
 
 in the script path you will point this to where airflow was install in WSL which should be in your user home directory, so use `~\.local\bin\airflow`.
 
-For parameters enter `test dag_id task_id date`. You are using Airlflow's native [test functionality](https://airflow.apache.org/cli.html#test).  
+For parameters enter `test dag_id task_id date`. You are using Airflow's native [test functionality](https://airflow.apache.org/cli.html#test).  
 
 For the Python interpreter, choose the interpreter you created in the previous step.
 
