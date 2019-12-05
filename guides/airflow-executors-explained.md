@@ -139,11 +139,13 @@ This means a few things:
     *   Service accounts
     *   Airflow image
 
-**Note**: The Kubernetes Executor is now available on Astronomer Enterprise v0.9+. Astronomer Cloud will be upgraded soon.
+**Note**: The Kubernetes Executor is now available on both Astronomer Enterprise and Astronomer Cloud. If you want to experimenet with the KubernetesExecutor, [start a free trial on Astronomer](https://www.astronomer.io/trial/).
 
-### Scale to Zero
+### Scale to Near-Zero
 
 With the Local and Celery Executors, a deployment whose DAGs run once a day will operate with a fixed set of resources for the full 24 hours - only 1 hour of which actually puts those resources to use. That's 23 hours of resources you're paying for but don't deliver.
+
+On Astronomer, your Webserver and Scheduler costs will remain fixed even if you use the KubernetesExecutor, but the dynamic scaling of the actual pods will allow you to shed the fixed cost that comes with having a Celery Worker up 24 hours a day.
 
 ### Less work for your Scheduler
 
@@ -160,14 +162,18 @@ Via the Kubernetes "Watcher" API, the scheduler reads event logs for anything wi
 *   Cost and resource efficient
 *   Fault tolerant
 *   Task-level configurations
+*   No interruption to running tasks if a deploy is pushed
 
 **Cons:**
 
 *   Kubernetes familiarity as a potential barrier to entry
+*   An overhead of a few extra seconds per task for a pod to spin up
 
 **When you should use it**
 
 The Kubernetes Executor offers extraordinary capabilities. If you're familiar with Kubernetes and want to give it a shot, we'd highly recommend doing so to be at the forefront of the modern Apache Airflow configuration.
+
+> Note: If you have a high quantity of tasks that are intended to finish executing particularly quickly, the extra handful of seconds it takes for each individual Pod to spin up may or may not be prohibitive.
 
 ### Honorable Mention
 
