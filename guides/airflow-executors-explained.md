@@ -173,7 +173,7 @@ Via the Kubernetes "Watcher" API, the scheduler reads event logs for anything wi
 
 The Kubernetes Executor offers extraordinary capabilities. If you're familiar with Kubernetes and want to give it a shot, we'd highly recommend doing so to be at the forefront of the modern Apache Airflow configuration.
 
-> Note: If you have a high quantity of tasks that are intended to finish executing particularly quickly, the extra handful of seconds it takes for each individual Pod to spin up may or may not be prohibitive.
+**Note:** If you have a high quantity of tasks that are intended to finish executing particularly quickly, note the extra handful of seconds it takes for each individual Pod to spin up might slow those tasks down.
 
 ### Honorable Mention
 
