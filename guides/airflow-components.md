@@ -27,7 +27,7 @@ There are a few different varieties of executors, each wtih their own strengths 
 
 **Metadata Database:** A database (usually Postgres, but can be anything with SQLAlchemy support) that determines how the other components interact. The scheduler stores and updates task statuses, which the webserver then uses to display job information.
 
-![title](https://assets.astronomer.io/website/img/guides/airflow_component_relationship_fixed.png)
+![title](https://assets2.astronomer.io/website/img/guides/airflow_component_relationship_fixed.png)
 
 ## How does work get scheduled?
 
