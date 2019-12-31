@@ -23,7 +23,7 @@ tags: ["Hooks", "Operators", "Tasks"]
 - **DAG Runs** are logged in the metadata database with their corresponding states.
 - **Tasks** associated with a **DAG Run** are called **task instances**.
 
-![title](https://assets.astronomer.io/website/img/guides/airflow_task_flow.png)
+![title](https://assets2.astronomer.io/main/guides/airflow_task_flow.png)
 
 
 **A Dag Run is an instantiation of a DAG object _in time_.**
@@ -52,4 +52,4 @@ _**Task States**_<br>
 **Retry (Gold)**: The task is up for retry. <br>
 **Upstream Failed (Orange)**: The task will not be run because of a failed upstream dependency.<br>
 
-![title](https://assets.astronomer.io/website/img/guides/states.png)
+![title](https://assets2.astronomer.io/main/guides/states.png)
