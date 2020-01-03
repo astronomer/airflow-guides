@@ -234,7 +234,7 @@ with dag:
     ...
 ```
 
-![SlackNotifications](../img/dag_failure_notification.png)
+![SlackNotifications](https://assets2.astronomer.io/main/guides/dag_failure_notification.png)
 
 
 Alternatively, a `SlackOperator` can be used.
