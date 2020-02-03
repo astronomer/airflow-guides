@@ -21,10 +21,10 @@ While we're incredibly excited that the commercialization of the Apache Airflow 
 
 ||Cloud Composer|Astronomer Cloud|Astronomer Enterprise|
 |-|--------------|----------------|---------------------|
-|Cost|~$300 base|~ $110 base running Local Executor|Annual license pending cluster CPU and support structure|
+|Cost|~$300 base|~$110 base running Local Executor|Annual license pending cluster CPU and support structure|
 |Hosting|Managed service hosted in Google's cloud environment|Managed service hosted in Astronomer's Cloud environment|Self-hosted service hosted on your own Kubernetes cluster|
 |Monitoring and Logging|[Google Stackdriver](https://cloud.google.com/stackdriver/)|Deployment level metrics and logging in the Astronomer UI |Elasticsearch, Fluentd, Kibana (EFK) stack to track resource usage across all Airflow deployments|
-|Support|Community support via Stack Overflow|Standard ticketing system, [community forum](https:/forum.astronomer.io), and premium real-time support option via a private Slack Channel |24x7 Business-Critical SLAs available|
+|Support|Community support via Stack Overflow|Ticketing system with Astronomer's team of Airflow experts and [community forum](https:/forum.astronomer.io) |24x7 Business-Critical SLAs available|
 |Training|None|[Astronomer SpaceCamp](https://astronomer.io/spacecamp) for on-site Airflow training |[Astronomer SpaceCamp](https://astronomer.io/spacecamp) for on-site Airflow training|
 
 
@@ -32,7 +32,7 @@ While we're incredibly excited that the commercialization of the Apache Airflow 
 
 #### Google Cloud Composer
 
-It's hard to land on a specific cost for Cloud Composer, as Google measures the resources your deployments use and add the total cost of your Airflow deployments onto your wider GCP bill.
+It's hard to land on a specific cost for Cloud Composer, as Google measures the resources your deployments use and adds the total cost of your Airflow deployments onto your wider GCP bill.
 
 Based on the [estimates provided](https://cloud.google.com/composer/pricing), a single, full-time instance of Composer:
 
@@ -47,9 +47,10 @@ Astronomer Cloud is billed based on exact resources used per deployment. On Astr
 Based on our default resource allocation, it breaks down to:
 
 - $110/mo for a default deployment with Airflow's Local Executor
-- $250/mo for a default deployment with the Celery executor
+- $250/mo for a default deployment with the Celery Executor
+- $290/mo for a default deployment with the Kubernetes Executor
 
-On Astronomer Cloud v0.9, the node limits for any single task (based on Google's standard-16 machine type) are:
+On Astronomer Cloud v0.11, the node limits for any single task (based on Google's standard-16 machine type) are:
 
 - 58 GB of Memory/RAM
 - 15 CPU
@@ -64,7 +65,7 @@ Astronomer Enterprise is priced based on an annual subscription license. Please 
 
 Astronomer's base Airflow images are [Alpine-based](https://alpinelinux.org/about/) (a distribution of Linux), which we leverage for its small size and resource efficiency (3.98MB)
 
-With that said, we've recently published an experimental Debian image that we've offered to interested customers. Despite its larger size (123MB), we wanted our users to have that option for better package dependency compatibility.
+With that said, we've recently published a Debian image in v0.11. Despite its larger size (123MB), we want our users to have the option for better package dependency compatibility.
 
 All of our Docker Images are open-sourced and can be found [here](https://hub.docker.com/r/astronomerinc/ap-airflow/). Source code for them [here](https://github.com/astronomer/astronomer/tree/release-0.7/docker/airflow).
 
@@ -72,13 +73,13 @@ For a more in-depth comparison (and how this translates to cost when deployed to
 
 ### Deployment
 
-Both Astronomer and Composer currently use a fairly similar setup for executing tasks. Each Airflow component (Airflow (Webserver, Scheduler, and Workers) are deployed as pods on Kubernetes using the Celery Executor. The largest difference in deployment between Astronomer and Cloud Composer is where these pods run.
+Both Astronomer and Composer currently use a fairly similar setup for executing tasks. Each Airflow component (Webserver, Scheduler, and Workers) are deployed as pods on Kubernetes using the Celery Executor. The largest difference in deployment between Astronomer and Cloud Composer is where these pods run.
 
 #### Astronomer
 
 While Google Cloud Composer only runs on Google's Cloud Platform, Astronomer Cloud runs on a [GKE](https://cloud.google.com/kubernetes-engine/)cluster fully managed and hosted by the Astronomer team.
 
-Astronomer Enterprise is entirely Cloud agnostic and can be installed on any Kubernetes Cluster. We recommend using a managed Kubernetes service from any of the large cloud providers ([Azure AKS](https://azure.microsoft.com/en-us/services/kubernetes-service/), [AWS EKS](https://aws.amazon.com/eks/), [Digital Ocean](https://www.digitalocean.com/products/kubernetes/), [Pivotal PKS](https://pivotal.io/platform/pivotal-container-service), and even [GCP GKE](https://cloud.google.com/kubernetes-engine/)), but you'd be equally able to run our platform on any flavor of on-prem Kubernetes.
+Astronomer Enterprise is entirely Cloud agnostic and can be installed on any Kubernetes Cluster. We recommend using a managed Kubernetes service from any of the large cloud providers ([Azure AKS](https://azure.microsoft.com/en-us/services/kubernetes-service/), [AWS EKS](https://aws.amazon.com/eks/), [Digital Ocean](https://www.digitalocean.com/products/kubernetes/), [Pivotal PKS](https://pivotal.io/platform/pivotal-container-service), and [GCP GKE](https://cloud.google.com/kubernetes-engine/)), but you'd be equally able to run our platform on any flavor of on-prem Kubernetes.
 
 ### Monitoring and Logging
 
@@ -90,11 +91,11 @@ As of the [1.0.0 release](https://cloud.google.com/composer/docs/release-notes#j
 
 Logging in Astronomer is handled by [Elasticsearch](https://www.elastic.co/products/elasticsearch).
 
-Astronomer Cloud has leverages a few features on the logging and metrics front. 
+Astronomer Cloud leverages a few features on the logging and metrics front. 
 
 #### 1. Real-time Scheduler, Webserver, Worker Logs
 
-Astronomer pulls searchable, real-time logs from your Airflow Scheduler, Webserver, and Worker directly into the Astronomer UI.
+Astronomer pulls searchable, real-time logs from your Airflow Scheduler, Webserver, and Workers directly into the Astronomer UI.
 
 ![logging](https://assets2.astronomer.io/main/guides/logging.png)
 
@@ -103,7 +104,7 @@ Astronomer pulls searchable, real-time logs from your Airflow Scheduler, Webserv
 As of Astronomer v0.9, we've also pulled a variety of deployment level metrics into the Astronomer UI, including:
 
 - Container status
-- Deployment Health
+- Deployment health
 - Task success and failure rates
 - CPU and Memory usage
 - Database connections
@@ -124,7 +125,7 @@ Google Cloud Composer supports both the Celery and Local Executors, but does not
 
 #### Astronomer
 
-As of v0.9, Astronomer has initial support for the Kubernetes Executor. While it's not scale-to-zero to start with, that's most certainly a reality we're working towards.
+As of v0.9, Astronomer supports the Kubernetes Executor. While it's not scale-to-zero to start with, that's most certainly a reality we're working towards.
 
 To read more, refer to [Airflow Executors: Explained](https://www.astronomer.io/guides/airflow-executors-explained/).
 
@@ -136,8 +137,8 @@ Composer's support is largely community-based. Users can post questions to forum
 
 #### Astronomer
 
-Astronomer comes out-of-the-box with support plans that give you access to a wealth of Airflow experts. We’ve been using Airflow internally for 2+ years and have helped many companies improve their data processes using Airflow.
+Astronomer's support automatically gives your team access to it's team of Airflow experts. We’ve been using Airflow internally for 2+ years and have helped many companies improve their data processes using Airflow.
 
-We have multiple Airflow committers on our team who are constantly working to improve the core OSS project, and offer on-site Airflow trainings that are product agnostic ([SpaceCamp](https://www.astronomer.io/spacecamp/))
+Astronomer has both of Airflow release managers on staff and several of its core committers who are constantly working to improve the core OSS project, and offer on-site product agnostic Airflow trainings ([SpaceCamp](https://www.astronomer.io/spacecamp/))
 
 For more info, feel free to check out our [support plans](https://astronomer.io/pricing) or [reach out directly](https://www.astronomer.io/spacecamp/#request-spacecamp) to request a customized SpaceCamp curriculum for your team. 
