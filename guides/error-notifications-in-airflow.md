@@ -69,30 +69,6 @@ with DAG('sample_dag',
     ...
 ```
 
-If you're the type of person that needs good news first thing in the morning (me)...
-
-
-```python
-from datetime import datetime
-from airflow import DAG
-
-default_args = {
-    'owner': 'airflow',
-    'start_date': datetime(2018, 1, 30),
-    'email': ['viraj@astronomer.io'],
-    'email_on_failure': False,
-    'email_on_retry': False,
-    'email_on_success': True
-    'retries': 1
-}
-
-with DAG('sample_dag',
-          default_args=default_args,
-          schedule_interval='@daily',
-          catchup=False) as dag:
-    ...
-```
-
 ## Isolating Tasks
 
 For some use cases, it might be helpful to only have failure emails for certain tasks. The BaseOperator that all Airflow Operators inherit from has support for these arguments if you don't want them defined at the DAG level.
