@@ -19,32 +19,37 @@ In this example, we're going to be using [Virtualenvwrapper](https://virtualenvw
 ## Steps
 
 1. Create a virtual environment
+
         mkvirtualenv test-secrets-backend
 
     >Note: If you ever need to use this virtual env from a blank terminal window, you can run `workon test-secrets-backend` to re-instantiate it.
 
 2. Install the whl package and Hashicorp dependency
+
         pip install apache_airflow-1\!1.10.10.dev1+astro.1-py2.py3-none-any.whl 
         pip install hvac
 
 3. Install Hashicorp Vault using Homebrew
-        # Option 1. Official (but no GUI)
+
+        # Option 1. Official (run with no UI)
         brew install vault
 
-        ## Option 2. Vault CLI and GUI (reccomended becuase the Vault UI is nice)
+        ## Option 2. Vault CLI and GUI (reccomended becuase the Vault UI is a nice feature)
         brew tap petems/vault
         brew install petems/vault-prebuilt/vault
 
 4. Run the Vault server
+
         vault server -dev
 
     Now, get the vault token from the output initially printed to your terminal- this should be directly under your `Unseal Key`.
+
         Root Token: <TOKEN>
 
     The Vault UI is now accessible at http://127.0.0.1:8200/ui.
 
-    TODO: Figure out why im getting an error when running step 5
 5. With your Vault server running, open a new terminal window and run `workon test-backend-secrets` to re-initialize your virtual environment.Then, create a Vault secret:
+
         vault kv put secret/connections/smtp_default conn_uri=smtps://user:host@relay.example.com:465
 
     > Note: if you get a `server gave HTTP response to HTTPS client` error, you'll need to export an env var to set the address via `export VAULT_ADDR='http://127.0.0.1:8200'`
@@ -57,6 +62,7 @@ In this example, we're going to be using [Virtualenvwrapper](https://virtualenvw
     For the purposes of this example, `smtp_default` is the secret name we're using. You can store arbitrary key/value pairs in this secret. By default, Airflow will look for the `conn_uri` inside the `smtp_default` key.
 
 6. Export the following env vars in a new terminal to activate your virtual environment:
+
         export AIRFLOW__SECRETS__BACKEND="airflow.contrib.secrets.hashicorp_vault.VaultSecrets"
         export AIRFLOW__SECRETS__BACKEND_KWARGS='{"url":"http://127.0.0.1:8200","token":"<YOUR-ROOT-TOKEN>"}'
 
@@ -86,14 +92,15 @@ In this example, we're going to be using [Virtualenvwrapper](https://virtualenvw
             )
 
     To get this example DAG running in your local Airflow environment, add it to your virtual environment's `airflow/example_dags` folder (ie. `/Users/username/.virtualenvs/test-secrets-backend/lib/python3.7/site-packages/airflow/example_dags/vault_dag`). Then, to get it running on a local Airflow environment, run the following commands:
-            # Get back into your virtual env if you're not already there
-            workon test-secrets-backend
-            # Initialize the Airflow SQLite db
-            airflow initdb
-            # Spin up the webserver on port 8080
-            airflow webserver -p 8080
-            # Spin up the scheduler
-            airflow scheduler
+
+        # Get back into your virtual env if you're not already there
+        workon test-secrets-backend
+        # Initialize the Airflow SQLite db
+        airflow initdb
+        # Spin up the webserver on port 8080
+        airflow webserver -p 8080
+        # Spin up the scheduler
+        airflow scheduler
 
     You should now be able to access your local Airflow instance at localhost:8080.
         ​
