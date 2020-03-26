@@ -6,11 +6,11 @@ slug: "airflow-and-hashicorp-vault"
 tags: ["Connections", "Airflow"]
 ---
 
-> Note: This guide is beta, as this feature is not included in stable Airflow release yet. We'll walk you through how to use this feature with a test build we've pushed out.
+> Note: This guide is beta, as this feature is not included in stable Airflow release yet. We'll walk you through how to use this feature with a test build we've pushed out that includes this feature.
 
 ## Overview
 
-One of the long-requested features we receive here at Astronomer is a native sync with Hashicorp Vault for secrets and connection information. The Airflow community has rallied around the need for more robust sync options from external secrets stores, and one of our very own commiters, Kaxil Naik, has built out a feature to sync connection information from Vault. Below is a step-by-step guide on how to leverage this functionality to import your connection info from your Vault store.
+A feature we often get asked about here at Astronomer is a native sync with Hashicorp Vault for secrets and connection information. The Airflow community has rallied around the need for more robust sync options from external secrets stores, and one of our very own commiters, [Kaxil Naik](https://www.linkedin.com/in/kaxil?originalSubdomain=uk), has built out a feature to sync connection information from Vault. Below is a step-by-step guide on how to leverage this functionality to import your connection info from your Vault store.
 
 ## Pre-Requisites
 
