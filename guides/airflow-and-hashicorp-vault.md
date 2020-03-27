@@ -26,15 +26,14 @@ In this example, we're going to be using [Virtualenvwrapper](https://virtualenvw
 
 2. **Install Airflow and the Hashicorp dependency to your virtual environment.** Note that this is currently pulling a test build that our team at Astronomer has pushed out to allow users to test this feature before it's included in an official Airflow release. You will need to install this version for now if you would like to test this feature while you wait for Airflow 1.10.10 to be officially released.
 
-        PIP_EXTRA_INDEX_URL="https://pip.astronomer.io/simple" pip install 'astronomer-certified==1.10.10-1.dev140'
-        pip install hvac
+        PIP_EXTRA_INDEX_URL="https://pip.astronomer.io/simple" pip install 'astronomer-certified>=1.10.10-1.dev140[hvac]'
 
 3. **Install Hashicorp Vault using Homebrew.**
 
         # Option 1. Official (run with no UI)
         brew install vault
 
-        ## Option 2. Vault CLI and GUI (reccomended becuase the Vault UI is a nice feature)
+        ## Option 2. Vault CLI and GUI (recommended becuase the Vault UI is a nice feature)
         brew tap petems/vault
         brew install petems/vault-prebuilt/vault
 
@@ -59,6 +58,22 @@ In this example, we're going to be using [Virtualenvwrapper](https://virtualenvw
     <br/>
 
     For the purposes of this example, `smtp_default` is the secret name we're using. You can store arbitrary key/value pairs in this secret. By default, Airflow will look for the `conn_uri` inside the `smtp_default` key.
+    
+    Confirm that you can retrieve the Secret:
+    
+        ❯ vault kv get secret/connections/smtp_default
+        ====== Metadata ======
+        Key              Value
+        ---              -----
+        created_time     2020-03-26T14:43:50.819791Z
+        deletion_time    n/a
+        destroyed        false
+        version          1
+
+        ====== Data ======
+        Key         Value
+        ---         -----
+        conn_uri    smtps://user:host@relay.example.com:465
 
 ## Retrieving Connections from Vault
 
@@ -68,14 +83,14 @@ In this example, we're going to be using [Virtualenvwrapper](https://virtualenvw
         from airflow.operators.python_operator import PythonOperator
         from datetime import datetime
         from airflow.hooks.base_hook import BaseHook
-        ​
-        ​
+        
+        
         def get_secrets(**kwargs):
             conn = BaseHook.get_connection(kwargs['my_conn_id'])
             print(f"Password: {conn.password}, Login: {conn.login}, URI: {conn.get_uri()}, Host: {conn.host}")
-        ​
-        with DAG('zz_example_secrets_dags', start_date=datetime(2020, 1, 1), schedule_interval=None) as dag:
-        ​
+        
+        with DAG('example_secrets_dags', start_date=datetime(2020, 1, 1), schedule_interval=None) as dag:
+        
         
             test_task = PythonOperator(
                 task_id='test-task',
@@ -104,7 +119,7 @@ In this example, we're going to be using [Virtualenvwrapper](https://virtualenvw
             airflow webserver
 
     You should now be able to access your local Airflow environment at localhost:8080.
-        ​
+        
 
 5. **Trigger the DAG and verify that you're getting the expected output.** You can do this by checking for the following output in your task logs:
 
