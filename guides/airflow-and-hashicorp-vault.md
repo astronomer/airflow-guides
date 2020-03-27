@@ -57,7 +57,7 @@ In this example, we're going to be using [Virtualenvwrapper](https://virtualenvw
     The `secret` here is called a `mount_point`. Generally, a user might create a separate mount point for each application consuming secrets from Vault.
     To organize our secrets, we specify the `/connection` path and put all Airflow connections in this path. This path is fully configurable.
     <br/>
-    
+
     For the purposes of this example, `smtp_default` is the secret name we're using. You can store arbitrary key/value pairs in this secret. By default, Airflow will look for the `conn_uri` inside the `smtp_default` key.
 
 ## Retrieving Connections from Vault
