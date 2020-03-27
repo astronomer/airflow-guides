@@ -84,7 +84,7 @@ In this example, we're going to be using [Virtualenvwrapper](https://virtualenvw
                 op_kwargs={'my_conn_id': 'smtp_default'},
             )
 
-    To get this example DAG running in your local Airflow environment, add it to your virtual environment's `airflow/example_dags` folder (ie. `/Users/username/.virtualenvs/test-secrets-backend/lib/python3.7/site-packages/airflow/example_dags/vault_dag`).
+    To get this example DAG running in your local Airflow environment, add it to your virtual environment's `$AIRFLOW_HOME/dags` folder. If `AIRFLOW_HOME` is not set, your DAG location will default to `~/airflow/dags` (ie. `/Users/username/airflow/dags/vault_dag` for Macbook users).
 
 2. **Initialize the Airflow database.** Run `airflow initdb` in your virtual environment to initialize the default SQLite DB that ships with stock Airflow.
 
