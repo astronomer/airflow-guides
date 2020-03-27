@@ -54,11 +54,9 @@ In this example, we're going to be using [Virtualenvwrapper](https://virtualenvw
 
     > Note: if you get a `server gave HTTP response to HTTPS client` error, you'll need to export an env var to set the address via `export VAULT_ADDR='http://127.0.0.1:8200'`
 
-    The secret here is referred to as a `mount_point`. Generally, a user might create a separate mount points for each application consuming secrets from Vault.
-    To organize our secrets, we specify the `/connection` path and put all Airflow connections in this path.
-
-    > Note: This path is fully configurable and you're more than welcome to change it to suit your needs.
-
+    The `secret` here is called a `mount_point`. Generally, a user might create a separate mount point for each application consuming secrets from Vault.
+    To organize our secrets, we specify the `/connection` path and put all Airflow connections in this path. This path is fully configurable.
+    
     For the purposes of this example, `smtp_default` is the secret name we're using. You can store arbitrary key/value pairs in this secret. By default, Airflow will look for the `conn_uri` inside the `smtp_default` key.
 
 ## Retrieving Connections from Vault
@@ -93,7 +91,7 @@ In this example, we're going to be using [Virtualenvwrapper](https://virtualenvw
         export AIRFLOW__SECRETS__BACKEND="airflow.contrib.secrets.hashicorp_vault.VaultSecrets"
 
         export AIRFLOW__SECRETS__BACKEND_KWARGS='{"url":"http://127.0.0.1:8200","token":"<YOUR-ROOT-TOKEN>","connections_path": "connections"}'
-        
+
         airflow scheduler
 
     The `AIRFLOW__SECRETS__BACKEND` var is the backend we want to use to fetch secrets. The default options are `EnvironmentVariables` and `Metastore`. Other available secrets backends include AWS SSM and Google Secrets Manager.
