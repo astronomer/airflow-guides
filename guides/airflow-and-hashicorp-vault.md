@@ -91,7 +91,9 @@ In this example, we're going to be using [Virtualenvwrapper](https://virtualenvw
 3. **Create your Scheduler environment.** Open a new terminal window and re-instantiate your virtual env with `workon test-backend-secrets`- this will be your Airflow Scheduler environment.  Export the following env vars in this environment so that your scheduler can access your Vault secrets, then run the scheduler.
 
         export AIRFLOW__SECRETS__BACKEND="airflow.contrib.secrets.hashicorp_vault.VaultSecrets"
+
         export AIRFLOW__SECRETS__BACKEND_KWARGS='{"url":"http://127.0.0.1:8200","token":"<YOUR-ROOT-TOKEN>","connections_path": "connections"}'
+        
         airflow scheduler
 
     The `AIRFLOW__SECRETS__BACKEND` var is the backend we want to use to fetch secrets. The default options are `EnvironmentVariables` and `Metastore`. Other available secrets backends include AWS SSM and Google Secrets Manager.
