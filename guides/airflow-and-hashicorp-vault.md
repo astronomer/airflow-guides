@@ -6,11 +6,11 @@ slug: "airflow-and-hashicorp-vault"
 tags: ["Connections", "Airflow"]
 ---
 
-> Note: This guide is beta, as this feature is not included in stable Airflow release yet. We'll walk you through how to use this feature with a test build we've pushed out that includes this feature.
+> Note: This guide is beta, as this feature is not included in stable Airflow release yet. We'll walk you through how to use this feature with a test build we've pushed out that includes this feature. This feature will be [fully available in Airflow 1.10.10](https://airflow.readthedocs.io/en/latest/howto/use-alternative-secrets-backend.html), with additional support for GCP Secrets Manager Backend and AWS Secrets Manager.
 
 ## Overview
 
-A feature we often get asked about here at Astronomer is a native sync with Hashicorp Vault for secrets and connection information. The Airflow community has rallied around the need for more robust sync options from external secrets stores, and one of our very own commiters, [Kaxil Naik](https://www.linkedin.com/in/kaxil?originalSubdomain=uk), has built out a feature to sync connection information from Vault. Below is a step-by-step guide on how to leverage this functionality to import your connection info from your Vault store.
+A feature we often get asked about here at Astronomer is a native sync with [Hashicorp Vault](https://www.vaultproject.io/) for secrets and connection information. The Airflow community has rallied around the need for more robust sync options from external secrets stores, and one of our very own commiters, [Kaxil Naik](https://www.linkedin.com/in/kaxil?originalSubdomain=uk), has built out a feature to sync Airflow Connections from Vault. Below is a step-by-step guide on how to leverage this functionality to import your connection info from your Vault store.
 
 ## Pre-Requisites
 
@@ -24,7 +24,7 @@ In this example, we're going to be using [Virtualenvwrapper](https://virtualenvw
 
     >Note: If you ever need to use this virtual env from a blank terminal window, you can run `workon test-secrets-backend` to re-instantiate it.
 
-2. **Install Airflow and the Hashicorp dependency to your virtual environment.** Note that this is currently pulling a test build that our team at Astronomer has pushed out to allow users to test this feature before it's included in an official Airflow release.
+2. **Install Airflow and the Hashicorp dependency to your virtual environment.** Note that this is currently pulling a test build that our team at Astronomer has pushed out to allow users to test this feature before it's included in an official Airflow release. You will need to install this version for now if you would like to test this feature while you wait for Airflow 1.10.10 to be officially released.
 
         PIP_EXTRA_INDEX_URL="https://pip.astronomer.io/simple" pip install 'astronomer-certified==1.10.10-1.dev140'
         pip install hvac
@@ -56,7 +56,7 @@ In this example, we're going to be using [Virtualenvwrapper](https://virtualenvw
 
     The `secret` here is called a `mount_point`. Generally, a user might create a separate mount point for each application consuming secrets from Vault.
     To organize our secrets, we specify the `/connection` path and put all Airflow connections in this path. This path is fully configurable.
-    
+
     For the purposes of this example, `smtp_default` is the secret name we're using. You can store arbitrary key/value pairs in this secret. By default, Airflow will look for the `conn_uri` inside the `smtp_default` key.
 
 ## Retrieving Connections from Vault
@@ -82,7 +82,7 @@ In this example, we're going to be using [Virtualenvwrapper](https://virtualenvw
                 op_kwargs={'my_conn_id': 'smtp_default'},
             )
 
-    To get this example DAG running in your local Airflow environment, add it to your virtual environment's `$AIRFLOW_HOME/dags` folder. If `AIRFLOW_HOME` is not set, your DAG location will default to `~/airflow/dags` (ie. `/Users/username/airflow/dags/vault_dag` for Macbook users).
+    To get this example DAG running in your local Airflow environment, add it to your virtual environment's `$AIRFLOW_HOME/dags` folder. If `AIRFLOW_HOME` is not set, your DAG location will default to `~/airflow/dags` (ie. `/Users/username/airflow/dags/vault_dag` for Mac users).
 
 2. **Initialize the Airflow database.** Run `airflow initdb` in your virtual environment to initialize the default SQLite DB that ships with stock Airflow.
 
