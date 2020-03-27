@@ -26,7 +26,7 @@ In this example, we're going to be using [Virtualenvwrapper](https://virtualenvw
 
 2. **Install Airflow and the Hashicorp dependency to your virtual environment.** Note that this is currently pulling a test build that our team at Astronomer has pushed out to allow users to test this feature before it's included in an official Airflow release.
 
-        pip install apache_airflow-1\!1.10.10.dev1+astro.1-py2.py3-none-any.whl 
+        PIP_EXTRA_INDEX_URL="https://pip.astronomer.io/simple" pip install 'astronomer-certified==1.10.10-1.dev140'
         pip install hvac
 
 3. **Install Hashicorp Vault using Homebrew.**
@@ -61,7 +61,7 @@ In this example, we're going to be using [Virtualenvwrapper](https://virtualenvw
 
     For the purposes of this example, `smtp_default` is the secret name we're using. You can store arbitrary key/value pairs in this secret. By default, Airflow will look for the `conn_uri` inside the `smtp_default` key.
 
-## Retreiving Connections from Vault
+## Retrieving Connections from Vault
 
 1. **Add an Example DAG.** Add an Example DAG to the Airflow distribution that you've installed to your virtual environment so that you can verify connections are being successfully retrieved from the Vault. Here's one you can use:
 
