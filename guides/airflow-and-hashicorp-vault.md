@@ -44,7 +44,7 @@ In this example, we're going to be using [Virtualenvwrapper](https://virtualenvw
 
 5. **Create your Vault Secret.** With your Vault server running, open a new terminal window and run `workon test-backend-secrets` to re-initialize your virtual environment.Then, create a Vault secret:
 
-        vault kv put secret/connections/smtp_default conn_uri=smtps://user:host@relay.example.com:465
+    <script src="https://gist.github.com/kaxil/dfd8f285d69e9bbb4935e5ab3471f5af.js"></script>
 
     > Note: if you get a `server gave HTTP response to HTTPS client` error, you'll need to export an env var to set the address via `export VAULT_ADDR='http://127.0.0.1:8200'`
 
