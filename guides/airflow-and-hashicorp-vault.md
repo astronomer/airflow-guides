@@ -94,9 +94,7 @@ In this example, we're going to be using [Virtualenvwrapper](https://virtualenvw
         export AIRFLOW__SECRETS__BACKEND_KWARGS='{"url":"http://127.0.0.1:8200","token":"<YOUR-ROOT-TOKEN>","connections_path": "connections"}'
         airflow scheduler
 
-    The `AIRFLOW__SECRETS__BACKEND` var is the backend we want to use to fetch secrets. The default options are `EnvironmentVariables` and `Metastore`.
-
-    Other available secrets backends include AWS SSM and Google Secrets Manager.
+    The `AIRFLOW__SECRETS__BACKEND` var is the backend we want to use to fetch secrets. The default options are `EnvironmentVariables` and `Metastore`. Other available secrets backends include AWS SSM and Google Secrets Manager.
 
     > Note: Run `export OBJC_DISABLE_INITIALIZE_FORK_SAFETY=YES` in your scheduler environment if python quits unexpectedly while running the DAG.
 
@@ -124,7 +122,7 @@ Then, use the Vault Python client directly to check for the correct outputs (sho
 
         In [2]: client=hvac.Client(url="http://127.0.0.1:8200")                                                      
 
-        In [3]: client.token = "s.2hMdO4NDz9SuMuenpvZb2bA7"                                                                  
+        In [3]: client.token = "<YOUR-ROOT-TOKEN>"                                                                  
 
         In [4]: client.is_authenticated()                                                                                    
         Out[4]: True
