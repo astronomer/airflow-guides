@@ -16,7 +16,7 @@ A feature we often get asked about here at Astronomer is a native sync with Hash
 
 In this example, we're going to be using [Virtualenvwrapper](https://virtualenvwrapper.readthedocs.io/en/latest/) to manage virtual environments. You can install this package and set up your shell to work nicely with it by following the [instructions in their installation docs](https://virtualenvwrapper.readthedocs.io/en/latest/install.html).
 
-## Steps
+## Setting up the Vault Dev Server
 
 1. **Create a virtual environment.**
 
@@ -61,7 +61,9 @@ In this example, we're going to be using [Virtualenvwrapper](https://virtualenvw
 
     For the purposes of this example, `smtp_default` is the secret name we're using. You can store arbitrary key/value pairs in this secret. By default, Airflow will look for the `conn_uri` inside the `smtp_default` key.
 
-6. **Add an Example DAG.** Add an Example DAG to the Airflow distribution that you've installed to your virtual environment so that you can verify connections are being successfully retrieved from the Vault. Here's one you can use:
+## Retreiving Connections from Vault
+
+1. **Add an Example DAG.** Add an Example DAG to the Airflow distribution that you've installed to your virtual environment so that you can verify connections are being successfully retrieved from the Vault. Here's one you can use:
 
         from airflow import DAG
         from airflow.operators.python_operator import PythonOperator
@@ -84,9 +86,9 @@ In this example, we're going to be using [Virtualenvwrapper](https://virtualenvw
 
     To get this example DAG running in your local Airflow environment, add it to your virtual environment's `airflow/example_dags` folder (ie. `/Users/username/.virtualenvs/test-secrets-backend/lib/python3.7/site-packages/airflow/example_dags/vault_dag`).
 
-7. **Initialize the Airflow database.** Run `airflow initdb` in your virtual environment to initialize the default SQLite DB that ships with stock Airflow.
+2. **Initialize the Airflow database.** Run `airflow initdb` in your virtual environment to initialize the default SQLite DB that ships with stock Airflow.
 
-8. **Create your Scheduler environment.** Open a new terminal window and re-instantiate your virtual env with `workon test-backend-secrets`- this will be your Airflow Scheduler environment.  Export the following env vars in this environment so that your scheduler can access your Vault secrets, then run the scheduler.
+3. **Create your Scheduler environment.** Open a new terminal window and re-instantiate your virtual env with `workon test-backend-secrets`- this will be your Airflow Scheduler environment.  Export the following env vars in this environment so that your scheduler can access your Vault secrets, then run the scheduler.
 
         export AIRFLOW__SECRETS__BACKEND="airflow.contrib.secrets.hashicorp_vault.VaultSecrets"
         export AIRFLOW__SECRETS__BACKEND_KWARGS='{"url":"http://127.0.0.1:8200","token":"<YOUR-ROOT-TOKEN>","connections_path": "connections"}'
@@ -98,14 +100,14 @@ In this example, we're going to be using [Virtualenvwrapper](https://virtualenvw
 
     > Note: Run `export OBJC_DISABLE_INITIALIZE_FORK_SAFETY=YES` in your scheduler environment if python quits unexpectedly while running the DAG.
 
-9. **Create your Webserver Environment** Open a new terminal window and re-instantiate your virtual env with `workon test-backend-secrets`- this will be your Airflow Webserver environment. Spin up the webserver:
+4. **Create your Webserver Environment** Open a new terminal window and re-instantiate your virtual env with `workon test-backend-secrets`- this will be your Airflow Webserver environment. Spin up the webserver:
 
             airflow webserver
 
     You should now be able to access your local Airflow environment at localhost:8080.
         ​
 
-10. Trigger the DAG and verify that you're getting the expected output. You can do this by checking for the following output in your task logs:
+5. **Trigger the DAG and verify that you're getting the expected output.** You can do this by checking for the following output in your task logs:
 
         [2020-03-24 01:34:44,824] {logging_mixin.py:112} INFO - [2020-03-24 01:34:44,823] {base_hook.py:87} INFO - Using connection to: id: smtp_default. Host: relay.example.com, Port: 465, Schema: , Login: user, Password: XXXXXXXX, extra: None
         [2020-03-24 01:34:44,824] {logging_mixin.py:112} INFO - Password: host, Login: user, URI: smtps://user:host@relay.example.com:465, Host: relay.example.com
