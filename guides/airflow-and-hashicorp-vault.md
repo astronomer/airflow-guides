@@ -26,7 +26,7 @@ In this example, we're going to be using [Virtualenvwrapper](https://virtualenvw
 
 2. **Install Airflow and the Hashicorp dependency to your virtual environment.** Note that this is currently pulling a test build that our team at Astronomer has pushed out to allow users to test this feature before it's included in an official Airflow release. You will need to install this version for now if you would like to test this feature while you wait for Airflow 1.10.10 to be officially released.
 
-        PIP_EXTRA_INDEX_URL="https://pip.astronomer.io/simple" pip install 'astronomer-certified>=1.10.10-1.dev140[hvac]'
+        PIP_EXTRA_INDEX_URL="https://pip.astronomer.io/simple" pip install 'astronomer-certified>=1.10.10-1.dev213[hashicorp]'
 
 3. **Install Hashicorp Vault using Homebrew.**
 
@@ -104,7 +104,7 @@ In this example, we're going to be using [Virtualenvwrapper](https://virtualenvw
 
 3. **Create your Scheduler environment.** Open a new terminal window and re-instantiate your virtual env with `workon test-backend-secrets`- this will be your Airflow Scheduler environment.  Export the following env vars in this environment so that your scheduler can access your Vault secrets, then run the scheduler.
 
-        export AIRFLOW__SECRETS__BACKEND="airflow.contrib.secrets.hashicorp_vault.VaultSecrets"
+        export AIRFLOW__SECRETS__BACKEND="airflow.contrib.secrets.hashicorp_vault.VaultBackend"
 
         export AIRFLOW__SECRETS__BACKEND_KWARGS='{"url":"http://127.0.0.1:8200","token":"<YOUR-ROOT-TOKEN>","connections_path": "connections"}'
 
