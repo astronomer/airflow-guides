@@ -6,7 +6,6 @@ slug: "airflow-and-hashicorp-vault"
 tags: ["Connections", "Airflow"]
 ---
 
-> Note: This guide is beta, as this feature is not included in stable Airflow release yet. We'll walk you through how to use this feature with a test build we've pushed out that includes this feature. This feature will be [fully available in Airflow 1.10.10](https://airflow.readthedocs.io/en/latest/howto/use-alternative-secrets-backend.html), with additional support for GCP Secrets Manager Backend and AWS Secrets Manager.
 
 ## Overview
 
@@ -24,9 +23,9 @@ In this example, we're going to be using [Virtualenvwrapper](https://virtualenvw
 
     >Note: If you ever need to use this virtual env from a blank terminal window, you can run `workon test-secrets-backend` to re-instantiate it.
 
-2. **Install Airflow and the Hashicorp dependency to your virtual environment.** Note that this is currently pulling a test build that our team at Astronomer has pushed out to allow users to test this feature before it's included in an official Airflow release. You will need to install this version for now if you would like to test this feature while you wait for Airflow 1.10.10 to be officially released.
+2. **Install Airflow and the Hashicorp dependency to your virtual environment.** 
 
-        PIP_EXTRA_INDEX_URL="https://pip.astronomer.io/simple" pip install 'astronomer-certified>=1.10.10-1.dev213[hashicorp]'
+        pip install 'apache-airflow==1.10.10'
 
 3. **Install Hashicorp Vault using Homebrew.**
 
