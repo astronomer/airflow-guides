@@ -6,9 +6,10 @@ slug: "airflow-and-hashicorp-vault"
 tags: ["Connections", "Airflow"]
 ---
 
-> Note: This guide is beta, as this feature is not included in stable Airflow release yet. We'll walk you through how to use this feature with a test build we've pushed out that includes this feature. This feature will be [fully available in Airflow 1.10.10](https://airflow.readthedocs.io/en/latest/howto/use-alternative-secrets-backend.html), with additional support for GCP Secrets Manager Backend and AWS Secrets Manager.
 
 ## Overview
+
+> Note: This feature will only work in [Airflow 1.10.10 and beyond](https://airflow.readthedocs.io/en/latest/howto/use-alternative-secrets-backend.html). Additionally, there exists additional support for GCP Secrets Manager Backend and AWS Secrets Manager integrations. Please [open an issue on our guides repo](https://github.com/astronomer/airflow-guides) if you'd like us to write a tutorial on how to apply the concepts covered in this guide to those backend secrets managers.
 
 A feature we often get asked about here at Astronomer is a native sync with [Hashicorp Vault](https://www.vaultproject.io/) for secrets and connection information. The Airflow community has rallied around the need for more robust sync options from external secrets stores, and one of our very own commiters, [Kaxil Naik](https://www.linkedin.com/in/kaxil?originalSubdomain=uk), has built out a feature to sync Airflow Connections from Vault. Below is a step-by-step guide on how to leverage this functionality to import your connection info from your Vault store.
 
@@ -24,9 +25,9 @@ In this example, we're going to be using [Virtualenvwrapper](https://virtualenvw
 
     >Note: If you ever need to use this virtual env from a blank terminal window, you can run `workon test-secrets-backend` to re-instantiate it.
 
-2. **Install Airflow and the Hashicorp dependency to your virtual environment.** Note that this is currently pulling a test build that our team at Astronomer has pushed out to allow users to test this feature before it's included in an official Airflow release. You will need to install this version for now if you would like to test this feature while you wait for Airflow 1.10.10 to be officially released.
+2. **Install Airflow and the Hashicorp dependency to your virtual environment.** 
 
-        PIP_EXTRA_INDEX_URL="https://pip.astronomer.io/simple" pip install 'astronomer-certified>=1.10.10-1.dev213[hashicorp]'
+        pip install 'apache-airflow==1.10.10'
 
 3. **Install Hashicorp Vault using Homebrew.**
 
