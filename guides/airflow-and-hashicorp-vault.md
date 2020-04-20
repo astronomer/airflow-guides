@@ -9,7 +9,7 @@ tags: ["Connections", "Airflow"]
 
 ## Overview
 
-> Note: This feature will only work in [Airflow 1.10.10 and beyond](https://airflow.apache.org/docs/1.10.10/howto/use-alternative-secrets-backend.html). Additionally, there exists additional support for GCP Secrets Manager Backend and AWS Secrets Manager integrations. Please [open an issue on our guides repo](https://github.com/astronomer/airflow-guides) if you'd like us to write a tutorial on how to apply the concepts covered in this guide to those backend secrets managers.
+> Note: This feature will only work in [Airflow 1.10.10 and beyond](https://airflow.readthedocs.io/en/latest/howto/use-alternative-secrets-backend.html). Additionally, there exists additional support for GCP Secrets Manager Backend and AWS Secrets Manager integrations. Please [open an issue on our guides repo](https://github.com/astronomer/airflow-guides) if you'd like us to write a tutorial on how to apply the concepts covered in this guide to those backend secrets managers.
 
 A feature we often get asked about here at Astronomer is a native sync with [Hashicorp Vault](https://www.vaultproject.io/) for secrets and connection information. The Airflow community has rallied around the need for more robust sync options from external secrets stores, and one of our very own commiters, [Kaxil Naik](https://www.linkedin.com/in/kaxil?originalSubdomain=uk), has built out a feature to sync Airflow Connections from Vault. Below is a step-by-step guide on how to leverage this functionality to import your connection info from your Vault store.
 
