@@ -48,7 +48,7 @@ def return_branch(**kwargs):
 
     return random.choice(branches)
 
-with dag:
+with DAG("branch_operator_guide", default_args=default_args, schedule_interval=None) as dag:
     kick_off_dag = DummyOperator(task_id='run_this_first')
 
     branching = BranchPythonOperator(
