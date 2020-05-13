@@ -139,7 +139,7 @@ This means a few things:
     *   Service accounts
     *   Airflow image
 
-**Note**: The Kubernetes Executor is now available on both Astronomer Enterprise and Astronomer Cloud. If you want to experimenet with the KubernetesExecutor, [start a free trial on Astronomer](https://www.astronomer.io/trial/).
+**Note**: The Kubernetes Executor is now available on both Astronomer Enterprise and Astronomer Cloud. If you want to experiment with the KubernetesExecutor, [start a free trial on Astronomer](https://www.astronomer.io/trial/).
 
 ### Scale to Near-Zero
 
