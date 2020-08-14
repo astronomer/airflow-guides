@@ -171,7 +171,7 @@ COPY_PARAMS = ["COMPUPDATE OFF",
 
 default_args = {
     'start_date': datetime(2018, 4, 24),
-    'email': ['viraj@astronomer.io'],
+    'email': [''],
     'email_on_failure': True,
     'email_on_retry': False,
     'retries': 0,
