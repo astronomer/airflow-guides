@@ -67,7 +67,7 @@ with dag:
 
         branching >> d
 ```
-![skipped](https://assets.astronomer.io/website/img/guides/branching.png)
+![skipped](https://assets2.astronomer.io/main/guides/branching.png)
 The DAG will proceed based on the output of the function passed in. 
 
 **Note:** You **cannot** have an empty path when skipping tasks - the `skipped` state will apply to all tasks immediately donwstream of whatever task is skipped. Depending on your use case, it may make sense to add a DummyOperator downstream of a task that can be skipped before the branches from the `BranchPythonOperator` meet.
