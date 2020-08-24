@@ -121,7 +121,7 @@ Astronomer Enterprise offers the same logging and metrics features incorporated 
 
 #### Google Cloud Composer
 
-Google Cloud Composer supports both the Celery Executor only, but does not support the Kubernetes and Local Executors.
+Google Cloud Composer supports the Celery Executor only.
 
 #### Astronomer
 
