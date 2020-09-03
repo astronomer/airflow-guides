@@ -191,9 +191,3 @@ with dag:
 ```
 
 All tasks downstream of the LatestOnlyOperator are skipped on all DagRuns past DagRuns.
-
-![latest_only_example](https://assets.astronomer.io/website/img/guides/latest_only_scheduling.png)
-
-At the task level, skipped downstream tasks:
-
-![latest_only_detail](https://assets.astronomer.io/website/img/guides/skipped_latest_only.png)
