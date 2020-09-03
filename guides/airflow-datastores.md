@@ -4,16 +4,16 @@ description: "Use Apache Airflow's internal datastores to build more powerful DA
 date: 2018-05-21T00:00:00.000Z
 slug: "airflow-datastores"
 heroImagePath: null
-tags: ["Datastores", "Airflow"]
+tags: ["XCom"]
 ---
 
 Data processing and storage is generally done with external systems, with Airflow handling workflow metadata, but there are a few areas of crossover.
 
-## XComs
+## XCom
 
-XComs, short for "cross communication," are stores of key, value, and timestamps meant to communicate between tasks. XComs are stored in Airflow's metadata database with an associated `execution_date`, `TaskInstance` and `DagRun`.
+XCom, short for "cross communication," are stores of key, value, and timestamps meant to communicate between tasks. XComs are stored in Airflow's metadata database with an associated `execution_date`, `TaskInstance` and `DagRun`.
 
-XComs can be "pushed" or "pulled" by all TaskInstances (by using `xcom_push()` or `xcom_pull()`, respectively).
+XCom can be "pushed" or "pulled" by all TaskInstances (by using `xcom_push()` or `xcom_pull()`, respectively).
 
 All values that are returned by an Operator's `execute()` method, or from a PythonOperator's `python_callable` are pushed to XCom.
 
