@@ -23,9 +23,9 @@ While we're incredibly excited that the commercialization of the Apache Airflow 
 |-|--------------|----------------|---------------------|
 |Cost|~$300 base|~$110 base running Local Executor|Annual license pending cluster CPU and support structure|
 |Hosting|Managed service hosted in Google's cloud environment|Managed service hosted in Astronomer's Cloud environment|Self-hosted service hosted on your own Kubernetes cluster|
-|Monitoring and Logging|[Google Stackdriver](https://cloud.google.com/stackdriver/)|Deployment level metrics and logging in the Astronomer UI |Elasticsearch, Fluentd, Kibana (EFK) stack to track resource usage across all Airflow deployments|
-|Support|Community support via Stack Overflow|Ticketing system with Astronomer's team of Airflow experts and [community forum](https:/forum.astronomer.io) |24x7 Business-Critical SLAs available|
-|Training|None|[Astronomer SpaceCamp](https://astronomer.io/spacecamp) for on-site Airflow training |[Astronomer SpaceCamp](https://astronomer.io/spacecamp) for on-site Airflow training|
+|Monitoring and Logging|Deployment level metrics and logging in the Cloud Console |Deployment level metrics and logging in the Astronomer UI |Elasticsearch, Fluentd, Kibana (EFK) stack to track resource usage across all Airflow deployments|
+|Support|Community support via Stack Overflow, Slack. [Commercial support](https://cloud.google.com/support) with many plans including 15-min response time for P1 cases in Premium Support |Ticketing system with Astronomer's team of Airflow experts and [community forum](https:/forum.astronomer.io) |24x7 Business-Critical SLAs available|
+|Training|Hands-on training via [QwikiLabs](https://www.qwiklabs.com/), [Google Certification](https://cloud.google.com/certification). [Training program](https://cloud.google.com/training) for on-site training, [Consulting service](https://cloud.google.com/consulting) for the most demanding customers |[Astronomer SpaceCamp](https://astronomer.io/spacecamp) for on-site Airflow training |[Astronomer SpaceCamp](https://astronomer.io/spacecamp) for on-site Airflow training|
 
 
 ### Cost
@@ -85,7 +85,7 @@ Astronomer Enterprise is entirely Cloud agnostic and can be installed on any Kub
 
 **Google Cloud Composer**
 
-As of the [1.0.0 release](https://cloud.google.com/composer/docs/release-notes#july_19_2018_composer-100-airflow-190), logging in Composer is handled by Stackdriver and based on [fluentd](https://www.fluentd.org).
+As of the [1.0.0 release](https://cloud.google.com/composer/docs/release-notes#july_19_2018_composer-100-airflow-190), logging in Composer is handled by Stackdriver and based on [fluentd](https://www.fluentd.org). Metrics availlable in [Cloud Monitoring](https://cloud.google.com/composer/docs/how-to/managing/monitoring-environments). As of [the March 31, 2020](https://cloud.google.com/composer/docs/release-notes#March_31_2020), Google added [monitoring dashboard](https://cloud.google.com/composer/docs/monitoring-dashboard). 
 
 **Astronomer**
 
@@ -121,7 +121,7 @@ Astronomer Enterprise offers the same logging and metrics features incorporated 
 
 #### Google Cloud Composer
 
-Google Cloud Composer supports both the Celery and Local Executors, but does not yet support the recently developed Kubernetes Executor.
+Google Cloud Composer supports the Celery Executor only.
 
 #### Astronomer
 
@@ -133,7 +133,15 @@ To read more, refer to [Airflow Executors: Explained](https://www.astronomer.io/
 
 #### Google Cloud Composer
 
-Composer's support is largely community-based. Users can post questions to forums like [StackOverflow](https://stackoverflow.com) or use the generic [Airflow support system established via Slack](https://apache-airflow-slack.herokuapp.com/).
+Google Cloud offers different support packages to meet different needs, such as 24/7 coverage, phone support, and access to a technical support manager. For more information, see [Google Cloud Support](https://cloud.google.com/support).
+
+Google Cloud offers Hands-on training via [QwikiLabs](https://www.qwiklabs.com/) which allow you to get to know Cloud Composer and other tools for your daily work as a Data Enginner, including Dataproc, BigQuery and more.
+
+[Google Cloud certifications](https://cloud.google.com/certification) allows you to validate your expertise and show your ability to transform businesses with Google Cloud technology.
+
+For the most demanding, [Google Consoluting Services](https://cloud.google.com/consulting) provides access to Google Cloud experts to build the solution your business needs.
+
+It's also provide community-based support. Users can post questions to forums like [StackOverflow](http://stackoverflow.com/questions/tagged/google-cloud-composer) or use the [https://googlecloud-community.slack.com/](Google Cloud Slack community). For Cloud Composer, they have join the [#composer](https://googlecloud-community.slack.com/messages/C7DGV8DGQ/) channel.
 
 #### Astronomer
 
