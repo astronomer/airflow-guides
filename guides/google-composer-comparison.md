@@ -9,9 +9,9 @@ tags: ["Astronomer Platform", "Google Composer"]
 
 |  | Google Cloud Composer | Astronomer Cloud | Astronomer Enterprise |
 |--|-----------------------|------------------|-----------------------|
-| Cost | ~$300 base | ~$110 base running Local Executor | Negotiated Annual subscription |
+| Cost | ~$300 base | ~$110 base (via LocalExecutor) | Negotiated Annual subscription |
 | Hosting | Managed service hosted in Google's cloud environment | Managed service hosted in Astronomer's cloud environment | Installed in your Kubernetes cluster |
-| Monitoring and Logging | Deployment level metrics and logging in the Cloud Console |D eployment level metrics and logging in the Astronomer UI | Prometheus/Grafana + Elasticsearch, Fluentd, Kibana (EFK) stack to track resource usage across all Airflow deployments |
+| Monitoring and Logging | Deployment level metrics and logging in the Cloud Console | Deployment level metrics and logging in the Astronomer UI | Prometheus/Grafana + Elasticsearch, Fluentd, Kibana (EFK) stack to track resource usage across all Airflow deployments |
 | Support | Community support via Stack Overflow, Slack. [Commercial support](https://cloud.google.com/support) with many plans including 15-min response time for P1 cases in Premium Support | [Commercial support](https://support.astronomer.io/) that includes access to Airflow PMC members, and a [community forum](https:/forum.astronomer.io) | 24x7 Business-Critical SLAs available |
 | Services | [QwikiLabs training](https://www.qwiklabs.com/), [Google Certification](https://cloud.google.com/certification), [Google on-site training](https://cloud.google.com/training), and [Consulting services](https://cloud.google.com/consulting) | [Astronomer SpaceCamp](https://astronomer.io/spacecamp) for on-site Airflow training | [Astronomer SpaceCamp](https://astronomer.io/spacecamp) for on-site Airflow training |
 
@@ -19,12 +19,10 @@ tags: ["Astronomer Platform", "Google Composer"]
 
 ### Google Cloud Composer
 
-It's hard to land on a specific cost for Cloud Composer, as Google measures the resources your deployments use and adds the total cost of your Airflow deployments onto your wider GCP bill.
-
 Based on the [estimates provided](https://cloud.google.com/composer/pricing), a single, full-time instance of Composer:
 
 - Costs ~$300/month
-- Assumes that all 3 workers use the relatively low-powered `n1-standard-1` (1 vCPU; 3.75GB) machine type
+- Assumes 3 workers using `n1-standard-1` (1 vCPU; 3.75GB) machine types
 - Does not include Storage and Compute Engine costs
 
 ### Astronomer
@@ -73,8 +71,6 @@ Metrics are handled by [Prometheus](https://prometheus.io/).
 
 Astronomer pulls searchable, real-time logs from your Airflow Scheduler, Webserver, and Workers directly into the Astronomer UI.
 
-![logging](https://assets2.astronomer.io/main/guides/logging.png)
-
 ### Deployment Level Metrics
 
 We also pull a variety of deployment level metrics into the Astronomer UI, including:
@@ -85,13 +81,9 @@ We also pull a variety of deployment level metrics into the Astronomer UI, inclu
 - CPU and Memory usage
 - Database connections
 
-![logging](https://assets2.astronomer.io/main/blog/metrics.gif)
-
 ### Cluster Wide Metrics (*Enterprise only*)
 
 Astronomer Enterprise offers the same logging and metrics features incorporated in Astronomer Cloud but also comes with access to a Grafana/Prometheus monitoring stack (the basis for the deployment level metrics above) to keep an eye on health and metadata *across* Airflow deployments.
-
-![grafana](https://assets2.astronomer.io/main/blog/grafana-dashboard.png)
 
 ## Airflow Executor Support
 
@@ -119,6 +111,6 @@ Composer users can also post questions to [StackOverflow](http://stackoverflow.c
 
 Astronomer offers multiple support packages to meet different needs, including 24/7 coverage, phone support, and access to a technical support manager.
 
-In addition, Astronomer's support automatically gives you  access our team of Airflow PMC members and committers. We’ve been Airflow users since 2016, and have helped many companies improve their data processes using Airflow.
+In addition, Astronomer's support automatically gives you access our team of Airflow PMC members and committers. We’ve been Airflow users since 2016, and have helped many companies improve their data processes using Airflow.
 
 Our users can also post questions to our [support portal](https://support.astronomer.io/), our [community Airflow support forum](https://forum.astronomer.io/) and we even offer private Slack channels.
