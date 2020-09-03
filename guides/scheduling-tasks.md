@@ -183,12 +183,11 @@ This can be helpful for tasks that are naturally idempotent or can be run indepe
 ```python
 default_args = {
     'owner': 'airflow',
+    'start_date': datetime(2020, 1, 1),
     'depends_on_past': False,
-    'start_date': datetime(2018, 1, 1),
-    'email_on_failure': False,
-    'email_on_retry': False,
     'retries': 1,
     'retry_delay': timedelta(minutes=5),
+    'email_on_retry': False,
 }
 
 dag = DAG('latest_only_example',
@@ -211,4 +210,3 @@ All tasks downstream of the LatestOnlyOperator are skipped on all DagRuns _past_
 ![latest_only_example](https://assets.astronomer.io/website/img/guides/latest_only_scheduling.png)
 At the task level, skipped downstream tasks:
 ![latest_only_detail](https://assets.astronomer.io/website/img/guides/skipped_latest_only.png)
-

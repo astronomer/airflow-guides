@@ -58,6 +58,62 @@ Connections can be maintained in the Airflow Interface (Menu --> Admin --> Conne
 * `Port`: 5432
 * `Extras`: n/a
 
-### A note about the Schema field
+Depending on the Hook or Operator used, Connections can be called directly in the code:
 
-The `Schema` field in Airflow can potentially be a source of confusion as many databases have different meanings for the term.  In Airflow a schema refers to the database name to which a connection is being made.  For example, for a Postgres connection the name of the database should be entered into the `Schema` field and the Postgres idea of schemas should be ignored (or put into the `Extras` field) when defining a connection.
+```
+
+postgres_query = PostgresOperator(
+            task_id="query_one",
+            postgres_conn_id=<my_postgres_conn_id>,
+            sql=<my_sql_statement>,
+            autocommit=True,
+        )
+```
+
+
+**Note**: The `Schema` field in Airflow can potentially be a source of confusion as many databases have different meanings for the term.  In Airflow a schema refers to the database name to which a connection is being made.  For example, for a Postgres connection the name of the database should be entered into the `Schema` field and the Postgres idea of schemas should be ignored (or put into the `Extras` field) when defining a connection.
+
+#### Programatically Modifying Connections
+The Airflow Connections class can be modified programatically to sync with an external secrets manager:
+
+```
+@provide_session
+def create_connections(session=None):
+    sources = {"This could come from secrets manager"}
+​
+    for source in sources:
+        try:
+            int(source['port'])
+        except:
+            logger.info("Port is not numeric for source")
+            continue
+        host = source.get("host", "")
+        port = source.get("port", "5439")
+        db = source.get("db", "")
+        user = source.get("user", "")
+        password = source.get("pw", "")
+​
+        try:
+            connection_query = session.query(Connection).filter(Connection.conn_id == source['name'],)
+            connection_query_result = connection_query.one_or_none()
+            if not connection_query_result:                    
+                connection = Connection(conn_id=source['name'], conn_type='postgres', host=host, port=port,
+                                        login=user, password=password, schema=db)
+                session.add(connection)
+                session.commit()
+            else:
+                connection_query_result.host = host
+                connection_query_result.login = user
+                connection_query_result.schema = db
+                connection_query_result.port = port
+                connection_query_result.set_password(password)
+                session.add(connection_query_result)
+                session.commit()
+        except Exception as e:
+            logger.info(
+                "Failed creating connection"
+            logger.info(e)
+				
+```
+
+**Note:** The `conn_id` does not have a uniqueness constraint within Airflow, so be sure to delete exist connections before programatically creating new ones. If two `Connections` have the same name, Airflow will randomly pick which one to use.

@@ -17,7 +17,7 @@ It is no longer considered best practice to use the Airflow Plugins mechanism fo
 
 ### Macros
 
-[Macros](https://airflow.apache.org/code.html#macros) are used to pass dynamic information into task instances at runtime via templating.
+[Macros](https://airflow.apache.org/docs/stable/macros-ref.html) are used to pass dynamic information into task instances at runtime via templating.
 
 A current limitation of Airflow is that every global variable or top-level method in a DAG file is interpreted every cycle during the DAG processing loop on the scheduler. While the loop execution time can vary from seconds to minutes (depending on configuration, external connectivity, number of DAGs, etc), the point remains that there is certain code that the vast majority of code should only be interpreted in a task at execution time.
 
