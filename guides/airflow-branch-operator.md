@@ -1,18 +1,17 @@
 ---
-title: "Using BranchOperator in Airflow"
-description: "Use Apache Airflow's BranchOperator to execute conditional branches in your workflow"
+title: "Branching in Airflow"
+description: "Use Apache Airflow's BranchOperator and ShortCircuitOperator to execute conditional branches in your workflow"
 date: 2018-05-21T00:00:00.000Z
 slug: "airflow-branch-operator"
 heroImagePath: null
-tags: ["Building DAGs", "BranchOperator", "Airflow"]
+tags: ["DAG Authoring"]
 ---
 
-# Branching
+## BranchPythonOperator
 
-Another powerful tool that can be used is branching - usually with the `BranchPythonOperator`. The `BranchPytonOperator` is similar to the `PythonOperator` in that it takes a Python function as an input, but it returns a task id (or list of task_ids) to decide which part of the graph to go down. This can be used to iterate down certain paths in a DAG based off the result of a function. 
+A powerful tool in Airflow is branching via the `BranchPythonOperator`. The `BranchPytonOperator` is similar to the `PythonOperator` in that it takes a Python function as an input, but it returns a task id (or list of task_ids) to decide which part of the graph to go down. This can be used to iterate down certain paths in a DAG based off the result of a function.
 
 ```python
-
 def return_branch(**kwargs):
 
     branches = ['branch_0,''branch_1', 'branch_2', 'branch_3', 'branch_4']
@@ -20,7 +19,7 @@ def return_branch(**kwargs):
     return random.choice(branches)
 ```
 
-In a DAG, the `BranchOperator` will take this function as an argument
+In a DAG, the `BranchOperator` will take this function as an argument:
 
 ```python
 from airflow.operators.python_operator import BranchPythonOperator
@@ -28,7 +27,6 @@ from airflow.operators.dummy_operator import DummyOperator
 from datetime import datetime, timedelta
 from airflow.models import DAG
 import random
-
 
 default_args = {
     'owner': 'airflow',
@@ -40,12 +38,8 @@ default_args = {
     'retry_delay': timedelta(minutes=5),
 }
 
-
-
 def return_branch(**kwargs):
-
     branches = ['branch_0,''branch_1', 'branch_2', 'branch_3', 'branch_4']
-
     return random.choice(branches)
 
 with dag:
@@ -62,16 +56,15 @@ with dag:
         d = DummyOperator(task_id='branch_{0}'.format(i))
         for j in range(0, 3):
             m = DummyOperator(task_id='branch_{0}_{1}'.format(i, j))
-
             d >> m
-
         branching >> d
 ```
+
 ![skipped](https://assets2.astronomer.io/main/guides/branching.png)
-The DAG will proceed based on the output of the function passed in. 
 
-**Note:** You **cannot** have an empty path when skipping tasks - the `skipped` state will apply to all tasks immediately donwstream of whatever task is skipped. Depending on your use case, it may make sense to add a DummyOperator downstream of a task that can be skipped before the branches from the `BranchPythonOperator` meet.
+The DAG will proceed based on the output of the function passed in.
 
+> Note: You can't have an empty path when skipping tasks - the `skipped` state will apply to all tasks immediately downstream of whatever task is skipped. Depending on your use case, it may make sense to add a DummyOperator downstream of a task that can be skipped before the branches from the `BranchPythonOperator` meet.
 
 Under the hood, the `BranchPythonOperator` simply inherits the PythonOperator:
 
@@ -96,11 +89,9 @@ class BranchPythonOperator(PythonOperator, SkipMixin):
 
 https://github.com/apache/airflow/blob/master/airflow/operators/python_operator.py#L133
 
+## ShortCircuitOperator
 
-
-## ShortCircuit Operator
-
-The `BranchOperator` is great for any sort of _conditional_ logic to determine which  dependency to respect. Other use cases may call for the `ShortCircuitOperator`:
+The `BranchOperator` is great for any sort of _conditional_ logic to determine which dependency to respect. Other use cases may call for the `ShortCircuitOperator`:
 
 ```python
 class ShortCircuitOperator(PythonOperator, SkipMixin):

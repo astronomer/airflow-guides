@@ -3,29 +3,27 @@ title: "Airflow's Components"
 description: "How all of Apache Airflow's components fit together."
 date: 2018-05-21T00:00:00.000Z
 slug: "airflow-components"
-heroImagePath: "https://assets.astronomer.io/website/img/guides/components.png"
+heroImagePath: null
 tags: ["Airflow", "Components"]
 ---
 
 ## Core Components
 
-_How everything fits together_
+Apache Airflow consists of 4 core components:
 
-At the core, Apache Airflow consists of 4 core components:
-
-**Webserver:** Airflow's UI. 
+**Webserver** Airflow's UI.
 
 At its core, this is just a Flask app that displays the status of your jobs and provides an interface to interact with the database and reads logs from a remote file store (S3, Google Cloud Storage, AzureBlobs, ElasticSearch etc.).
 
-**Scheduler:** This is responsible for scheduling jobs. 
+**Scheduler** This is responsible for scheduling jobs.
 
 This is a multi-threaded Python process that uses the DAG object with the state of tasks in the metadata database to decide what tasks need to be run, when they need to be run, and where they are run.
 
-**Executor:** The mechanism by which work actually gets done. 
+**Executor** The mechanism by which work actually gets done.
 
-There are a few different varieties of executors, each wtih their own strengths and weaknesses.
+There are several executors, each with strengths and weaknesses.
 
-**Metadata Database:** A database (usually Postgres, but can be anything with SQLAlchemy support) that determines how the other components interact. The scheduler stores and updates task statuses, which the webserver then uses to display job information.
+**Metadata Database** A database (usually PostgresDB or MySql, but can be anything with SQLAlchemy support) that determines how the other components interact. The scheduler stores and updates task statuses, which the Webserver then uses to display job information.
 
 ![title](https://assets2.astronomer.io/main/guides/airflow_component_relationship_fixed.png)
 
@@ -33,7 +31,7 @@ There are a few different varieties of executors, each wtih their own strengths 
 
 Once the scheduler is started:
 
-1) The scheduler "taps" the _dags_ folder and instanstiates all DAG objects in the metadata databases. Depending on the configuration, each DAG gets a configurable number of processes.
+1) The scheduler "taps" the _dags_ folder and instantiates all DAG objects in the metadata databases. Depending on the configuration, each DAG gets a configurable number of processes.
 
 **Note**: This means all top level code (i.e. anything that isn't defining the DAG) in a DAG file will get run each scheduler heartbeat. Try to avoid top level code to your DAG file unless absolutely necessary.
 
@@ -88,8 +86,6 @@ def _process_dags(self, dagbag, dags, tis_out):
 
 ## Controlling Component Interactions
 
-_Fine tuning airflow.cfg_
-
 The schedule at which these components interact can be set through airflow.cfg. This file has tuning for several airflow settings that can be optimized for a use case.
 
 This file is well documented, but a few notes:
@@ -105,8 +101,6 @@ By default, Airflow can use the LocalExecutor, SequentialExecutor, the CeleryExe
 - The CeleryExecutor is the preferred method to run a distributed Airflow cluster. It requires Redis, RabbitMq, or another message queue system to coordinate tasks between workers.
 
 - The KubernetesExecutor, which was introduced in Airflow 1.10, calls the Kubernetes API to create a temporary pod for each task to run, enabling users to pass in custom configurations for each of their tasks and use resources efficiently.
-
-There is a also communinty contributed MesosExecutor, but it is not _currently_ production ready.
 
 ### Parallelism
 
