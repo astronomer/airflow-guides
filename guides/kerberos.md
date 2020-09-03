@@ -3,7 +3,7 @@ title: "Using Kerberos in Apache Airflow"
 description: "How to use Kerberos and Kerberized hooks in Airflow"
 date: 2018-07-24T00:00:00.000Z
 slug: "kerberos"
-heroImagePath: "https://cdn.astronomer.io/website/img/guides/TheAirflowUI_preview.png"
+heroImagePath: null
 tags: ["Airflow", "Kerberos"]
 ---
 

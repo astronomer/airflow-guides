@@ -3,13 +3,11 @@ title: "Intro to Apache Airflow DAGs"
 description: "What are DAGs and how they are constructed in Apache Airflow?"
 date: 2018-05-21T00:00:00.000Z
 slug: "dags"
-heroImagePath: "https://cdn.astronomer.io/website/img/guides/IntroToDAG_preview.png"
+heroImagePath: "https://assets.astronomer.io/website/img/guides/IntroToDAG_preview.png"
 tags: ["UI", "Frontend", "Airflow"]
 ---
 
-# Functional Data Engineering
-
-## What is a DAG
+## Overview
 
 _Core definitions._
 
@@ -27,7 +25,7 @@ Directed Graph: A directed graph is any graph where the vertices and edges have 
 
 Directed Acyclic Graph: Finally, a directed acyclic graph is a directed graph without any cycles. A cycle is just a series of vertices that connect back to each other in a closed chain.
 
-![title](https://cdn.astronomer.io/website/img/guides/dag_example.png)
+![title](https://assets.astronomer.io/website/img/guides/dag_example.png)
 
 In Airflow, each node in a DAG (soon to be known as a task) represents some form of data processing:
 
@@ -43,15 +41,15 @@ In Airflow, each node in a DAG (soon to be known as a task) represents some form
 
 ## Dependencies
 
-Each of the verticies have a specific direction showing the relationship between nodes - data can only follow the direction of the vertices (from the example above, the IP addresses cannot be annonymized until the data has been pulled).
+Each of the verticies have a specific direction showing the relationship between nodes - data can only follow the direction of the vertices (from the example above, the IP addresses cannot be anonymized until the data has been pulled).
 
 Node B is  _downstream_ from Node A - it won't execute until Node A finishes.
 
 ## DAGs are Acyclic
 
-Workflows, particulary around those processing data, have to have a point of "completion." This espescially holds true in batch architectures to be able to say that a certain "batch" ran successfully.
+Workflows, particularly around those processing data, have to have a point of "completion." This especially holds true in batch architectures to be able to say that a certain "batch" ran successfully.
 
-![title](https://cdn.astronomer.io/website/img/guides/cycle_example.png)
+![title](https://assets.astronomer.io/website/img/guides/cycle_example.png)
 
 ### Recap
 
@@ -69,7 +67,7 @@ https://medium.com/@maximebeauchemin/functional-data-engineering-a-modern-paradi
 
 _Repeatable inputs for repeatable output_
 
-Best practices emerging around data engineering are pointing towards concepts found in functional programming. Ideas around immutability, isolation, and idempotency that are defining charactersitics of good functional programming are very natural fits into good ETL architecture.
+Best practices emerging around data engineering are pointing towards concepts found in functional programming. Ideas around immutability, isolation, and idempotency that are defining characteristics of good functional programming are very natural fits into good ETL architecture.
 
 ### Idempotency, Idempotency, Idempotency
 
@@ -81,16 +79,17 @@ Something is idempotent if it will produce the same result regardless of how man
 
 Idempotency usually hand in hand with **reproducability** - a set of inputs always produces the same set of outputs
 
-Making ETL jobs idempotent can be easier for workflows  more than others - if it's just a SQL load for a days data, implemtenting upsert logic is pretty easy. If it's a file that's dropped on an externally controlled FTP that is not there for long, it is a little more difficult.
+Making ETL jobs idempotent can be easier for workflows  more than others - if it's just a SQL load for a days data, implementing upsert logic is pretty easy. If it's a file that's dropped on an externally controlled FTP that is not there for long, it is a little more difficult.
 
 However, the initial investment is usually worth it for safety, operability, and modularity.
 
 ### Direct Association
 
-There should be a clear and intuitive association between tables, intermediate files, and all other _levels_ of your data. DAGs are a natural fit here, as every task can have an exclusive target that does not propogate into another tasks target without a direct dependency being set.
+There should be a clear and intuitive association between tables, intermediate files, and all other _levels_ of your data. DAGs are a natural fit here, as every task can have an exclusive target that does not propagate into another tasks target without a direct dependency being set.
 
 Furthermore, this association should filter down into all metadata - logs, runtimes,
 
 Mathematically, this idea of clarity and directness is intuitive:
 
 `$f(x) = y$`
+ 

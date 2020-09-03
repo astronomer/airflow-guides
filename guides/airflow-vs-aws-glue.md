@@ -27,13 +27,13 @@ Airflow is designed to be an incredibly flexible task scheduler; there really ar
 
 ### Glue
 
-Glue is designed to make the processing of your data as easy as possible ONCE it is the AWS ecosystem. According to AWS Glue documentation:
+Glue is designed to make the processing of your data as easy as possible ONCE it is in the AWS ecosystem. According to AWS Glue documentation:
 
 "AWS Glue natively supports data stored in Amazon Aurora, Amazon RDS for MySQL, Amazon RDS for Oracle, Amazon RDS for PostgreSQL, Amazon RDS for SQL Server, Amazon Redshift, and Amazon S3, as well as MySQL, Oracle, Microsoft SQL Server, and PostgreSQL databases in your Virtual Private Cloud (Amazon VPC) running on Amazon EC2.
 
 AWS Glue provides out-of-the-box integration with Amazon Athena, Amazon EMR, Amazon Redshift Spectrum, and any Apache Hive Metastore-compatible application."
 
-Because of this, it can be advantageous to still use Airflow handle the data pipeline for all things OUTSIDE of AWS (e.g. pulling in records from an API and storing in s3) as this will be not be a capability of AWS Glue itself.
+Because of this, it can be advantageous to still use Airflow to handle the data pipeline for all things OUTSIDE of AWS (e.g. pulling in records from an API and storing in s3) as this is not be a capability of AWS Glue.
 
 ## Underlying Framework
 

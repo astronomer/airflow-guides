@@ -3,7 +3,7 @@ title: "Useful SQL queries for Apache Airflow"
 description: "A home for SQL queries that we frequently run on our Airflow postgres database."
 date: 2018-05-21T00:00:00.000Z
 slug: "airflow-queries"
-heroImagePath: "https://cdn.astronomer.io/website/img/guides/usefulsqlqueries.png"
+heroImagePath: "https://assets.astronomer.io/website/img/guides/usefulsqlqueries.png"
 tags: ["Queries", "SQL", "Airflow"]
 ---
 
@@ -94,6 +94,20 @@ In the next release of Airflow after 1.9, a [delete_dags command](https://stacko
 ```sql
 delete from xcom where dag_id = 'my_dag_id';
 delete from task_instance where dag_id = 'my_dag_id';
+delete from sla_miss where dag_id = 'my_dag_id';
+delete from log where dag_id = 'my_dag_id';
+delete from job where dag_id = 'my_dag_id';
+delete from dag_run where dag_id = 'my_dag_id';
+delete from dag where dag_id = 'my_dag_id';
+```
+
+For Airflow 1.10, two additional tables have been added where the DAG also needs to be removed.
+
+```sql
+delete from xcom where dag_id = 'my_dag_id';
+delete from task_instance where dag_id = 'my_dag_id';
+delete from task_reschedule where dag_id = 'my_dag_id';
+delete from task_fail where dag_id = 'my_dag_id';
 delete from sla_miss where dag_id = 'my_dag_id';
 delete from log where dag_id = 'my_dag_id';
 delete from job where dag_id = 'my_dag_id';

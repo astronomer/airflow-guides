@@ -3,41 +3,45 @@ title: "Airflow's Components"
 description: "How all of Apache Airflow's components fit together."
 date: 2018-05-21T00:00:00.000Z
 slug: "airflow-components"
-heroImagePath: "https://cdn.astronomer.io/website/img/guides/components.png"
+heroImagePath: null
 tags: ["Airflow", "Components"]
 ---
 
 ## Core Components
 
-_How everything fits together_
+Apache Airflow consists of 4 core components:
 
-At the core,  Airflow consists of 4 core components:
+**Webserver** Airflow's UI.
 
-**Webserver:** Airflow's UI. At it's core, this is just a Flask app that displays the status of your jobs and provides an interface to interact with the database and reads logs from a remote file store (S3, Google Cloud Storage, AzureBlobs, ElasticSearch etc.).
+At its core, this is just a Flask app that displays the status of your jobs and provides an interface to interact with the database and reads logs from a remote file store (S3, Google Cloud Storage, AzureBlobs, ElasticSearch etc.).
 
-**Scheduler:** This is responsible for scheduling jobs. It is a multithreaded Python process that uses the DAG object with the state of tasks in the metadata database to decide what tasks need to be run, when they need to be run, and where they are run.
+**Scheduler** This is responsible for scheduling jobs.
 
-**Executor:** The mechanism by which work actually gets done. There are a few different varieties of executors, each wtih their own strengths and weaknesses.
+This is a multi-threaded Python process that uses the DAG object with the state of tasks in the metadata database to decide what tasks need to be run, when they need to be run, and where they are run.
 
-**Metadata Database:** A database (usually Postgres, but can be anything with SQLAlchemy support) that powers how the other components interact. The scheduler stores and updates task statuses, which the webserver then uses to display job information
+**Executor** The mechanism by which work actually gets done.
 
-![title](https://cdn.astronomer.io/website/img/guides/airflow_component_relationship.png)
+There are several executors, each with strengths and weaknesses.
+
+**Metadata Database** A database (usually PostgresDB or MySql, but can be anything with SQLAlchemy support) that determines how the other components interact. The scheduler stores and updates task statuses, which the Webserver then uses to display job information.
+
+![title](https://assets2.astronomer.io/main/guides/airflow_component_relationship_fixed.png)
 
 ## How does work get scheduled?
 
 Once the scheduler is started:
 
-1) The scheduler "taps" the _dags_ folder and instanstiates all DAG objects in the metadata databases. Depending on the configuration, each DAG gets a configurable number of processes.
+1. The scheduler "taps" the _dags_ folder and instantiates all DAG objects in the metadata databases. Depending on the configuration, each DAG gets a configurable number of processes.
 
-**Note**: This means all top level code (ie. anything that isn't defining the DAG) in a DAG file will get run each scheduler heartbeat. Try to avoid top level code to your DAG file unless absolutely necessary.
+  **Note**: This means all top level code (i.e. anything that isn't defining the DAG) in a DAG file will get run each scheduler heartbeat. Try to avoid top level code to your DAG file unless absolutely necessary.
 
-2) Each process parses the DAG file and creates the necessary DagRuns based on the scheduling parameters of each DAG's tasks. A TaskInstance is instanstiated for each task that needs to be executed. These TaskInstances are set to `Scheduled` in the metadata database.
+1. Each process parses the DAG file and creates the necessary DagRuns based on the scheduling parameters of each DAG's tasks. A TaskInstance is instantiated for each task that needs to be executed. These TaskInstances are set to `Scheduled` in the metadata database.
 
-3) The primary scheduler process queries the database for all tasks in the `SCHEDULED` state and sends them to the executors to be executed (with state changed to `QUEUED`).
+1. The primary scheduler process queries the database for all tasks in the `SCHEDULED` state and sends them to the executors (with state changed to `QUEUED`).
 
-4) Depending on the execution setup, workers will pull tasks from the queue and start executing it. Tasks that are pulled off of the queue are changed from "queued" to "running."
+1. Depending on the execution setup, workers will pull tasks from the queue and start executing it. Tasks that are pulled off of the queue are changed from "queued" to "running."
 
-5) If a task finishes, the worker then changes the status of that task to it's final state (finished, failed, etc.). The scheduler then reflects this change in the metadata database.
+1. If a task finishes, the worker then changes the status of that task to its final state (finished, failed, etc.). The scheduler then reflects this change in the metadata database.
 
 ```python
 # https://github.com/apache/incubator-airflow/blob/2d50ba43366f646e9391a981083623caa12e8967/airflow/jobs.py#L1386
@@ -82,31 +86,29 @@ def _process_dags(self, dagbag, dags, tis_out):
 
 ## Controlling Component Interactions
 
-_Fine tuning airflow.cfg_
-
 The schedule at which these components interact can be set through airflow.cfg. This file has tuning for several airflow settings that can be optimized for a use case.
 
 This file is well documented, but a few notes:
 
 ### Executors:
 
-By default, Airflow can use the LocalExecutor, SequentialExecutor, or the CelelryExecutor.
+By default, Airflow can use the LocalExecutor, SequentialExecutor, the CeleryExecutor, or the KubernetesExecutor.
 
 - The SequentialExecutor just executes tasks sequentially, with no parallelism or concurrency. It is good for a test environment or when debugging deeper Airflow bugs.
 
 - The LocalExecutor supports parallelism and hyperthreading and is a good fit for Airflow running on local machine or a single node.
 
-- The CeleryExecutor is the preferred method to run a distrubted Airflow cluster. It requires Redis, RabbitMq, or another message queue system to coordinate tasks between workers.
+- The CeleryExecutor is the preferred method to run a distributed Airflow cluster. It requires Redis, RabbitMq, or another message queue system to coordinate tasks between workers.
 
-There is a communinty contributed MesosExecutors and KubernetesExexcutor that can execute tasks across  larger clusters, but neither of them are _currently_ production ready.
+- The KubernetesExecutor, which was introduced in Airflow 1.10, calls the Kubernetes API to create a temporary pod for each task to run, enabling users to pass in custom configurations for each of their tasks and use resources efficiently.
 
 ### Parallelism
 
-The `parallelism`, `dag_concurrency` and `max_active_runs_per_dag` settings  can be tweaked to determine how many tasks can be executed at once.
+The `parallelism`, `dag_concurrency` and `max_active_runs_per_dag` settings can be tweaked to determine how many tasks can be executed at once.
 
-It is important to note that `parallelism` determines how many task instances can run in parallel in the executor, while `dag_concurrency` determines the number of tasks that can be scheduled  by the scheduler. These two numbers should be fine tuned together when optimizing an Airflow deployment, with the ratio depending on the number of DAGs.
+It is important to note that `parallelism` determines how many task instances can run in parallel in the executor, while `dag_concurrency` determines the maximum number of tasks that can run within each DAG. These two numbers should be fine tuned together when optimizing an Airflow deployment, with the ratio depending on the number of DAGs.
 
-`max_active_runs_per_dag` is for each particular DAG - how many DagRuns across time can be scheduled for a single DAG at once. This number should depend on how how long DAGs take to execute, their schedule interval, and scheduler performance.
+`max_active_runs_per_dag` determines how many DagRuns across time can be scheduled for each particular DAG. This number should depend on how how long DAGs take to execute, their schedule interval, and scheduler performance.
 
 ### Scheduler Settings
 

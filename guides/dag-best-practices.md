@@ -3,9 +3,13 @@ title: "DAG Writing Best Practices in Apache Airflow"
 description: "How to create effective, clean, and functional DAGs."
 date: 2018-05-21T00:00:00.000Z
 slug: "dag-best-practices"
-heroImagePath: "https://cdn.astronomer.io/website/img/guides/bestwritingpractices.png"
+heroImagePath: "https://assets.astronomer.io/website/img/guides/bestwritingpractices.png"
 tags: ["DAGs", "Data Pipelines", "Airflow"]
 ---
+
+Welcome to our guide on writing Airflow DAGs. In this piece, we'll walk through some high-level concepts involved in Airflow DAGs, explain what to stay away from, and cover some useful tricks that will hopefully be helpful to you.
+
+If you're interested in further DAG writing help or general Airflow assistance, we offer support packages that give you on-demand access to Airflow experts. [Drop us a line](https://www.astronomer.io/#request) if you'd like to chat.
 
 ### Idempotency
 
@@ -145,7 +149,7 @@ The Airflow executor executes top level code on every heartbeat, so a small amou
 
 ### Task Dependencies
 
-Task dependencies are set using `set_upstream()` and `set_upstream()`. Using either will depend on your preferences, but it is best to stay consistent with which one you use.
+Task dependencies are set using `set_upstream()` and `set_downstream()`. Using either will depend on your preferences, but it is best to stay consistent with which one you use.
 
 #### Example
 

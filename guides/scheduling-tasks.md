@@ -3,7 +3,7 @@ title: "Scheduling Tasks in Airflow"
 description: "Overview of the Airflow scheduler"
 date: 2018-05-21T00:00:00.000Z
 slug: "scheduling-tasks"
-heroImagePath: "https://cdn.astronomer.io/website/img/guides/SchedulingTasksinAirflow_preview.png"
+heroImagePath: "https://assets.astronomer.io/website/img/guides/SchedulingTasksinAirflow_preview.png"
 tags: ["Building DAGs", "Scheduling Tasks", "Airflow"]
 ---
 
@@ -78,7 +78,7 @@ t3.set_upstream(t2)
 
 When the scheduler taps this DAG, it will generate a DAG run for each day from the `start_date` to 4/30/18, and then for each day going forward:
 
-![](https://cdn.astronomer.io/website/img/guides/ucg_scheduling.png)
+![](https://assets.astronomer.io/website/img/guides/ucg_scheduling.png)
 
 In this example DAG it won't really cause many problems, but if this DAG were hitting an external system (e.g. making API calls, querying a database, etc.) it could get problematic.
 
@@ -129,7 +129,7 @@ t3.set_upstream(t2)
 
 This DAG only gets one DAG run scheduled once on 4/30 due to the catchup parameter:
 
-![](https://cdn.astronomer.io/website/img/guides/ucg_scheduling_catchup.png)
+![](https://assets.astronomer.io/website/img/guides/ucg_scheduling_catchup.png)
 
 ### Using catchup effectively
 
@@ -171,7 +171,7 @@ COPY_PARAMS = ["COMPUPDATE OFF",
 
 default_args = {
     'start_date': datetime(2018, 4, 24),
-    'email': ['viraj@astronomer.io'],
+    'email': [''],
     'email_on_failure': True,
     'email_on_retry': False,
     'retries': 0,
@@ -225,7 +225,7 @@ with dag:
         start >> google_analytics >> s3_to_redshift
 ```
 
-![](https://cdn.astronomer.io/website/img/guides/ucg_ga_ga_scheduled.png)
+![](https://assets.astronomer.io/website/img/guides/ucg_ga_ga_scheduled.png)
 
 **Note:** Your GA service account may only be bound to a limited number of concurrent connections.
 

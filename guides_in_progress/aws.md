@@ -22,17 +22,36 @@ For information about getting started with EKS, see the [AWS Getting Started Gui
 
 Make sure you have correctly installed the following tools, and can run a test command for each:
 
-- Helm: `helm version`
-  - Output: `Client: &version.Version{SemVer:"v2.9.1", GitCommit:"20adb27c7c5868466912eebdf6664e7390ebe710", GitTreeState:"clean"}`
+- Helm:
 
-- AWS CLI: `aws -version`
-  - Output: `Client: &version.Version{SemVer:"v2.9.1", GitCommit:"20adb27c7c5868466912eebdf6664e7390ebe710", GitTreeState:"clean"}`
+    ```
+    $ helm version
+    Client: &version.Version{SemVer:"v2.10.0", GitCommit:"9ad53aac42165a5fadc6c87be0dea6b115f93090", GitTreeState:"clean"}
+    Server: &version.Version{SemVer:"v2.10.0", GitCommit:"9ad53aac42165a5fadc6c87be0dea6b115f93090", GitTreeState:"clean"}
+    ```
 
-- Kubectl: `kubectl version`
-  - Output: `Client Version: version.Info{Major:"1", Minor:"10", GitVersion:"v1.10.3", GitCommit:"2bba0127d85d5a46ab4b778548be28623b32d0b0", GitTreeState:"clean", BuildDate:"2018-05-21T09:17:39Z"`
+- AWS CLI:
 
-- Heptio: `heptio-authenticator-aws help`
-  - Output: `A tool to authenticate to Kubernetes using AWS IAM credentials...`
+    ```
+    $ aws --version
+    aws-cli/1.16.14 Python/3.6.4 Darwin/17.7.0 botocore/1.12.4
+    ```
+
+- Kubernetes:
+
+    ```
+    $ kubectl version
+    Client Version: version.Info{Major:"1", Minor:"11", GitVersion:"v1.11.3", GitCommit:"a4529464e4629c21224b3d52edfe0ea91b072862", GitTreeState:"clean", BuildDate:"2018-09-10T11:44:36Z", GoVersion:"go1.11", Compiler:"gc", Platform:"darwin/amd64"}
+    Server Version: version.Info{Major:"1", Minor:"10", GitVersion:"v1.10.3", GitCommit:"2bba0127d85d5a46ab4b778548be28623b32d0b0", GitTreeState:"clean", BuildDate:"2018-05-28T20:13:43Z", GoVersion:"go1.9.3", Compiler:"gc", Platform:"linux/amd64"}
+    ```
+
+- AWS IAM Authenticator for Kubernetes:
+
+    ```
+    $ heptio-authenticator-aws -h
+    A tool to authenticate to Kubernetes using AWS IAM credentials
+    ...
+    ```
 
 - An AWS VPC. You can setup a custom VPC, or use the provided AWS template to get started. See the VPC setup guide in the [EKS Getting Started Docs](https://docs.aws.amazon.com/eks/latest/userguide/getting-started.html)
 

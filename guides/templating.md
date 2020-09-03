@@ -6,6 +6,7 @@ slug: "templating"
 heroImagePath: null
 tags: ["Templating", "Jinja", "Airflow"]
 ---
+
 Macros are used to pass dynamic information into task instances at runtime. Since all top-level code in DAG files is interpreted every scheduler "heartbeat," macros and templating allow run-time tasks to be offloaded to the executor instead of the scheduler.  <br> <br>
 Apart from efficiency, they're also powerful tools in forcing jobs to be idempotent.
 
@@ -21,7 +22,7 @@ Common macros include:
 
 ## Setting a Template
 
-Templates can be sit directly in the DAG file:
+Templates can be set directly in the DAG file:
 
 ```python
 dag = DAG('example_template_once_v2',
@@ -97,11 +98,11 @@ get_individual_issue_counts = \
 
 Notice that the `execution_date` template and the `timedelta` macro (to make up for the time difference) is being written into the SQL. The runtime values for this task can be seen from the UI:
 
-![task_details](https://cdn.astronomer.io/website/img/guides/task_details.png)
+![task_details](https://assets.astronomer.io/website/img/guides/task_details.png)
 
 On the *Rendered* tab
 
-![rendered_sql](https://cdn.astronomer.io/website/img/guides/rendered_sql.png)
+![rendered_sql](https://assets.astronomer.io/website/img/guides/rendered_sql.png)
 
 The corresponding timestamp has been rendered into the TaskInstance.
 
@@ -113,15 +114,16 @@ Any sort of intermediate file, timebased SQL, or anything else that has the time
 
 Luckily, this usually only requires changing a few lines of code:
 
-1) Specify the field as a `template_field` at the operator level- notice that this requires no changes to the parameters being templated.
- <br>
+**1) Specify the field as a `template_field` at the operator level- notice that this requires no changes to the parameters being templated.**
+
 https://github.com/airflow-plugins/google_analytics_plugin/blob/master/operators/google_analytics_reporting_to_s3_operator.py#L41
 
 ```python
 template_fields = ('s3_key', 'since', 'until')
 ```
 
-2) Define the corresponding values in the DAG file:<br>
+**2) Define the corresponding values in the DAG file:**
+
 https://github.com/airflow-plugins/Example-Airflow-DAGs/blob/master/etl/google_analytics_to_redshift.py#L131
 
 ```python
@@ -134,7 +136,7 @@ S3_KEY = 'google_analytics/{0}/{1}_{2}_{3}.json'.format(REDSHIFT_SCHEMA,
                                                                 "{{ ts_nodash }}")
 ```
 
-3) Instantiate the Operator with the right values:
+**3) Instantiate the Operator with the right values:**
 
 https://github.com/airflow-plugins/Example-Airflow-DAGs/blob/master/etl/google_analytics_to_redshift.py#L136
 

@@ -3,11 +3,11 @@ title: "Marketo API to Redshift with Airflow"
 description: "Use Airflow to ingest data from the Marketo API to Redshift"
 date: 2018-05-23T00:00:00.000Z
 slug: "marketo-to-redshift"
-heroImagePath: "https://cdn.astronomer.io/website/img/guides/MarketoToRedshift_preview.png"
+heroImagePath: "https://assets.astronomer.io/website/img/guides/MarketoToRedshift_preview.png"
 tags: ["Building DAGs", "Redshift", "Marketo"]
 ---
 
-In this guide, we’ll explore how you can use [Apache Airflow](https://airflow.apache.org/) to move your data from Marketo to Redshift. Note that this is an effective and flexible alternative to point-and-click ETL tools like [Segment](https://segment.com), [Alooma](https://alooma.com), [Xplenty](https://xplenty.com), [Stitch](https://stitchdata.com), and [ETLeap](https://etleap.com/).
+In this guide, we’ll explore how you can use [Apache Airflow](https://airflow.apache.org/) to move your data from Marketo to Redshift. Note that this is an effective and flexible alternative to point-and-click ETL tools like [Segment](https://segment.com), [Alooma](https://alooma.com), [Xplenty](https://www.xplenty.com), [Stitch](https://stitchdata.com), and [ETLeap](https://etleap.com/).
 
 Before we get started, be sure you have the following on hand:
 
@@ -33,7 +33,7 @@ pulling since Jan 1, 2013.
 
 ### 1. Add Connections in Airflow UI
 
-Begin by creating all of the necessary connections in your Airflow UI. To do this, log into your Airflow dashboard and navigate to Admin-->Connections. In order to build this pipeline, you’ll need to create a connection to your Marketo account, your S3 bucket, and your Redshift instance. For more info on how to fill out the fields within your connections, check out our [documentation here](https://docs.astronomer.io/v2/apache_airflow/tutorial/connections.html).
+Begin by creating all of the necessary connections in your Airflow UI. To do this, log into your Airflow dashboard and navigate to Admin-->Connections. In order to build this pipeline, you’ll need to create a connection to your Marketo account, your S3 bucket, and your Redshift instance. For more info on how to fill out the fields within your connections, check out our [documentation here](https://www.astronomer.io/guides/connections/).
 
 ### 2. Clone the plugin
 
@@ -70,4 +70,4 @@ monthly_id = '{}_to_redshift_monthly_backfill'.format(MARKETO_CONN_ID)
 
 Once you have those credentials plugged into your DAG, test and deploy it!
 
-If you don't have Airflow already set up in your production environment, head over to [our app](https://app.astronomer.io/signup) to get spun up with your own managed instance!
+If you don't have Airflow already set up in your production environment, head over to [our getting started guide](https://astronomer.io/docs/getting-started) to get spun up with your own managed instance!

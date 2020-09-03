@@ -1,138 +1,77 @@
 ---
 title: "Introduction to Apache Airflow"
-description: "A crash-course in introductory Airflow concepts."
+description: "Everything you need to know to get started with Apache Airflow."
 date: 2018-05-21T00:00:00.000Z
 slug: "intro-to-airflow"
-heroImagePath: "https://cdn.astronomer.io/website/img/guides/bestpractices.png"
-tags: ["Airflow", "Best Practices"]
+heroImagePath: null
+tags: ["Airflow"]
 ---
 
-## Introduction
+If you're at all involved in the data engineering space, you've probably heard of [Apache Airflow](https://github.com/apache/airflow). Since its [inception as an open-source project at AirBnb in 2015](https://medium.com/airbnb-engineering/airflow-a-workflow-management-platform-46318b977fd8), Airflow has quickly become the gold standard for data engineering, getting public contributions from folks at major orgs like [Bloomberg](https://www.techatbloomberg.com/blog/airflow-on-kubernetes/), [Lyft](https://eng.lyft.com/running-apache-airflow-at-lyft-6e53bb8fccff), [Robinhood](https://robinhood.engineering/why-robinhood-uses-airflow-aed13a9a90c8), and [many more](https://github.com/apache/airflow#who-uses-apache-airflow).
 
-One of the best practices you can adopt in regards to Airflow is to develop integrations in the form of plugins.
+If you're just getting your feet wet, you're probably wondering what all the hype is about. We're here to walk you through the basic concepts that you need to know to get started with Airflow.
 
-Developing with the [Airflow plugins system][0] allows you to keep core integration features separate from workflows (DAGs). This will support your engineering team to actively develop and version plugins while analysts leverage these plugins in their workflows. With this practice, your workflows will be clean and mostly configuration details as opposed to implementation logic.
+## History
 
-## Plugins
+In 2015, Airbnb experienced a problem. They were growing like crazy and had a massive amount of data that was only getting larger. To achieve the vision of becoming a fully data-driven organization, they had to grow their workforce of data engineers, data scientists, and analysts- all of whom had to regularly work to automate processes by writing scheduled batch jobs. To satisfy the need for a robust scheduling tool, [Data Engineer Maxime Beauchemin](https://soundcloud.com/the-airflow-podcast/the-origins-of-airflow) created and open-sourced Airflow with the idea that it would allow them to quickly author, iterate on, and monitor their batch data pipelines.
 
-Plugins are very powerful components in Airflow. This section covers plugin capabilities and provides some examples to show the flexibility they provide.
+Since Maxime's first commit way back then, Airflow has come a long way. The project joined the official Apache Foundation Incubator in April of 2016, where it lived and grew until it graduated as a top-level project on January 8th, 2019. As of February 2019, Airflow has 715 contributors, 5958 commits, and 11,108 stars on Github. It's used by almost every major Data Engineering team around the world and is only getting more powerful as the community grows stronger. 
 
-### Hooks
+## Overview
 
-[Hooks][3] define how your plugin will interact with outside resources. This outside service may be an external API, database, web service, file server or just about anything else. A hook allows you to connect to this resource and perform a well defined set of actions against that external system.
+[Apache Airflow](https://airflow.apache.org/index.html) is a platform for programmatically authoring, scheduling, and monitoring workflows. It is completely open-source and is especially useful in architecting complex data pipelines. It's written in Python, so you're able to interface with any third party python API or database to extract, transform, or load your data into its final destination. It was created to solve the issues that come with long-running cron tasks that execute hefty scripts.
+
+With Airflow, workflows are architected and expressed as DAGs, with each step of the DAG defined as a specific Task. It is designed with the belief that all ETL (Extract, Transform, Load data processing) is best expressed as code, and as such is a code-first platform that allows you to iterate on your workflows quickly and efficiently. As a result of its code-first design philosophy, Airflow allows for a degree of customizibility and extensibility that other ETL tools do not support.
+
+## Use Cases
+
+There are a ton of [documented use cases for Airflow](https://github.com/jghoman/awesome-apache-airflow#best-practices-lessons-learned-and-cool-use-cases). While there are a plethora of different use cases Airflow can address, it's particularly good for just about any ETL you need to do- since every stage of your pipeline is expressed as code, it's easy to tailor your pipelines to fully fit your needs. Whether it be pinging specific API endpoints or performing custom transformations that clean the data according to your custom specifications, there is truly any way you can tailor things to fit your use case.
+
+If you're interested in getting more specific, here are a few cool things we've seen folks do with Airflow:
+
+- Aggregate daily sales team updates from Salesforce to send a daily report to executives at the company.
+- Use Airflow to organize and kick off machine learning jobs running on external Spark clusters.
+- Load website/applicaiton analytics data into a data warehouse on an hourly basis.
+
+We further discuss Airflow's use cases in our [podcast episode here](https://soundcloud.com/the-airflow-podcast/use-cases) if you're interested in diving deeper!
+
+## Core Concepts
+
+### DAG
+
+DAG stands for "Directed Acyclic Graph". Each DAG represents a collection of all the tasks you want to run and is organized to show relationships between tasks directly in the Airflow UI. They are defined this way for the following reasons:
+
+1. Directed: If multiple tasks exist, each must have at least one defined upstream or downstream task.
+2. Acyclic: Tasks are not allowed to create data that goes on to self-reference. This is to avoid creating infinite loops.
+3. Graph: All tasks are laid out in a clear structure with processes occurring at clear points with set relationships to other tasks.
+
+For a more in-depth review on DAGs, check out our [Intro to DAGs guide](https://astronomer.io/guides/dags).
+
+### Tasks
+
+Tasks represent each node of a defined DAG. They are visual representations of the work being done at each step of the workflow, with the actual work that they represent being defined by Operators.
 
 ### Operators
 
-[Operators][4] are the workhorses in Airflow. They extend how you can interact with an external system.
+Operators in Airflow determine the actual work that gets done. They define a single task, or one node of a DAG. DAGs make sure that operators get scheduled and run in a certain order, while operators define the work that must be done at each step of the process.
 
-At a high-level there are three types of operators:
+Operators are typically standalone and do not share information with other operators, but you can check out [XComs](https://airflow.apache.org/concepts.html#xcoms) if you're interested in how they might work with other operators. DAGs make sure operators are run in a specific order.
 
-1. **Sensor operator** - wait for and detect some condition in a source system.
-1. **Transfer operator** - move data from one system to another.
-1. **Action operator** - perform some action locally or make a call to an external system to perform some action.
+### Hooks
 
-Transfer operators and action operators inherit from [BaseOperator][6], while sensor operators inherit from [BaseSensorOperator][5].
+Hooks are Airflow's way of interfacing with third-party systems. They allow you to connect to external APIs and databases like Hive, S3, GCS, MySQL, Postgres, etc. They act as building blocks for larger operators. Secure information such as authentication credentials are kept out of hooks- that information is stored via Airflow connections in the encrypted metadata db that lives under your Airflow instance.
 
-### Macros
+### Plugins
 
-[Macros][2] are used to pass dynamic information into task instances at runtime via templating.
+Airflow plugins represent a combination of Hooks and Operators that allows you to accomplish a certain task, like [transfer data from Salesforce to Redshift](http://astronomer.io/guides/salesforce-to-redshift). Check out our [open-source library of Airflow plugins](https://github.com/airflow-plugins) if you'd like to check if a plugin you need has already been created by the community.
 
-A current limitation of Airflow is that every global variable or top-level method in a DAG file is interpreted every cycle during the DAG processing loop on the scheduler. While the loop execution time can vary from seconds to minutes (depending on configuration, external connectivity, number of DAGs, etc), the point remains that there is certain code that the vast majority of code should only be interpreted in a task at execution time.
+### Connections
 
-Macros are a tool in Airflow that provide a solution to this problem. Macros extend Airflow's [templating][13] capabilities to allow you to offload runtime tasks to the executor as opposed to the scheduler loop. Some examples of macros might include:
+Connections are where Airflow stores information that allows you to connect to external systems, such as authentication credentials or API tokens. This is managed directly from the UI and the actual information is encrypted and stored in as metadata in Airflow's underlying Postgres or MySQL.
 
-- timestamp formatting of last or next execution for incremental ETL
-- decryption of a key used for authentication to an external system
-- accessing custom user-defined params
 
-### Blueprints and Views
+## Learn by Doing
 
-The [blueprints][7] and [views][8] components in Airflow are extensions of blueprints and views in the Flask web app framework. Developers have extended the Airflow API to include things such as triggering a DAG run remotely, adding new connections or modifying [Airflow variables][9]. You can extend this to build an entire web app which sits alongside the Airflow webserver. One example of this is a plugin that allows analysts to input SQL through a web UI to be run on a scheduled interval.
+If you'd like to get started playing around with Airflow on your local machine, check out our [Astronomer CLI](https://github.com/astronomer/astro-cli)- it's open source and completely free to use. With the CLI, you can spin up Airflow locally and start getting your hands dirty with the core concepts mentioned above in just a few minutes. 
 
-### Menu Links
-
-[Menu Links][1] allow developers to add custom links to the navigation menu in Airflow.
-
-Airflow is a powerful tool that lives at the intersection of developers, analysts and many other jobs in your organization. Because of this, the Airflow webserver is customizable to meet a wide variety of use cases. With menu links, you can easily provide supporting resources to anyone who might access your Airflow instance.
-
-For example, you may want to modify the Airflow webserver to have two menu link categories where each item is a link, like so:
-
-- Developer
-  - Plugins repository
-  - CI/CD system
-- Analyst
-  - Organization-specific Domino install
-  - CI/CD system
-  - AI Management systems
-
-Doing this provides each user access to the context they need when using an Airflow instance.
-
-## Additional Information
-
-### Example Plugin Directory Structure
-
-Plugins ship as Python modules but there are a few tricks to keeping the project structure clean.
-
-We recommend breaking out each plugin component type into a sub module that will house a file per component. This will allow for more simple upstreaming into [apache/incubator-airflow][10] at a later date.
-
-For simplicity, we choose to put the AirflowPlugin class instantiation inside of the top level `__init__.py`. Just be aware of this when looking for where the the plugin entry point.
-
-For example:
-
-```
-example_plugin/
-├── hooks
-│   ├── __init__.py
-│   └── example_hook.py
-├── macros
-│   ├── __init__.py
-│   └── example_macro.py
-├── menu_links
-│   ├── __init__.py
-│   └── example_links.py
-├── operators
-│   ├── __init__.py
-│   └── example_operator.py
-├── README.md
-└── __init__.py  <--- Your AirflowPlugin class instantiation
-```
-
-If you are looking for Plugin inspiration or want to see if a solution to your problem already exists, visit the [Airflow-Plugins][11] GitHub organization that is being actively maintained by [Astronomer][12].
-
-### BaseOperator.execute()
-
-Overriding [the execute() method][14] in a class that extends BaseOperator will define the code that gets run on task instantiation.
-
-### Connection Pools
-
-[Connection pools][16] allow multiple tasks to share a connection limit for a given resource.  This can be used as a parallelism constraint, but more importantly it's useful to limit the amount of connections to a resource like a database or API.  For instance, pools can be used to prevent Redshift from getting overloaded when you need to run thousands of tasks but want to cap the number of concurrent tasks across tasks across all DAGs to dozens.
-
-### XComs
-
-[XComs][15] are a great way to share information between tasks in your workflow, but they should not be used to store (or pass) large amounts of data such as batch data in an ETL job. The reason for this is that XComs are stored in the Airflow metadata database and using XComs to stream data through results in unnecessary bloat on the database over time. An alternative is to write the batch data or larger datasets to a block storage system, mounted volume, etc.
-
-### More Information
-
-A good resource for general best practices on Airflow is Gerard Toonstra's site [ETL best practices with Airflow][17].
-
-The document [Common Pitfalls][18] from the official Airflow Confluence wiki also provides several useful bits of advice for common challenges.
-
-[0]: https://airflow.apache.org/plugins.html "Airflow Plugins System"
-[1]: https://github.com/flask-admin/flask-admin/blob/06aebf078574cbbe70b2691fc8a41f234f321962/flask_admin/menu.py#L129 "MenuLinks"
-[2]: https://airflow.apache.org/code.html#macros "Airflow Macros"
-[3]: https://airflow.apache.org/code.html?highlight=operators#hooks "Airflow Hooks"
-[4]: https://airflow.apache.org/code.html?highlight=operators "Airflow Operators"
-[5]: https://pythonhosted.org/airflow/code.html#basesensoroperator "Base Sensor Operator"
-[6]: https://pythonhosted.org/airflow/code.html#baseoperator "Base Operator"
-[7]: http://flask.pocoo.org/docs/0.12/blueprints/ "Flask Blueprints"
-[8]: http://flask.pocoo.org/docs/0.12/views/ "Flask Views"
-[9]: https://pythonhosted.org/airflow/concepts.html#variables "Airflow Variables"
-[10]: https://github.com/apache/incubator-airflow "Apache incubator-airflow"
-[11]: https://github.com/airflow-plugins "Airflow Plugin Github Org"
-[12]: https://github.com/astronomerio "Astronomer Github"
-[13]: https://airflow.apache.org/tutorial.html#templating-with-jinja "Airflow Templating System"
-[14]: https://github.com/apache/incubator-airflow/blob/e76cda0ff5c9dfdbec7a9d199884d359cdf6dbbb/airflow/models.py#L2463 "Execute Entry Point"
-[15]: https://airflow.incubator.apache.org/concepts.html#xcoms "XComs"
-[16]: https://airflow.apache.org/concepts.html#pools "Connection pools"
-[17]: https://gtoonstra.github.io/etl-with-airflow/ "ETL best practices with Airflow"
-[18]: https://cwiki.apache.org/confluence/display/AIRFLOW/Common+Pitfalls "Common Pitfalls"
+As always, please feel free to [reach out to us](https://astronomer.io/contact) if you have any questions or if there's anything we can do to help you on your Airflow journey!

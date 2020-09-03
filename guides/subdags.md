@@ -1,15 +1,11 @@
 ---
 title: "Using SubDAGs in Airflow"
-description: "Using SubDAGs to build modular workflows in Airflow"
+description: "Using SubDAGs to build modular workflows in Airflow."
 date: 2018-05-23T00:00:00.000Z
 slug: "subdags"
 heroImagePath: null
 tags: ["Building DAGs", "Subdags", "Airflow"]
 ---
-
-# Subdags
-
-_Aesthetically appealing, but fragile._
 
 Most DAGs consist of patterns that often repeat themselves. ETL DAGs that are written to best practice usually all share the pattern of grabbing data from a source, loading it to an intermediary file store or _staging_ table, and then pushing it into production data.
 
@@ -17,19 +13,19 @@ Depending on your set up, using a subdag operator could make your DAG cleaner.
 
 Suppose the DAG looks like:
 
-![no_subdag](https://cdn.astronomer.io/website/img/guides/workflow_no_subdag.png)
+![no_subdag](https://assets.astronomer.io/website/img/guides/workflow_no_subdag.png)
 
 The pattern between extracting and loading the data is clear. The same workflow can be generated through subdags:
 
-![subdag](https://cdn.astronomer.io/website/img/guides/subdag_dag.png)
+![subdag](https://assets.astronomer.io/website/img/guides/subdag_dag.png)
 
 Each of the subdags can be zoomed in on:
 
-![zoom](https://cdn.astronomer.io/website/img/guides/zoomed_in.png)
+![zoom](https://assets.astronomer.io/website/img/guides/zoomed_in.png)
 
 The zoomed view reveals a granular view of the task:
 
-![tasks](https://cdn.astronomer.io/website/img/guides/subdag_tasks.png)
+![tasks](https://assets.astronomer.io/website/img/guides/subdag_tasks.png)
 
 Subdags should be generated through a "DAG factory" - an external file that returns dag objects.
 
@@ -57,7 +53,7 @@ This object should then be called when instanstiating the SubDagOperator:
 ```python
 load_tasks = SubDagOperator(
         task_id='load_tasks',
-        subdag=extract_subdag('example_subdag_operator',
+        subdag=load_subdag('example_subdag_operator',
                            'load_tasks', default_args),
         default_args=default_args,
         dag=dag,
@@ -82,4 +78,4 @@ In mathematical terms, each SubDag is behaving like a _vertex_ (a single point i
 
 Depending on the scale and infrastructure, a specialized queue can be added just for SubDags (assuming a CeleryExecutor), but a cleaner workaround is to avoid subdags entirely.
 
-**Astronomer highly recommends staying away from SubDags.**
+**Astronomer highly recommends staying away from SubDags. Airflow 1.10 has changed the default SubDag execution method to use the Sequential Executor to work around deadlocks caused by SubDags**
