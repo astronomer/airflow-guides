@@ -31,17 +31,17 @@ There are several executors, each with strengths and weaknesses.
 
 Once the scheduler is started:
 
-1) The scheduler "taps" the _dags_ folder and instantiates all DAG objects in the metadata databases. Depending on the configuration, each DAG gets a configurable number of processes.
+1. The scheduler "taps" the _dags_ folder and instantiates all DAG objects in the metadata databases. Depending on the configuration, each DAG gets a configurable number of processes.
 
-**Note**: This means all top level code (i.e. anything that isn't defining the DAG) in a DAG file will get run each scheduler heartbeat. Try to avoid top level code to your DAG file unless absolutely necessary.
+  **Note**: This means all top level code (i.e. anything that isn't defining the DAG) in a DAG file will get run each scheduler heartbeat. Try to avoid top level code to your DAG file unless absolutely necessary.
 
-2) Each process parses the DAG file and creates the necessary DagRuns based on the scheduling parameters of each DAG's tasks. A TaskInstance is instantiated for each task that needs to be executed. These TaskInstances are set to `Scheduled` in the metadata database.
+1. Each process parses the DAG file and creates the necessary DagRuns based on the scheduling parameters of each DAG's tasks. A TaskInstance is instantiated for each task that needs to be executed. These TaskInstances are set to `Scheduled` in the metadata database.
 
-3) The primary scheduler process queries the database for all tasks in the `SCHEDULED` state and sends them to the executors (with state changed to `QUEUED`).
+1. The primary scheduler process queries the database for all tasks in the `SCHEDULED` state and sends them to the executors (with state changed to `QUEUED`).
 
-4) Depending on the execution setup, workers will pull tasks from the queue and start executing it. Tasks that are pulled off of the queue are changed from "queued" to "running."
+1. Depending on the execution setup, workers will pull tasks from the queue and start executing it. Tasks that are pulled off of the queue are changed from "queued" to "running."
 
-5) If a task finishes, the worker then changes the status of that task to its final state (finished, failed, etc.). The scheduler then reflects this change in the metadata database.
+1. If a task finishes, the worker then changes the status of that task to its final state (finished, failed, etc.). The scheduler then reflects this change in the metadata database.
 
 ```python
 # https://github.com/apache/incubator-airflow/blob/2d50ba43366f646e9391a981083623caa12e8967/airflow/jobs.py#L1386
