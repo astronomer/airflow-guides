@@ -9,13 +9,15 @@ tags: ["Connections", "Airflow"]
 
 ## Overview
 
-> Note: This feature will only work in [Airflow 1.10.10 and beyond](https://airflow.readthedocs.io/en/latest/howto/use-alternative-secrets-backend.html). Additionally, there exists additional support for GCP Secrets Manager Backend and AWS Secrets Manager integrations. Please [open an issue on our guides repo](https://github.com/astronomer/airflow-guides) if you'd like us to write a tutorial on how to apply the concepts covered in this guide to those backend secrets managers.
+> Note: This feature will only work in [Airflow 1.10.10 and beyond](https://airflow.readthedocs.io/en/latest/howto/use-alternative-secrets-backend.html). Additionally, there exists additional support for GCP Secrets Manager Backend and AWS Secrets Manager integrations.
 
-A feature we often get asked about here at Astronomer is a native sync with [Hashicorp Vault](https://www.vaultproject.io/) for secrets and connection information. The Airflow community has rallied around the need for more robust sync options from external secrets stores, and one of our very own commiters, [Kaxil Naik](https://www.linkedin.com/in/kaxil?originalSubdomain=uk), has built out a feature to sync Airflow Connections from Vault. Below is a step-by-step guide on how to leverage this functionality to import your connection info from your Vault store.
+A feature we often get asked about here at Astronomer is a native sync with [Hashicorp Vault](https://www.vaultproject.io/) for secrets and connection information. The Airflow community has rallied around the need for more robust sync options from external secrets stores, and one of our very own committers, [Kaxil Naik](https://www.linkedin.com/in/kaxil?originalSubdomain=uk), has built out a feature to sync Airflow Connections from Vault.
+
+Below is a step-by-step guide on how to leverage this functionality to import your connection info from your Vault store.
 
 ## Pre-Requisites
 
-In this example, we're going to be using [Virtualenvwrapper](https://virtualenvwrapper.readthedocs.io/en/latest/) to manage virtual environments. You can install this package and set up your shell to work nicely with it by following the [instructions in their installation docs](https://virtualenvwrapper.readthedocs.io/en/latest/install.html).
+In this example, we're going to be using [virtualenvwrapper](https://virtualenvwrapper.readthedocs.io/en/latest/) to manage virtual environments. You can install this package and set up your shell to work nicely with it by following the [instructions in their installation docs](https://virtualenvwrapper.readthedocs.io/en/latest/install.html).
 
 ## Setting up the Vault Dev Server
 
@@ -25,7 +27,7 @@ In this example, we're going to be using [Virtualenvwrapper](https://virtualenvw
 
     >Note: If you ever need to use this virtual env from a blank terminal window, you can run `workon test-secrets-backend` to re-instantiate it.
 
-2. **Install Airflow and the Hashicorp dependency to your virtual environment.** 
+2. **Install Airflow and the Hashicorp dependency to your virtual environment.**
 
         pip install 'apache-airflow==1.10.10'
 
@@ -59,9 +61,9 @@ In this example, we're going to be using [Virtualenvwrapper](https://virtualenvw
     <br/>
 
     For the purposes of this example, `smtp_default` is the secret name we're using. You can store arbitrary key/value pairs in this secret. By default, Airflow will look for the `conn_uri` inside the `smtp_default` key.
-    
+
     Confirm that you can retrieve the Secret:
-    
+
         ❯ vault kv get secret/connections/smtp_default
         ====== Metadata ======
         Key              Value
@@ -84,15 +86,15 @@ In this example, we're going to be using [Virtualenvwrapper](https://virtualenvw
         from airflow.operators.python_operator import PythonOperator
         from datetime import datetime
         from airflow.hooks.base_hook import BaseHook
-        
-        
+
+
         def get_secrets(**kwargs):
             conn = BaseHook.get_connection(kwargs['my_conn_id'])
             print(f"Password: {conn.password}, Login: {conn.login}, URI: {conn.get_uri()}, Host: {conn.host}")
-        
+
         with DAG('example_secrets_dags', start_date=datetime(2020, 1, 1), schedule_interval=None) as dag:
-        
-        
+
+
             test_task = PythonOperator(
                 task_id='test-task',
                 python_callable=get_secrets,
@@ -120,7 +122,7 @@ In this example, we're going to be using [Virtualenvwrapper](https://virtualenvw
             airflow webserver
 
     You should now be able to access your local Airflow environment at localhost:8080.
-        
+
 
 5. **Trigger the DAG and verify that you're getting the expected output.** You can do this by checking for the following output in your task logs:
 
@@ -136,7 +138,6 @@ First, run `ipython` in your terminal to create the shell.
 Then, use the Vault Python client directly to check for the correct outputs (shown below).
 
         In [1]: import hvac                                                                                                  
-
         In [2]: client=hvac.Client(url="http://127.0.0.1:8200")                                                      
 
         In [3]: client.token = "<YOUR-ROOT-TOKEN>"                                                                  
@@ -145,7 +146,7 @@ Then, use the Vault Python client directly to check for the correct outputs (sho
         Out[4]: True
 
         In [5]: client.secrets.kv.v2.read_secret_version(path="connections/smtp_default")                                    
-        Out[5]: 
+        Out[5]:
         {'request_id': '04857d45-a960-011c-f1f1-ba4011a1cccc',
         'lease_id': '',
         'renewable': False,
