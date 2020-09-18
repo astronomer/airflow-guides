@@ -3,7 +3,6 @@ title: "Airflow vs. Oozie"
 description: "How Airflow differs from Oozie."
 date: 2018-05-21T00:00:00.000Z
 slug: "airflow-vs-oozie"
-heroImagePath: "https://assets.astronomer.io/website/img/guides/Oozie+vs+Airflow.png"
 tags: ["Oozie", "Competition"]
 ---
 
