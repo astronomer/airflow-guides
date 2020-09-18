@@ -3,7 +3,6 @@ title: "Managing Dependencies in Apache Airflow"
 description: "An overview of dependencies and triggers in Airflow."
 date: 2018-05-21T00:00:00.000Z
 slug: "managing-dependencies"
-heroImagePath: "https://assets.astronomer.io/website/img/guides/dependencies.png"
 tags: ["Airflow", "Dependencies", "Triggers"]
 ---
 
