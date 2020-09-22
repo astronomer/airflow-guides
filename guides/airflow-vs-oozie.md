@@ -6,6 +6,8 @@ slug: "airflow-vs-oozie"
 tags: ["Oozie", "Competition"]
 ---
 
+> This guide was last updated September 2020
+
 We often get questions regarding the differences between [Airflow](https://airflow.apache.org/) and [Oozie](http://oozie.apache.org/). While we at Astronomer may be a bit biased in our knowledge, we’ve done our best to give an objective summary of the differences between two open-source frameworks for data engineering.
 
 # Summary
