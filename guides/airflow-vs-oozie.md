@@ -14,7 +14,7 @@ At a high level, Airflow leverages the increasingly standardized use of Python t
 
 # Airflow Overview
 
-Created by [Airbnb Data Engineer Maxime Beauchemin](https://www.linkedin.com/in/maximebeauchemin), Airflow is an open source workflow management system designed for authoring, scheduling, and monitoring workflows as [DAGs, or directed acyclic graphs](https://www.astronomer.io/guides/dags/). Workflows are designed in Python, which allows them to be flexible in their interaction with third-party APIs, databases, infrastructure layers, and data systems. It is currently the most popular open source workflow management tool on the market, as measured by Github stars and contributors.
+Created by [Airbnb Data Engineer Maxime Beauchemin](https://www.linkedin.com/in/maximebeauchemin), Airflow is an open-source workflow management system designed for authoring, scheduling, and monitoring workflows as [DAGs, or directed acyclic graphs](https://www.astronomer.io/guides/dags/). Workflows are designed in Python, which allows them to be flexible in their interaction with third-party APIs, databases, infrastructure layers, and data systems. It is currently the most popular open-source workflow management tool on the market, as measured by Github stars and contributors.
 
 # Oozie Overview
 
