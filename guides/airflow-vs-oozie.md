@@ -6,66 +6,43 @@ slug: "airflow-vs-oozie"
 tags: ["Oozie", "Competition"]
 ---
 
-We often get questions regarding the differences between [Airflow](https://airflow.apache.org/) and [Oozie](http://oozie.apache.org/). Below you'll find a summary of the two tools and a comparison of the two communities surrounding the projects.
+> This guide was last updated September 2020
 
-# TL;DR
+As tools within the data engineering industry continue to expand their footprint, it's common for product offerings in the space to be directly compared against each other for a variety of use cases.
 
-Airflow leverages growing use of python to allow you to create extremely complex workflows, while Oozie allows you to write your workflows in Java and XML. The open-source community supporting Airflow is 20x the size of the community supporting Oozie.
+For those evaluating [Apache Airflow](https://airflow.apache.org/) and [Oozie](http://oozie.apache.org/), we've put together a summary of the key differences between the two open-source frameworks.
 
-# Airflow Overview
+## Summary
 
-Created by [Airbnb Data Engineer Maxime Beauchemin](https://www.linkedin.com/in/maximebeauchemin), Airflow is an open source workflow management system designed for authoring, scheduling, and monitoring workflows as [DAGs, or directed acyclic graphs](https://www.astronomer.io/guides/dags/). All workflows are designed in python and it is currently the most popular open source workflow management tool on the market.
+At a high level, Airflow leverages the industry standard use of Python to allow users to create complex workflows via a commonly understood programming language, while Oozie is optimized for writing Hadoop workflows in Java and XML. While both projects are open-sourced and supported by the Apache foundation, Airflow has a larger and more active community.
 
-# Oozie Overview
+## Airflow Overview
 
-Oozie is an open-source workflow scheduling system written in Java for Hadoop systems. Oozie has a coordinator that allows for jobs to be triggered by time, event, or data availability and allows you to schedule jobs via command line, Java API, and a GUI. It supports XML property files and uses an SQL database to log metadata pertaining to task orchestration.
+Created by [Airbnb Data Engineer Maxime Beauchemin](https://www.linkedin.com/in/maximebeauchemin), Airflow is an open-source workflow management system designed for authoring, scheduling, and monitoring workflows as [DAGs, or directed acyclic graphs](https://www.astronomer.io/guides/dags/). Workflows are written in Python, which makes for flexible interaction with third-party APIs, databases, infrastructure layers, and data systems. Measured by Github stars and number of contributors, Apache Airflow is the most popular open-source workflow management tool on the market today.
 
-While it has been used successfully by a few teams, [it has been reported](https://stackoverflow.com/questions/47928995/which-one-to-choose-apache-oozie-or-apache-airflow-need-a-comparison) that Oozie has difficulty handling complex pipelines and has an underdeveloped GUI that is challenging to navigate.
+## Oozie Overview
 
-# Key Differences
+Oozie is an open-source workflow scheduling system written in Java for Hadoop systems. Oozie has a coordinator that triggers jobs by time, event, or data availability and allows you to schedule jobs via command line, Java API, and a GUI. Workflows are written in hPDL (XML Process Definition Language) and use an SQL database to log metadata for task orchestration. Workflows can support jobs such as Hadoop Map-Reduce, Pipe, Streaming, Pig, Hive, and custom Java applications.
 
-## Python vs. Java
+## Key Differences
 
-As mentioned above, Airflow allows you to write your DAGs in Python while Oozie uses Java or XML. Per [Codecademy](https://codecademy.com)'s recent report, the Python community has grown exponentially in recent years, and even excelled to the most active programming language on Stack Overflow in 2017:
+### Compatibility
 
-![pythongraph](https://assets.astronomer.io/website/img/guides/lo5t9UKVQ1VDW8zq1fQg_growth-of-python.png)
+The main difference between Oozie and Airflow is their compatibility with data platforms and tools. Oozie was primarily designed to work within the Hadoop ecosystem. Contributors have expanded Oozie to work with other Java applications, but this expansion is limited to what the community has contributed. Airflow, on the other hand, is quite a bit more flexible in its interaction with third-party applications. In-memory task execution can be invoked via simple bash or Python commands. With the addition of the [KubernetesPodOperator](https://airflow.readthedocs.io/en/latest/howto/operator/kubernetes.html), Airflow can even schedule execution of arbitrary Docker images written in any language. With these features, Airflow is quite extensible as an agnostic orchestration layer that does not have a bias for any particular ecosystem.
 
-## Community
+### Python vs. Java
 
-Airflow is the most active workflow management tool on the market and has 8,636 stars on Github and 491 active contributors. See below for an image documenting code changes caused recent commits to the project.
+As mentioned above, Airflow allows you to write your DAGs in Python while Oozie uses Java or XML. Per the [PYPL popularity index](http://pypl.github.io/PYPL.html), which is created by analyzing how often language tutorials are searched on Google, Python now consumes over 30% of the total market share of programming and is far and away the most popular programming language to learn in 2020.  Because of its pervasiveness, Python has become a first-class citizen of all APIs and data systems; almost every tool that you’d need to interface with programmatically has a Python integration, library, or API client. Java is still the default language for some more traditional Enterprise applications but it’s indisputable that Python is a first-class tool in the modern data engineer’s stack.
 
-![airflow](https://assets.astronomer.io/website/img/guides/Screen+Shot+2018-07-10+at+4.26.28+PM.png)
+### Community
 
-Oozie has 386 stars and 16 active contributors on Github. See below for an image documenting code changes caused by recent commits to the project.
+Airflow is the most active workflow management tool in the open-source community and has 18.3k stars on Github and 1317 active contributors. See below for an image documenting code changes caused by recent commits to the project.
 
-![oozie](https://assets.astronomer.io/website/img/guides/Screen+Shot+2018-07-10+at+4.26.17+PM.png)
+![airflow](https://assets2.astronomer.io/main/guides/airflow_contrib_2020.png)
 
-Note that, with open source projects, community contributions are significant in that they're reflective of the community's faith in the future of the project and indicate that features are actively being developed.
+Oozie has 584 stars and 16 active contributors on Github. See below for an image documenting code changes caused by recent commits to the project.
 
-## Other Features
+![oozie](https://assets2.astronomer.io/main/guides/oozie_contrib_2020.png)
 
-As pointed out by [Stack Overflow user Michele De Simoni](https://stackoverflow.com/users/8050556/michele-ubik-de-simoni), there are a few reasons why Airflow is preferred over Oozie by the community for workflow management.
+Community contributions are significant in that they're reflective of the community's faith in the future of the project and indicate that the community is actively developing features. If your existing tools are embedded in the Hadoop ecosystem, Oozie will be an easy orchestration tool to adopt. If you want to future proof your data infrastructure and instead adopt a framework with an active community that will continue to add features, support, and extensions that accommodate more robust use cases and integrate more widely with the modern data stack, go with Apache Airflow.
 
-### Airflow
-
-- Python Code for DAGs (+)
-- Has connectors for every major service/cloud provider (+)
-- More versatile (+)
-- Advanced metrics (+)
-- Better UI and API (+)
-- Capable of creating extremely complex workflows (+)
-- Jinja Templating (+)
-- Can be parallelized (=)
-- Native Connections to HDFS, HIVE, PIG etc.. (=)
-- Graph as DAG (=)
-
-### Oozie
-
-- Java or XML for DAGs (---)
-- Hard to build complex pipelines (-)
-- Smaller, less active community (-)
-- Worse WEB GUI (-)
-- Java API (-)
-- Can be parallelized (=)
-- Native Connections to HDFS, HIVE, PIG etc.. (=)
-- Graph as DAG (=)
