@@ -86,8 +86,7 @@ In this example, we're going to be using [virtualenvwrapper](https://virtualenvw
         from airflow.operators.python_operator import PythonOperator
         from datetime import datetime
         from airflow.hooks.base_hook import BaseHook
-
-
+        
         def get_secrets(**kwargs):
             conn = BaseHook.get_connection(kwargs['my_conn_id'])
             print(f"Password: {conn.password}, Login: {conn.login}, URI: {conn.get_uri()}, Host: {conn.host}")
