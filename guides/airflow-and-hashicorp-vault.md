@@ -93,7 +93,6 @@ In this example, we're going to be using [virtualenvwrapper](https://virtualenvw
 
         with DAG('example_secrets_dags', start_date=datetime(2020, 1, 1), schedule_interval=None) as dag:
 
-
             test_task = PythonOperator(
                 task_id='test-task',
                 python_callable=get_secrets,
