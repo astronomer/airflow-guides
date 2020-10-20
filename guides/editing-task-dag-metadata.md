@@ -4,7 +4,7 @@ description: "What are DAGs and how they are constructed in Apache Airflow?"
 date: 2018-05-21T00:00:00.000Z
 slug: "editing-task-dag-metadata"
 heroImagePath: "https://assets.astronomer.io/website/img/guides/IntroToDAG_preview.png"
-tags: ["DAGs", "Metadata", "Tasks"]
+tags: ["DAGs", "Database", "Tasks"]
 ---
 
 # Editing DagRuns and TaskInstance History

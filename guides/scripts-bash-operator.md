@@ -4,7 +4,7 @@ description: "Learn and troubleshoot how to run shell scripts using the Bash Ope
 date: 2018-07-17T00:00:00.000Z
 slug: "scripts-bash-operator"
 heroImagePath: null
-tags: ["Building DAGs", "BashOperator", "Airflow"]
+tags: ["DAGs", "Operators"]
 ---
 
 [Apache Airflow's BashOperator](https://airflow.apache.org/code.html#operator-api) is an easy way to execute bash commands in your workflow. If the DAG you wrote executes a bash command or script, this is the operator you will want to use to define the task.

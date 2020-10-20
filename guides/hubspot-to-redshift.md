@@ -4,7 +4,7 @@ description: "Use Airflow to ingest CRM data from the Hubspot API into Redshift"
 date: 2018-05-23T00:00:00.000Z
 slug: "hubspot-to-redshift"
 heroImagePath: "https://assets.astronomer.io/website/img/guides/HubspotToRedshift_preview.png"
-tags: ["Building DAGs", "Redshift", "Hubspot"]
+tags: ["Integrations", “Connections”, “DAGs”]
 ---
 
 In this guide, we’ll explore how you can use [Apache Airflow](https://airflow.apache.org/) to move your CRM data from Hubspot to Redshift. Note that this is an effective and flexible alternative to point-and-click ETL tools like [Segment](https://segment.com), [Alooma](https://alooma.com), [Xplenty](https://www.xplenty.com), [Stitch](https://stitchdata.com), and [ETLeap](https://etleap.com/).

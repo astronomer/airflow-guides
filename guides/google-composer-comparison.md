@@ -4,7 +4,7 @@ description: "A high-level comparison of Astronomer and Google Cloud Composer"
 date: 2018-08-30T00:00:00.000Z
 slug: "google-composer-comparison"
 heroImagePath: null
-tags: ["Astronomer Platform", "Google Composer"]
+tags: []
 ---
 
 |  | Google Cloud Composer | Astronomer Cloud | Astronomer Enterprise |

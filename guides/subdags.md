@@ -4,7 +4,7 @@ description: "Using SubDAGs to build modular workflows in Airflow."
 date: 2018-05-23T00:00:00.000Z
 slug: "subdags"
 heroImagePath: null
-tags: ["Building DAGs", "Subdags", "Airflow"]
+tags: ["DAGs", "Subdags"]
 ---
 
 Most DAGs consist of patterns that often repeat themselves. ETL DAGs that are written to best practice usually all share the pattern of grabbing data from a source, loading it to an intermediary file store or _staging_ table, and then pushing it into production data.

@@ -4,7 +4,7 @@ description: "Managing Error Notifications"
 date: 2018-05-21T00:00:00.000Z
 slug: "error-notifications-in-airflow"
 heroImagePath: null
-tags: ["Building DAGs", "Redshift", "IMAP"]
+tags: ["DAGs", "Integrations", “ Operators”]
 ---
 
 # Error Reporting on Airflow

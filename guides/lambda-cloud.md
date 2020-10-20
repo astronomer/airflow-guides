@@ -4,7 +4,7 @@ description: "A few tips, guidelines, and best practices for calling Lambda and 
 date: 2018-08-27T00:00:00.000Z
 slug: "lambda-cloud"
 heroImagePath: null
-tags: ["Astronomer Platform", "Airflow"]
+tags: ["Best Practices", “Integrations”]
 ---
 
 You might be wanting to trigger an [AWS Lambda](https://goo.gl/zYGM7L) function directly via Airflow. Here are some tid bits of knowlege accumulated at Astronomer that might help you perform that function successfully. 

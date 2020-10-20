@@ -4,7 +4,7 @@ description: "Use the KubernetesPodOperator on Astronomer"
 date: 2018-07-17T00:00:00.000Z
 slug: "kubepod-operator"
 heroImagePath: null
-tags: ["Astronomer Platform", "Airflow", "Kubernetes"]
+tags: ["Kubernetes", “Operators”]
 ---
 
 

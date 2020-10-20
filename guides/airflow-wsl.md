@@ -4,7 +4,7 @@ description: "How to spin up Airflow on your Windows system."
 date: 2018-05-21T00:00:00.000Z
 slug: "airflow-wsl"
 heroImagePath: null
-tags: ["Airflow", "Windows"]
+tags: ["Windows"]
 ---
 Windows has come a long way in the last few years by catering to open source software and developers in an increasing capacity. Nothing illustrates this more than their development of WSL (Windows Subsystem for Linux), which allows you to install a Linux distribution on your PC alongside Windows without having to worry about VMs or containers. This is great for developers that work with tools that only run in Linux, such as Apache Airflow.
 

@@ -3,7 +3,7 @@ title: "Airflow vs. Oozie"
 description: "How Airflow differs from Oozie."
 date: 2018-05-21T00:00:00.000Z
 slug: "airflow-vs-oozie"
-tags: ["Oozie", "Competition"]
+tags: []
 ---
 
 > This guide was last updated September 2020
