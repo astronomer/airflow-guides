@@ -9,7 +9,7 @@ tags: ["DAGs”,"Operators”, “Basics”, “Tasks”]
 
 ## BranchPythonOperator
 
-A powerful tool in Airflow is branching via the `BranchPythonOperator`. The `BranchPytonOperator` is similar to the `PythonOperator` in that it takes a Python function as an input, but it returns a task id (or list of task_ids) to decide which part of the graph to go down. This can be used to iterate down certain paths in a DAG based off the result of a function.
+A powerful tool in Airflow is branching via the `BranchPythonOperator`. The `BranchPythonOperator` is similar to the `PythonOperator` in that it takes a Python function as an input, but it returns a task id (or list of task_ids) to decide which part of the graph to go down. This can be used to iterate down certain paths in a DAG based off the result of a function.
 
 ```python
 def return_branch(**kwargs):
