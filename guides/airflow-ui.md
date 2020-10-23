@@ -13,7 +13,7 @@ Since the UI isn't always the most intuitive, here's a guide that'll walk you th
 
 ## Getting Started
 
-Upon signing into the UI, you'll immediately land on the DAGs dashboard. 
+Upon signing into the UI, you'll immediately land on the DAGs dashboard.
 
 ![dashboard](https://assets.astronomer.io/website/img/guides/dags_dashboard.png)
 
