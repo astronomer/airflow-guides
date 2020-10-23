@@ -4,7 +4,7 @@ description: "Use Apache Airflow's BranchOperator and ShortCircuitOperator to ex
 date: 2018-05-21T00:00:00.000Z
 slug: "airflow-branch-operator"
 heroImagePath: null
-tags: ["DAG Authoring"]
+tags: ["DAGs”,"Operators”, “Basics”, “Tasks”]
 ---
 
 ## BranchPythonOperator

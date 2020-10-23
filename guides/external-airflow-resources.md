@@ -4,7 +4,7 @@ description: "A collection of blog posts, decks, guides, and use cases written b
 date: 2018-06-21T00:00:00.000Z
 slug: "external-airflow-resources"
 heroImagePath: null
-tags: ["Resources", "Airflow"]
+tags: ["Resources", “Basics” ]
 ---
 
 A categorized collection of blog posts, decks,

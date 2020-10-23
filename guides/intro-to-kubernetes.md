@@ -4,7 +4,7 @@ description: "High-level overview of introductory concepts in Kubernetes."
 date: 2018-08-30T00:00:00.000Z
 slug: "intro-to-kubernetes"
 heroImagePath: null
-tags: ["Airflow", "Kubernetes", "Infrastructure"]
+tags: ["Kubernetes", "Infrastructure"]
 ---
 
 # Kubernetes 101

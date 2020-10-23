@@ -4,7 +4,7 @@ description: "Use Airflow to ingest data from an IMAP server to Redshift"
 date: 2018-05-21T00:00:00.000Z
 slug: "imap-to-redshift"
 heroImagePath: null
-tags: ["Building DAGs", "Redshift", "IMAP"]
+tags: ["Integrations", “Connections”, “DAGs”]
 ---
 
 In this guide, we’ll explore how you can use [Apache Airflow](https://airflow.apache.org/) to move your data from an IMAP server to Redshift. Note that this is an effective and flexible alternative to point-and-click ETL tools like [Segment](https://segment.com), [Alooma](https://alooma.com), [Xplenty](https://www.xplenty.com), [Stitch](https://stitchdata.com), and [ETLeap](https://etleap.com/).

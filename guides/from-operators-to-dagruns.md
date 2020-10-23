@@ -4,7 +4,7 @@ description: "From Operators to DagRuns"
 date: 2018-05-21T00:00:00.000Z
 slug: "from-operators-to-dagruns"
 heroImagePath: "https://assets.astronomer.io/website/img/guides/IntroToDAG_preview.png"
-tags: ["Hooks", "Operators", "Tasks"]
+tags: ["Hooks", "Operators", "Tasks", ”DAGs”]
 ---
 
 # How Work Gets Executed

@@ -4,7 +4,7 @@ description: "Use Airflow to ingest data from the Marketo API to Redshift"
 date: 2018-05-23T00:00:00.000Z
 slug: "marketo-to-redshift"
 heroImagePath: "https://assets.astronomer.io/website/img/guides/MarketoToRedshift_preview.png"
-tags: ["Building DAGs", "Redshift", "Marketo"]
+tags: ["DAGs", "Integrations", “Plugins”]
 ---
 
 In this guide, we’ll explore how you can use [Apache Airflow](https://airflow.apache.org/) to move your data from Marketo to Redshift. Note that this is an effective and flexible alternative to point-and-click ETL tools like [Segment](https://segment.com), [Alooma](https://alooma.com), [Xplenty](https://www.xplenty.com), [Stitch](https://stitchdata.com), and [ETLeap](https://etleap.com/).

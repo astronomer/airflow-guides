@@ -4,7 +4,7 @@ description: "How Airflow differs from Luigi."
 date: 2018-05-21T00:00:00.000Z
 slug: "airflow-vs-luigi"
 heroImagePath: null
-tags: ["Luigi", "Competition"]
+tags: []
 ---
 
 We often get questions regarding the differences between [Airflow](https://airflow.apache.org/) and [Luigi](https://github.com/spotify/luigi). Below you'll find a summary of the two tools and a comparison of the two communities surrounding the projects.

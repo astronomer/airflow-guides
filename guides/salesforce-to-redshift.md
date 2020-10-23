@@ -4,7 +4,7 @@ description: "Use Airflow to ingest CRM data from the Salesforce API to Redshift
 date: 2018-05-23T00:00:00.000Z
 slug: "salesforce-to-redshift"
 heroImagePath: "https://assets.astronomer.io/website/img/guides/SalesforceToRedshift_preview.png"
-tags: ["Building DAGs", "Redshift", "Salesforce"]
+tags: [“DAGs", "Integrations", “Plugins”]
 ---
 
 In this guide, we’ll explore how you can use [Apache Airflow](https://airflow.apache.org/) to move your CRM data from Salesforce to Redshift. Note that this is an effective and flexible alternative to point-and-click ETL tools like [Segment](https://segment.com), [Alooma](https://alooma.com), [Xplenty](https://www.xplenty.com), [Stitch](https://stitchdata.com), and [ETLeap](https://etleap.com/).

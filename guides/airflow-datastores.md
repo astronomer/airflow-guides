@@ -4,7 +4,7 @@ description: "Use Apache Airflow's internal datastores to build more powerful DA
 date: 2018-05-21T00:00:00.000Z
 slug: "airflow-datastores"
 heroImagePath: null
-tags: ["XCom"]
+tags: ["XCom", "DAGs", “Tasks”]
 ---
 
 Data processing and storage is generally done with external systems, with Airflow handling workflow metadata, but there are a few areas of crossover.

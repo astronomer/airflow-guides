@@ -4,7 +4,7 @@ description: "How Airflow differs from Amazon's data pipeline orchestration tool
 date: 2018-05-21T00:00:00.000Z
 slug: "airflow-vs-aws-glue"
 heroImagePath: null
-tags: ["AWS-Glue", "Competition"]
+tags: []
 ---
 
 You may have come across AWS Glue mentioned as a code-based, server-less ETL alternative to traditional drag-and-drop platforms. While this is all true (and Glue has a number of very exciting advancements over traditional tooling), there is still a very large distinction that should be made when comparing it to Apache Airflow.
