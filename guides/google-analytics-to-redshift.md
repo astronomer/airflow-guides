@@ -61,7 +61,7 @@ Navigate back into your project directory and create a `dags` folder by running 
 
 Open up the [google_analytics_to_redshift.py file](https://github.com/airflow-plugins/Example-Airflow-DAGs/blob/master/etl/google_analytics_to_redshift.py#L46) that you just copied in a text editor of your choice and input the following credentials into lines 46-50:
 
-```py
+```python
 S3_CONN_ID = ''
 S3_BUCKET = ''
 GOOGLE_ANALYTICS_CONN_ID = ''

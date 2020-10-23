@@ -25,13 +25,13 @@ If we write a simple script, `test.sh` with only one command, `echo $(whoami)`, 
 
 However, what we get is:
 
-```
+```shell
 bash: ./test.sh: Permission denied.
 ```
 
 If we try to `chmod +x test.sh` inside of the container's bash terminal, we get:
 
-```
+```shell
 chmod: test.sh: Read-only file system.
 ```
 
@@ -55,13 +55,13 @@ If you don't want to run chmod from the command line, you can add the command to
 
 In the `Dockerfile`, add the line:
 
-```
+```shell
 RUN chmod +x /full/file/path/test.sh
 ```
 
 The full file path is required, as specified above. You can type `pwd` inside the Docker container to get the file path to the directory where the `test.sh` script is located. An example of this may be:
 
-```
+```shell
 RUN chmod +x /usr/local/airflow/test.sh
 ```
 

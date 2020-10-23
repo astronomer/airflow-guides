@@ -98,7 +98,7 @@ Navigate back into your project directory and create a `dags` folder by running 
 
 Open up the [hubspot_to_redshift.py file](https://github.com/airflow-plugins/Example-Airflow-DAGs/blob/master/etl/hubspot_to_redshift.py#L74) from the repo you just cloned in a text editor of your choice and input the following credentials in lines 74-78:
 
-```
+```python
 S3_CONN_ID = ''
 S3_BUCKET = ''
 HUBSPOT_CONN_ID = ''

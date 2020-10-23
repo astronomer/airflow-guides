@@ -40,7 +40,7 @@ Navigate back into your project directory and create a `dags` folder by running 
 
 Open up the [google_analytics_to_redshift.py file](https://github.com/airflow-plugins/Example-Airflow-DAGs/blob/master/etl/imap_to_redshift.py#L25) that you just copied in a text editor of your choice and input the following credentials into lines 25-34:
 
-```py
+```python
 IMAP_CONN_ID = ''
 IMAP_EMAIL = ''
 

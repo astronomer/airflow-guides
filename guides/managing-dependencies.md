@@ -31,7 +31,7 @@ This logic can be set three ways:
 
 To set groups of dependencies, you can use lists or tuples as well.
 
-```
+```python
 d1 >> d2 >> (d3, d4)
 
 d1 >> d2 >> [d3, d4]

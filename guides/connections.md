@@ -60,7 +60,7 @@ Connections can be maintained in the Airflow Interface (Menu --> Admin --> Conne
 
 Depending on the Hook or Operator used, Connections can be called directly in the code:
 
-```
+```python
 
 postgres_query = PostgresOperator(
             task_id="query_one",
@@ -76,7 +76,7 @@ postgres_query = PostgresOperator(
 #### Programatically Modifying Connections
 The Airflow Connections class can be modified programatically to sync with an external secrets manager:
 
-```
+```python
 @provide_session
 def create_connections(session=None):
     sources = {"This could come from secrets manager"}

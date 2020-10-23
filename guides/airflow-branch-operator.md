@@ -68,7 +68,7 @@ The DAG will proceed based on the output of the function passed in.
 
 Under the hood, the `BranchPythonOperator` simply inherits the PythonOperator:
 
-```
+```python
 class BranchPythonOperator(PythonOperator, SkipMixin):
     """
     Allows a workflow to "branch" or follow a path following the execution

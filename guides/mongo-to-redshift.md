@@ -42,7 +42,7 @@ Navigate back into your project directory and create a `dags` folder by running 
 
 Open up the [mongo_to_redshift.py file](https://github.com/airflow-plugins/Example-Airflow-DAGs/blob/master/etl/mongo_to_redshift/mongo_to_redshift.py) from the repo you just cloned in a text editor of your choice and input the following credentials in lines 35-40:
 
-```py
+```python
 S3_CONN = ''
 S3_BUCKET = ''
 REDSHIFT_SCHEMA = ''

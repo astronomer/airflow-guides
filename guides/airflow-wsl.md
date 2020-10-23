@@ -36,7 +36,7 @@ It can be a bit burdensome to have to look in `/mnt/c` to get to your windows fi
 
 Type `sudo nano /etc/wsl.conf`. This will open the Linux nano text editor for editing files. Change the file structure to match the following:
 
-```
+```shell
 [automount]
 root = /
 options = "metadata"
@@ -62,7 +62,7 @@ Now let’s set `AIRFLOW_HOME` (Airflow looks for this environment variable when
 
 Running `nano ~/.bashrc` will open up the file mentioned earlier for setting environment variables in your bash session. On a new line add the following statement `export AIRFLOW_HOME=/c/Users/user_name/AirflowHome` statement replacing `user_name` with your actual windows home folder name. It should look something like this:
 
-```
+```shell
 # ~/.bashrc: executed by bash(1) for non-login shells.
 # see /usr/share/doc/bash/examples/startup-files (in the package bash-doc)
 # for examples
@@ -145,7 +145,7 @@ Cmder is console emulator for windows. It is great for interacting with both WSL
 Click [here](https://cmder.net/) to read more and download
 
 In Cmder, click the dropdown by the green plus in the bottom right corner and select `setup tasks`. There should be a `WSL::bash` task. In the commands box, I like to add a line that makes Cmder open to my Windows home folder instead of the Ubuntu home folder. It will look something like this.
-```
+```shell
 set "PATH=%ConEmuBaseDirShort%\wsl;%PATH%" & %ConEmuBaseDirShort%\conemu-cyg-64.exe --wsl -cur_console:pm:/mnt -C "/c/Users/user_name" -e
 ```
 

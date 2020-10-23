@@ -15,7 +15,7 @@ Installing Kubectl is pretty simple.
 ### Linux
 If you're running Ubuntu or Debian, install with the native package manager:
 
-```
+```shell
 apt-get update && apt-get install -y apt-transport-https
 curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key add -
 cat <<EOF >/etc/apt/sources.list.d/kubernetes.list
@@ -27,20 +27,20 @@ apt-get install -y kubectl
 ### OSX
 Install Kubectl using Homebrew on mac
 
-```
+```shell
 brew install kubectl
 ```
 
 Verify kubectl is installed and up-to-date
 
-```
+```shell
 kubectl version
 ```
 
 ### Windows
 Install kubectl on windows using cURL
 
-```
+```shell
 curl -LO https://storage.googleapis.com/kubernetes-release/release/v1.10.3/bin/windows/amd64/kubectl.exe
 ```
 Add the binary to your environment PATH and you're all set.
@@ -54,7 +54,7 @@ For more installation options, visit the official Kubectl install guide:[https:/
 Check with your sys-admin to be sure that your gcloud account has the right permissions to use this.
 
 To authenticate, run:
- ```
+```shell
 gcloud container clusters get-credentials CLUSTERNAME --zone ZONE --project PROJECT NAME
 ```
 
@@ -64,7 +64,7 @@ Download kubectx for an easy way to switch between namespaces and clusters. This
 
 ### Basic Commands
 
-```
+```shell
 bash
 kubectl get pods
 ```
@@ -73,7 +73,7 @@ This will return a list of pods and their current status.
 
 To delete a pod, run:
 
-```
+```shell
 bash
 kubectl delete po/POD_NAME
 ```
@@ -81,14 +81,14 @@ To restart any particular component of your Airflow setup, you can simply delete
 **Note: Do not delete the database pod**
 
 If you are seeing unexpected behavior in your Airflow deployment, the answer might lie in the scheduler or webserver logs:
-```
+```shell
 bash
 kubectl logs po/POD_NAME -f
 ```
 This will follow the logs on your terminal. The scheduler and webserver logs tend to pile up quickly, so it might be best to run this after restarting either of those pods.
 
 To exec into a pod, you can run:
-```
+```shell
 kubectl exec -it NAME /bin/bash
 ```
 This will show you the code that exists on the container.
