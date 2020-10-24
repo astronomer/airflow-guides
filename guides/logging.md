@@ -37,7 +37,7 @@ The logger in Airflow is configured through a *dictionary-formatted* file. All o
 In the `.py`, the context for the logger is set. This includes the type of handler to use, the formatter, and the level of the log message.
 
 Let's take a look at the default logging configuration file that Airflow ships with.
-```
+```python
 from airflow import configuration as conf
 
 LOG_LEVEL = conf.get('core', 'LOGGING_LEVEL').upper()
@@ -140,7 +140,7 @@ Configuring logging is done through both `env` variables and setting up a new `l
 - Create a new directory to store the new log config file. The new directory should be called `config`. Airflow's docs require you place the new directory in the `PYTHONPATH`, so it should be created as such: `$AIRFLOW_HOME/config`.
 
 - Inside your new directory called `config`, place two new files, `__init__.py` and a `log_config.py`. It should look something like this:
-```py
+```bash
 ├── config
 │   ├── __init__.py
 │   ├── log_config.py
@@ -150,7 +150,7 @@ Configuring logging is done through both `env` variables and setting up a new `l
 - Copy the entire contents of `airflow_local_settings.py` from the `config_templates` directory into `log_config.py`. Change the variable name called `DEFAULT_LOGGING_CONFIG` to `LOGGING_CONFIG`.
 
 - Inside `airflow.cfg`, locate the environmental variable called `LOGGING_CONFIG_CLASS`, inside the Airflow Core settings. Change this to reflect the path to your new `log_config,py` file. In most cases, this will be as such, but adapt to your own needs:
-```py
+```python
  LOGGING_CONFIG_CLASS = airflow.config.log_config.LOGGING_CONFIG
 ```
 

@@ -69,7 +69,7 @@ Navigate back into your project directory and create a `dags` folder by running 
 
 Open up the [facebook_ads_to_redshift.py file](https://github.com/airflow-plugins/Example-Airflow-DAGs/blob/master/etl/facebook_ads_to_redshift.py#L51) from the repo you just cloned in a text editor of your choice and fill out the following fields fin lines 51-56:
 
-```py
+```python
 FACEBOOK_CONN_ID = ''
 ACCOUNT_ID = ''
 S3_BUCKET = ''

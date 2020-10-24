@@ -54,7 +54,7 @@ If you are using s3 as your intermediary, it is best to set a policy restricted 
 
 An example policy allowing this is below:
 
-```
+```json
 {
     "Version": "2012-10-17",
     "Statement": [
@@ -123,7 +123,7 @@ Try to do basic transformations and aggregations in SQL queries - this offloads 
 
 To keep any custom plugins easy for someone else to use, use a consistent file structure. At Astronomer, we use:
 
-```
+```bash
 plugin_name/
 ├── README.md  <--- High level description of what the plugin contains and what it does
 ├── __init__.py  <--- Calls the Airflow plugins manager

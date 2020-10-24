@@ -51,7 +51,7 @@ Navigate back into your project directory and create a `dags` folder by running 
 
 Open up the [marketo_to_redshift.py file](https://github.com/airflow-plugins/Example-Airflow-DAGs/blob/master/etl/marketo_to_redshift.py#L39) from the repo you just cloned in a text editor of your choice and input the following credentials in lines 39-50:
 
-```py
+```python
 MARKETO_CONN_ID = ''
 MARKETO_SCHEMA = ''
 REDSHIFT_SCHEMA = ''

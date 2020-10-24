@@ -14,7 +14,7 @@ Note: The `Plugins` mechanism still must be used for plugins that make changes t
 ### How it works
 Let’s assume you have an `Airflow Home` directory with the following structure.
 
-```
+```bash
 .
 ├── airflow.cfg
 ├── airflow.db
@@ -31,7 +31,7 @@ Let’s assume you have an `Airflow Home` directory with the following structure
 
 We will assume that `my_dag` wants to use `my_operator` and `my_sensor`. Also, `my_operator` wants to use `my_hook`. When Airflow is running, it will add `dags/`, `plugins/`, and `config/` to PATH. So any python files in those folders should be accessible to import. So from our `my_dag.py` file, we can simply use
 
-```
+```python
 from operators.my_operator import MyOperator
 from sensors.my_sensor import MySensor
 ```
