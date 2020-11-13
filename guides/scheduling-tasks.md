@@ -4,7 +4,7 @@ description: "Overview of the Airflow scheduler"
 date: 2018-05-21T00:00:00.000Z
 slug: "scheduling-tasks"
 heroImagePath: null
-tags: [ "Tasks", “Best Practices”, “Basics”]
+tags: [ "Tasks", "Best Practices", "Basics"]
 ---
 
 The Airflow scheduler monitors all tasks and all DAGs to ensure that everything is executed according to schedule. The Airflow scheduler, the heart of the application, "heartbeats" the DAGs folder at a configurable interval to inspect tasks for whether or not they can be triggered.

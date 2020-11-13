@@ -4,7 +4,7 @@ description: "Use Apache Airflow to ingest data from MongoDB to Redshift"
 date: 2018-05-23T00:00:00.000Z
 slug: "mongo-to-redshift"
 heroImagePath: "https://assets.astronomer.io/website/img/guides/MongoDBToRedshift_preview.png"
-tags: [“DAGs", "Integrations", “Plugins”]
+tags: ["DAGs", "Integrations", "Plugins"]
 ---
 
 In this guide, we’ll explore how you can use [Apache Airflow](https://airflow.apache.org/) to move your data from your MongoDB to Redshift. Note that this is an effective and flexible alternative to point-and-click ETL tools like [Segment](https://segment.com), [Alooma](https://alooma.com), [Xplenty](https:/www.xplenty.com), [Stitch](https://stitchdata.com), and [ETLeap](https://etleap.com/).

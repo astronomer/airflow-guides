@@ -4,7 +4,7 @@ description: "How to correctly import custom hooks and operators"
 date: 2019-05-29T00:00:00.000Z
 slug: "airflow-importing-custom-hooks-operators"
 heroImagePath: null
-tags: [“Hooks”, “Operators”, “Plugins”, “Basics”]
+tags: ["Hooks", "Operators", "Plugins", "Basics"]
 ---
 
 Custom hooks and operators are a powerful way to extend Airflow to meet your needs. There is however some confusion on the best way to implement them. According to the Airflow documentation, they can be added using Airflow’s `Plugins` mechanism. This however, overcomplicates the issue and leads to confusion for many people. Airflow is even considering deprecating using the `Plugins` mechanism for hooks and operators going forward.

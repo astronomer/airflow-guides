@@ -4,7 +4,7 @@ description: "How to use Kerberos and Kerberized hooks in Airflow"
 date: 2018-07-24T00:00:00.000Z
 slug: "kerberos"
 heroImagePath: null
-tags: [“Integrations”, ”Connections”]
+tags: ["Integrations", "Connections"]
 ---
 
 An overview of the support for Kerberos in Airflow today and how you can use Kerberized hooks.

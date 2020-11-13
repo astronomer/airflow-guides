@@ -4,7 +4,7 @@ description: "A high-level overview of the Airflow UI"
 date: 2018-05-21T00:00:00.000Z
 slug: "airflow-ui"
 heroImagePath: null
-tags: ["DAGs", "Airflow UI", “Basics”, “XCom”, “Tasks”, “Connections”]
+tags: ["DAGs", "Airflow UI", "Basics", "XCom", "Tasks", "Connections"]
 ---
 
 A notable part of Apache Airflow is its built-in UI, which allows you to see the status of your jobs, their underlying code, and even some meta-data on their execution time. It'll help you both monitor and troubleshoot your workflows and, if used correctly, can make your use of Airflow that more effective. 

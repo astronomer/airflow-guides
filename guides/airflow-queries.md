@@ -4,7 +4,7 @@ description: "A home for SQL queries that we frequently run on our Airflow postg
 date: 2018-05-21T00:00:00.000Z
 slug: "airflow-queries"
 heroImagePath: "https://assets.astronomer.io/website/img/guides/usefulsqlqueries.png"
-tags: ["Database", "SQL", “DAGs”, “Tasks”]
+tags: ["Database", "SQL", "DAGs", "Tasks"]
 ---
 
 ## Get total completed task count

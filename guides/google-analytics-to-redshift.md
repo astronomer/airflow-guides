@@ -4,7 +4,7 @@ description: "Use Airflow to ingest data from the Google Analytics API to Redshi
 date: 2018-05-21T00:00:00.000Z
 slug: "google-analytics-to-redshift"
 heroImagePath: "https://assets.astronomer.io/website/img/guides/GoogleAnalyticsToRedshift_preview.png"
-tags: ["DAGs", “Integrations”]
+tags: ["DAGs", "Integrations"]
 ---
 
 In this guide, we’ll explore how you can use [Apache Airflow](https://airflow.apache.org/) to move your data from Google Analytics to Redshift. Note that this is an effective and flexible alternative to point-and-click ETL tools like [Segment](https://segment.com), [Alooma](https://alooma.com), [Xplenty](https://xplenty.com), [Stitch](https://stitchdata.com), and [ETLeap](https://etleap.com/).

@@ -4,7 +4,7 @@ description: "A thorough breakdown of Apache Airflow's Executors: Celery, Local 
 date: 2019-03-04T00:00:00.000Z
 slug: "airflow-executors-explained"
 heroImagePath: null
-tags: ["Executor", “Basics”, "Kubernetes",  "Concurrency",  "Parallelism" ]
+tags: ["Executor", "Basics", "Kubernetes",  "Concurrency",  "Parallelism" ]
 ---
 
 If you're new to Apache Airflow, the world of Executors is difficult to navigate. Even if you're a veteran user overseeing 20+ DAGs, knowing what Executor best suits your use case at any given time isn't black and white - especially as the OSS project (and its utilities) continues to grow and develop.

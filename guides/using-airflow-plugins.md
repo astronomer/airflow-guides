@@ -4,7 +4,7 @@ description: "A crash-course in using Airflow Plugins."
 date: 2018-05-21T00:00:00.000Z
 slug: "using-airflow-plugins"
 heroImagePath: "https://assets.astronomer.io/website/img/guides/bestpractices.png"
-tags: ["Best Practices", "Plugins", “Basics”]
+tags: ["Best Practices", "Plugins", "Basics"]
 ---
 
 ## Plugins
