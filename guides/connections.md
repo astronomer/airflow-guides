@@ -4,7 +4,7 @@ description: "An overview of how connections work in the Airflow UI."
 date: 2018-05-21T00:00:00.000Z
 slug: "connections"
 heroImagePath: null
-tags: ["Connections", “Basics”, “Hooks”, “Operators”]
+tags: ["Connections", "Basics", "Hooks", "Operators"]
 ---
 
 This document covers how to set up various connections in Airflow. Connections defined by this process are used by [Hooks](https://airflow.apache.org/concepts.html#hooks) in order to encapsulate authentication code and common functions that are used by [Operators](https://airflow.apache.org/concepts.html#operators).

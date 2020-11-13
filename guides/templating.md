@@ -4,7 +4,7 @@ description: "How to leverage the power of Jinja Templating when writing your DA
 date: 2018-05-23T00:00:00.000Z
 slug: "templating"
 heroImagePath: null
-tags: ["Templating", “Best Practices”, “Basics”]
+tags: ["Templating", "Best Practices", "Basics"]
 ---
 
 Macros are used to pass dynamic information into task instances at runtime. Since all top-level code in DAG files is interpreted every scheduler "heartbeat," macros and templating allow run-time tasks to be offloaded to the executor instead of the scheduler.  <br> <br>

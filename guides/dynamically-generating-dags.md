@@ -4,7 +4,7 @@ description: "Using a base DAG template to create multiple DAGs."
 date: 2018-05-21T00:00:00.000Z
 slug: "dynamically-generating-dags"
 heroImagePath: "https://assets.astronomer.io/website/img/guides/dynamicdags.png"
-tags: ["DAGs", “Best Practices”]
+tags: ["DAGs", "Best Practices"]
 ---
 The simplest way of creating a DAG in Airflow is to define it in the DAGs folder. Anything with a .py suffix will be scanned to see if it contains the definition of a new DAG.
 

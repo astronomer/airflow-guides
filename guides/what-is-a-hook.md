@@ -4,7 +4,7 @@ description: "What is a Hook"
 date: 2018-05-21T00:00:00.000Z
 slug: "what-is-a-hook"
 heroImagePath: "https://assets.astronomer.io/website/img/guides/IntroToDAG_preview.png"
-tags: ["Hooks", "Operators", "Tasks", “Basics”]
+tags: ["Hooks", "Operators", "Tasks", "Basics"]
 ---
 
 # Hooks

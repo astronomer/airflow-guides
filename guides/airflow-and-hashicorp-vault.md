@@ -3,7 +3,7 @@ title: "Integrating Airflow and Hashicorp Vault"
 description: "Pull connection information from your Hashicorp Vault to use in your Airflow DAGs."
 date: 2020-03-21T00:00:00.000Z
 slug: "airflow-and-hashicorp-vault"
-tags: ["DAGs", "Secrets", “Integrations”]
+tags: ["DAGs", "Secrets", "Integrations"]
 ---
 
 

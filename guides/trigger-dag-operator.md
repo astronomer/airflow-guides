@@ -4,7 +4,7 @@ description: "How to use DAGs to trigger secondary DAG kickoffs in Airflow."
 date: 2018-05-23T00:00:00.000Z
 slug: "trigger-dag-operator"
 heroImagePath: "https://assets.astronomer.io/website/img/guides/trigger.png"
-tags: ["Templating", “Best Practices”, “Basics”]
+tags: ["Templating", "Best Practices", "Basics"]
 ---
 
 As workflows are being developed and built upon by different team members, they tend to get more complex.

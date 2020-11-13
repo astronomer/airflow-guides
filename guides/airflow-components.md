@@ -4,7 +4,7 @@ description: "How all of Apache Airflow's components fit together."
 date: 2018-05-21T00:00:00.000Z
 slug: "airflow-components"
 heroImagePath: null
-tags: ["Components", "Executors", "Airflow UI", “Database”, “Basics”]
+tags: ["Components", "Executors", "Airflow UI", "Database", "Basics"]
 ---
 
 ## Core Components
