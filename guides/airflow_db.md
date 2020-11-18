@@ -2,7 +2,7 @@
 title: "Understanding the Airflow Metadata Database"
 description: "Documentation for airflow metadata database"
 date: 2020-03-21T00:00:00.000Z
-slug: "airflow-database-docs"
+slug: "airflow_db"
 tags: ["metastore", "database", "Airflow"]
 ---
 
@@ -15,13 +15,12 @@ A question we often get asked about here at Astronomer is regarding the structur
 
 Airflow uses SQLAlchemy and Object Relational Mapping (ORM) in Python to connect and interact with the underlying metadata database from the application layer. Thus, any database supported by [SQLAlchemy](https://www.sqlalchemy.org/) can be configured to store all the metadata. On Astronomer, each Airflow deployment is equipped with PostgreSQL database for this purpose. The following guide details all the tables available in the database repository including dependencies and the complete ERD diagram. 
 
-Even though we don't recommend modifying the values directly on the database as it might affect dependencies, understanding the underlying structure can be very useful when it comes to building your own reports or queries directly the database. You can find some useful queries that go directly against these tables in our [Useful SQL queries for Apache Airflow](#https://www.astronomer.io/guides/airflow-queries/) guide. 
+Even though we don't recommend modifying the values directly on the database as it might affect dependencies, understanding the underlying structure can be very useful when it comes to building your own reports or queries directly the database. You can find some useful queries that go directly against these tables in our [Useful SQL queries for Apache Airflow](https://www.astronomer.io/guides/airflow-queries/) guide. 
 
 
 ## ERD Diagram
 
 The following diagram displays all the tables from the Airflow database. 
-Further descriptions and structure for each table is 
 
 ![Airflow DB](https://assets2.astronomer.io/main/guides/airflow_db.png)
 
@@ -32,14 +31,12 @@ Further descriptions and structure for each table is
 The Airflow metadata database has a total of 30 tables  tables are stored on the public schema by default. The following describe the table structure and reference for the airflow metadata tables. 
 
 ### public.ab_permission
-**Description:** 
-
+ 
 **Table Structure:**
 |  F-Key   |Name   |Type                     |Description|
 |:-------  |:------ |:-----------------------|:-----------|
 |          |id     |integer                  |*PRIMARY KEY*|
 |          |name   |character varying(100)   |*UNIQUE NOT NULL*|
-
 
 **Tables referencing this one via Foreign Key Constraints:**
 
@@ -49,15 +46,12 @@ The Airflow metadata database has a total of 30 tables  tables are stored on the
 
 ### public.ab_permission_view
 
-**Description:** 
-
 **Table Structure:**
 |F-Key                                                 |Name            |Type      |Description   |
 |:-----------------------------------------------------|:---------------|:---------|:-------------|
 |                                                      |id              |integer   |*PRIMARY KEY*|
 |  [public.ab_permission.id](#public.ab\_permission)   |permission_id   |integer   |*UNIQUE\#1*|
 |  [public.ab_view_menu.id](#public.ab\_view\_menu)    |view_menu_id    |integer   |*UNIQUE\#1*|
-
 
 **Tables referencing this one via Foreign Key Constraints:**
 
@@ -66,8 +60,6 @@ The Airflow metadata database has a total of 30 tables  tables are stored on the
 ------------------------------------------------------------------------
 
 ###  public.ab_permission_view_role
-
-**Description:** 
 
 **Table Structure:**
 |F-Key  |Name |Type |Description|
@@ -79,8 +71,6 @@ The Airflow metadata database has a total of 30 tables  tables are stored on the
 ------------------------------------------------------------------------
 
 ###  public.ab_register_user
-
-**Description:** 
 
 **Table Structure:**
 |  F-Key  |Name                |Type                          |Description|
@@ -98,8 +88,6 @@ The Airflow metadata database has a total of 30 tables  tables are stored on the
 
 ###  public.ab_role
 
-**Description:** 
-
 **Table Structure:**
 |F-Key     |Name   |Type                    |Description|
 |:-------  |:------|:-----------------------|:-------------------|
@@ -110,11 +98,9 @@ The Airflow metadata database has a total of 30 tables  tables are stored on the
 -   [public.ab_permission_view_role](#public.ab-permission\_view\_role)
 -   [public.ab_user_role](#public.ab\_user\_role)
 
-
 ------------------------------------------------------------------------
 
 ###  public.ab_user
-**Description:** 
 
 **Table Structure:**
 |F-Key                                        |Name                 |Type                          |Description
@@ -134,14 +120,13 @@ The Airflow metadata database has a total of 30 tables  tables are stored on the
 |  [public.ab_user.id](#public.ab\_user) |  created_by_fk      |integer                       |
 |  [public.ab_user.id](#public.ab\_user) |  changed_by_fk      |integer                       |
 
-
 **Tables referencing this one via Foreign Key Constraints:**
 -   [public.ab_user](#public.ab\_user)
 -   [public.ab_user_role](#public.ab\_user\_role)
+
 ------------------------------------------------------------------------
 
 ###  public.ab_user_role
-**Description:** 
 
 **Table Structure:**
 |F-Key                                        |Name      |Type      |Description
@@ -153,8 +138,7 @@ The Airflow metadata database has a total of 30 tables  tables are stored on the
 ------------------------------------------------------------------------
 
 ###  public.ab_view_menu
-**Description:** 
-
+ 
 **Table Structure:**
 |F-Key   |Name   |Type                     |Description
 |:------ |:----- |:----------------------- |:-------------------
@@ -167,8 +151,7 @@ The Airflow metadata database has a total of 30 tables  tables are stored on the
 ------------------------------------------------------------------------
 
 ###  public.alembic_version
-**Description:** 
-
+ 
 **Table Structure:**
 |F-Key   |Name          |Type                    |Description
 |------- |:------------ |:---------------------- |:--------------
@@ -177,8 +160,7 @@ The Airflow metadata database has a total of 30 tables  tables are stored on the
 ------------------------------------------------------------------------
 
 ###  public.chart
-**Description:** 
-
+ 
 **Table Structure:**
 |F-Key                                    |Name              |Type                       |Description
 |---------------------------------------- |:---------------- |:------------------------- |:--------------
@@ -201,7 +183,6 @@ The Airflow metadata database has a total of 30 tables  tables are stored on the
 ------------------------------------------------------------------------
 
 ###  public.connection
-**Description:** 
 
 **Table Structure:**
 |F-Key   |Name                 |Type                      |Description
@@ -221,7 +202,6 @@ The Airflow metadata database has a total of 30 tables  tables are stored on the
 ------------------------------------------------------------------------
 
 ###  public.dag
-**Description:** 
 
 **Table Structure:**
 |F-Key   |Name                 |Type                       |Description
@@ -248,8 +228,7 @@ The Airflow metadata database has a total of 30 tables  tables are stored on the
 ------------------------------------------------------------------------
 
 ###  public.dag_pickle
-**Description:** 
-
+ 
 **Table Structure:**
 |F-Key   |Name           |Type                       |Description
 |:------ |:------------- |:------------------------- |:--------------
@@ -261,8 +240,7 @@ The Airflow metadata database has a total of 30 tables  tables are stored on the
 ------------------------------------------------------------------------
 
 ###  public.dag_run
-**Description:** 
-
+ 
 **Table Structure:**
 |F-Key   |Name               |Type                       |Description
 |:------ |:----------------- |:------------------------- |:----------------------
@@ -276,15 +254,12 @@ The Airflow metadata database has a total of 30 tables  tables are stored on the
 |        |end_date           |timestamp with time zone   |
 |        |start_date         |timestamp with time zone   |
 
-
+**Indexes:**
 -   **dag_id_state** dag_id, state
-
-[Index](#index) - [Schema public](#public.schema)
 
 ------------------------------------------------------------------------
 
 ###  public.import_error
-**Description:** 
 
 **Table Structure:**
 |F-Key   |Name         |Type                       |Description
@@ -297,8 +272,7 @@ The Airflow metadata database has a total of 30 tables  tables are stored on the
 ------------------------------------------------------------------------
 
 ###  public.job
-**Description:** 
-
+ 
 **Table Structure:**
 |F-Key   |Name               |Type                       |Description
 |:------ |:----------------- |:------------------------- |:---------------
@@ -320,7 +294,6 @@ The Airflow metadata database has a total of 30 tables  tables are stored on the
 ------------------------------------------------------------------------
 
 ###  public.known_event
-**Description:** 
 
 **Table Structure:**
 |F-Key                                                          |Name                  |Type                          |Description
@@ -336,7 +309,6 @@ The Airflow metadata database has a total of 30 tables  tables are stored on the
 ------------------------------------------------------------------------
 
 ###  public.known_event_type
-**Description:** 
 
 **Table Structure:**
 |F-Key   |Name              |Type                     |Description
@@ -350,7 +322,6 @@ The Airflow metadata database has a total of 30 tables  tables are stored on the
 ------------------------------------------------------------------------
 
 ###  public.kube_resource_version
-**Description:** 
 
 **Table Structure:**
 |F-Key   |Name               |Type                     |Description
@@ -358,7 +329,7 @@ The Airflow metadata database has a total of 30 tables  tables are stored on the
 |        |one_row_id         |boolean                  |*PRIMARY KEY DEFAULT true*
 |        |resource_version   |character varying(255)   |
 
-Constraints:
+**Constraints:**
 |Name                                |Constraint
 |:---------------------------------- |:--------------------
 |kube_resource_version_one_row_id    |CHECK (one_row_id)
@@ -366,15 +337,14 @@ Constraints:
 ------------------------------------------------------------------------
 
 ###  public.kube_worker_uuid
-**Description:** 
-
+ 
 **Table Structure:**
 |F-Key   |Name          |Type                     |Description
 |:------ |:------------ |:----------------------- |:---------------------------
 |        |one_row_id    |boolean                  |*PRIMARY KEY DEFAULT true*
 |        |worker_uuid   |character varying(255)   |
 
-Constraints:
+**Constraints:**
 |Name                     |Constraint
 |:----------------------- |:-------------------
 |kube_worker_one_row_id   |CHECK (one_row_id)
@@ -382,8 +352,7 @@ Constraints:
 ------------------------------------------------------------------------
 
 ###  public.log
-**Description:** 
-
+ 
 **Table Structure:**
 |F-Key   |Name             |Type                       |Description
 |:------ |:--------------- |:------------------------- |:--------------
@@ -402,7 +371,6 @@ Constraints:
 ------------------------------------------------------------------------
 
 ###  public.serialized_dag
-**Description:** 
 
 **Table Structure:**
 |F-Key   |Name           |Type                       |Description
@@ -418,8 +386,7 @@ Constraints:
 
 ------------------------------------------------------------------------
 
-###  public.sla_miss
-**Description:** 
+###  public.sla_miss 
 
 **Table Structure:**
 |F-Key   |Name                |Type                       |Description
@@ -438,8 +405,7 @@ Constraints:
 ------------------------------------------------------------------------
 
 ###  public.slot_pool
-**Description:** 
-
+ 
 **Table Structure:**
 |F-Key   |Name          |Type                    |Description
 |------- |------------- |----------------------- |---------------
@@ -451,8 +417,7 @@ Constraints:
 ------------------------------------------------------------------------
 
 ###  public.task_fail
-**Description:** 
-
+ 
 **Table Structure:**
 |F-Key   |Name             |Type                       |Description
 |------- |---------------- |-------------------------- |---------------
@@ -469,8 +434,7 @@ Constraints:
 
 ------------------------------------------------------------------------
 
-###  public.task_instance
-**Description:** 
+###  public.task_instance 
 
 **Table Structure:**
 |F-Key   |Name              |Type                       |Description
@@ -506,12 +470,10 @@ Constraints:
 -   **ti_state** state
 -   **ti_state_lkp** dag_id, task_id, execution_date, state
 
-
 ------------------------------------------------------------------------
 
 ### Table public.task_reschedule
-**Description:** 
-
+ 
 **Table Structure:**
 
 --------------------------------------------------------------------------------
@@ -535,8 +497,6 @@ Constraints:
 
 ###  public.users
 
-**Description:** 
-
 **Table Structure:**
 |F-Key   |Name        |Type                     |Description
 |:-------|:-----------|:------------------------|:---------------
@@ -551,12 +511,10 @@ Constraints:
 -   [public.chart](#public.chart)
 -   [public.known_event](#public.known-event)
 
-
 ------------------------------------------------------------------------
 
 ###  public.variable
-**Description:** 
-
+ 
 **Table Structure:**
 |F-Key   |Name           |Type                     |Description
 |------- |:--------------|:------------------------|:---------------
@@ -568,8 +526,6 @@ Constraints:
 ------------------------------------------------------------------------
 
 ### public.xcom
-**Description:**
-XCom, short for "cross communication," are stores of key, value, and timestamps meant to communicate between tasks. XComs are stored in Airflow's metadata database in the public.xcom table with an associated `execution_date`, `task_id` and `dag_id` 
 
 **Table Structure:**
 |F-Key  | Name            | Type                      |Description|
