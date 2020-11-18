@@ -13,16 +13,17 @@ tags: ["metastore", "database", "Airflow"]
 
 A question we often get asked about here at Astronomer is regarding the structure of the underlying Airflow metadata database. The Airflow metadata database stores configurations, such as variables and connections. It also stores user information, roles, and policies and is the Airflow Scheduler's source of truths when it comes to the metadata regarding DAGs, schedule intervals, statistics from each run, and their tasks. 
 
-Airflow uses SQLAlchemy and Object Relational Mapping (ORM) in Python to connect and interact with the underlying metadata database from the application layer. Thus, any database supported by SQLALchemy can be configured to store all the metadata. On Astronomer, each Airflow deployment is equiped with PostgreSQL database for this purpose. The following guide details all the tables available in the database repository including dependencies and the complete ERD diagram. 
+Airflow uses SQLAlchemy and Object Relational Mapping (ORM) in Python to connect and interact with the underlying metadata database from the application layer. Thus, any database supported by [SQLAlchemy](https://www.sqlalchemy.org/) can be configured to store all the metadata. On Astronomer, each Airflow deployment is equipped with PostgreSQL database for this purpose. The following guide details all the tables available in the database repository including dependencies and the complete ERD diagram. 
 
 Even though we don't recommend modifying the values directly on the database as it might affect dependencies, understanding the underlying structure can be very useful when it comes to building your own reports or queries directly the database. You can find some useful queries that go directly against these tables in our [Useful SQL queries for Apache Airflow](#https://www.astronomer.io/guides/airflow-queries/) guide. 
 
 
 ## ERD Diagram
-The following diagram displays all the tables from the aiflow 
+
+The following diagram displays all the tables from the Airflow database. 
 Further descriptions and structure for each table is 
 
-![Airflow DB](airflow_db.png)
+![Airflow DB](https://assets2.astronomer.io/main/guides/airflow_db.png)
 
 ------------------------------------------------------------------------
 
