@@ -31,9 +31,9 @@ Each method has pros and cons, and the method you choose will likely depend on y
 
 |Method      |Docker + KubernetesPodOperator                                                                                                                                                                    |API + SimpleHttpOperator                                                                                                            |
 |------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|------------------------------------------------------------------------------------------------------------------------------------|
-|Pros        |- Containerizing jobs brings the benefits of containerization including efficiency, flexibility, and scaling - Easily allows for downstream dependencies  - Logs from jobs are shown in Airflow UI|- Very easy and accessible. Little setup and knowledge of other tools is required                                                   |
-|Cons        |- Must have Talend Studio to containerize jobs - More requirements and complexity to setup                                                                                                        |- Not well suited for triggering jobs that have downstream dependencies - Logs from Talend job are not automatically sent to Airflow|
-|Requirements|- Talend Studio license - Docker registry (can use Dockerhub if public is okay) - Kubernetes                                                                                                      |- Talend cloud license that allows API access                                                                                       |
+|Pros        |<ul><li>Containerizing jobs brings the benefits of containerization including efficiency, flexibility, and scaling - Easily allows for downstream dependencies</li><li>Logs from jobs are shown in Airflow UI| <ul><li>Very easy and accessible. Little setup and knowledge of other tools is required</li></ul>                                                   |
+|Cons        | <ul><li>Must have Talend Studio to containerize jobs - More requirements and complexity to setup</li></ul>                                                                                                        | <ul><li>Not well suited for triggering jobs that have downstream dependencies - Logs from Talend job are not automatically sent to Airflow</li></ul>|
+|Requirements| <ul><li>Talend Studio license - Docker registry (can use Dockerhub if public is okay)</li> <li> Kubernetes</li></ul>                                                                                                      | <ul><li>Talend cloud license that allows API access</li></ul>                                                                                       |
 
 <br/>
 
@@ -116,7 +116,7 @@ else:
     config_file=None
 
 # Define recipient emails for successful completion notification
-email_to = ["kenten@astronomer.io"]
+email_to = ["noreply@astronomer.io"]
 
 with DAG('talend_jobs',
           schedule_interval='@once',
