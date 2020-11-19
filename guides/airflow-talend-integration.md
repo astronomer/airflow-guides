@@ -3,7 +3,7 @@ title: "Executing Talend Jobs with Airflow"
 description: ""
 date: 2020-11-18T00:00:00.000Z
 slug: "airflow-talend-integration"
-heroImagePath: null
+heroImagePath: "https://assets2.astronomer.io/main/guides/talend/talend_airflow_hero.png"
 tags: ["Integrations"]
 ---
 
