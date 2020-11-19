@@ -153,7 +153,7 @@ When you select 'Finish' the job will be converted into Docker image and pushed 
 
 Talend can also publish jobs to Amazon ECR, Azure ACR, and Google GCR. Use this guide from Talend for connection parameter specifics [https://www.talend.com/blog/2019/03/12/how-to-deploy-talend-jobs-as-docker-images-to-amazon-azure-and-google-cloud-registries/](https://www.talend.com/blog/2019/03/12/how-to-deploy-talend-jobs-as-docker-images-to-amazon-azure-and-google-cloud-registries/)
 
-![Executing%20Talend%20Jobs%20with%20Airflow%202a2beb0aae414e13b1fcf6db0c53e173/Screen_Shot_2020-10-28_at_3.37.35_PM.png](Executing%20Talend%20Jobs%20with%20Airflow%202a2beb0aae414e13b1fcf6db0c53e173/Screen_Shot_2020-10-28_at_3.37.35_PM.png)
+![Talend UI](https://assets2.astronomer.io/main/guides/talend/talend_ui_4.png)
 
 You can now run this job locally by running:
 
