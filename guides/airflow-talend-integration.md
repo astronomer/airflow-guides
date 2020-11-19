@@ -24,22 +24,102 @@ In this tutorial we'll show simple examples that highlight a few ways that Talen
 
 There are two easy ways to execute Talend jobs with Airflow:
 
-1. Containerize your Talend jobs and execute them using the KubernetesPodOperator
-2. Use the Talend Cloud API and execute the job using the SimpleHttpOperator
+1. Use the Talend Cloud API and execute the job using the SimpleHttpOperator
+2. Containerize your Talend jobs and execute them using the KubernetesPodOperator
 
 Each method has pros and cons, and the method you choose will likely depend on your Talend setup and workflow requirements.
 
 |Method      |Docker + KubernetesPodOperator                                                                                                                                                                    |API + SimpleHttpOperator                                                                                                            |
 |------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|------------------------------------------------------------------------------------------------------------------------------------|
-|Pros        |<ul><li>Containerizing jobs brings the benefits of containerization including efficiency, flexibility, and scaling - Easily allows for downstream dependencies</li><li>Logs from jobs are shown in Airflow UI| <ul><li>Very easy and accessible. Little setup and knowledge of other tools is required</li></ul>                                                   |
-|Cons        | <ul><li>Must have Talend Studio to containerize jobs - More requirements and complexity to setup</li></ul>                                                                                                        | <ul><li>Not well suited for triggering jobs that have downstream dependencies - Logs from Talend job are not automatically sent to Airflow</li></ul>|
-|Requirements| <ul><li>Talend Studio license - Docker registry (can use Dockerhub if public is okay)</li> <li> Kubernetes</li></ul>                                                                                                      | <ul><li>Talend cloud license that allows API access</li></ul>                                                                                       |
+|Pros        |<ul><li>Containerizing jobs brings the benefits of containerization including efficiency, flexibility, and scaling </li> <li>  Easily allows for downstream dependencies</li><li>Logs from jobs are shown in Airflow UI| <ul><li>Very easy and accessible. Little setup and knowledge of other tools is required</li></ul>                                                   |
+|Cons        | <ul><li>Must have Talend Studio to containerize jobs </li> <li>  More requirements and complexity to setup</li></ul>                                                                                                        | <ul><li>Not well suited for triggering jobs that have downstream dependencies </li> <li>  Logs from Talend job are not automatically sent to Airflow</li></ul>|
+|Requirements| <ul><li>Talend Studio license </li> <li> Docker registry (can use Dockerhub if public is okay)</li> <li> Kubernetes</li></ul>                                                                                                      | <ul><li>Talend cloud license that allows API access</li></ul>                                                                                       |
 
 <br/>
 
+## Executing Talend Jobs Using the Cloud API
+
+The first way of executing Talend jobs from Airflow is using the Talend Cloud API via the SimpleHttpOperator in Airflow. This method is ideal if you have Talend Cloud jobs that do not have downstream dependencies.
+
+Below we will show how to configure your Talend Cloud account to work with the API, and an example DAG that will execute a workflow. If you are unfamiliar with the Talend Cloud API, the documentation at these links are helpful: 
+
+- [Talend Public API Docs](https://community.talend.com/s/article/Using-the-Talend-Cloud-Management-Console-Public-API-O2Ndn)
+
+- [Talend UI Docs](https://api.us-west.cloud.talend.com/tmc/swagger/swagger-ui.html#!/)
+
+### Getting Started with the Talend Cloud API
+
+Getting configured to use the API in Talend Cloud is straight forward. First, make sure the job you want to execute is present in the Talend Management Console as shown below. For this example, we will execute a sample 'SayHello' job.
+
+![Say Hello Job](https://assets2.astronomer.io/main/guides/talend/talend_api_1.png)
+
+Next, note your job's Task ID; this will be passed to the API to trigger this specific job.
+
+![Task ID](https://assets2.astronomer.io/main/guides/talend/talend_api_2.png)
+
+Finally, ensure your user has a personal access token created. This is required for authenticating to the API. To create one, under your user go to Profile Preferences, then Personal Access Tokens, and then add a token.
+
+![Token](https://assets2.astronomer.io/main/guides/talend/talend_api_3.png)
+
+That's all you have to do on the Talend side! Now you can move on to creating an Airflow DAG to execute this job.
+
+### Using the Talend API with Airflow
+
+Using Airflow to interact with the Talend Cloud API is easy using the SimpleHttpOperator. In this example we will show how to execute a job; however, note that there are many other actions you can perform with the Talend API as described in the documentation linked above, and all of these can be accomplished in a similar way. Also note that there are other ways of making an API call in Airflow besides using the SimpleHttpOperator; we have chosen to show this operator because it is the most straight forward for this use case.
+
+First, we need to set up an Airflow connection to connect to the API. The connection should be an HTTP type, and should be configured like this:
+
+![Talend Connection](https://assets2.astronomer.io/main/guides/talend/airflow_talend_5.png)
+
+The host name should be the Talend Cloud API URL. This can vary depending on which region your account is hosted in and may not be the same as the one shown above. The extras should contain your authorization string, with 'Bearer' followed by your personal access token. 
+
+Next we can create our DAG.
+
+```python
+from airflow import DAG
+from airflow.operators.http_operator import SimpleHttpOperator
+from datetime import datetime, timedelta
+import json
+
+default_args = {
+    'owner': 'airflow',
+    'depends_on_past': False,
+    'start_date': datetime(2019, 1, 1),
+    'email_on_failure': False,
+    'email_on_retry': False,
+    'retries': 1,
+    'retry_delay': timedelta(minutes=5),
+}
+
+with DAG('talend_api_jobs',
+          schedule_interval='@once',
+          default_args=default_args
+          ) as dag:
+
+    talend1 = SimpleHttpOperator(
+        task_id='talend_api',
+        method='POST',
+        http_conn_id='talend_api',
+        endpoint='/tmc/v2.2/executions',
+        data=json.dumps({"executable": "5fb2f5126a1cd451b07bee7a"}),
+    )
+```
+
+This DAG has a single SimpleHttpOperator that will send a POST request to the Talend API to trigger our job. Ensure you enter the `http_conn_id` as the connection created above. The `endpoint` should be the Talend Cloud API executions endpoint for your region. And the `data` is the body of the request, and needs to contain the executable, which is the Task ID described in the previous section formatted in json.
+
+Now if you run this DAG in Airflow, you should see a successful log that looks something like this:
+
+![Success log](https://assets2.astronomer.io/main/guides/talend/airflow_talend_6.png)
+
+And looking at the Talend Management Console, you can see the job is running:
+
+![Talend Running Job](https://assets2.astronomer.io/main/guides/talend/airflow_talend_7.png)
+
+Finally, note that because the API call will simply trigger the job, the Airflow task will be marked successful as soon as a response is received from the API; this is not tied to when the job actually completes, so if you have downstream tasks that need the Talend job to be complete you will either have to use another method like the KubernetesPodOperator described below, or design your workflow in another way that manages this dependency.
+
 ## Executing Talend Jobs with KubernetesPodOperator
 
-The first way to execute Talend jobs with Airflow is to containerize them and execute them from Airflow using the KubernetesPodOperator. This is a good option if you are using Talend studio, and if you have tasks that are dependent on your Talend jobs completing first.
+The second way to execute Talend jobs with Airflow is to containerize them and execute them from Airflow using the KubernetesPodOperator. This is a good option if you are using Talend studio, and if you have tasks that are dependent on your Talend jobs completing first.
 
 Here we'll show how to containerize an existing Talend job, and then execute some containerized jobs with dependencies using the KubernetesPodOperator in Airflow.
 
@@ -125,7 +205,7 @@ with DAG('talend_jobs',
 
     talend1 = KubernetesPodOperator(
                 namespace=namespace,
-                image="davidkoenitzer/talendjob:hello",
+                image="your-repo/talendjob:hello",
                 name="talend-test-hello",
                 task_id="hello-world",
                 in_cluster=in_cluster, # if set to true, will look in the cluster, if false, looks for file
@@ -137,7 +217,7 @@ with DAG('talend_jobs',
 
     talend2 = KubernetesPodOperator(
                 namespace=namespace,
-                image="davidkoenitzer/talendjob:random",
+                image="your-repo/talendjob:random",
                 name="talend-test-random",
                 task_id="random",
                 in_cluster=in_cluster,
@@ -186,85 +266,6 @@ You can also view task statuses as you would normally using the Airflow UI. If y
 
 Pretty straight forward! Once your Talend jobs are containerized, they can be orchestrated using Airflow in any sort of DAG needed for your use case, by themselves, with other Talend jobs, with any other Airflow tasks, etc. 
 
-## Executing Talend Jobs Using the Cloud API
-
-The second way of executing Talend jobs from Airflow is using the Talend Cloud API via the SimpleHttpOperator in Airflow. This method is ideal if you have Talend Cloud jobs that do not have downstream dependencies.
-
-Below we will show how to configure your Talend Cloud account to work with the API, and an example DAG that will execute a workflow. If you are unfamiliar with the Talend Cloud API, the documentation at these links are helpful: 
-
-- [Talend Public API Docs](https://community.talend.com/s/article/Using-the-Talend-Cloud-Management-Console-Public-API-O2Ndn)
-
-- [Talend UI Docs](https://api.us-west.cloud.talend.com/tmc/swagger/swagger-ui.html#!/)
-
-### Getting Started with the Talend Cloud API
-
-Getting configured to use the API in Talend Cloud is straight forward. First, make sure the job you want to execute is present in the Talend Management Console as shown below. For this example, we will execute a sample 'SayHello' job.
-
-![Say Hello Job](https://assets2.astronomer.io/main/guides/talend/talend_api_1.png)
-
-Next, note your job's Task ID; this will be passed to the API to trigger this specific job.
-
-![Task ID](https://assets2.astronomer.io/main/guides/talend/talend_api_2.png)
-
-Finally, ensure your user has a personal access token created. This is required for authenticating to the API. To create one, under your user go to Profile Preferences, then Personal Access Tokens, and then add a token.
-
-![Token](https://assets2.astronomer.io/main/guides/talend/talend_api_3.png)
-
-That's all you have to do on the Talend side! Now you can move on to creating an Airflow DAG to execute this job.
-
-### Using the Talend API with Airflow
-
-Using Airflow to interact with the Talend Cloud API is easy using the SimpleHttpOperator. In this example we will show how to execute a job; however, note that there are many other actions you can perform with the Talend API as described in the documentation linked above, and all of these can be accomplished in a similar way. Also note that there are other ways of making an API call in Airflow besides using the SimpleHttpOperator; we have chosen to show this operator because it is the most straight forward for this use case.
-
-First, we need to set up an Airflow connection to connect to the API. The connection should be an Http type, and should be configured like this:
-
-![Talend Connection](https://assets2.astronomer.io/main/guides/talend/airflow_talend_5.png)
-
-The host name should be the Talend Cloud API URL. This can vary depending on which region your account is hosted in and may not be the same as the one shown above. The extras should contain your authorization string, with 'Bearer' followed by your personal access token. 
-
-Next we can create our DAG.
-
-```python
-from airflow import DAG
-from airflow.operators.http_operator import SimpleHttpOperator
-from datetime import datetime, timedelta
-import json
-
-default_args = {
-    'owner': 'airflow',
-    'depends_on_past': False,
-    'start_date': datetime(2019, 1, 1),
-    'email_on_failure': False,
-    'email_on_retry': False,
-    'retries': 1,
-    'retry_delay': timedelta(minutes=5),
-}
-
-with DAG('talend_api_jobs',
-          schedule_interval='@once',
-          default_args=default_args
-          ) as dag:
-
-    talend1 = SimpleHttpOperator(
-        task_id='talend_api',
-        method='POST',
-        http_conn_id='talend_api',
-        endpoint='/tmc/v2.2/executions',
-        data=json.dumps({"executable": "5fb2f5126a1cd451b07bee7a"}),
-    )
-```
-
-This DAG has a single SimpleHttpOperator that will send a POST request to the Talend API to trigger our job. Ensure you enter the `http_conn_id` as the connection created above. The `endpoint` should be the Talend Cloud API executions endpoint for your region. And the `data` is the body of the request, and needs to contain the executable, which is the Task ID described in the previous section formatted in json.
-
-Now if you run this DAG in Airflow, you should see a successful log that looks something like this:
-
-![Success log](https://assets2.astronomer.io/main/guides/talend/airflow_talend_6.png)
-
-And looking at the Talend Management Console, you can see the job is running:
-
-![Talend Running Job](https://assets2.astronomer.io/main/guides/talend/airflow_talend_7.png)
-
-Finally, note that because the API call will simply trigger the job, the Airflow task will be marked successful as soon as a response is received from the API; this is not tied to when the job actually completes, so if you have downstream tasks that need the Talend job to be complete you will either have to use another method like the KubernetesPodOperator described above, or design your workflow in another way that manages this dependency.
 
 ## Troubleshooting - Common Issues
 
