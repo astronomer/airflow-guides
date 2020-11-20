@@ -14,9 +14,9 @@ tags: ["Integrations"]
 There are a couple of benefits to using Airflow and Talend together:
 
 - Using Airflow for orchestration allows for easily running multiple jobs with dependencies, parallelizing jobs, monitoring run status and failures, and more
-- Combining Talend and Airflow allows you to use both tools for what they're good for. If Talend works particularly well for one use case and python for another, you can do both and still have a one-stop-shop for orchestration, monitoring, logs, etc. with Airflow and Astronomer
+- Combining Talend and Airflow allows you to use both tools for what they're good for. If Talend works particularly well for one use case and Python for another, you can do both and still have a one-stop-shop for orchestration, monitoring, logs, etc. with Airflow and Astronomer
     - You can even combine both Talend jobs and other tasks in the same DAG if desired
-- If your team is moving to Astronomer but has existing Talend jobs, using the two together eliminates the need to migrate existing jobs to python code
+- If your team is moving to Astronomer but has existing Talend jobs, using the two together eliminates the need to migrate existing jobs to Python code
 
 In this tutorial we'll show simple examples that highlight a few ways that Talend and Airflow can easily work together. 
 
@@ -75,7 +75,7 @@ The host name should be the Talend Cloud API URL. This can vary depending on whi
 
 Next we can create our DAG.
 
-```python
+```Python
 from airflow import DAG
 from airflow.operators.http_operator import SimpleHttpOperator
 from datetime import datetime, timedelta
@@ -167,7 +167,7 @@ Once your Talend jobs are containerized and pushed to a registry, you can move o
 
 For this example, we are going to create a DAG that will execute two Talend jobs, one of which is dependent on the other, and then send an email notification if the jobs are successful. The full DAG code is copied here:
 
-```python
+```Python
 from airflow import DAG
 from datetime import datetime, timedelta
 from airflow.contrib.operators.kubernetes_pod_operator import KubernetesPodOperator
