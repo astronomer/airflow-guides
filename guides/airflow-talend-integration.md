@@ -75,7 +75,7 @@ The host name should be the Talend Cloud API URL. This can vary depending on whi
 
 Next we can create our DAG.
 
-```Python
+```python
 from airflow import DAG
 from airflow.operators.http_operator import SimpleHttpOperator
 from datetime import datetime, timedelta
@@ -167,7 +167,7 @@ Once your Talend jobs are containerized and pushed to a registry, you can move o
 
 For this example, we are going to create a DAG that will execute two Talend jobs, one of which is dependent on the other, and then send an email notification if the jobs are successful. The full DAG code is copied here:
 
-```Python
+```python
 from airflow import DAG
 from datetime import datetime, timedelta
 from airflow.contrib.operators.kubernetes_pod_operator import KubernetesPodOperator
