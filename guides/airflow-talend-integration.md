@@ -14,9 +14,9 @@ tags: ["Integrations"]
 There are a couple of benefits to using Airflow and Talend together:
 
 - Using Airflow for orchestration allows for easily running multiple jobs with dependencies, parallelizing jobs, monitoring run status and failures, and more
-- Combining Talend and Airflow allows you to use both tools for what they're good for. If Talend works particularly well for one use case and python for another, you can do both and still have a one-stop-shop for orchestration, monitoring, logs, etc. with Airflow and Astronomer
+- Combining Talend and Airflow allows you to use both tools for what they're good for. If Talend works particularly well for one use case and Python for another, you can do both and still have a one-stop-shop for orchestration, monitoring, logs, etc. with Airflow and Astronomer
     - You can even combine both Talend jobs and other tasks in the same DAG if desired
-- If your team is moving to Astronomer but has existing Talend jobs, using the two together eliminates the need to migrate existing jobs to python code
+- If your team is moving to Astronomer but has existing Talend jobs, using the two together eliminates the need to migrate existing jobs to Python code
 
 In this tutorial we'll show simple examples that highlight a few ways that Talend and Airflow can easily work together. 
 
