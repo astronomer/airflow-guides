@@ -31,9 +31,9 @@ Each method has pros and cons, and the method you choose will likely depend on y
 
 |Method      |Docker + KubernetesPodOperator                                                                                                                                                                    |API + SimpleHttpOperator                                                                                                            |
 |------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|------------------------------------------------------------------------------------------------------------------------------------|
-|Pros        |<ul><li>Containerizing jobs brings the benefits of containerization including efficiency, flexibility, and scaling </li> <li>  Easily allows for downstream dependencies</li><li>Logs from jobs are shown in Airflow UI| <ul><li>Very easy and accessible. Little setup and knowledge of other tools is required</li></ul>                                                   |
-|Cons        | <ul><li>Must have Talend Studio to containerize jobs </li> <li>  More requirements and complexity to setup</li></ul>                                                                                                        | <ul><li>Not well suited for triggering jobs that have downstream dependencies </li> <li>  Logs from Talend job are not automatically sent to Airflow</li></ul>|
-|Requirements| <ul><li>Talend Studio license </li> <li> Docker registry (can use Dockerhub if public is okay)</li> <li> Kubernetes</li></ul>                                                                                                      | <ul><li>Talend cloud license that allows API access</li></ul>                                                                                       |
+|Pros        | - Containerizing jobs brings the benefits of containerization including efficiency, flexibility, and scaling  Easily allows for downstream dependencies <br/> - Logs from jobs are shown in Airflow UI| - Very easy and accessible. Little setup and knowledge of other tools is required                                              |
+|Cons        | - Must have Talend Studio to containerize jobs  More requirements and complexity to setup                                                                                                   | - Not well suited for triggering jobs that have downstream dependencies <br/> - Logs from Talend job are not automatically sent to Airflow |
+|Requirements| - Talend Studio license Docker registry (can use Dockerhub if public is okay) <br/> - Kubernetes                                                                                                 | - Talend cloud license that allows API access                                                                                  |
 
 <br/>
 
@@ -153,7 +153,7 @@ When you select 'Finish' the job will be converted into Docker image and pushed 
 
 Talend can also publish jobs to Amazon ECR, Azure ACR, and Google GCR. Use this guide from Talend for connection parameter specifics [https://www.talend.com/blog/2019/03/12/how-to-deploy-talend-jobs-as-docker-images-to-amazon-azure-and-google-cloud-registries/](https://www.talend.com/blog/2019/03/12/how-to-deploy-talend-jobs-as-docker-images-to-amazon-azure-and-google-cloud-registries/)
 
-![Executing%20Talend%20Jobs%20with%20Airflow%202a2beb0aae414e13b1fcf6db0c53e173/Screen_Shot_2020-10-28_at_3.37.35_PM.png](Executing%20Talend%20Jobs%20with%20Airflow%202a2beb0aae414e13b1fcf6db0c53e173/Screen_Shot_2020-10-28_at_3.37.35_PM.png)
+![Talend UI](https://assets2.astronomer.io/main/guides/talend/talend_ui_4.png)
 
 You can now run this job locally by running:
 
