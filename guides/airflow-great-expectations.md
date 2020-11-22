@@ -8,7 +8,7 @@ tags: ["DAGs", "Integrations"]
 
 ## Overview
 
-[Great Expectations](https://greatexpectations.io) is an open source Python-based data validation framework. It allows you to test your data by expressing what you “expect” from it as simple declarative statements in Python, then run validation using those “expectations” against datasets. The [Great Expectations team maintains an Airflow provider](https://github.com/great-expectations/airflow-provider-great-expectations) that gives users a convenient method for running validation directly from their DAGs. This guide will walk you through the usage of the [official GreatExpectationsOperator](https://github.com/great-expectations/airflow-provider-great-expectations/blob/main/great_expectations_provider/operators/great_expectations.py_) and provide some guidance on how to configure an Airflow DAG containing a Great Expectations task to work with Airflow.
+[Great Expectations](https://greatexpectations.io) is an open source Python-based data validation framework. It allows you to test your data by expressing what you “expect” from it as simple declarative statements in Python, then run validation using those “expectations” against datasets. The [Great Expectations team maintains an Airflow provider](https://github.com/great-expectations/airflow-provider-great-expectations) that gives users a convenient method for running validation directly from their DAGs. This guide will walk you through the usage of the [official GreatExpectationsOperator](https://github.com/great-expectations/airflow-provider-great-expectations/blob/main/great_expectations_provider/operators/great_expectations.py) and provide some guidance on how to configure an Airflow DAG containing a Great Expectations task to work with Airflow.
 
 
 ## Pre-Requisites
@@ -33,9 +33,9 @@ After setting up the project, you will see a `great_expectations` directory whic
 
 ## Using the Great Expectations Airflow Operator
 
-The [Great Expectations Airflow operator](https://github.com/great-expectations/airflow-provider-great-expectations) provides a convenient method for loading an existing Expectation Suite and using it to validate a batch of data. In order to use the operator in your DAG, follow these steps:
+The [Great Expectations Airflow operator](https://github.com/great-expectations/airflow-provider-great-expectations) provides a convenient method for loading an existing Expectation Suite and using it to validate a batch of data. You can point the operator to` any location by setting the `data_context_root_dir` parameter-- more that below. In order to use the operator in your DAG, follow these steps:
 
-1. Ensure that the great_expectations directory is accessible by your DAG. Ideally, it should be located in the same project as your DAG, but you can point the operator at any location.
+1. Ensure that the `great_expectations` directory is accessible by your DAG. Ideally, it should be located in the same project as your DAG, but you can point the operator at any location.
 
 2. Install Great Expectations and the Great Expectations provider in your environment.
 
@@ -53,9 +53,9 @@ The [Great Expectations Airflow operator](https://github.com/great-expectations/
 
 The `GreatExpectationsOperator` supports multiple ways of invoking validation with Great Expectations:
 
-- Using an expectation suite name and `batch_kwargs`.
-- Using a list of expectation suite names and `batch_kwargs`.
-- Using a checkpoint. 
+- Using an Expectation Suite name and `batch_kwargs`.
+- Using a list of Expectation Suite names and `batch_kwargs`.
+- Using a Checkpoint. 
 
 This means that the parameters you pass to the operator depend on how you would like to invoke Great Expectations validation. As a simple example, assuming you have a single Expectation Suite `my_suite` and a simple batch of data, such as a database table called `my_table`, you can use the following parameters:
 
@@ -71,9 +71,9 @@ my_ge_task = GreatExpectationsOperator(
 )
 ```
 
-Note: If your `great_expectations` directory is not located in the same place as your DAG file, you will need to provide the `data_context_root_dir` parameter.
+> Note: If your `great_expectations` directory is not located in the same directory as your DAG file, you will need to provide the `data_context_root_dir` parameter.
 
-By default, a Great Expectations task will run validation and raise an Airflow Exception if any of the tests fails. To override this behavior and continue running even if tests fail, set the `fail_task_on_validation_failure` flag to “False”.
+By default, a Great Expectations task will run validation and raise an `AirflowException` if any of the tests fail. To override this behavior and continue running even if tests fail, set the `fail_task_on_validation_failure` flag to `false`.
 
 For more information about possible parameters and examples, see the [README in the repository]https://github.com/great-expectations/airflow-provider-great-expectations), and the [example DAG in the provider package](https://github.com/great-expectations/airflow-provider-great-expectations/tree/main/great_expectations_provider/examples).
 
@@ -81,7 +81,7 @@ For more information about possible parameters and examples, see the [README in 
 
 There are only few additional requirements to deploy a DAG with the Great Expectations operator with Astronomer. Most importantly, you will need to set relevant environment variables. 
 
-1. Great Expectations needs to know where to find the data context by setting the data context root directory, which you can then access in the DAG. We recommend adding this variable to your Dockerfile, but you can use [any of the methods described in our docs](https://www.astronomer.io/docs/cloud/stable/deploy/environment-variables/) to set environment variables for your deployment.
+1. Great Expectations needs to know where to find the Data Context  by setting the `data_context_root_dir`, which you can then access in the DAG. We recommend adding this variable to your Dockerfile, but you can use [any of the methods described in our docs](https://www.astronomer.io/docs/cloud/stable/deploy/environment-variables/) to set environment variables for your deployment.
 
     ```
     ENV GE_DATA_CONTEXT_ROOT_DIR=/usr/local/airflow/include/great_expectations
