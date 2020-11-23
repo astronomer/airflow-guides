@@ -3,6 +3,7 @@ title: "Integrating Airflow and Great Expectations"
 description: "Using the Great Expectations provider natively in your Airflow DAGs."
 date: 2020-11-22T00:00:00.000Z
 slug: "airflow-great-expectations"
+heroImagePath: "https://assets2.astronomer.io/main/guides/airflow-ge.png"
 tags: ["DAGs", "Integrations"]
 ---
 
