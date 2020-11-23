@@ -90,4 +90,4 @@ There are only few additional requirements to deploy a DAG with the Great Expect
 
 2. You will need to configure environment variables for any credentials required for external data connections. See the [Great Expectations documentation](https://docs.greatexpectations.io/en/latest/guides/how_to_guides/configuring_data_contexts/how_to_use_a_yaml_file_or_environment_variables_to_populate_credentials.html?highlight=environment%20variables) for an explanation on using environment variables for Datasource credentials in your `great_expectations.yml` configuration.
 
-3. Finally, you will need to add add the environment variables to your local `.env` file and as [secret environment variables in the Astronomer Cloud settings](https://www.astronomer.io/docs/cloud/stable/deploy/environment-variables/).
+3. Finally, you will need to add the environment variables to your local `.env` file and as [secret environment variables in the Astronomer Cloud settings](https://www.astronomer.io/docs/cloud/stable/deploy/environment-variables/).
