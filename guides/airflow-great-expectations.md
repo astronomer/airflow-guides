@@ -34,7 +34,7 @@ After setting up the project, you will see a `great_expectations` directory whic
 
 ## Using the Great Expectations Airflow Operator
 
-The [Great Expectations Airflow operator](https://github.com/great-expectations/airflow-provider-great-expectations) provides a convenient method for loading an existing Expectation Suite and using it to validate a batch of data. You can point the operator to` any location by setting the `data_context_root_dir` parameter-- more that below. In order to use the operator in your DAG, follow these steps:
+The [Great Expectations Airflow operator](https://github.com/great-expectations/airflow-provider-great-expectations) provides a convenient method for loading an existing Expectation Suite and using it to validate a batch of data. You can point the operator to any location by setting the `data_context_root_dir` parameter-- more that below. In order to use the operator in your DAG, follow these steps:
 
 1. Ensure that the `great_expectations` directory is accessible by your DAG. Ideally, it should be located in the same project as your DAG, but you can point the operator at any location.
 
