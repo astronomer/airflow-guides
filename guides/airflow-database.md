@@ -32,10 +32,10 @@ The Airflow metadata database has a total of 30 tables  tables are stored on the
 ### public.ab_permission
  
 **Table Structure:**
-|  F-Key   |Name   |Type                     |Description|
+|  F-Key   | Name  |Type | Description |
 |--------|------ |-----------------------|-----------|
-|          |id     |integer                  |*PRIMARY KEY*|
-|          |name   |character varying(100)   |*UNIQUE NOT NULL*|
+|          | id |integer | *PRIMARY KEY* |
+|          |  name |character varying(100)   | *UNIQUE NOT NULL* |
 
 **Tables referencing this one via Foreign Key Constraints:**
 
