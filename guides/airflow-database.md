@@ -33,7 +33,7 @@ The Airflow metadata database has a total of 30 tables  tables are stored on the
  
 **Table Structure:**
 |  F-Key   |Name   |Type                     |Description|
-|:-------  |:------ |:-----------------------|:-----------|
+|--------|------ |-----------------------|-----------|
 |          |id     |integer                  |*PRIMARY KEY*|
 |          |name   |character varying(100)   |*UNIQUE NOT NULL*|
 
@@ -47,7 +47,7 @@ The Airflow metadata database has a total of 30 tables  tables are stored on the
 
 **Table Structure:**
 |F-Key                                                 |Name            |Type      |Description   |
-|:-----------------------------------------------------|:---------------|:---------|:-------------|
+|-----------------------------------------------------|---------------|---------|-------------|
 |                                                      |id              |integer   |*PRIMARY KEY*|
 |  [public.ab_permission.id](#public.ab\_permission)   |permission_id   |integer   |*UNIQUE\#1*|
 |  [public.ab_view_menu.id](#public.ab\_view\_menu)    |view_menu_id    |integer   |*UNIQUE\#1*|
@@ -62,7 +62,7 @@ The Airflow metadata database has a total of 30 tables  tables are stored on the
 
 **Table Structure:**
 |F-Key  |Name |Type |Description|
-|:------|:----|:----|:----------|
+|------|----|----|----------|
 |       |id   |integer |   *PRIMARY KEY*|
 |[public.ab_permission_view.id](#public.ab\_permission\_view)   |permission_view_id   |integer   |*UNIQUE\#1*|
 |[public.ab_role.id](#public.ab\_role)                         |role_id              |integer   |*UNIQUE\#1*|
@@ -73,7 +73,7 @@ The Airflow metadata database has a total of 30 tables  tables are stored on the
 
 **Table Structure:**
 |  F-Key  |Name                |Type                          |Description|
-|:------- |:-------------------|:-----------------------------|:------------------|
+|------- |-------------------|-----------------------------|------------------|
 ||          id                  |integer                       |*PRIMARY KEY*
 ||          first_name          |character varying(64)         |*NOT NULL*
 ||          last_name           |character varying(64)         |*NOT NULL*
@@ -89,7 +89,7 @@ The Airflow metadata database has a total of 30 tables  tables are stored on the
 
 **Table Structure:**
 |F-Key     |Name   |Type                    |Description|
-|:-------  |:------|:-----------------------|:-------------------|
+|-------  |------|-----------------------|-------------------|
 |          |id     |integer                 |*PRIMARY KEY*|
 |          |name   |character varying(64)   |*UNIQUE NOT NULL*|
 
@@ -103,7 +103,7 @@ The Airflow metadata database has a total of 30 tables  tables are stored on the
 
 **Table Structure:**
 |F-Key                                        |Name                 |Type                          |Description
-|:--------------------------------------------|:--------------------|:-----------------------------|:-------------------
+|--------------------------------------------|--------------------|-----------------------------|-------------------
 |                                             |  id                 |integer                       |*PRIMARY KEY*
 |                                             |  first_name         |character varying(64)         |*NOT NULL*
 |                                             |  last_name          |character varying(64)         |*NOT NULL*
@@ -129,7 +129,7 @@ The Airflow metadata database has a total of 30 tables  tables are stored on the
 
 **Table Structure:**
 |F-Key                                        |Name      |Type      |Description
-|:------------------------------------------- |:-------- |:-------- |:--------------
+|------------------------------------------- |-------- |-------- |--------------
 |                                             |id        |integer   |*PRIMARY KEY*
 |[public.ab_user.id](#public.ab\_user)   |user_id   |integer   |*UNIQUE\#1*
 |[public.ab_role.id](#public.ab\_role)   |role_id   |integer   |*UNIQUE\#1*
@@ -140,7 +140,7 @@ The Airflow metadata database has a total of 30 tables  tables are stored on the
  
 **Table Structure:**
 |F-Key   |Name   |Type                     |Description
-|:------ |:----- |:----------------------- |:-------------------
+|------ |----- |----------------------- |-------------------
 |        |id     |integer                  |*PRIMARY KEY*
 |        |name   |character varying(100)   |*UNIQUE NOT NULL*
 
@@ -153,7 +153,7 @@ The Airflow metadata database has a total of 30 tables  tables are stored on the
  
 **Table Structure:**
 |F-Key   |Name          |Type                    |Description
-|------- |:------------ |:---------------------- |:--------------
+|------- |------------ |---------------------- |--------------
 |        |version_num   |character varying(32)   |*PRIMARY KEY*
 
 ------------------------------------------------------------------------
@@ -162,7 +162,7 @@ The Airflow metadata database has a total of 30 tables  tables are stored on the
  
 **Table Structure:**
 |F-Key                                    |Name              |Type                       |Description
-|---------------------------------------- |:---------------- |:------------------------- |:--------------
+|---------------------------------------- |---------------- |------------------------- |--------------
 |                                         |id                |serial                     |*PRIMARY KEY*
 |                                         |label             |character varying(200)     |
 |                                         |conn_id           |character varying(250)     |*NOT NULL*
@@ -185,7 +185,7 @@ The Airflow metadata database has a total of 30 tables  tables are stored on the
 
 **Table Structure:**
 |F-Key   |Name                 |Type                      |Description
-|:------ |:------------------- |:------------------------ |:--------------
+|------ |------------------- |------------------------ |--------------
 |        |id                   |serial                    |*PRIMARY KEY*
 |        |conn_id              |character varying(250)    |
 |        |conn_type            |character varying(500)    |
@@ -204,7 +204,7 @@ The Airflow metadata database has a total of 30 tables  tables are stored on the
 
 **Table Structure:**
 |F-Key   |Name                 |Type                       |Description
-|------- |:------------------- |:------------------------- |:--------------
+|------- |------------------- |------------------------- |--------------
 |        |dag_id               |character varying(250)     |*PRIMARY KEY*
 |        |is_paused            |boolean                    |
 |        |is_subdag            |boolean                    |
@@ -230,7 +230,7 @@ The Airflow metadata database has a total of 30 tables  tables are stored on the
  
 **Table Structure:**
 |F-Key   |Name           |Type                       |Description
-|:------ |:------------- |:------------------------- |:--------------
+|------ |------------- |------------------------- |--------------
 |        |id             |serial                     |*PRIMARY KEY*
 |        |pickle         |bytea                      |
 |        |created_dttm   |timestamp with time zone   |
@@ -242,7 +242,7 @@ The Airflow metadata database has a total of 30 tables  tables are stored on the
  
 **Table Structure:**
 |F-Key   |Name               |Type                       |Description
-|:------ |:----------------- |:------------------------- |:----------------------
+|------ |----------------- |------------------------- |----------------------
 |        |id                 |serial                     |*PRIMARY KEY*
 |        |dag_id             |character varying(250)     |*UNIQUE\#2 UNIQUE\#1*
 |        |execution_date     |timestamp with time zone   |*UNIQUE\#2*
@@ -262,7 +262,7 @@ The Airflow metadata database has a total of 30 tables  tables are stored on the
 
 **Table Structure:**
 |F-Key   |Name         |Type                       |Description
-|------- |:----------- |:------------------------- |:--------------
+|------- |----------- |------------------------- |--------------
 |        |id           |serial                     |*PRIMARY KEY*
 |        |timestamp    |timestamp with time zone   |
 |        |filename     |character varying(1024)    |
@@ -274,7 +274,7 @@ The Airflow metadata database has a total of 30 tables  tables are stored on the
  
 **Table Structure:**
 |F-Key   |Name               |Type                       |Description
-|:------ |:----------------- |:------------------------- |:---------------
+|------ |----------------- |------------------------- |---------------
 |        |id                 |serial                     |*PRIMARY KEY*
 |        |dag_id             |character varying(250)     |
 |        |state              |character varying(20)      |
@@ -296,7 +296,7 @@ The Airflow metadata database has a total of 30 tables  tables are stored on the
 
 **Table Structure:**
 |F-Key                                                          |Name                  |Type                          |Description
-|:------------------------------------------------------------- |:-------------------- |:---------------------------- |:--------------
+|------------------------------------------------------------- |-------------------- |---------------------------- |--------------
 |                                                               |id                    |serial                        |*PRIMARY KEY*
 |                                                               |label                 |character varying(200)        |
 |                                                               |start_date            |timestamp without time zone   |
@@ -311,7 +311,7 @@ The Airflow metadata database has a total of 30 tables  tables are stored on the
 
 **Table Structure:**
 |F-Key   |Name              |Type                     |Description
-|:------ |:---------------- |:----------------------- |:--------------
+|------ |---------------- |----------------------- |--------------
 |        |id                |serial                   |*PRIMARY KEY*
 |        |know_event_type   |character varying(200)   |
 
@@ -324,13 +324,13 @@ The Airflow metadata database has a total of 30 tables  tables are stored on the
 
 **Table Structure:**
 |F-Key   |Name               |Type                     |Description
-|:------ |:----------------- |:----------------------- |:---------------------------
+|------ |----------------- |----------------------- |---------------------------
 |        |one_row_id         |boolean                  |*PRIMARY KEY DEFAULT true*
 |        |resource_version   |character varying(255)   |
 
 **Constraints:**
 |Name                                |Constraint
-|:---------------------------------- |:--------------------
+|---------------------------------- |--------------------
 |kube_resource_version_one_row_id    |CHECK (one_row_id)
 
 ------------------------------------------------------------------------
@@ -339,13 +339,13 @@ The Airflow metadata database has a total of 30 tables  tables are stored on the
  
 **Table Structure:**
 |F-Key   |Name          |Type                     |Description
-|:------ |:------------ |:----------------------- |:---------------------------
+|------ |------------ |----------------------- |---------------------------
 |        |one_row_id    |boolean                  |*PRIMARY KEY DEFAULT true*
 |        |worker_uuid   |character varying(255)   |
 
 **Constraints:**
 |Name                     |Constraint
-|:----------------------- |:-------------------
+|----------------------- |-------------------
 |kube_worker_one_row_id   |CHECK (one_row_id)
 
 ------------------------------------------------------------------------
@@ -354,7 +354,7 @@ The Airflow metadata database has a total of 30 tables  tables are stored on the
  
 **Table Structure:**
 |F-Key   |Name             |Type                       |Description
-|:------ |:--------------- |:------------------------- |:--------------
+|------ |--------------- |------------------------- |--------------
 |        |id               |serial                     |*PRIMARY KEY*
 |        |dttm             |timestamp with time zone   |
 |        |dag_id           |character varying(250)     |
@@ -373,7 +373,7 @@ The Airflow metadata database has a total of 30 tables  tables are stored on the
 
 **Table Structure:**
 |F-Key   |Name           |Type                       |Description
-|:------ |:------------- |:------------------------- |:--------------
+|------ |------------- |------------------------- |--------------
 |        |dag_id         |character varying(250)     |*PRIMARY KEY*
 |        |fileloc        |character varying(2000)    |*NOT NULL*
 |        |fileloc_hash   |integer                    |*NOT NULL*
@@ -389,7 +389,7 @@ The Airflow metadata database has a total of 30 tables  tables are stored on the
 
 **Table Structure:**
 |F-Key   |Name                |Type                       |Description
-|:------ |:------------------ |:------------------------- |:--------------
+|------ |------------------ |------------------------- |--------------
 |        |task_id             |character varying(250)     |*PRIMARY KEY*
 |        |dag_id              |character varying(250)     |*PRIMARY KEY*
 |        |execution_date      |timestamp with time zone   |*PRIMARY KEY*
@@ -498,7 +498,7 @@ The Airflow metadata database has a total of 30 tables  tables are stored on the
 
 **Table Structure:**
 |F-Key   |Name        |Type                     |Description
-|:-------|:-----------|:------------------------|:---------------
+|-------|-----------|------------------------|---------------
 |        |id          |serial                   |*PRIMARY KEY*
 |        |username    |character varying(250)   |*UNIQUE*
 |        |email       |character varying(500)   |
@@ -516,7 +516,7 @@ The Airflow metadata database has a total of 30 tables  tables are stored on the
  
 **Table Structure:**
 |F-Key   |Name           |Type                     |Description
-|------- |:--------------|:------------------------|:---------------
+|------- |--------------|------------------------|---------------
 |        |id             |serial                   |*PRIMARY KEY*
 |        |key            |character varying(250)   |*UNIQUE*
 |        |val            |text                     |
@@ -528,7 +528,7 @@ The Airflow metadata database has a total of 30 tables  tables are stored on the
 
 **Table Structure:**
 |F-Key  | Name            | Type                      |Description|
-|:------|:----------------|:--------------------------|:---|
+|------|----------------|--------------------------|---|
 |       |id               |serial                     |*PRIMARY KEY*|
 |       |key              |character varying(512)     ||
 |       |value            |bytea                      ||
