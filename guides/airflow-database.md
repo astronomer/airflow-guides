@@ -56,7 +56,7 @@ The Airflow metadata database has a total of 30 tables  tables are stored on the
 |-------------------|---------------|---------|-------------|
 |                                                      |id              |integer   |*PRIMARY KEY*|
 |  [public.ab_permission.id](#public.ab\_permission)   |permission_id   |integer   |*UNIQUE\#1*|
-|  [public.ab\_view\_menu.id](#public.ab\_view\_menu)    |view_menu_id    |integer   |*UNIQUE\#1*|
+|  [public.ab\_view\_menu.id](#public.ab\_view\_menu)    |view\_menu\_id    |integer   |*UNIQUE\#1*|
 
 **Tables referencing this one via Foreign Key Constraints:**
 
@@ -73,7 +73,7 @@ The Airflow metadata database has a total of 30 tables  tables are stored on the
 |F-Key  |Name |Type |Description|
 |------|----|----|----------|
 |       |id   |integer |   *PRIMARY KEY*|
-|[public.ab\_permission\_view.id](#public.ab\_permission\_view)   |permission_view_id   |integer   |*UNIQUE\#1*|
+|[public.ab\_permission\_view.id](#public.ab\_permission\_view)   |permission\_view\_id   |integer   |*UNIQUE\#1*|
 |[public.ab_role.id](#public.ab\_role)                         |role_id              |integer   |*UNIQUE\#1*|
 
 ------------------------------------------------------------------------
@@ -134,8 +134,8 @@ The Airflow metadata database has a total of 30 tables  tables are stored on the
 |                                             |  fail_login_count   |integer                       |
 |                                             |  created_on         |timestamp without time zone   |
 |                                             |  changed_on         |timestamp without time zone   |
-|  [public.ab_user.id](#public.ab\_user) |  created_by_fk      |integer                       |
-|  [public.ab_user.id](#public.ab\_user) |  changed_by_fk      |integer                       |
+|  [public.ab_user.id](#public.ab\_user) |  created\_by\_fk      |integer                       |
+|  [public.ab_user.id](#public.ab\_user) |  changed\_by\_fk      |integer                       |
 
 **Tables referencing this one via Foreign Key Constraints:**
 -   [public.ab_user](#public.ab\_user)
@@ -205,7 +205,7 @@ The Airflow metadata database has a total of 30 tables  tables are stored on the
 |                                         |show_sql          |boolean                    |
 |                                         |height            |integer                    |
 |                                         |default_params    |character varying(5000)    |
-|                                         |x_is_date         |boolean                    |
+|                                         |x\_is\_date         |boolean                    |
 |                                         |iteration_no      |integer                    |
 |                                         |last_modified     |timestamp with time zone   |
 
@@ -229,7 +229,7 @@ The Airflow metadata database has a total of 30 tables  tables are stored on the
 |        |port                 |integer                   |
 |        |extra                |character varying(5000)   |
 |        |is_encrypted         |boolean                   |
-|        |is_extra_encrypted   |boolean                   |
+|        |is\_extra\_encrypted   |boolean                   |
 
 ------------------------------------------------------------------------
 
@@ -335,8 +335,8 @@ The Airflow metadata database has a total of 30 tables  tables are stored on the
 |        |unixname           |character varying(1000)    |
 
 **Indexes:**
--   **idx\_job\_state\_heartbeat** state, latest_heartbeat
--   **job\_type\_heart** job_type, latest_heartbeat
+-   **idx\_job\_state\_heartbeat** state, latest\_heartbeat
+-   **job\_type\_heart** job\_type, latest\_heartbeat
 
 ------------------------------------------------------------------------
 
@@ -386,6 +386,7 @@ The Airflow metadata database has a total of 30 tables  tables are stored on the
 |        |resource_version   |character varying(255)   |
 
 **Constraints:**
+
 |Name                                |Constraint
 |---------------------------------- |--------------------
 |kube\_resource\_version\_one\_row\_id    |CHECK (one\_row\_id)
@@ -404,6 +405,7 @@ The Airflow metadata database has a total of 30 tables  tables are stored on the
 |        |worker_uuid   |character varying(255)   |
 
 **Constraints:**
+
 |Name                     |Constraint
 |----------------------- |-------------------
 |kube\_worker\_one\_row\_id   |CHECK (one\_row\_id)
@@ -428,7 +430,7 @@ The Airflow metadata database has a total of 30 tables  tables are stored on the
 |        |extra            |text                       |
 
 **Indexes:**
--   **idx\_log\_dag** dag_id
+-   **idx\_log\_dag** dag\_id
 
 ------------------------------------------------------------------------
 
@@ -504,7 +506,7 @@ The Airflow metadata database has a total of 30 tables  tables are stored on the
 |        |duration         |integer                    |
 
 **Indexes:**
--   **idx\_task\_fail\_dag\_task\_date** dag_id, task_id, execution_date
+-   **idx\_task\_fail\_dag\_task\_date** dag\_id, task\_id, execution\_date
 
 ------------------------------------------------------------------------
 
@@ -540,12 +542,12 @@ The Airflow metadata database has a total of 30 tables  tables are stored on the
 -   [public.task_reschedule](#table-public.task-reschedule)
 
 **Indexes:**
--   **ti\_dag\_date** dag_id, execution_date
--   **ti\_dag\_state** dag_id, state
--   **ti_job_id** job_id
--   **ti_pool** pool, state, priority_weight
+-   **ti\_dag\_date** dag\_id, execution\_date
+-   **ti\_dag\_state** dag\_id, state
+-   **ti\_job\_id** job\_id
+-   **ti\_pool** pool, state, priority\_weight
 -   **ti_state** state
--   **ti\_state\_lkp** dag_id, task_id, execution_date, state
+-   **ti\_state\_lkp** dag\_id, task\_id, execution\_date, state
 
 ------------------------------------------------------------------------
 
@@ -568,7 +570,7 @@ The Airflow metadata database has a total of 30 tables  tables are stored on the
 |                                                                        |reschedule_date   |timestamp with time zone   |*NOT NULL*
 
 **Indexes:**
--   **idx\_task\_reschedule\_dag\_task\_date** dag_id, task_id, execution_date
+-   **idx\_task\_reschedule\_dag\_task\_date** dag\_id, task\_id, execution\_date
 
 ------------------------------------------------------------------------
 
@@ -625,6 +627,6 @@ The Airflow metadata database has a total of 30 tables  tables are stored on the
 |       |dag_id           |character varying(250)     |*NOT NULL*|
 
 **Indexes:** 
--   **idx\_xcom\_dag\_task\_date** dag_id, task_id, execution_date
+-   **idx\_xcom\_dag\_task\_date** dag\_id, task\_id, execution\_date
 
 ------------------------------------------------------------------------
