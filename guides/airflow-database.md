@@ -32,10 +32,13 @@ The Airflow metadata database has a total of 30 tables  tables are stored on the
 ### public.ab_permission
  
 **Table Structure:**
+
+--------------------------------------------------------------------------------
+
 |  F-Key   | Name  |Type | Description |
-|--|--------|------ |-----------------------|-----------|
-|          | id |integer | *PRIMARY KEY* |
-|          |  name |character varying(100) | *UNIQUE NOT NULL* |
+|----------|-------|--------|------------------|
+|          | id    |integer | *PRIMARY KEY*    |
+|          | name  |character varying(100)  | *UNIQUE NOT NULL* |
 
 **Tables referencing this one via Foreign Key Constraints:**
 
@@ -43,35 +46,44 @@ The Airflow metadata database has a total of 30 tables  tables are stored on the
 
 ------------------------------------------------------------------------
 
-### public.ab_permission_view
+### public.ab\_permission\_view
 
 **Table Structure:**
+
+--------------------------------------------------------------------------------
+
 |F-Key                                                 |Name            |Type      |Description   |
 |-------------------|---------------|---------|-------------|
 |                                                      |id              |integer   |*PRIMARY KEY*|
 |  [public.ab_permission.id](#public.ab\_permission)   |permission_id   |integer   |*UNIQUE\#1*|
-|  [public.ab_view_menu.id](#public.ab\_view\_menu)    |view_menu_id    |integer   |*UNIQUE\#1*|
+|  [public.ab\_view\_menu.id](#public.ab\_view\_menu)    |view_menu_id    |integer   |*UNIQUE\#1*|
 
 **Tables referencing this one via Foreign Key Constraints:**
 
--   [public.ab_permission_view_role](#public.ab\_permission\_view\_role)
+-   [public.ab\_permission\_view\_role](#public.ab\_permission\_view\_role)
 
 ------------------------------------------------------------------------
 
-###  public.ab_permission_view_role
+###  public.ab\_permission\_view\_role
 
 **Table Structure:**
+
+--------------------------------------------------------------------------------
+
 |F-Key  |Name |Type |Description|
 |------|----|----|----------|
 |       |id   |integer |   *PRIMARY KEY*|
-|[public.ab_permission_view.id](#public.ab\_permission\_view)   |permission_view_id   |integer   |*UNIQUE\#1*|
+|[public.ab\_permission\_view.id](#public.ab\_permission\_view)   |permission_view_id   |integer   |*UNIQUE\#1*|
 |[public.ab_role.id](#public.ab\_role)                         |role_id              |integer   |*UNIQUE\#1*|
 
 ------------------------------------------------------------------------
 
-###  public.ab_register_user
+###  public.ab\_register\_user
 
 **Table Structure:**
+
+--------------------------------------------------------------------------------
+
 |  F-Key  |Name                |Type                          |Description|
 |------- |-------------------|-----------------------------|------------------|
 ||          id                  |integer                       |*PRIMARY KEY*
@@ -88,20 +100,26 @@ The Airflow metadata database has a total of 30 tables  tables are stored on the
 ###  public.ab_role
 
 **Table Structure:**
+
+--------------------------------------------------------------------------------
+
 |F-Key     |Name   |Type                    |Description|
 |-------  |------|-----------------------|-------------------|
 |          |id     |integer                 |*PRIMARY KEY*|
 |          |name   |character varying(64)   |*UNIQUE NOT NULL*|
 
 **Tables referencing this one via Foreign Key Constraints:**
--   [public.ab_permission_view_role](#public.ab-permission\_view\_role)
--   [public.ab_user_role](#public.ab\_user\_role)
+-   [public.ab\_permission\_view\_role](#public.ab-permission\_view\_role)
+-   [public.ab\_user\_role](#public.ab\_user\_role)
 
 ------------------------------------------------------------------------
 
 ###  public.ab_user
 
 **Table Structure:**
+
+--------------------------------------------------------------------------------
+
 |F-Key                                        |Name                 |Type                          |Description
 |--------------------------------------------|--------------------|-----------------------------|-------------------
 |                                             |  id                 |integer                       |*PRIMARY KEY*
@@ -121,13 +139,16 @@ The Airflow metadata database has a total of 30 tables  tables are stored on the
 
 **Tables referencing this one via Foreign Key Constraints:**
 -   [public.ab_user](#public.ab\_user)
--   [public.ab_user_role](#public.ab\_user\_role)
+-   [public.ab\_user\_role](#public.ab\_user\_role)
 
 ------------------------------------------------------------------------
 
-###  public.ab_user_role
+###  public.ab\_user\_role
 
 **Table Structure:**
+
+--------------------------------------------------------------------------------
+
 |F-Key                                        |Name      |Type      |Description
 |------------------------------------------- |-------- |-------- |--------------
 |                                             |id        |integer   |*PRIMARY KEY*
@@ -136,22 +157,28 @@ The Airflow metadata database has a total of 30 tables  tables are stored on the
 
 ------------------------------------------------------------------------
 
-###  public.ab_view_menu
+###  public.ab\_view\_menu
  
 **Table Structure:**
+
+--------------------------------------------------------------------------------
+
 |F-Key   |Name   |Type                     |Description
 |------ |----- |----------------------- |-------------------
 |        |id     |integer                  |*PRIMARY KEY*
 |        |name   |character varying(100)   |*UNIQUE NOT NULL*
 
 **Tables referencing this one via Foreign Key Constraints:**
--   [public.ab_permission_view](#public.ab\_permission\_view)
+-   [public.ab\_permission\_view](#public.ab\_permission\_view)
 
 ------------------------------------------------------------------------
 
 ###  public.alembic_version
  
 **Table Structure:**
+
+--------------------------------------------------------------------------------
+
 |F-Key   |Name          |Type                    |Description
 |------- |------------ |---------------------- |--------------
 |        |version_num   |character varying(32)   |*PRIMARY KEY*
@@ -161,6 +188,9 @@ The Airflow metadata database has a total of 30 tables  tables are stored on the
 ###  public.chart
  
 **Table Structure:**
+
+--------------------------------------------------------------------------------
+
 |F-Key                                    |Name              |Type                       |Description
 |---------------------------------------- |---------------- |------------------------- |--------------
 |                                         |id                |serial                     |*PRIMARY KEY*
@@ -184,6 +214,9 @@ The Airflow metadata database has a total of 30 tables  tables are stored on the
 ###  public.connection
 
 **Table Structure:**
+
+--------------------------------------------------------------------------------
+
 |F-Key   |Name                 |Type                      |Description
 |------ |------------------- |------------------------ |--------------
 |        |id                   |serial                    |*PRIMARY KEY*
@@ -203,13 +236,16 @@ The Airflow metadata database has a total of 30 tables  tables are stored on the
 ###  public.dag
 
 **Table Structure:**
+
+--------------------------------------------------------------------------------
+
 |F-Key   |Name                 |Type                       |Description
 |------- |------------------- |------------------------- |--------------
 |        |dag_id               |character varying(250)     |*PRIMARY KEY*
 |        |is_paused            |boolean                    |
 |        |is_subdag            |boolean                    |
 |        |is_active            |boolean                    |
-|        |last_scheduler_run   |timestamp with time zone   |
+|        |last\_scheduler\_run   |timestamp with time zone   |
 |        |last_pickled         |timestamp with time zone   |
 |        |last_expired         |timestamp with time zone   |
 |        |scheduler_lock       |boolean                    |
@@ -219,16 +255,19 @@ The Airflow metadata database has a total of 30 tables  tables are stored on the
 |        |description          |text                       |
 |        |default_view         |character varying(25)      |
 |        |schedule_interval    |text                       |
-|        |root_dag_id          |character varying(250)     |
+|        |root\_dag\_id          |character varying(250)     |
 
 **Indexes:**
--   **idx_root_dag_id** root_dag_id
+-   **idx\_root\_dag\_id** root\_dag\_id
 
 ------------------------------------------------------------------------
 
 ###  public.dag_pickle
  
 **Table Structure:**
+
+--------------------------------------------------------------------------------
+
 |F-Key   |Name           |Type                       |Description
 |------ |------------- |------------------------- |--------------
 |        |id             |serial                     |*PRIMARY KEY*
@@ -241,6 +280,9 @@ The Airflow metadata database has a total of 30 tables  tables are stored on the
 ###  public.dag_run
  
 **Table Structure:**
+
+--------------------------------------------------------------------------------
+
 |F-Key   |Name               |Type                       |Description
 |------ |----------------- |------------------------- |----------------------
 |        |id                 |serial                     |*PRIMARY KEY*
@@ -254,13 +296,16 @@ The Airflow metadata database has a total of 30 tables  tables are stored on the
 |        |start_date         |timestamp with time zone   |
 
 **Indexes:**
--   **dag_id_state** dag_id, state
+-   **dag\_id\_state** dag_id, state
 
 ------------------------------------------------------------------------
 
 ###  public.import_error
 
 **Table Structure:**
+
+--------------------------------------------------------------------------------
+
 |F-Key   |Name         |Type                       |Description
 |------- |----------- |------------------------- |--------------
 |        |id           |serial                     |*PRIMARY KEY*
@@ -273,6 +318,9 @@ The Airflow metadata database has a total of 30 tables  tables are stored on the
 ###  public.job
  
 **Table Structure:**
+
+--------------------------------------------------------------------------------
+
 |F-Key   |Name               |Type                       |Description
 |------ |----------------- |------------------------- |---------------
 |        |id                 |serial                     |*PRIMARY KEY*
@@ -287,14 +335,17 @@ The Airflow metadata database has a total of 30 tables  tables are stored on the
 |        |unixname           |character varying(1000)    |
 
 **Indexes:**
--   **idx_job_state_heartbeat** state, latest_heartbeat
--   **job_type_heart** job_type, latest_heartbeat
+-   **idx\_job\_state\_heartbeat** state, latest_heartbeat
+-   **job\_type\_heart** job_type, latest_heartbeat
 
 ------------------------------------------------------------------------
 
 ###  public.known_event
 
 **Table Structure:**
+
+--------------------------------------------------------------------------------
+
 |F-Key                                                          |Name                  |Type                          |Description
 |------------------------------------------------------------- |-------------------- |---------------------------- |--------------
 |                                                               |id                    |serial                        |*PRIMARY KEY*
@@ -302,57 +353,69 @@ The Airflow metadata database has a total of 30 tables  tables are stored on the
 |                                                               |start_date            |timestamp without time zone   |
 |                                                               |end_date              |timestamp without time zone   |
 |[public.users.id](#public.users)                         |user_id               |integer                       |
-|[public.known_event_type.id](#public.known-event-type)   |known_event_type_id   |integer                       |
+|[public.known\_event\_type.id](#public.known-event-type)   |known\_event\_type\_id   |integer                       |
 |                                                               |description           |text                          |
 
 ------------------------------------------------------------------------
 
-###  public.known_event_type
+###  public.known\_event\_type
 
 **Table Structure:**
+
+--------------------------------------------------------------------------------
+
 |F-Key   |Name              |Type                     |Description
 |------ |---------------- |----------------------- |--------------
 |        |id                |serial                   |*PRIMARY KEY*
-|        |know_event_type   |character varying(200)   |
+|        |know\_event\_type   |character varying(200)   |
 
 **Tables referencing this one via Foreign Key Constraints:**
 -   [public.known_event](#public.known-event)
 
 ------------------------------------------------------------------------
 
-###  public.kube_resource_version
+###  public.kube\_resource\_version
 
 **Table Structure:**
+
+--------------------------------------------------------------------------------
+
 |F-Key   |Name               |Type                     |Description
 |------ |----------------- |----------------------- |---------------------------
-|        |one_row_id         |boolean                  |*PRIMARY KEY DEFAULT true*
+|        |one\_row\_id         |boolean                  |*PRIMARY KEY DEFAULT true*
 |        |resource_version   |character varying(255)   |
 
 **Constraints:**
 |Name                                |Constraint
 |---------------------------------- |--------------------
-|kube_resource_version_one_row_id    |CHECK (one_row_id)
+|kube\_resource\_version\_one\_row\_id    |CHECK (one\_row\_id)
 
 ------------------------------------------------------------------------
 
-###  public.kube_worker_uuid
+###  public.kube\_worker\_uuid
  
 **Table Structure:**
+
+--------------------------------------------------------------------------------
+
 |F-Key   |Name          |Type                     |Description
 |------ |------------ |----------------------- |---------------------------
-|        |one_row_id    |boolean                  |*PRIMARY KEY DEFAULT true*
+|        |one\_row\_id    |boolean                  |*PRIMARY KEY DEFAULT true*
 |        |worker_uuid   |character varying(255)   |
 
 **Constraints:**
 |Name                     |Constraint
 |----------------------- |-------------------
-|kube_worker_one_row_id   |CHECK (one_row_id)
+|kube\_worker\_one\_row\_id   |CHECK (one\_row\_id)
 
 ------------------------------------------------------------------------
 
 ###  public.log
  
 **Table Structure:**
+
+--------------------------------------------------------------------------------
+
 |F-Key   |Name             |Type                       |Description
 |------ |--------------- |------------------------- |--------------
 |        |id               |serial                     |*PRIMARY KEY*
@@ -365,13 +428,16 @@ The Airflow metadata database has a total of 30 tables  tables are stored on the
 |        |extra            |text                       |
 
 **Indexes:**
--   **idx_log_dag** dag_id
+-   **idx\_log\_dag** dag_id
 
 ------------------------------------------------------------------------
 
 ###  public.serialized_dag
 
 **Table Structure:**
+
+--------------------------------------------------------------------------------
+
 |F-Key   |Name           |Type                       |Description
 |------ |------------- |------------------------- |--------------
 |        |dag_id         |character varying(250)     |*PRIMARY KEY*
@@ -381,13 +447,16 @@ The Airflow metadata database has a total of 30 tables  tables are stored on the
 |        |last_updated   |timestamp with time zone   |*NOT NULL*
 
 **Indexes:**
--   **idx_fileloc_hash** fileloc_hash
+-   **idx\_filelo\_hash** fileloc_hash
 
 ------------------------------------------------------------------------
 
 ###  public.sla_miss 
 
 **Table Structure:**
+
+--------------------------------------------------------------------------------
+
 |F-Key   |Name                |Type                       |Description
 |------ |------------------ |------------------------- |--------------
 |        |task_id             |character varying(250)     |*PRIMARY KEY*
@@ -406,6 +475,9 @@ The Airflow metadata database has a total of 30 tables  tables are stored on the
 ###  public.slot_pool
  
 **Table Structure:**
+
+--------------------------------------------------------------------------------
+
 |F-Key   |Name          |Type                    |Description
 |------- |------------- |----------------------- |---------------
 |        |id            |serial                  |*PRIMARY KEY*
@@ -418,6 +490,9 @@ The Airflow metadata database has a total of 30 tables  tables are stored on the
 ###  public.task_fail
  
 **Table Structure:**
+
+--------------------------------------------------------------------------------
+
 |F-Key   |Name             |Type                       |Description
 |------- |---------------- |-------------------------- |---------------
 |        |id               |serial                     |*PRIMARY KEY*
@@ -429,13 +504,16 @@ The Airflow metadata database has a total of 30 tables  tables are stored on the
 |        |duration         |integer                    |
 
 **Indexes:**
--   **idx_task_fail_dag_task_date** dag_id, task_id, execution_date
+-   **idx\_task\_fail\_dag\_task\_date** dag_id, task_id, execution_date
 
 ------------------------------------------------------------------------
 
 ###  public.task_instance 
 
 **Table Structure:**
+
+--------------------------------------------------------------------------------
+
 |F-Key   |Name              |Type                       |Description
 |------- |----------------- |-------------------------- |---------------------------
 |        |task_id           |character varying(250)     |*PRIMARY KEY*
@@ -462,12 +540,12 @@ The Airflow metadata database has a total of 30 tables  tables are stored on the
 -   [public.task_reschedule](#table-public.task-reschedule)
 
 **Indexes:**
--   **ti_dag_date** dag_id, execution_date
--   **ti_dag_state** dag_id, state
+-   **ti\_dag\_date** dag_id, execution_date
+-   **ti\_dag\_state** dag_id, state
 -   **ti_job_id** job_id
 -   **ti_pool** pool, state, priority_weight
 -   **ti_state** state
--   **ti_state_lkp** dag_id, task_id, execution_date, state
+-   **ti\_state\_lkp** dag_id, task_id, execution_date, state
 
 ------------------------------------------------------------------------
 
@@ -480,9 +558,9 @@ The Airflow metadata database has a total of 30 tables  tables are stored on the
 |F-Key                                                                   |Name              |Type                       |Description
 |----------------------------------------------------------------------- |----------------- |-------------------------- |---------------
 |                                                                        |id                |serial                     |*PRIMARY KEY*
-|[public.task_instance.task_id\#1](#public.task-instance)          |task_id           |character varying(250)     |*NOT NULL*
-|[public.task_instance.dag_id\#1](#public.task-instance)           |dag_id            |character varying(250)     |*NOT NULL*
-|[public.task_instance.execution_date\#1](#public.task-instance)   |execution_date    |timestamp with time zone   |*NOT NULL*
+|[public.task\_instance.task\_id\#1](#public.task-instance)          |task_id           |character varying(250)     |*NOT NULL*
+|[public.task\_instance.dag\_id\#1](#public.task-instance)           |dag_id            |character varying(250)     |*NOT NULL*
+|[public.task\_instance.execution\_date\#1](#public.task-instance)   |execution_date    |timestamp with time zone   |*NOT NULL*
 |                                                                        |try_number        |integer                    |*NOT NULL*
 |                                                                        |start_date        |timestamp with time zone   |*NOT NULL*
 |                                                                        |end_date          |timestamp with time zone   |*NOT NULL*
@@ -490,13 +568,16 @@ The Airflow metadata database has a total of 30 tables  tables are stored on the
 |                                                                        |reschedule_date   |timestamp with time zone   |*NOT NULL*
 
 **Indexes:**
--   **idx_task_reschedule_dag_task_date** dag_id, task_id, execution_date
+-   **idx\_task\_reschedule\_dag\_task\_date** dag_id, task_id, execution_date
 
 ------------------------------------------------------------------------
 
 ###  public.users
 
 **Table Structure:**
+
+--------------------------------------------------------------------------------
+
 |F-Key   |Name        |Type                     |Description
 |-------|-----------|------------------------|---------------
 |        |id          |serial                   |*PRIMARY KEY*
@@ -515,6 +596,9 @@ The Airflow metadata database has a total of 30 tables  tables are stored on the
 ###  public.variable
  
 **Table Structure:**
+
+--------------------------------------------------------------------------------
+
 |F-Key   |Name           |Type                     |Description
 |------- |--------------|------------------------|---------------
 |        |id             |serial                   |*PRIMARY KEY*
@@ -527,6 +611,9 @@ The Airflow metadata database has a total of 30 tables  tables are stored on the
 ### public.xcom
 
 **Table Structure:**
+
+--------------------------------------------------------------------------------
+
 |F-Key  | Name            | Type                      |Description|
 |------|----------------|--------------------------|---|
 |       |id               |serial                     |*PRIMARY KEY*|
@@ -538,6 +625,6 @@ The Airflow metadata database has a total of 30 tables  tables are stored on the
 |       |dag_id           |character varying(250)     |*NOT NULL*|
 
 **Indexes:** 
--   **idx_xcom_dag_task_date** dag_id, task_id, execution_date
+-   **idx\_xcom\_dag\_task\_date** dag_id, task_id, execution_date
 
 ------------------------------------------------------------------------
