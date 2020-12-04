@@ -6,8 +6,6 @@ slug: "airflow-database"
 tags: ["Database", "Airflow", "Components"]
 ---
 
-# Understanding the Airflow Metadata Database
-
 ## Overview
 
 > Note: This guide has been written and tested with Airflow Airflow 1.10.10. New tables may be introduced in newer versions. 
