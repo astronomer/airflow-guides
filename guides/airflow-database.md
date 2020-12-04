@@ -1,7 +1,7 @@
 ---
 title: "Understanding the Airflow Metadata Database"
 description: "Documentation for airflow metadata database"
-date: 2020-03-21T00:00:00.000Z
+date: 2020-11-21T00:00:00.000Z
 slug: "airflow-database"
 tags: ["Database", "Airflow", "Components"]
 ---
