@@ -1,6 +1,6 @@
 ---
 title: "Understanding the Airflow Metadata Database"
-description: "Documentation for airflow metadata database"
+description: "An structural walkthrough of Apache Airflow's metadata database, with a full ERD."
 date: 2020-11-21T00:00:00.000Z
 slug: "airflow-database"
 tags: ["Database", "Airflow", "Components"]
@@ -14,7 +14,7 @@ tags: ["Database", "Airflow", "Components"]
 
 We at Astronomer often get asked about the structure of the underlying Airflow metadata database. The Airflow metadata database stores configurations, such as variables and connections, user information, roles, and policies. It is also the Airflow Scheduler's source of truth for all metadata regarding DAGs, schedule intervals, statistics from each run, and tasks. 
 
-Airflow uses SQLAlchemy and Object Relational Mapping (ORM) in Python to connect and interact with the underlying metadata database from the application layer. Thus, any database supported by [SQLAlchemy](https://www.sqlalchemy.org/) can theoretically be configured to host Airflow's metadata. On Astronomer, each Airflow deployment is equipped with PostgreSQL database for this purpose. The following guide details all of the tables available in the database repository including dependencies and the complete ERD diagram. 
+Airflow uses SQLAlchemy and Object Relational Mapping (ORM) in Python to connect and interact with the underlying metadata database from the application layer. Thus, any database supported by [SQLAlchemy](https://www.sqlalchemy.org/) can theoretically be configured to host Airflow's metadata. On Astronomer, each Airflow deployment is equipped with PostgreSQL database for this purpose. The following guide details all of the tables available in the database repository including dependencies and the complete ERD. 
 
 Even though we don't recommend modifying the values directly on the database, as doing so might affect dependencies, understanding the underlying structure can be very useful when it comes to building your own reports or querying directly against the database. You can find some useful queries that go directly against these tables in our [Useful SQL queries for Apache Airflow](https://www.astronomer.io/guides/airflow-queries/) guide. 
 
