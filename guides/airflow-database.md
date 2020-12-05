@@ -42,7 +42,7 @@ The Airflow metadata database has a total of 30 tables  tables are stored on the
 
 **Tables referencing this one via Foreign Key Constraints:**
 
--   [public.ab_permission_view](#public.ab\_permission\_view)
+-   [public.ab\_permission\_view](#public.ab\_permission\_view)
 
 ------------------------------------------------------------------------
 
@@ -55,7 +55,7 @@ The Airflow metadata database has a total of 30 tables  tables are stored on the
 |F-Key                                                 |Name            |Type      |Description   |
 |-------------------|---------------|---------|-------------|
 |                                                      |id              |integer   |*PRIMARY KEY*|
-|  [public.ab_permission.id](#public.ab\_permission)   |permission_id   |integer   |*UNIQUE\#1*|
+|  [public.ab\_permission.id](#public.ab\_permission)   |permission_id   |integer   |*UNIQUE\#1*|
 |  [public.ab\_view\_menu.id](#public.ab\_view\_menu)    |view\_menu\_id    |integer   |*UNIQUE\#1*|
 
 **Tables referencing this one via Foreign Key Constraints:**
@@ -74,7 +74,7 @@ The Airflow metadata database has a total of 30 tables  tables are stored on the
 |------|----|----|----------|
 |       |id   |integer |   *PRIMARY KEY*|
 |[public.ab\_permission\_view.id](#public.ab\_permission\_view)   |permission\_view\_id   |integer   |*UNIQUE\#1*|
-|[public.ab_role.id](#public.ab\_role)                         |role_id              |integer   |*UNIQUE\#1*|
+|[public.ab\_role.id](#public.ab\_role)                         |role\_id              |integer   |*UNIQUE\#1*|
 
 ------------------------------------------------------------------------
 
@@ -131,14 +131,14 @@ The Airflow metadata database has a total of 30 tables  tables are stored on the
 |                                             |  email              |character varying(64)         |*UNIQUE NOT NULL*
 |                                             |  last_login         |timestamp without time zone   |
 |                                             |  login_count        |integer                       |
-|                                             |  fail_login_count   |integer                       |
+|                                             |  fail\_login\_count   |integer                       |
 |                                             |  created_on         |timestamp without time zone   |
 |                                             |  changed_on         |timestamp without time zone   |
-|  [public.ab_user.id](#public.ab\_user) |  created\_by\_fk      |integer                       |
-|  [public.ab_user.id](#public.ab\_user) |  changed\_by\_fk      |integer                       |
+|  [public.ab\_user.id](#public.ab\_user) |  created\_by\_fk      |integer                       |
+|  [public.ab\_user.id](#public.ab\_user) |  changed\_by\_fk      |integer                       |
 
 **Tables referencing this one via Foreign Key Constraints:**
--   [public.ab_user](#public.ab\_user)
+-   [public.ab\_user](#public.ab\_user)
 -   [public.ab\_user\_role](#public.ab\_user\_role)
 
 ------------------------------------------------------------------------
@@ -152,8 +152,8 @@ The Airflow metadata database has a total of 30 tables  tables are stored on the
 |F-Key                                        |Name      |Type      |Description
 |------------------------------------------- |-------- |-------- |--------------
 |                                             |id        |integer   |*PRIMARY KEY*
-|[public.ab_user.id](#public.ab\_user)   |user_id   |integer   |*UNIQUE\#1*
-|[public.ab_role.id](#public.ab\_role)   |role_id   |integer   |*UNIQUE\#1*
+|[public.ab\_user.id](#public.ab\_user)   |user\_id   |integer   |*UNIQUE\#1*
+|[public.ab\_role.id](#public.ab\_role)   |role\_id   |integer   |*UNIQUE\#1*
 
 ------------------------------------------------------------------------
 
