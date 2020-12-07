@@ -6,6 +6,7 @@ slug: "airflow-talend-integration"
 heroImagePath: "https://assets2.astronomer.io/main/guides/talend/talend_airflow_hero.png"
 tags: ["Integrations"]
 ---
+> Note: All code shown in this guide can be found in [this Github repo](https://github.com/astronomer/airflow-talend-tutorial).
 
 ## Why use Talend and Airflow
 
