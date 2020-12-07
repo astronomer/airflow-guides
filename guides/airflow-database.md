@@ -55,7 +55,7 @@ The Airflow metadata database has a total of 30 tables  tables are stored on the
 |F-Key                                                 |Name            |Type      |Description   |
 |-------------------|---------------|---------|-------------|
 |                                                      |id              |integer   |*PRIMARY KEY*|
-|  [public.ab\_permission.id](#public.ab\_permission)   |permission_id   |integer   |*UNIQUE\#1*|
+|  [public.ab\_permission.id](#public.ab\_permission)   |permission\_id   |integer   |*UNIQUE\#1*|
 |  [public.ab\_view\_menu.id](#public.ab\_view\_menu)    |view\_menu\_id    |integer   |*UNIQUE\#1*|
 
 **Tables referencing this one via Foreign Key Constraints:**
@@ -200,7 +200,7 @@ The Airflow metadata database has a total of 30 tables  tables are stored on the
 |                                         |chart_type        |character varying(100)     |
 |                                         |sql_layout        |character varying(50)      |
 |                                         |sql               |text                       |
-|                                         |y_log_scale       |boolean                    |
+|                                         |y\_log\_scale       |boolean                    |
 |                                         |show_datatable    |boolean                    |
 |                                         |show_sql          |boolean                    |
 |                                         |height            |integer                    |
