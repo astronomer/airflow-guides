@@ -7,62 +7,62 @@ heroImagePath: null
 tags: []
 ---
 
-You may have come across AWS Glue mentioned as a code-based, server-less ETL alternative to traditional drag-and-drop platforms. While this is all true (and Glue has a number of very exciting advancements over traditional tooling), there is still a very large distinction that should be made when comparing it to Apache Airflow.
+> This guide was last updated September 2020
+
+For those with tooling in the Amazon ecosystem, [AWS Glue](https://aws.amazon.com/glue/) is commonly presented and used as a code-based, serverless ETL alternative to traditional drag-and-drop platforms.
+
+Given that Glue has some exciting advancements over traditional tooling, it's commonly pitted against [Apache Airflow](https://airflow.apache.org/) for those looking for a code-based ETL tool with more extensibility. With that said, there are key differences between the two that are worth outlining for anyone evaluating them both. We'll walk you through those differences below.
 
 ## Platform
 
 ### Airflow
 
-Airflow is an open-sourced project that (with a few executor options) can be run anywhere in the cloud (e.g. AWS, GCP, Azure, etc). With [Astronomer Enterprise](http://enterprise.astronomer.io/), you can run Airflow on Kubernetes either on-premise or in any cloud.
+Airflow is an open-source workflow orchestration tool that's entirely cloud-agnostic and offers [three distinct execution methods](https://www.astronomer.io/guides/airflow-executors-explained/), each designed for a particular use case.
+
+Airflow can serve as a standard ETL tool but can be stretched well beyond that to accommodate much more complex workflows and dependencies. Given its large community and the vast array of supported use cases, there are dozens of pre-built templates for tools across cloud providers (AWS, GCP, Azure, etc.).
 
 ### AWS Glue
 
-Glue is an AWS product and cannot be implemented on-premise or in any other cloud environment.
+AWS Glue is a fully managed ETL service designed to be compatible with other AWS services, and cannot be implemented on-premise or in any other cloud environment.
+
+AWS customers can use Glue to prepare and load their data for analytics. You can use your AWS console to point Glue to your data stored on AWS. Glue will catalog the data and make it available for ETL jobs.  If you have a lot of data stored in AWS, Glue could be a good option for ETL.
 
 ## Purpose
 
 ### Airflow
 
-Airflow is designed to be an incredibly flexible task scheduler; there really are no limits of how it can be used. Often, it is used to perform ETL jobs (see the ETL section of [Example Airflow Dags](https://github.com/airflow-plugins/Example-Airflow-DAGs), but it can easily be used to [train ML models](https://wecode.wepay.com/posts/training-machine-learning-models-with-airflow-and-bigquery), [check the state of different systems and send notifications via email/slack](https://www.astronomer.io/blog/automating-salesforce-reports-in-slack-with-airflow-3/), and [power features within an app using various APIs](https://robinhood.engineering/why-robinhood-uses-airflow-aed13a9a90c8?gi=e3d130abaf1a).
+Airflow is designed to be a flexible workflow orchestrator with no limits to how it can be used. While ETL is its most common use case, Airflow is also widely used to [train ML models](https://blog.twitter.com/engineering/en_us/topics/insights/2018/ml-workflows.html), [check the state of different systems and send notifications via email/slack](https://www.astronomer.io/blog/automating-salesforce-reports-in-slack-with-airflow-3/), and [power features within an app using various APIs](https://robinhood.engineering/why-robinhood-uses-airflow-aed13a9a90c8?gi=e3d130abaf1a).
 
 ### Glue
 
-Glue is designed to make the processing of your data as easy as possible ONCE it is in the AWS ecosystem. According to AWS Glue documentation:
+Glue is designed to make the processing of your data as easy as possible once it is in the AWS ecosystem. According to AWS Glue documentation:
 
-"AWS Glue natively supports data stored in Amazon Aurora, Amazon RDS for MySQL, Amazon RDS for Oracle, Amazon RDS for PostgreSQL, Amazon RDS for SQL Server, Amazon Redshift, and Amazon S3, as well as MySQL, Oracle, Microsoft SQL Server, and PostgreSQL databases in your Virtual Private Cloud (Amazon VPC) running on Amazon EC2.
+> “AWS Glue natively supports data stored in Amazon Aurora, Amazon RDS for MySQL, Amazon RDS for Oracle, Amazon RDS for PostgreSQL, Amazon RDS for SQL Server, Amazon Redshift, DynamoDB and Amazon S3, as well as MySQL, Oracle, Microsoft SQL Server, and PostgreSQL databases in your Virtual Private Cloud (Amazon VPC) running on Amazon EC2. AWS Glue also supports data streams from Amazon MSK, Amazon Kinesis Data Streams, and Apache Kafka.”
 
-AWS Glue provides out-of-the-box integration with Amazon Athena, Amazon EMR, Amazon Redshift Spectrum, and any Apache Hive Metastore-compatible application."
-
-Because of this, it can be advantageous to still use Airflow to handle the data pipeline for all things OUTSIDE of AWS (e.g. pulling in records from an API and storing in s3) as this is not be a capability of AWS Glue.
+Precisely because of Glue's dependency on the AWS ecosystem, dozens of users choose to leverage both by using Airflow to handle data pipelines that interact with data outside of AWS (e.g. pulling records from an API and storing it in S3), as AWS Glue isn't able to handle those jobs.
 
 ## Underlying Framework
 
 ### Airflow
 
-Airflow is an independent framework that executes native Python code without any other dependencies. This can then be extended to use other services, such as [Apache Spark](https://github.com/apache/incubator-airflow/blob/master/airflow/contrib/operators/spark_submit_operator.py), using the library of officially supported and community contributed operators.
+Airflow is an independent framework that executes native Python code without any other dependencies. This can then be extended to use other services, such as [Apache Spark](https://github.com/apache/incubator-airflow/blob/master/airflow/contrib/operators/spark_submit_operator.py), using the library of officially supported and community contributed operators. Flexible interaction with third-party APIs, databases, infrastructure layers, and data systems (including AWS) is made possible through these operators.  
 
 ### Glue
 
-Glue uses Apache Spark as the foundation for it's ETL logic. There are some notable differences, however, that differentiate it from traditional Spark. The biggest of these differences include the use of a "dynamic frame" vs. the "data frame" (in Spark) that adds a number of additional Glue methods including [ResolveChoice()](https://docs.aws.amazon.com/glue/latest/dg/aws-glue-api-crawler-pyspark-transforms-ResolveChoice.html), [ApplyMapping()](https://docs.aws.amazon.com/glue/latest/dg/aws-glue-api-crawler-pyspark-transforms-ApplyMapping.html), and [Relationalize()](https://docs.aws.amazon.com/glue/latest/dg/aws-glue-api-crawler-pyspark-transforms-Relationalize.html).
+Glue uses Apache Spark as the engine for its data processing. There are some notable differences, however, that differentiate it from vanilla Spark. The biggest of these differences include the use of a "dynamic frame" vs. the "data frame" in Spark that adds a number of additional Glue methods including [ResolveChoice()](https://docs.aws.amazon.com/glue/latest/dg/aws-glue-api-crawler-pyspark-transforms-ResolveChoice.html), [ApplyMapping()](https://docs.aws.amazon.com/glue/latest/dg/aws-glue-api-crawler-pyspark-transforms-ApplyMapping.html), and [Relationalize()](https://docs.aws.amazon.com/glue/latest/dg/aws-glue-api-crawler-pyspark-transforms-Relationalize.html). By contract, Glue ETL scripts can be written in either PySpark or Scala.
 
 ## Execution
 
 ### Airflow
 
-Airflow can be executed in a number of fashions; the most common of which is the [CeleryExecutor](https://github.com/apache/incubator-airflow/blob/master/airflow/executors/celery_executor.py). Other [executors](https://github.com/apache/incubator-airflow/tree/master/airflow/executors) are currently available and compatibility with other platforms can be written to extend the framework (such as the [Mesos](https://github.com/apache/incubator-airflow/blob/master/airflow/contrib/executors/mesos_executor.py) or [Kubernetes](https://cwiki.apache.org/confluence/pages/viewpage.action?pageId=71013666) Executors).
-
-Airflow on Astronomer (Enterprise) runs on a private Kubernetes cluster and includes resource management tooling and analytics including Prometheus, [Grafana](https://grafana.com/), and [StatsD](https://github.com/etsy/statsd).
+One of Airflow's biggest strengths is its built-in choice between three [executors](https://github.com/apache/incubator-airflow/tree/master/airflow/executors), each built to execute tasks for a distinct use case. These executors allow Airflow to consume resources in a way that's optimized to the needs of your workflows and extends its framework to support serverless task execution via the [Kubernetes Executor](https://airflow.apache.org/docs/stable/executor/kubernetes.html), for example.
 
 ### Glue
 
-AWS Glue is notably "server-less", meaning that it requires no specific resources to manage.
+AWS Glue is notably serverless by default and does not require the user to decide how to allocate resources at any given time.
 
-## Pricing
+Glue uses [crawlers](https://docs.aws.amazon.com/glue/latest/dg/add-crawler.html) to crawl through your AWS data stores(S3, DynamoDB, etc…) and populate the AWS Glue Data Catalog by looking for a particular data schema. ETL jobs are run from this Data Catalog and Glue uses this catalog as a data source for jobs. For the crawlers to work correctly, data often needs to be in a particular format. Given that limitation, it's common to leverage Apache Airflow to organize or transform data as needed so Glue can efficiently crawl it.
 
-### Airflow
+## Conclusion
 
-While it can be pretty difficult to get up and running alone, Airflow is an open-source project that's completely free to use. If you think you could use some help managing infrastructure or getting Airflow training, check out our [products](https://astronomer.io) and shoot us an email at humans@astronomer.io if you'd like to chat.
-
-### Glue
-
-Pricing on Glue is determined using the derived measure of "Data Processing Units." More information can be found on their [Pricing Page](https://aws.amazon.com/glue/pricing/).
+AWS Glue is designed specifically to run ETL processes within the AWS ecosystem. Airflow is an open-source workflow orchestrator and scheduler that is designed to be flexible and work with any data platform, API, or data store. Those running ETL processes in AWS may still need Airflow to organize data for Glue to process or manage data processes outside of AWS.
