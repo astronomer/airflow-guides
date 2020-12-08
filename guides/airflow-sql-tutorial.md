@@ -1,14 +1,15 @@
 ---
 title: "Using Airflow to Execute SQL"
-description: "Executing queries, loading data, and more, from your Apache Airflow DAGs."
+description: "Executing queries, paramaterizing queries, and ETL, from your Apache Airflow DAGs."
 date: 2020-12-07T00:00:00.000Z
 slug: "airflow-sql-tutorial"
 tags: ["Database", "SQL", "DAGs"]
 ---
-## Overview
 > Note: All code in this guide can be found in [this Github repo](https://github.com/astronomer/airflow-sql-tutorial).
 
-Executing SQL queries is one of the most common use cases for data pipelines. Whether you're extracting and loading data, calling a stored procedure, or executing a complex query for a report, Airflow has you covered. Using Airflow, you can orchestrate all of your SQL tasks elegantly with relatively simple code.
+## Overview
+
+Executing SQL queries is one of the most common use cases for data pipelines. Whether you're extracting and loading data, calling a stored procedure, or executing a complex query for a report, Airflow has you covered. Using Airflow, you can orchestrate all of your SQL tasks elegantly with just a few lines of boilerplate code.
 
 In this guide, we'll cover general best practices for executing SQL from your DAG, showcase Airflow's available SQL-related operators, and demonstrate how to use Airflow for a few common SQL use cases.
 
@@ -36,7 +37,7 @@ For example, at Astronomer we use the following file structure to store scripts 
 An exception to this rule could be very short queries (such as SELECT * FROM table); putting one-line queries like this directly in the DAG can be done if it makes your code more readable.
 
 ### Keep Transformations in SQL
-Remember that Airflow is primarily an orchestrator, not a transformation framework. While you have the full power of Python in your DAG, best practice is to offload as much of your transformation logic as possible to source and destination systems. With SQL, this means completing the transformations within your query whenever possible.
+Remember that Airflow is primarily an orchestrator, not a transformation framework. While you have the full power of Python in your DAG, best practice is to offload as much of your transformation logic as possible to third party transformation frameworks. With SQL, this means completing the transformations within your query whenever possible.
 
 ## SQL-Related Operators
 Airflow has many operators available out of the box that make working with SQL easier. Here we'll highlight some commonly used ones that we think you should be aware of, but note that this list isn't comprehensive. For more documentation about Airflow operators, head [here](https://airflow.apache.org/docs/stable/_api/airflow/operators/index.html#).
@@ -61,11 +62,11 @@ Transfer operators move data from a source to a destination. For SQL-related tas
 - VerticaToMySqlTransfer
 
 ## Examples
-With those basic concepts in mind, we'll show a few examples of common SQL use cases. For this tutorial we will use Snowflake, but note that the concepts shown can be adapted for other databases.
+With those basic concepts in mind, we'll show a few examples of common SQL use cases. For this tutorial we will use [Snowflake](https://www.snowflake.com/), but note that the concepts shown can be adapted for other databases.
 
 ### Example 1 - Executing a Query
 
-In this first example, we use a DAG to execute two simple queries which are dependent on each other other. To do so we use the SnowflakeOperator, which is documented [here](https://airflow.apache.org/docs/stable/_modules/airflow/contrib/operators/snowflake_operator.html). 
+In this first example, we use a DAG to execute two simple interdependent queries. To do so we use the [SnowflakeOperator](https://airflow.apache.org/docs/stable/_modules/airflow/contrib/operators/snowflake_operator.html). 
 
 First we need to define our DAG:
 
@@ -120,7 +121,7 @@ CALL sp_pi_squared();
 
 `sp_pi()` and `sp_pi_squared()` are two stored procedures that we have defined in our Snowflake instance. Note that the SQL in these files could be any type of query you need to execute; sprocs are used here just as an example. 
 
-Finally, we need to set up a connection to Snowflake. There are a few ways to manage connections using Astronomer, including [IAM roles](https://www.astronomer.io/docs/enterprise/v0.16/customize-airflow/integrate-iam), [secrets managers](https://www.astronomer.io/docs/enterprise/v0.16/customize-airflow/secrets-backend), and the [Airflow API](https://www.astronomer.io/docs/enterprise/v0.16/customize-airflow/airflow-api). For this example, we set up a connection using the Airflow UI. In this DAG our connection is called `snowflake`, and the connection should look something like this:
+Finally, we need to set up a connection to Snowflake. There are a few ways to manage connections using Astronomer, including [IAM roles](https://www.astronomer.io/docs/enterprise/stable/customize-airflow/integrate-iam), [secrets managers](https://www.astronomer.io/docs/enterprise/stable/customize-airflow/secrets-backend), and the [Airflow API](https://www.astronomer.io/docs/enterprise/stable/customize-airflow/airflow-api). For this example, we set up a connection using the Airflow UI. In this DAG our connection is called `snowflake`, and the connection should look something like this:
 
 ![Snowflake Connection](https://assets2.astronomer.io/main/guides/sql-tutorial/snowflake_connection.png)
 
@@ -204,9 +205,9 @@ WHERE date = {{ params.date }}
 ### Example 3 - Loading Data
 Our next example loads data from an external source into a table in our database. We grab data from an API and save it to a flat file on S3, which we then load into Snowflake. 
 
-We use the S3toSnowflakeTransferOperator to limit the code we have to write. You can find the code for this operator [here](https://github.com/apache/airflow/blob/master/airflow/providers/snowflake/transfers/s3_to_snowflake.py). 
+We use the [S3toSnowflakeTransferOperator](https://github.com/apache/airflow/blob/master/airflow/providers/snowflake/transfers/s3_to_snowflake.py) to limit the code we have to write. 
 
-First, we create a DAG that pulls COVID data from an API endpoint for California, Colorado, Washington, and Oregon, saves the data to comma-separated values (CSVs) on S3, and loads each of those CSVs to Snowflake using the transfer operator. Here's the DAG code:
+First, we create a DAG that pulls COVID data from an [API endpoint](https://covidtracking.com/data/api) for California, Colorado, Washington, and Oregon, saves the data to comma-separated values (CSVs) on S3, and loads each of those CSVs to Snowflake using the transfer operator. Here's the DAG code:
 
 ```python
 from airflow import DAG
