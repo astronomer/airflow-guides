@@ -19,7 +19,7 @@ Upon signing into the UI, you'll immediately land on the DAGs dashboard.
 
 Your initial options:
 
-- **On/Off Toggle** To the left of the DAG name, look for an on/off toggle that allows you to pause any DAG at any time. By default, DAGs are instanstiated as off.
+- **On/Off Toggle** To the left of the DAG name, look for an on/off toggle that allows you to pause any DAG at any time. By default, DAGs are instantiated as off.
 
 - **Recent Tasks** shows a summary of the last scheduled DAG run.
 
@@ -87,7 +87,7 @@ For more on Connections, check out this guide: [Managing Your Connections in Air
 
 Variables are a generic way to store and retrieve arbitrary content or settings as a simple key value store within Airflow. Any DAG running in your Airflow instance can access, reference, or edit a Variable as a part of the workflow.
 
-The data is stored in Airflow's underyling Postgres, so while it's not a great spot to store large amounts of data -  it is a good fit for storing configuration information, lists of external tables, or constants.
+The data is stored in Airflow's underlying Postgres, so while it's not a great spot to store large amounts of data -  it is a good fit for storing configuration information, lists of external tables, or constants.
 
 _Note_: Most of your constants and variables should be defined in code, but it's useful to have some variables or configuration items accessible and modifiable through the UI itself.
 

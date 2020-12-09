@@ -40,7 +40,7 @@ def test(**kwargs):
 
 
 with dag:
-    execution_date = '{{ execution_date }}' # Access excution date template
+    execution_date = '{{ execution_date }}' # Access execution date template
     t1 = PythonOperator(
         task_id='show_template',
         python_callable=test,

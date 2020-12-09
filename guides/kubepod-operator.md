@@ -31,7 +31,7 @@ Create a service account tied to a role that allows `create`, `get` and `watch` 
 
 3. Set `in_cluster` to `True`.
 
-This will tell your task to look inside the cluster for the Kubernetes config. In this setup, the workers are tied to role with the right privledges in the cluster.
+This will tell your task to look inside the cluster for the Kubernetes config. In this setup, the workers are tied to role with the right privileges in the cluster.
 
 4. Run an example.
 

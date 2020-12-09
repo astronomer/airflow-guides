@@ -24,7 +24,7 @@ This dag pulls the following endpoints and inserts data to the following table/s
 
 *NOTE:* Only endpoints with the appropriate scope will be included in this dag.
 
-The associated scope to the varius endpoints can be found in the "scope" field within the endpoints array below. The scope available to a given token can be found by passing the associated token to: https://api.hubapi.com/oauth/v1/access-tokens/{OAUTH_TOKEN}
+The associated scope to the various endpoints can be found in the "scope" field within the endpoints array below. The scope available to a given token can be found by passing the associated token to: https://api.hubapi.com/oauth/v1/access-tokens/{OAUTH_TOKEN}
 
 *NOTE:* The contacts table and associated subtables are built based on an incrementing contact id that is stored as an Airflow Variable with the
 naming convention "INCREMENTAL_KEY__{DAG_ID}_{TASK_ID}_vidOffset" at the end of each run and then pulled on the next to be used as an offset. As such, while accessing the Contacts endpoint, "max_active_runs" should be set to 1 to avoid pulling the same incremental key offset and therefore pulling the same data twice.
@@ -41,7 +41,7 @@ naming convention "INCREMENTAL_KEY__{DAG_ID}_{TASK_ID}_vidOffset" at the end of 
   * Associations_AssociatedCompanyVids - Append
   * Associations_AssociatedDealIds - Append
 * Deal Pipelines - Rebuild
-* Engagments - Rebuild
+* Engagements - Rebuild
   * Associations - Rebuild
   * Attachments - Rebuild
 * Events - Append - Built based on incremental date

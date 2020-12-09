@@ -92,7 +92,7 @@ class GoogleAnalyticsReportingToCloudStorageOperator(BaseOperator):
 
         if not isinstance(self.include_empty_rows, bool):
             raise Exception(
-                'Please specificy "include_empty_rows" as a boolean.')
+                'Please specify "include_empty_rows" as a boolean.')
 
     def execute(self, context):
         ga_conn = GoogleAnalyticsHook(self.google_analytics_conn_id)

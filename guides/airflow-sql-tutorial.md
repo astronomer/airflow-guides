@@ -1,6 +1,6 @@
 ---
 title: "Using Airflow to Execute SQL"
-description: "Executing queries, paramaterizing queries, and embedding SQL-driven ETL in Apache Airflow DAGs."
+description: "Executing queries, parameterizing queries, and embedding SQL-driven ETL in Apache Airflow DAGs."
 date: 2020-12-07T00:00:00.000Z
 slug: "airflow-sql-tutorial"
 tags: ["Database", "SQL", "DAGs"]
@@ -138,7 +138,7 @@ With the connection established, we can now run the DAG to execute our SQL queri
 
 ### Example 2 - Executing a Query with Parameters
 
-Using Airflow, you can also paramaterize your SQL queries to make them more dynamic. Let's say we have a query that selects data from a table for a date that we want to dynamically update. We can execute the query using the same setup as in Example 1, with a few adjustments.
+Using Airflow, you can also parameterize your SQL queries to make them more dynamic. Let's say we have a query that selects data from a table for a date that we want to dynamically update. We can execute the query using the same setup as in Example 1, with a few adjustments.
 
 Our DAG will look like this:
 
@@ -156,7 +156,7 @@ default_args = {
     'retry_delay': timedelta(minutes=1)
 }
 
-with DAG('paramaterized_query',
+with DAG('parameterized_query',
          start_date=datetime(2020, 6, 1),
          max_active_runs=3,
          schedule_interval='@daily',
@@ -233,7 +233,7 @@ BUCKET = 'astro-workshop-bucket'
 name = 'covid_data'  # swap your name here
 
 def upload_to_s3(endpoint, date):
-    # Instanstiate
+    # Instantiate
     s3_hook = S3Hook(aws_conn_id=S3_CONN_ID)
 
     # Base URL

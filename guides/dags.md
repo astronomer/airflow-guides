@@ -41,7 +41,7 @@ In Airflow, each node in a DAG (soon to be known as a task) represents some form
 
 ## Dependencies
 
-Each of the verticies have a specific direction showing the relationship between nodes - data can only follow the direction of the vertices (from the example above, the IP addresses cannot be anonymized until the data has been pulled).
+Each of the vertices have a specific direction showing the relationship between nodes - data can only follow the direction of the vertices (from the example above, the IP addresses cannot be anonymized until the data has been pulled).
 
 Node B is  _downstream_ from Node A - it won't execute until Node A finishes.
 
@@ -77,7 +77,7 @@ Something is idempotent if it will produce the same result regardless of how man
 
 `$f(x) = f(f(x)) = f(f(f(x)))...$`
 
-Idempotency usually hand in hand with **reproducability** - a set of inputs always produces the same set of outputs
+Idempotency usually hand in hand with **reproducibility** - a set of inputs always produces the same set of outputs
 
 Making ETL jobs idempotent can be easier for workflows  more than others - if it's just a SQL load for a days data, implementing upsert logic is pretty easy. If it's a file that's dropped on an externally controlled FTP that is not there for long, it is a little more difficult.
 

@@ -70,7 +70,7 @@ kubectl delete po/POD_NAME
 To restart any particular component of your Airflow setup, you can simply delete the pod and it will spin back up.
 **Note: Do not delete the database pod**
 
-If you are seeing unexpected behavior in your Airflow deployment, the ansewr might lie in the scheduler or webserver logs:
+If you are seeing unexpected behavior in your Airflow deployment, the answer might lie in the scheduler or webserver logs:
 ```
 bash
 kubectl logs po/POD_NAME -f

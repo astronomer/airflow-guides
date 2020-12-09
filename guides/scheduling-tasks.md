@@ -151,7 +151,7 @@ Instead of running one big API call, `catchup=True` along with a `schedule_inter
 
 Deploying a DAG with **`catchup=True`** can fit a use case, but consider using additional scheduling parameters for added safety.
 
-**`depends_on_past`**: When set to `True`, task instance will run chronologically sequentially, relying on the previously scheduled task instance to suceed before executing.
+**`depends_on_past`**: When set to `True`, task instance will run chronologically sequentially, relying on the previously scheduled task instance to succeed before executing.
 
 This will ensure sequential data loads, but may also stop progress if a job is left to run unmonitored.
 
@@ -159,7 +159,7 @@ This will ensure sequential data loads, but may also stop progress if a job is l
 
 ###  LatestOnlyOperator
 
-The [LatestOnlyOperator](https://airflow.apache.org/concepts.html#latest-run-only) can explicity accomplish the same functionality as some of the scheduling parameters (assuming default `trigger_rules`). The `LatestOnlyOperator` skips all tasks that are not for the most recent DagRun.
+The [LatestOnlyOperator](https://airflow.apache.org/concepts.html#latest-run-only) can explicitly accomplish the same functionality as some of the scheduling parameters (assuming default `trigger_rules`). The `LatestOnlyOperator` skips all tasks that are not for the most recent DagRun.
 
 This can be helpful for tasks that are naturally idempotent or can be run independently of time (i.e. no time based input).
 

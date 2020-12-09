@@ -78,7 +78,7 @@ t5 = S3ToRedshiftTransfer(
         aws_conn_id='my_aws_connection'
     )
 ```
-This operator loads data from S3 to Redshift via Redshift's COPY command. This is in a family of operators called `Transfer Operators` - operators designed to move data from one system (S3) to another (Redshift). Notice it has two Airlfow connections in the parameters, one for Redshift and one for S3.
+This operator loads data from S3 to Redshift via Redshift's COPY command. This is in a family of operators called `Transfer Operators` - operators designed to move data from one system (S3) to another (Redshift). Notice it has two Airflow connections in the parameters, one for Redshift and one for S3.
 
 This also uses another concept - [macros and templates](https://www.astronomer.io/guides/templating/). In the `s3_key` parameter, jinja template notation is used to pass in the execution date for this DAG Run formatted as a string with no dashes (`ds_nodash` - a predefined macro in Airflow). It will look for a key formatted similarly to `my_s3_bucket/20190711/my_file.csv`, with the timestamp dependent on when the file ran. 
 

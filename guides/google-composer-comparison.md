@@ -60,7 +60,7 @@ Astronomer Enterprise is entirely cloud agnostic and can be installed on any Kub
 
 **Google Cloud Composer**
 
-Logging in Composer is handled by Stackdriver and based on [fluentd](https://www.fluentd.org). Metrics availlable in [Cloud Monitoring](https://cloud.google.com/composer/docs/how-to/managing/monitoring-environments) and the [Composer monitoring dashboard](https://cloud.google.com/composer/docs/monitoring-dashboard).
+Logging in Composer is handled by Stackdriver and based on [fluentd](https://www.fluentd.org). Metrics available in [Cloud Monitoring](https://cloud.google.com/composer/docs/how-to/managing/monitoring-environments) and the [Composer monitoring dashboard](https://cloud.google.com/composer/docs/monitoring-dashboard).
 
 **Astronomer**
 

@@ -25,7 +25,7 @@ Luigi is an open-source framework developed by ex-Spotify engineer [Erik Bernhar
 
 ## Comparison
 
-### Compatiblity
+### Compatibility
 
 Users write data pipelines in Python in both Luigi and Airflow, which makes them compatible with third-party tools. Almost every tool that you’d need to interface with programmatically has a Python integration, library, or API client. Where Airflow and Luigi differentiate is in Airflow’s use of operators, which allow for users to leverage community-contributed integrations. The Airflow community maintains operators for hundreds of external tools.
 

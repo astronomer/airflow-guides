@@ -51,7 +51,7 @@ If you haven't done so already, navigate into your project directory and create 
 
 `git clone https://github.com/airflow-plugins/google_analytics_plugin.git`
 
-This will allow you to use the Google analytics hook to establish a connection to Google Anlaytics and extract data into a file. You will also be able to use the appropriate operators to transfer the Google Analytics data to S3 and then from S3 to Redshift.
+This will allow you to use the Google Analytics hook to establish a connection to Google Analytics and extract data into a file. You will also be able to use the appropriate operators to transfer the Google Analytics data to S3 and then from S3 to Redshift.
 
 ### 3. Copy the DAG file
 

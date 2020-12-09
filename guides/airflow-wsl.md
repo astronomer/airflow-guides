@@ -54,7 +54,7 @@ Run `pip3 --version` to make sure it's installed correctly.
 
 ### Installing Airflow
 
-This step should be no different than installing Airflow in any normal Ubuntu environment. If you want, you can include other Airflow modules such as postrges or s3. Some of these may require dependencies to be installed on Ubuntu using `sudo apt install [your_dependency]`.
+This step should be no different than installing Airflow in any normal Ubuntu environment. If you want, you can include other Airflow modules such as postgres or s3. Some of these may require dependencies to be installed on Ubuntu using `sudo apt install [your_dependency]`.
 
 Run `pip3 install apache-airflow`.
 

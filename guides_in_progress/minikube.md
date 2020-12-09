@@ -46,10 +46,10 @@ This command will install the latest version of MiniKube and add a PATH for mini
 * [Hyper-V](https://docs.microsoft.com/en-us/virtualization/hyper-v-on-windows/quick-start/enable-hyper-v)
 
 
-The windows installer is currently experminetal, you can download it here: [minikube-windows-amd64](https://storage.googleapis.com/minikube/releases/latest/minikube-windows-amd64.exe). Once downloaded, rename the file to `minikube.exe` and manually add it to your environment PATH.
+The windows installer is currently experimental, you can download it here: [minikube-windows-amd64](https://storage.googleapis.com/minikube/releases/latest/minikube-windows-amd64.exe). Once downloaded, rename the file to `minikube.exe` and manually add it to your environment PATH.
 
 For help setting the environment path in Windows 10, see [this guide](https://www.computerhope.com/issues/ch000549.htm).
 
 
-## Kuburnetes Quickstart
-For more minikube resoureces, check out the [Kuburnetes Quickstart Guide](https://kubernetes.io/docs/getting-started-guides/minikube/)
+## Kubernetes Quickstart
+For more minikube resources, check out the [Kubernetes Quickstart Guide](https://kubernetes.io/docs/getting-started-guides/minikube/)

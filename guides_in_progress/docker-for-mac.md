@@ -53,7 +53,7 @@ Homebrew is a package manager that describes itself as installing `the stuff you
 
 ### Helm via Homebrew Install
 
-Helm is a package manager for Kubernetes itself. In Helm a package is called a Chart. Under the hood a `Chart` is a collection of files definiting the configuration of Kubernetes resources. The [Kubernetes github organization][5]{:target="_blank"} provides a list of [stable Charts][6]{:target="_blank"}.
+Helm is a package manager for Kubernetes itself. In Helm a package is called a Chart. Under the hood a `Chart` is a collection of files defining the configuration of Kubernetes resources. The [Kubernetes github organization][5]{:target="_blank"} provides a list of [stable Charts][6]{:target="_blank"}.
 
 ### Installation Steps
 
@@ -69,7 +69,7 @@ There are a couple of [helm installation options][7]{:target="_blank"}, for this
 
 ## Kubernetes WebUI Dashboard Install
 
-The Kubernetes dashboard is the command central of your Kubernetes cluster. From here you can graphically monitor the status of deployments as well as dive into the logs to troubleshoot failed deployments. We will be using the install from the [Kubernetes Githup][8]{:target="_blank"}.
+The Kubernetes dashboard is the command central of your Kubernetes cluster. From here you can graphically monitor the status of deployments as well as dive into the logs to troubleshoot failed deployments. We will be using the install from the [Kubernetes GitHub][8]{:target="_blank"}.
 
 ### Installation Steps
 

@@ -151,7 +151,7 @@ def hello_world(**kwargs):
     ti.email_alert = new_email_alert
 
     # intentionally fail the task by calling get_records()
-    # without providing positiional argument "sql"
+    # without providing positional argument "sql"
 
     hook = PostgresHook('hook-name')
     return hook.get_records()

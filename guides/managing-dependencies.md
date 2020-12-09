@@ -85,7 +85,7 @@ Each trigger rule can have specific use cases: <br> <br>
 **one_success:** fires as soon as at least one parent succeeds, it does not wait for all parents to be done <br>
 **dummy:** dependencies are just for show, trigger at will <br>
 
-TriggerRules are defined as Airlfow Utils:
+TriggerRules are defined as Airflow Utils:
 
 ## Different Use Cases
 
@@ -148,7 +148,7 @@ A common use case of exotic trigger rules is a task downstream of all  other tas
 
 ### The `one_success` rule
 
-This rule is particulary helpful when setting up a "safety check" DAG - a DAG that runs as a safetycheck to all your data. If one of the "disaster checks" come back as `True`, the downstream disaster task can run the necessary logic.
+This rule is particularly helpful when setting up a "safety check" DAG - a DAG that runs as a safetycheck to all your data. If one of the "disaster checks" come back as `True`, the downstream disaster task can run the necessary logic.
 
 **Note:** The same logic can be implemented with the `one_failed` rule.
 
@@ -165,7 +165,7 @@ Once again, the same functionality can be achieved by using the `PythonBranchOpe
 
 ## Triggers with LatestOnlyOperator
 
-When scheduling tasks with complex trigger rules with dates in the past, there may be instances where certain tasks can run independely of time and others shouldn't.
+When scheduling tasks with complex trigger rules with dates in the past, there may be instances where certain tasks can run independently of time and others shouldn't.
 
 The parameters can also be set in the DAG configuration as above - the scheduling may get a bit messy, but it can save computing resources and add a layer of safety.
 
