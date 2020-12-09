@@ -1,6 +1,6 @@
 ---
 title: "Using Airflow to Execute SQL"
-description: "Executing queries, paramaterizing queries, and ETL, from your Apache Airflow DAGs."
+description: "Executing queries, paramaterizing queries, and embedding SQL-driven ETL in Apache Airflow DAGs."
 date: 2020-12-07T00:00:00.000Z
 slug: "airflow-sql-tutorial"
 tags: ["Database", "SQL", "DAGs"]
