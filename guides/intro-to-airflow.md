@@ -31,7 +31,7 @@ If you're interested in getting more specific, here are a few cool things we've 
 
 - Aggregate daily sales team updates from Salesforce to send a daily report to executives at the company.
 - Use Airflow to organize and kick off machine learning jobs running on external Spark clusters.
-- Load website/applicaiton analytics data into a data warehouse on an hourly basis.
+- Load website/application analytics data into a data warehouse on an hourly basis.
 
 We further discuss Airflow's use cases in our [podcast episode here](https://soundcloud.com/the-airflow-podcast/use-cases) if you're interested in diving deeper!
 

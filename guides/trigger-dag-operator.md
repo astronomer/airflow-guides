@@ -55,13 +55,13 @@ On the same note, they can be used to monitor Airflow itself.
 
 ## Metadata Trigger DAGs.
 
-Error notifications can be set through various levels through a DAG, but propogating whose  between different DAGs can valuable for other reasons. Suppose that after 5  DAG failures, you wanted to trigger a systems check
+Error notifications can be set through various levels through a DAG, but propagating whose  between different DAGs can valuable for other reasons. Suppose that after 5  DAG failures, you wanted to trigger a systems check
 
 ### Sensors and TriggerDAGs
 
 _Airflow on Airflow._
 
-As Airflow operations are being scaled up, error reporting gets increasingly difficult. The more failure emails that are being sent out, the less each notification matters. Furthermore, a certain threshold of failures could indiciate a deeper issue in another system.
+As Airflow operations are being scaled up, error reporting gets increasingly difficult. The more failure emails that are being sent out, the less each notification matters. Furthermore, a certain threshold of failures could indicate a deeper issue in another system.
 
 Using a Sensor and TriggerDag can provide a clean solution to this issue,
 

@@ -48,7 +48,7 @@ def load_subdag(parent_dag_name, child_dag_name, args):
 
 ```
 
-This object should then be called when instanstiating the SubDagOperator:
+This object should then be called when instantiating the SubDagOperator:
 
 ```python
 load_tasks = SubDagOperator(

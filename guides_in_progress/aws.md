@@ -79,7 +79,7 @@ Make sure you have correctly installed the following tools, and can run a test c
     }
     ```
 
-In this example we've assigned these actions to all resources, you may decide to assign these permisions to only the EKS resource, that it fine.
+In this example we've assigned these actions to all resources, you may decide to assign these permissions to only the EKS resource, that it fine.
 
 ## AWS CLI
 
@@ -111,8 +111,8 @@ aws eks create-cluster --name devel --role-arn arn:aws:iam::111122223333:role/ek
 
 - Replace `devel` with the name you want to give your new cluster.
 - Replace `arn:aws:iam::111122223333:role/eks-service-role-AWSServiceRoleForAmazonEKS-EXAMPLEBKZRQR` with the `Role ARN` identifier under your IAM role summary.
-- Replace the `subnetIds` with the subnets created when setting up your VPC. To look these up again you can navigate to the [CloudFormation Serivce](https://console.aws.amazon.com/cloudformation/) select the box next to your VPC stack name and click the `Outputs` tab in the lower half of the screen.
-- Replace the `securityGroupIds` with your VPC secuirityGroups value in the outputs tab.
+- Replace the `subnetIds` with the subnets created when setting up your VPC. To look these up again you can navigate to the [CloudFormation Service](https://console.aws.amazon.com/cloudformation/) select the box next to your VPC stack name and click the `Outputs` tab in the lower half of the screen.
+- Replace the `securityGroupIds` with your VPC securityGroups value in the outputs tab.
 
 After running this command you may allow up to 10 minutes for the cluster to be fully provisioned.
 

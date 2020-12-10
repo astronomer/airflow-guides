@@ -104,7 +104,7 @@ Once you've chosen the domain where you will be hosting the services, update `gl
 
 ## Secrets
 
-The Astronomer Platform requires several secrets to be in place before installation. At a minimum, you will need to create secrets that contain database connection strings. Optionally, you can provide a secret for TLS certificates so you can accesss the platform securely over HTTPS. If you are new to Kubernetes or secrets, you may want to check out [this guide](https://kubernetes.io/docs/concepts/configuration/secret/) for a quick primer.
+The Astronomer Platform requires several secrets to be in place before installation. At a minimum, you will need to create secrets that contain database connection strings. Optionally, you can provide a secret for TLS certificates so you can access the platform securely over HTTPS. If you are new to Kubernetes or secrets, you may want to check out [this guide](https://kubernetes.io/docs/concepts/configuration/secret/) for a quick primer.
 
 ### Connection Strings
 
@@ -139,7 +139,7 @@ kubectl create secret generic airflow-redis --from-literal connection='redis://:
 
 ### TLS
 
-When getting started with the Astronomer Platform you can deploy without enabling TLS. This will give you a feel for the platform by allowing you to access individual resources. However, when you are ready for a production deploy you will need to enable TLS. This is because the Astronomer Platform requires secure connections when accessing it's sevices over the public internet. To do this, you will need to populate one more secret with your TLS key and certificate.
+When getting started with the Astronomer Platform you can deploy without enabling TLS. This will give you a feel for the platform by allowing you to access individual resources. However, when you are ready for a production deploy you will need to enable TLS. This is because the Astronomer Platform requires secure connections when accessing its services over the public internet. To do this, you will need to populate one more secret with your TLS key and certificate.
 
 #### Existing Certificate
 
@@ -215,7 +215,7 @@ Now that we have everything in place, we can deploy the Astronomer Platform to y
 helm install -f config.yaml --namespace ${NAMESPACE} .
 ```
 
-If you recieve any weird errors from helm, you may need to give Tiller access to the Kubernetes API. Check out [our post](/guides/helm) on setting helm up with the proper permissions.
+If you receive any weird errors from helm, you may need to give Tiller access to the Kubernetes API. Check out [our post](/guides/helm) on setting helm up with the proper permissions.
 
 ## Upgrade
 

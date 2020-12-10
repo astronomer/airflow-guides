@@ -263,7 +263,7 @@ Task 2:
 
 You can also view task statuses as you would normally using the Airflow UI. If your Talend job runs successfully, the Airflow task that executed it will have a 'success' status. If the Talend job fails, the Airflow task will be marked 'failed' (as shown on the second task in the screenshot below), and any error messages will be printed in the Airflow task logs.
 
-![Airflow Task Statuss](https://assets2.astronomer.io/main/guides/talend/airflow_talend_4.png)
+![Airflow Task Status](https://assets2.astronomer.io/main/guides/talend/airflow_talend_4.png)
 
 Pretty straight forward! Once your Talend jobs are containerized, they can be orchestrated using Airflow in any sort of DAG needed for your use case, by themselves, with other Talend jobs, with any other Airflow tasks, etc. 
 
@@ -274,7 +274,7 @@ Pretty straight forward! Once your Talend jobs are containerized, they can be or
 
 If you are getting an error that says `Cannot run program "docker-credential-desktop"` while building an image from a job using a local docker host on Mac then it may be due to an outdated Java plugin on Talend Studio V7.3.1  
 
-You will need to edit your `.docker/config.json`. The file is localted at ~/.docker/config.json. Delete the line `"credsStore" : "desktop"` from you config.json :
+You will need to edit your `.docker/config.json`. The file is located at ~/.docker/config.json. Delete the line `"credsStore" : "desktop"` from you config.json :
 
 ```json
 {

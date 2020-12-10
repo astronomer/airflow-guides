@@ -7,7 +7,7 @@ heroImagePath: null
 tags: ["Best Practices", "Integrations"]
 ---
 
-You might be wanting to trigger an [AWS Lambda](https://goo.gl/zYGM7L) function directly via Airflow. Here are some tid bits of knowlege accumulated at Astronomer that might help you perform that function successfully. 
+You might be wanting to trigger an [AWS Lambda](https://goo.gl/zYGM7L) function directly via Airflow. Here are some tid bits of knowledge accumulated at Astronomer that might help you perform that function successfully. 
 
 ## AWS Lambda Basics
 

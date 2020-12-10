@@ -200,7 +200,7 @@ Then we can go to the main UI and see all of the new DAGs that have been created
 
 ## Adding DAGs based on Connections
 
-Creating DAGs based on a varible or set of variables is a very powerful feature of Airflow. But what if we want our number of DAGs to correspond to the number of connections (to an API, database, etc.) that are created in the "Connections" tab? In that case, we wouldn't want to have to create an additional variable uncessarily every time we made a new connection -- that would be redundant.
+Creating DAGs based on a variable or set of variables is a very powerful feature of Airflow. But what if we want our number of DAGs to correspond to the number of connections (to an API, database, etc.) that are created in the "Connections" tab? In that case, we wouldn't want to have to create an additional variable unnecessarily every time we made a new connection -- that would be redundant.
 
 Instead, we can pull the connections we have in our database by instantiating the "Session" and querying the "Connection" table. We can even filter our query so that this only pulls connections that match a certain criteria.
 

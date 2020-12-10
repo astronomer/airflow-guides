@@ -52,7 +52,7 @@ As long as the Docker Image contains all the necessary logic to execute a job, t
 
 
 #### PythonVirtualEnvOperator
-A solution that involves fewer moving parts - the [PythonVirtualEnvOperator](https://github.com/apache/incubator-airflow/blob/master/airflow/operators/python_operator.py) allows to run an arbitary python function (with some caveats).
+A solution that involves fewer moving parts - the [PythonVirtualEnvOperator](https://github.com/apache/incubator-airflow/blob/master/airflow/operators/python_operator.py) allows to run an arbitrary python function (with some caveats).
 
 Define a python callable:
 ```python
@@ -103,7 +103,7 @@ ENV AIRFLOW__WEBSERVER__EXPOSE_CONFIG True
 
 To move data from Google Analytics into Google Cloud Storage, you'll need:
 
-- A service account JSON key with the right privledges for GCS and BigQuery(recommend Admin access).
+- A service account JSON key with the right privileges for GCS and BigQuery(recommend Admin access).
 
 - A Google Analytics Airflow plugin. This guide is written to work with the one attached.
 
@@ -136,4 +136,4 @@ Run the attached `gcs_to_bq_test.py` DAG to verify that you can connect to Googl
 #### Write the DAG:
 Now that the connections are all taken care of, the DAG file can resemble a config file. If you are new to Airflow, please see [this guide](https://www.astronomer.io/guides/managing-dependencies/) for an overview on managing dependencies.
 
-The DAG in the attached `google_analytics_to_gcs.py` takes two different Google Analytics queries and puts the corresponding results in separate files for every time period they are run. This keeps the workflow idempotent and mantains a 1:1 relationship between each DagRun and each intermediary file. 
+The DAG in the attached `google_analytics_to_gcs.py` takes two different Google Analytics queries and puts the corresponding results in separate files for every time period they are run. This keeps the workflow idempotent and maintains a 1:1 relationship between each DagRun and each intermediary file. 
