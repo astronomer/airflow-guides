@@ -1,19 +1,19 @@
 {
-  "name": "airflow_guides",
+  "name": "astro-guides",
   "version": "1.0.0",
-  "description": "A series of guides for using Apache Airflow with Astronomer",
+  "description": "Tutorials and best practices for using Apache Airflow",
   "main": "index.js",
   "scripts": {
     "start": "npm start"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/astronomerio/airflow_guides.git"
+    "url": "git+https://github.com/astronomer/airflow-guides.git"
   },
   "author": "",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/astronomerio/airflow_guides/issues"
+    "url": "https://github.com/astronomer/airflow-guides/issues"
   },
-  "homepage": "https://github.com/astronomerio/airflow_guides#readme"
+  "homepage": "https://github.com/astronomer/airflow-guides#readme"
 }
