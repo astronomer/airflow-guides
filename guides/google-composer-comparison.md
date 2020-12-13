@@ -12,7 +12,7 @@ tags: []
 | Cost | ~$300 base | ~$110 base (via LocalExecutor) | Negotiated Annual subscription |
 | Hosting | Managed service hosted in Google's cloud environment | Managed service hosted in Astronomer's cloud environment | Installed in your Kubernetes cluster |
 | Monitoring and Logging | Deployment level metrics and logging in the Cloud Console | Deployment level metrics and logging in the Astronomer UI | Prometheus/Grafana + Elasticsearch, Fluentd, Kibana (EFK) stack to track resource usage across all Airflow deployments |
-| Support | Community support via Stack Overflow, Slack. [Commercial support](https://cloud.google.com/support) with many plans including 15-min response time for P1 cases in Premium Support | [Commercial support](https://support.astronomer.io/) that includes access to Airflow PMC members, and a [community forum](https:/forum.astronomer.io) | 24x7 Business-Critical SLAs available |
+| Support | Community support via Stack Overflow, Slack. [Commercial support](https://cloud.google.com/support) with many plans including 15-min response time for P1 cases in Premium Support | [Commercial support](https://support.astronomer.io/) that includes access to Airflow PMC members, and a [community forum](https://forum.astronomer.io) | 24x7 Business-Critical SLAs available |
 | Services | [QwikiLabs training](https://www.qwiklabs.com/), [Google Certification](https://cloud.google.com/certification), [Google on-site training](https://cloud.google.com/training), and [Consulting services](https://cloud.google.com/consulting) | [Astronomer SpaceCamp](https://astronomer.io/spacecamp) for on-site Airflow training | [Astronomer SpaceCamp](https://astronomer.io/spacecamp) for on-site Airflow training |
 
 ## Cost
