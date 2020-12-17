@@ -110,7 +110,3 @@ https://airflow.apache.org/docs/apache-airflow/stable/upgrade-check.html#upgrade
 The Apache Airflow Project strongly recommends that all users interested in running Airflow 2.0 first upgrade to [Airflow 1.10.14](https://github.com/apache/airflow/releases/tag/1.10.14), which was built to make the migration process as easy as possible.
 
 If you find a bug or problem in Airflow, file a GitHub issue in the [Apache Airflow GitHub repo]((https://github.com/apache/airflow/issues)). We'll be working with open source contributors towards subsequent 2.0 releases and are committed to regularly triaging community-reported issues.
-
-
-
-
