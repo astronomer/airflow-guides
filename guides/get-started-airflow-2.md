@@ -97,6 +97,8 @@ The example DAG in your directory should be populated in the Airflow UI on your 
 
 With that, you're all set!
 
+> **Note:** You will NOT be able to run multiple Airflow Scheduler replicas locally. If you’re interested in testing that feature, [let us know](https://support.astronomer.io) and we’ll provide you with a docker-compose override file you can use
+
 ## Resources
 
 Once you've tested Airflow 2.0 locally, refer to:
