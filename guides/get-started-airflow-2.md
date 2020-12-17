@@ -3,7 +3,7 @@ title: "Get Started with Apache Airflow 2.0"
 description: "Test Apache Airflow 2.0 on your local machine with the Astronomer CLI."
 date: 2020-12-17T00:00:00.000Z
 slug: "get-started-airflow-2"
-heroImagePath: "https://assets.astronomer.io/website/img/guides/IntroToDAG_preview.png"
+heroImagePath: "https://assets2.astronomer.io/main/guides/getting-started-airflow-2.png"
 tags: ["Resources", "Basics"]
 ---
 
