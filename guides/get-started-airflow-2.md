@@ -36,7 +36,7 @@ To install the latest version of the Astronomer CLI via cURL, run:
 $ curl -ssl https://install.astronomer.io | sudo bash
 ```
 
-> **Note:** If you're a macOS user using ZSH as your shell, you may encounter an error. [Learn more](https://www.theverge.com/2019/6/4/18651872/apple-macos-catalina-zsh-bash-shell-replacement-features).
+> **Note:** If you're a macOS user using ZSH as your shell, you may encounter an error. [Learn more](https://forum.astronomer.io/t/astro-cli-install-error-on-mac-zsh/659).
 
 ### Install the CLI via Homebrew
 
