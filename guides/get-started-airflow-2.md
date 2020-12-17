@@ -26,7 +26,7 @@ There are two ways to install any version of the Astronomer CLI:
 
 ### Prerequisites
 
-To install the Astronomer CLI, make sure you have [Docker](https://www.docker.com/) (v18.09 or higher).
+To use the Astronomer CLI, make sure you have [Docker](https://www.docker.com/) (v18.09 or higher) installed and running on your machine.
 
 ### Install the CLI via cURL
 
@@ -35,6 +35,8 @@ To install the latest version of the Astronomer CLI via cURL, run:
 ```bash
 $ curl -ssl https://install.astronomer.io | sudo bash
 ```
+
+> **Note:** If you're a macOS user using ZSH as your shell, you may encounter an error. [Learn more](https://www.theverge.com/2019/6/4/18651872/apple-macos-catalina-zsh-bash-shell-replacement-features).
 
 ### Install the CLI via Homebrew
 
@@ -64,7 +66,7 @@ This project directory is where you'll store all files necessary to build your A
 
 ## Step 3: Add Airflow 2.0 to your Dockerfile
 
-Your Dockerfile will include reference to a Debian-based, [Astronomer Certified](https://www.astronomer.io/downloads/) Docker Image.
+Your `Dockerfile` will include reference to a Debian-based, [Astronomer Certified](https://www.astronomer.io/downloads/) Docker Image.
 
 In your Dockerfile, replace the existing FROM statement with:
 
@@ -72,7 +74,7 @@ In your Dockerfile, replace the existing FROM statement with:
 FROM quay.io/astronomer/ap-airflow:2.0.0-buster-onbuild
 ```
 
-For the source code of this Airflow 2.0 Docker image, go [here](https://github.com/astronomer/ap-airflow/tree/master/2.0.0/buster).
+Feel free to refer to the [Astronomer Certified 2.0.0 image source](https://github.com/astronomer/ap-airflow/tree/master/2.0.0/buster).
 
 ## Step 4: Start Airflow
 
@@ -82,9 +84,9 @@ Now, run the following command:
 $ astro dev start
 ```
 
-This command spins up 3 Docker containers on your machine, each for a different Airflow component (Postgres, Webserver, Scheduler).
+This command spins up 3 Docker containers on your machine, 1 each for the Airflow Webserver, Scheduler, and Postgres components.
 
-> **Note:** If you’re running the Astronomer CLI with the [buildkit](https://docs.docker.com/develop/develop-images/build_enhancements/) feature enabled in Docker, you may see an error (`buildkit not supported by daemon`). Learn more in [this forum post](https://forum.astronomer.io/t/buildkit-not-supported-by-daemon-error-command-docker-build-t-airflow-astro-bcb837-airflow-latest-failed-failed-to-execute-cmd-exit-status-1/857).
+> **Note:** If you’re running the Astronomer CLI with the [buildkit](https://docs.docker.com/develop/develop-images/build_enhancements/) feature enabled in Docker, you may see an error (`buildkit not supported by daemon`). Check out [this forum post](https://forum.astronomer.io/t/buildkit-not-supported-by-daemon-error-command-docker-build-t-airflow-astro-bcb837-airflow-latest-failed-failed-to-execute-cmd-exit-status-1/857) for the suggested resolution.
 
 ## Step 5: Access the Airflow 2.0 UI
 
@@ -97,7 +99,7 @@ The example DAG in your directory should be populated in the Airflow UI on your 
 
 With that, you're all set!
 
-> **Note:** You will NOT be able to run multiple Airflow Scheduler replicas locally. If you’re interested in testing that feature, [let us know](https://support.astronomer.io) and we’ll provide you with a docker-compose override file you can use
+> **Note:** You will NOT be able to run multiple Airflow Scheduler replicas locally. If you’re interested in testing that feature, [reach out to us](https://astronomer.io/contact) and we’ll help you get set up with a docker-compose override file to test both locally and on Astronomer.
 
 ## Resources
 
