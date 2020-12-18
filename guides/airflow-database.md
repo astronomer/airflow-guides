@@ -3,7 +3,7 @@ title: "Understanding the Airflow Metadata Database"
 description: "An structural walkthrough of Apache Airflow's metadata database, with a full ERD."
 date: 2020-11-21T00:00:00.000Z
 slug: "airflow-database"
-tags: ["Database", "Airflow", "Components"]
+tags: ["Database", "SQL", "Components"]
 ---
 
 ## Overview
