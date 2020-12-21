@@ -58,6 +58,42 @@ Connections can be maintained in the Airflow Interface (Menu --> Admin --> Conne
 * `Port`: 5432
 * `Extras`: n/a
 
+#### Snowflake
+
+* `Host`: https://youraccount.yourregion.snowflakecomputing.com/
+* `Schema`: _your schema name_
+* `Login`: _your username_
+* `Password`: _your password_
+* `Port`: n/a
+* `Extras`: {"account":" ","role":" ", "warehouse":" ", "database":" ", "region":" "}
+
+#### Azure Data Factory
+
+* `Host`: n/a
+* `Schema`: n/a
+* `Login`: _your ClientId_
+* `Password`: _your Client Secret_
+* `Port`: n/a
+* `Extras`: {"tenantId":" ","subscriptionId":" ", "resourceGroup":" ", "factory":" "}
+
+#### Azure Blob Storage
+
+* `Host`: n/a
+* `Schema`: n/a
+* `Login`: _your Storage Account name_
+* `Password`: _your Storage Account key_
+* `Port`: n/a
+* `Extras`: n/a
+
+#### Azure Container Instances
+
+* `Host`: n/a
+* `Schema`: n/a
+* `Login`: _your ClientId_
+* `Password`: _your Client Secret_
+* `Port`: n/a
+* `Extras`: {"tenantId":" ","subscriptionId":" "}
+
 Depending on the Hook or Operator used, Connections can be called directly in the code:
 
 ```python
@@ -73,7 +109,7 @@ postgres_query = PostgresOperator(
 
 **Note**: The `Schema` field in Airflow can potentially be a source of confusion as many databases have different meanings for the term.  In Airflow a schema refers to the database name to which a connection is being made.  For example, for a Postgres connection the name of the database should be entered into the `Schema` field and the Postgres idea of schemas should be ignored (or put into the `Extras` field) when defining a connection.
 
-#### Programmatically Modifying Connections
+### Programmatically Modifying Connections
 The Airflow Connections class can be modified programmatically to sync with an external secrets manager:
 
 ```python
