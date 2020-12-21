@@ -15,7 +15,7 @@ Read below for guidelines.
 
 > **Note:** If you're an Astronomer user looking to upgrade an Airflow Deployment on Astronomer to 2.0, refer to [Upgrade to Apache Airflow 2.0 on Astronomer](https://www.astronomer.io/docs/cloud/stable/customize-airflow/upgrade-to-airflow-2).
 
-## Step 1: Install the Astronomer CLI
+## Step 1: Install or Upgrade the Astronomer CLI
 
 The [Astronomer CLI](https://github.com/astronomer/astro-cli) is the easiest way to run Apache Airflow on your machine. From the CLI, you can establish a local testing environment regardless of where you'll be deploying to from there.
 
@@ -24,13 +24,17 @@ There are two ways to install any version of the Astronomer CLI:
 - cURL
 - [Homebrew](https://brew.sh/)
 
+> **Note:** If you already have the Astronomer CLI installed, make sure you're running `v0.23.2` or above. To check, run `$ astro version`.
+>
+> If you're running an earlier version, follow the install steps below to upgrade.
+
 ### Prerequisites
 
 To use the Astronomer CLI, make sure you have [Docker](https://www.docker.com/) (v18.09 or higher) installed and running on your machine.
 
-### Install the CLI via cURL
+### Install or Upgrade the CLI via cURL
 
-To install the latest version of the Astronomer CLI via cURL, run:
+To install or upgrade to the latest version of the Astronomer CLI via cURL, run:
 
 ```bash
 $ curl -ssl https://install.astronomer.io | sudo bash
@@ -38,9 +42,9 @@ $ curl -ssl https://install.astronomer.io | sudo bash
 
 > **Note:** If you're a macOS user using ZSH as your shell, you may encounter an error. [Learn more](https://forum.astronomer.io/t/astro-cli-install-error-on-mac-zsh/659).
 
-### Install the CLI via Homebrew
+### Install or Upgrade the CLI via Homebrew
 
-To install the latest version of the Astronomer CLI via [Homebrew](https://brew.sh/), run:
+To install or upgrade to the latest version of the Astronomer CLI via [Homebrew](https://brew.sh/), run:
 
 ```bash
 $ brew install astronomer/tap/astro
