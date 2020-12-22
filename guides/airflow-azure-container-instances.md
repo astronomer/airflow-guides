@@ -28,17 +28,12 @@ Note that this operator can also be used to run existing container instances and
 
 ### When to use ACI
 
-There are multiple ways to work with containers with Airflow on Azure; which you choose depends on your use case. 
-
-The most flexible and scalable method would be to use the [KubernetesPodOperator](https://airflow.apache.org/docs/apache-airflow/stable/kubernetes.html). This method:
-
-- Lets you run any container with Airflow as a Kubernetes pod, which allows you to pass in resource requests and other Kubernetes native parameters
-- Allows you to run containers in different regions
-- Requires an [AKS](https://azure.microsoft.com/en-us/services/kubernetes-service/) cluster
+There are multiple ways to work with containers with Airflow on Azure, each of which could be the right fit from your use case. The most flexible and scalable method would be to the [KubernetesPodOperator](https://airflow.apache.org/docs/apache-airflow/stable/kubernetes.html). This will not only let you run any container with Airflow, but also run it as a Kubernetes pod, which allows you to pass in resource requests and other Kubernetes native parameters. However, it requires an [AKS](https://azure.microsoft.com/en-us/services/kubernetes-service/) cluster (or a hand rolled Kubernetes cluster).
 
 If you are not running on [AKS](https://azure.microsoft.com/en-us/services/kubernetes-service/), ACI can be a great choice:
 
 - It requires very little setup, and is easy to use
+- It allows you to run containers in different regions
 - It is typically the cheapest; since no virtual machines or higher-level services are required, **you only pay for the memory and CPU used by your container group while it is active.**
 - Unlike the [DockerOperator](https://airflow.apache.org/docs/apache-airflow/1.10.4/_api/airflow/operators/docker_operator/index.html), it does not require running a container on the host machine
 
