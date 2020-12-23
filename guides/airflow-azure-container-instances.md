@@ -20,8 +20,8 @@ The easiest way to orchestrate Azure Container Instances with Airflow is to use 
 
 The only prerequisites for using this operator are:
 
-- An Azure account with a resource group created
-- An Azure Service Principle that has write permissions over that resource group
+- An Azure account with a [resource group](https://docs.microsoft.com/en-us/azure/azure-resource-manager/management/manage-resource-groups-portal) created
+- An [Azure Service Principle](https://docs.microsoft.com/en-us/azure/active-directory/develop/app-objects-and-service-principals) that has write permissions over that resource group
 - A docker image to use for the container (either publicly or privately available)
 
 This operator can also be used to run existing container instances and make certain updates, including the docker image, environment variables, or commands. Some updates to existing container groups are not possible with the operator, including CPU, memory, and GPU; those updates require deleting the existing container group and recreating it, which can be accomplished using the [AzureContainerInstanceHook](https://github.com/apache/airflow/blob/master/airflow/providers/microsoft/azure/hooks/azure_container_instance.py).
@@ -41,7 +41,7 @@ With these points in mind, we recommend using ACI with the AzureContainerInstanc
 
 ## Example
 
-Using Airflow to create and run an ACI is straightforward: You first identify the Azure resource group you want to create the ACI in (or create a new one), then ensure your Azure instance has a service principle with write access over that resource group. For more information on setting this up, refer to the [Azure documentation](https://docs.microsoft.com/en-us/azure/active-directory/develop/howto-create-service-principal-portal).
+Using Airflow to create and run an Azure Container Instance is straightforward: You first identify the Azure resource group you want to create the ACI in (or create a new one), then ensure your Azure instance has a service principle with write access over that resource group. For more information on setting this up, refer to the [Azure documentation](https://docs.microsoft.com/en-us/azure/active-directory/develop/howto-create-service-principal-portal).
 
 Next, create an Airflow connection with the type `Azure Container Instance`. Specify your Client ID in the Login field, Client Secret in the Password field, and Tenant and Subscription IDs in the Extras field as json. It should look something like this:
 
