@@ -157,7 +157,7 @@ This will ensure sequential data loads, but may also stop progress if a job is l
 
 **`wait_for_downstream`**: A stronger version of `depends_on_past` that is extended to a DAG level instead of a task level. The entire DAG will need to run successfully for the next DAG run to start.
 
-###  LatestOnlyOperator
+### LatestOnlyOperator
 
 The [LatestOnlyOperator](https://airflow.apache.org/concepts.html#latest-run-only) can explicitly accomplish the same functionality as some of the scheduling parameters (assuming default `trigger_rules`). The `LatestOnlyOperator` skips all tasks that are not for the most recent DagRun.
 

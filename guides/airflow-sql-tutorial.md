@@ -15,12 +15,15 @@ Executing SQL queries is one of the most common use cases for data pipelines. Wh
 In this guide, we'll cover general best practices for executing SQL from your DAG, showcase Airflow's available SQL-related operators, and demonstrate how to use Airflow for a few common SQL use cases.
 
 ## Best Practices for Executing SQL From Your DAG
+
 No matter which database and flavor of SQL you're using, there are many ways to execute  your queries using Airflow. Once you determine how to execute your queries, the following tips will help you keep your DAGs clean, readable, and efficient for execution.
 
 ### Use Hooks and Operators
+
 Using hooks and operators whenever possible makes your DAGs easier to read, easier to maintain, and more performant. Airflow has many SQL-related operators available that can significantly limit the code needed to execute your queries.
 
 ### Keep Lengthy SQL Code out of your DAG
+
 Best practice is to avoid top-level code in your DAG file. If you have a SQL query, it should be kept in its own .sql file and imported into your DAG. 
 
 For example, at Astronomer we use the following file structure to store scripts like SQL queries in the `include/` directory:

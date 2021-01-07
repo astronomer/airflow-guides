@@ -39,7 +39,7 @@ For example, a DAG that runs hourly will have 24 runs times a day. Each DAG run 
 
 When a last modified date is not available, a sequence or incrementing ID, can be used for incremental loads. This logic works best when the source records are only being appended to and never updated. If the source records are updated you should seek to implement a Last Modified Date in that source system and key your logic off of that. In the case of the source system not being updated, basing your incremental logic off of a sequence ID can be a sound way to filter pipeline records without a last modified date.
 
-### Limit how much data gets pulled into a task.
+### Limit how much data gets pulled into a task
 
 Every task gets run in its own container with limited memory (based on the selected plan) in Astronomer Cloud. If the task container doesn't have enough memory for a task, it will fail with:
 `{jobs.py:2127} INFO - Task exited with return code -9`.
@@ -76,7 +76,7 @@ An example policy allowing this is below:
 }
 ```
 
-For more details, please visit: https://docs.aws.amazon.com/AmazonS3/latest/dev/using-with-s3-actions.html#using-with-s3-actions-related-to-bucket-subresources
+For more details, please visit: `https://docs.aws.amazon.com/AmazonS3/latest/dev/using-with-s3-actions.html#using-with-s3-actions-related-to-bucket-subresources`
 
 Depending on your data retention policy you could modify the load logic and re-run the entire historical pipeline without having to re-run the extracts. This is also useful in situations where you no longer have access to the source system (i.e. hit an API limit).
 
@@ -85,7 +85,7 @@ Depending on your data retention policy you could modify the load logic and re-r
 Specifying that a field is templatable allows for it to be set by using environment variables using jinja templating.
 
 For example, the `s3_key` and `since` and `until` fields are set as `template_fields` here:
- https://github.com/airflow-plugins/google_analytics_plugin/blob/master/operators/google_analytics_reporting_to_s3_operator.py#L41
+ `https://github.com/airflow-plugins/google_analytics_plugin/blob/master/operators/google_analytics_reporting_to_s3_operator.py#L41`
 
  This allows for these values to be dynamically set by the `schedule_interval`.
 
@@ -119,7 +119,7 @@ Try to do basic transformations and aggregations in SQL queries - this offloads 
 
 ## Readability
 
-### Use a consistent file structure.
+### Use a consistent file structure
 
 To keep any custom plugins easy for someone else to use, use a consistent file structure. At Astronomer, we use:
 
@@ -137,13 +137,13 @@ plugin_name/
 
 See [here](https://github.com/airflow-plugins/) for examples!
 
-### Change the name of your DAG when you change the start date.
+### Change the name of your DAG when you change the start date
 
 Changing the `start_date` of a DAG creates a new entry in Airflow's database, which could confuse the scheduler because there will be two DAGs with the same name but different schedules.
 
 Changing the name of a DAG also creates a new entry in the database, which powers the dashboard, so follow a consistent naming convention since changing a DAG's name doesn't delete the entry in the database for the old name.
 
-### Avoid top level code in your DAG file.
+### Avoid top level code in your DAG file
 
 The Airflow executor executes top level code on every heartbeat, so a small amount of top level code can cause performance issues. Try to treat the DAG file like a config file and leave all the heavy lifting for the hook and operator.
 
@@ -155,21 +155,21 @@ Task dependencies are set using `set_upstream()` and `set_downstream()`. Using e
 
 Instead of this
 
-~~~
+```python
 task_1.set_downstream(task_2)
 task_3.set_upstream(task_2)
-~~~
+```
 
 Try to be consistent with this
 
-~~~
+```python
 task_1.set_downstream(task_2)
 task_2.set_downstream(task_3)
-~~~
+```
 
 or this
 
-~~~
+```python
 task_3 >> task_2
 task_2 >> task_1
-~~~
+```

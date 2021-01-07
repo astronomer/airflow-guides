@@ -8,6 +8,7 @@ tags: ["Best Practices", "Components", "Kubernetes", "Executors"]
 ---
 
 ## Overview
+
 High-Availability (HA) is a concept which refers to a particular service or cluster meeting a specified amount of uptime. In order to meet more stringent uptime requirements, a service or cluster will often leverage a more complex architecture to ensure that downtime is rare and brief when it does occur.
 
 While the Apache Airflow project does not discuss specifics of HA, some in the community have discussed [Airflow HA previously](http://site.clairvoyantsoft.com/making-apache-airflow-highly-available/). Unlike those previous discussions, this article will focus on HA for an Airflow cluster orchestrated by Kubernetes. 

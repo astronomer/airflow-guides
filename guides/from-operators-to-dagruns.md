@@ -6,8 +6,8 @@ slug: "from-operators-to-dagruns"
 heroImagePath: "https://assets.astronomer.io/website/img/guides/IntroToDAG_preview.png"
 tags: ["Hooks", "Operators", "Tasks", "DAGs"]
 ---
-
-# How Work Gets Executed
+<!-- markdownlint-disable-file -->
+## How Work Gets Executed
 
 **Operators become Tasks**
 - Operators contain the logic - but once they are added to a DAG file with a `task_id` and `dag`, they become **tasks**.

@@ -6,7 +6,7 @@ slug: "logging"
 heroImagePath: null
 tags: ["Logging", "Best Practices", "Basics"]
 ---
-
+<!-- markdownlint-disable-file -->
 Airflow provides a ton of flexibility in configuring its logging system. All of the logging in Airflow is implemented through Python's standard `logging` library. Logs can be piped to remote storage, including Google Cloud Storage and Amazon S3 buckets, and most recently in Airflow 1.10, ElasticSearch.
 
 A lot of the information on logging in Airflow can be found in the official documentation, but we've added a bit more flavor and detail about the logging module that Airflow utilizes. Given that our product is built on Airflow, we've thought a lot about how logs should be structured, and where they should be sent.
@@ -14,6 +14,7 @@ A lot of the information on logging in Airflow can be found in the official docu
 **This guide is built for logging in Airflow 1.9, but a 1.10 version is coming soon**
 
 ### An Overview of Logging
+
 If you just want to get more information on logging handlers, skip this section. This is merely more information to understand how the logging system is implemented in Airflow.
 
 In [The Twelve-Factor App's](https://12factor.net/logs) section on logging, logs are described as "the stream of aggregated, time-ordered events collected from the output streams of all running processes and backing services". Airflow has built around this philosophy, but given that it runs in a server-based environment, all of Airflow's logs are written to a file. When the user wants to access a log file through the web UI, that action triggers a GET request to retrieve the contents.
@@ -37,6 +38,7 @@ The logger in Airflow is configured through a *dictionary-formatted* file. All o
 In the `.py`, the context for the logger is set. This includes the type of handler to use, the formatter, and the level of the log message.
 
 Let's take a look at the default logging configuration file that Airflow ships with.
+
 ```python
 from airflow import configuration as conf
 
@@ -105,6 +107,7 @@ DEFAULT_LOGGING_CONFIG = {
     }
 }
 ```
+
 This is a small piece of the `airflow_local_settings.py` file located in `/airflow/config_templates`. Some important notes:
 - All-capitalized variables are environmental variables that are pulled in from the airflow configuration file `airflow.cfg`
 - The `DEFAULT_LOGGING_CONFIG` is an object, containing keys for `formatters`, `handlers`, and `loggers`.
@@ -140,6 +143,7 @@ Configuring logging is done through both `env` variables and setting up a new `l
 - Create a new directory to store the new log config file. The new directory should be called `config`. Airflow's docs require you place the new directory in the `PYTHONPATH`, so it should be created as such: `$AIRFLOW_HOME/config`.
 
 - Inside your new directory called `config`, place two new files, `__init__.py` and a `log_config.py`. It should look something like this:
+
 ```bash
 ├── config
 │   ├── __init__.py
@@ -150,6 +154,7 @@ Configuring logging is done through both `env` variables and setting up a new `l
 - Copy the entire contents of `airflow_local_settings.py` from the `config_templates` directory into `log_config.py`. Change the variable name called `DEFAULT_LOGGING_CONFIG` to `LOGGING_CONFIG`.
 
 - Inside `airflow.cfg`, locate the environmental variable called `LOGGING_CONFIG_CLASS`, inside the Airflow Core settings. Change this to reflect the path to your new `log_config,py` file. In most cases, this will be as such, but adapt to your own needs:
+
 ```python
  LOGGING_CONFIG_CLASS = airflow.config.log_config.LOGGING_CONFIG
 ```

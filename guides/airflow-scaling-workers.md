@@ -6,7 +6,7 @@ slug: "airflow-scaling-workers"
 heroImagePath: null
 tags: ["Workers", "Concurrency", "Parallelism", "DAGs"]
 ---
-
+<!-- markdownlint-disable-file -->
 As data pipelines grow in complexity, the need to have a flexible and scalable architecture is more important than ever. Airflow's Celery Executor makes it easy to scale out workers horizontally when you need to execute lots of tasks in parallel. There are however some "gotchas" to look out for. Even folks familiar with using the Celery Executor might wonder, "Why are more tasks not running even after I add workers?""
 
 This common issue is the result of a number of different Airflow settings you can tweak to reach max parallelism and performance. Settings are maintained in the airflow.cfg file and can also be overridden using environment variables.

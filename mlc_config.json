@@ -1,0 +1,33 @@
+{
+  "ignorePatterns": [
+    {
+      "pattern": "../assets/.+"
+    },
+    {
+      "pattern": "humans@astronomer.io"
+    },
+    {
+      "pattern": "https://localport:8080"
+    },
+    {
+      "pattern": "http://localhost:8080"
+    },
+    {
+      "pattern": "https://airflow.readthedocs.io/.+"
+    },
+    {
+      "pattern":"https://www.linkedin.com/.+"
+    },
+    {
+      "pattern":"https://cwiki.apache.org/.+"    
+    },
+    {
+      "pattern":"https://github.com/mik-laj"
+    }
+  ],
+  "timeout": "20s",
+  "retryOn429": true,
+  "retryCount": 5,
+  "fallbackRetryDelay": "30s",
+  "aliveStatusCodes": [200, 206, 999, 429]
+}

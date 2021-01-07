@@ -6,7 +6,7 @@ slug: "facebook-ads-to-redshift"
 heroImagePath: "https://assets.astronomer.io/website/img/guides/FBToRedshift_preview.png"
 tags: ["DAGs", "Integrations", "Connections"]
 ---
-
+<!-- markdownlint-disable-file -->
 In this guide, we’ll explore how you can use [Apache Airflow](https://airflow.apache.org/) to move your ad data from Facebook Ads to Redshift. Note that this is an effective and flexible alternative to point-and-click ETL tools like [Segment](https://segment.com), [Alooma](https://alooma.com), [Xplenty](https://www.xplenty.com), [Stitch](https://stitchdata.com), and [ETLeap](https://etleap.com/).
 
 Before we get started, be sure you have the following on hand:

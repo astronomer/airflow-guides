@@ -15,7 +15,7 @@ A feature we often get asked about here at Astronomer is a native sync with [Has
 
 Below is a step-by-step guide on how to leverage this functionality to import your connection info from your Vault store.
 
-## Pre-Requisites
+## PreRequisites
 
 In this example, we're going to be using [virtualenvwrapper](https://virtualenvwrapper.readthedocs.io/en/latest/) to manage virtual environments. You can install this package and set up your shell to work nicely with it by following the [instructions in their installation docs](https://virtualenvwrapper.readthedocs.io/en/latest/install.html).
 
@@ -48,7 +48,7 @@ In this example, we're going to be using [virtualenvwrapper](https://virtualenvw
 
         Root Token: <TOKEN>
 
-    The Vault UI is now accessible at http://127.0.0.1:8200/ui.
+    The Vault UI is now accessible at `http://127.0.0.1:8200/ui`.
 
 5. **Create your Vault Secret.** With your Vault server running, open a new terminal window and run `workon test-backend-secrets` to re-initialize your virtual environment. Then, create a Vault secret:
 
@@ -58,7 +58,7 @@ In this example, we're going to be using [virtualenvwrapper](https://virtualenvw
 
     The `secret` here is called a `mount_point`. Generally, a user might create a separate mount point for each application consuming secrets from Vault.
     To organize our secrets, we specify the `/connection` path and put all Airflow connections in this path. This path is fully configurable.
-    <br/>
+
 
     For the purposes of this example, `smtp_default` is the secret name we're using. You can store arbitrary key/value pairs in this secret. By default, Airflow will look for the `conn_uri` inside the `smtp_default` key.
 

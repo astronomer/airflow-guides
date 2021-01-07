@@ -90,7 +90,7 @@ The schedule at which these components interact can be set through airflow.cfg. 
 
 This file is well documented, but a few notes:
 
-### Executors:
+### Executors
 
 By default, Airflow can use the LocalExecutor, SequentialExecutor, the CeleryExecutor, or the KubernetesExecutor.
 

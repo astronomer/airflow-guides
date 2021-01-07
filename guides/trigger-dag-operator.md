@@ -13,7 +13,7 @@ The first level of complexity can usually be handled by some sort of error messa
 
 Branching can be helpful for performing conditional logic - execute a set of tasks based off of a condition. For situations where that is not enough - **The TriggerDagRunOperator can be used to kick off entire DAGs.**
 
-https://github.com/apache/incubator-airflow/blob/master/airflow/operators/dagrun_operator.py
+`https://github.com/apache/incubator-airflow/blob/master/airflow/operators/dagrun_operator.py`
 
 ## Define a controller and a target  DAG
 
@@ -53,21 +53,21 @@ These sorts of checks are a good fail safe to add to the end of a workflow, down
 
 On the same note, they can be used to monitor Airflow itself.
 
-## Metadata Trigger DAGs.
+## Metadata Trigger DAGs
 
 Error notifications can be set through various levels through a DAG, but propagating whose  between different DAGs can valuable for other reasons. Suppose that after 5  DAG failures, you wanted to trigger a systems check
 
 ### Sensors and TriggerDAGs
 
-_Airflow on Airflow._
+#### Airflow on Airflow
 
 As Airflow operations are being scaled up, error reporting gets increasingly difficult. The more failure emails that are being sent out, the less each notification matters. Furthermore, a certain threshold of failures could indicate a deeper issue in another system.
 
 Using a Sensor and TriggerDag can provide a clean solution to this issue,
 
-#### Checking the database for a threshold of failures.
+#### Checking the database for a threshold of failures
 
-_DagFailureSensor_
+#### DagFailureSensor
 
 A sensor can be used to check the metadatabase for the status of DagRuns. If the number of failed runs is above a certain threshold (different for each DAG), the next task can trigger a systems check DAG.
 

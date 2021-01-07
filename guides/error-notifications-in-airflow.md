@@ -7,12 +7,13 @@ heroImagePath: null
 tags: ["DAGs", "Integrations", "Operators"]
 ---
 
-# Error Reporting on Airflow
+## Error Reporting on Airflow
 
 Email notifications are great for monitoring Airflow workflows. They can be sent for failures, successes, and retries.
 
 
-## Setting Notifications at the DAG level
+### Setting Notifications at the DAG level
+
 Notifications set at the DAG level filter down to each task in the DAG - generally in the `default_args`.
 
 By default, `email_on_failure` is set to `True`
@@ -37,7 +38,7 @@ with DAG('sample_dag',
 
 Any task in this DAG's context will send a failure email to all addresses in the emails array
 
-## Different Levels of Notifications
+### Different Levels of Notifications
 
 Failure notifications are the most common, but different levels can be set where appropriate.
 
@@ -69,7 +70,7 @@ with DAG('sample_dag',
     ...
 ```
 
-## Isolating Tasks
+### Isolating Tasks
 
 For some use cases, it might be helpful to only have failure emails for certain tasks. The BaseOperator that all Airflow Operators inherit from has support for these arguments if you don't want them defined at the DAG level.
 
@@ -105,7 +106,7 @@ with DAG('sample_dag',
     ...
 ```
 
-## Customizing Email Notifications
+### Customizing Email Notifications
 
 By default, email notifications have a default format that includes standard information as defined in the [__`email_alert`__](https://github.com/apache/incubator-airflow/blob/master/airflow/models.py#L1949) method of the TaskInstance class.
 
@@ -176,13 +177,13 @@ def failure_email(context):
     send_email('you_email@address.com', email_title, email_body)
 ```
 
-## Setting Up Alerts in Slack
+### Setting Up Alerts in Slack
 
 At Astronomer, we drop Airflow notifications in shared slack channels instead of emails. There are a few ways to accomplish this:
 
-### Adding a Slack Integration
+#### Adding a Slack Integration
 
-Add this integration: https://slack.com/apps/A0F81496D-email and pick a channel to drop alerts in.
+Add this integration: `https://slack.com/apps/A0F81496D-email` and pick a channel to drop alerts in.
 
 The email address generated can be added to the list of emails like any other:
 

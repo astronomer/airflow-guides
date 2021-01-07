@@ -6,13 +6,13 @@ slug: "airflow-executors-explained"
 heroImagePath: null
 tags: ["Executors", "Basics", "Kubernetes",  "Concurrency",  "Parallelism" ]
 ---
-
+<!-- markdownlint-disable-file -->
 If you're new to Apache Airflow, the world of Executors is difficult to navigate. Even if you're a veteran user overseeing 20+ DAGs, knowing what Executor best suits your use case at any given time isn't black and white - especially as the OSS project (and its utilities) continues to grow and develop.
 
 This guide will do 3 things:
 
 *   Define the core function of an Executor
-*   Contextualize Executors with general Airflow fundamentals
+*  Contextualize Executors with general Airflow fundamentals
 *   Shed some insight to the 3 most popular Executors: Local, Celery, and Kubernetes
 
 We'll give the Sequential Executor an honorable mention, too.

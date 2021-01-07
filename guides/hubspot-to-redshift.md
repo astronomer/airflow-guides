@@ -6,7 +6,7 @@ slug: "hubspot-to-redshift"
 heroImagePath: "https://assets.astronomer.io/website/img/guides/HubspotToRedshift_preview.png"
 tags: ["Integrations", "Connections", "DAGs"]
 ---
-
+<!-- markdownlint-disable-file -->
 In this guide, we’ll explore how you can use [Apache Airflow](https://airflow.apache.org/) to move your CRM data from Hubspot to Redshift. Note that this is an effective and flexible alternative to point-and-click ETL tools like [Segment](https://segment.com), [Alooma](https://alooma.com), [Xplenty](https://www.xplenty.com), [Stitch](https://stitchdata.com), and [ETLeap](https://etleap.com/).
 
 Before we get started, be sure you have the following on hand:
@@ -24,7 +24,7 @@ This dag pulls the following endpoints and inserts data to the following table/s
 
 *NOTE:* Only endpoints with the appropriate scope will be included in this dag.
 
-The associated scope to the various endpoints can be found in the "scope" field within the endpoints array below. The scope available to a given token can be found by passing the associated token to: https://api.hubapi.com/oauth/v1/access-tokens/{OAUTH_TOKEN}
+The associated scope to the various endpoints can be found in the "scope" field within the endpoints array below. The scope available to a given token can be found by passing the associated token to: `https://api.hubapi.com/oauth/v1/access-tokens/{OAUTH_TOKEN}`
 
 *NOTE:* The contacts table and associated subtables are built based on an incrementing contact id that is stored as an Airflow Variable with the
 naming convention "INCREMENTAL_KEY__{DAG_ID}_{TASK_ID}_vidOffset" at the end of each run and then pulled on the next to be used as an offset. As such, while accessing the Contacts endpoint, "max_active_runs" should be set to 1 to avoid pulling the same incremental key offset and therefore pulling the same data twice.

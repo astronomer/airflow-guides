@@ -12,7 +12,7 @@ tags: ["DAGs", "Integrations"]
 [Great Expectations](https://greatexpectations.io) is an open source Python-based data validation framework. It allows you to test your data by expressing what you “expect” from it as simple declarative statements in Python, then run validation using those “expectations” against datasets. The [Great Expectations team maintains an Airflow provider](https://github.com/great-expectations/airflow-provider-great-expectations) that gives users a convenient method for running validation directly from their DAGs. This guide will walk you through the usage of the [official GreatExpectationsOperator](https://github.com/great-expectations/airflow-provider-great-expectations/blob/main/great_expectations_provider/operators/great_expectations.py) and provide some guidance on how to configure an Airflow DAG containing a Great Expectations task to work with Airflow.
 
 
-## Pre-Requisites
+## PreRequisites
 
 Typically, using Great Expectations is a two-step process: 
 
@@ -84,7 +84,7 @@ There are only few additional requirements to deploy a DAG with the Great Expect
 
 1. Great Expectations needs to know where to find the Data Context  by setting the `data_context_root_dir`, which you can then access in the DAG. We recommend adding this variable to your Dockerfile, but you can use [any of the methods described in our docs](https://www.astronomer.io/docs/cloud/stable/deploy/environment-variables/) to set environment variables for your deployment.
 
-    ```
+    ```shell
     ENV GE_DATA_CONTEXT_ROOT_DIR=/usr/local/airflow/include/great_expectations
     ```
 

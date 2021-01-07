@@ -6,7 +6,7 @@ slug: "airflow-vs-aws-glue"
 heroImagePath: null
 tags: []
 ---
-
+<!-- markdownlint-disable-file -->
 > This guide was last updated September 2020
 
 For those with tooling in the Amazon ecosystem, [AWS Glue](https://aws.amazon.com/glue/) is commonly presented and used as a code-based, serverless ETL alternative to traditional drag-and-drop platforms.

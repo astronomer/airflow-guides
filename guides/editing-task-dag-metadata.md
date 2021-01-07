@@ -7,13 +7,13 @@ heroImagePath: "https://assets.astronomer.io/website/img/guides/IntroToDAG_previ
 tags: ["DAGs", "Database", "Tasks"]
 ---
 
-# Editing DagRuns and TaskInstance History
+## Editing DagRuns and TaskInstance History
 
 Airflow stores all metadata about TaskInstances and DagRuns in the metadata database.
 
 A lot of the visualizations in the UI pull from the database, but others are determined every scheduler loop.
 
-## Changing Task Names
+### Changing Task Names
 
 Suppose you have an hourly dag that syncs a list of tables between two data sources.
 
@@ -50,11 +50,12 @@ For DagRuns that have already completed (whether successfully or not) after the 
 
 ![change_task_name](https://assets.astronomer.io/website/img/guides/changing_task_name.png)
 
-Similar behavior would happen when changing a pre-existing task's name:
+Similar behavior would happen when changing a preexisting task's name:
 
 ```python
 tables = ['table_one', 'table_two', 'table_three_new', 'table_four']
 ```
+
 ![change_task_name_two](https://assets.astronomer.io/website/img/guides/changing_task_name_two.png)
 
 
@@ -64,7 +65,7 @@ No task named `sync_table_three` shows up in the `GraphView` since that view is 
 
 This view shows the `sync_table_three` TaskInstances that are stored in the Airflow UI.
 
-### Rerunning the DAGs.
+#### Rerunning the DAGs
 
 By default, the new task won't run for the older DagRuns as they are already in a `final` state. However, the `DagRuns` can have their state changed in the UI:
 
@@ -76,7 +77,7 @@ Changing the state to `Running` will make the scheduler look at that DagRun and 
 
 
 
-## Changing Dag Names.
+### Changing Dag Names
 
 For now, the Airflow database does not store the state of the DAG itself (we are working to change that).
 This means that just like task instances, there may be parts of the metadata that are hidden from the UI when changing a Dag's attributes.

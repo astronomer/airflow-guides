@@ -7,16 +7,17 @@ heroImagePath: null
 tags: ["Kubernetes", "Infrastructure"]
 ---
 
-# Kubernetes 101
-_Modern Distributed Applications_
+## Kubernetes 101
 
-## Container and Data Center Orchestration
+### Modern Distributed Applications
+
+### Container and Data Center Orchestration
 
 Modern best practice for most modern application has them running across containers in a distributed architecture. Though this may add infrastructural complexity, it allows for a more fault tolerant, scalable system that keeps compute costs low. This microservice architectures (where each part of your application runs as a microservice) allows for independent deployment, greater granularity for performance tuning (e.g. switch Python for Go just one part of an application), and a host of other benefits.
 
 However, applications cannot be developed this way without an abstraction to manage, deploy, and coordinate these containers.
 
-## Current players in the Container Orchestration Space
+### Current players in the Container Orchestration Space
 
 The most popular options for container orchestration tools right now are Kubernetes, Docker Swarm, and Apache Mesos. As a whole, Kubernetes  has the most community support and is the most popular by a significant margin. Regardless, we'll compare the three here, as the best option for container orchestration is largely contingent on your use case.
 
@@ -29,12 +30,12 @@ The most popular options for container orchestration tools right now are Kuberne
 The best option should depend on your use case, but Kubernetes has the strongest community support, upward-trending development, and flexibility.
 
 
-## So What is Kubernetes Anyway?
+### So What is Kubernetes Anyway?
 
 Kubernetes, also known as k8s, is originally an internal project Google that is now maintained by the Cloud Native Computing  Foundation. With Kubernetes, you can cluster together groups of hosts running Linux containers and easily manage those clusters. It works with a range of different container tools, but is designed with Docker as a first class citizen.
 
     
-## Why use Kubernetes?
+### Why use Kubernetes?
 
 If implementing a modern microservice architecture, containers are probably running across a host of nodes, each with different resources and requirements required to run. Kubernetes provides a common abstraction to deploy, manage, and scale those containers as the application needs. 
 
@@ -43,7 +44,7 @@ As system requirements change, move container workloads in Kubernetes can be mov
 ![move_to_kubes](https://assets.astronomer.io/website/img/guides/move_to_kubes.jpg)
 
 
-## Key Terms
+### Key Terms
 
 **Master**: Responsible for maintaining the desired state for your cluster, the master is the machine that controls nodes. This is where task assignments originate. When you interact with Kubernetes using their `kubectl` CLI, you're directly communicating with the cluster's master. The master can also be replicated for availability and redundancy.
 
