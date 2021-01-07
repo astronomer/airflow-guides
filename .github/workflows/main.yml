@@ -37,7 +37,7 @@ jobs:
           config-file: './mlc_config.json'
           check-modified-files-only: 'yes'
           base-branch: 'main'
-          folder-path: './posts'
+          folder-path: './guides'
   spell-check:
     runs-on: ubuntu-latest
     steps:
