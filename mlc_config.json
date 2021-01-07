@@ -26,6 +26,9 @@
     },
     {
       "pattern":"https://assets2.astronomer.io/.+"
+    },
+    {
+      "pattern":"https://assets.astronomer.io/.+"
     }
   ],
   "timeout": "20s",
