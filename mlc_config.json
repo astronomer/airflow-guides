@@ -23,6 +23,9 @@
     },
     {
       "pattern":"https://github.com/mik-laj"
+    },
+    {
+      "pattern":"https://assets2.astronomer.io/.+"
     }
   ],
   "timeout": "20s",
