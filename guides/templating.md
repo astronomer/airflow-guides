@@ -12,7 +12,7 @@ Apart from efficiency, they're also powerful tools in forcing jobs to be idempot
 
 ## Common Macros and Templates
 
-A list of default variables accessible in all templates can be found here: https://airflow.apache.org/code.html#macros
+A list of default variables accessible in all templates can be found here: `https://airflow.apache.org/docs/apache-airflow/stable/macros-ref.html`
 
 Common macros include:
 

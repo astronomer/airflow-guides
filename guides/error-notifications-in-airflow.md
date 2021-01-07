@@ -108,7 +108,7 @@ with DAG('sample_dag',
 
 ### Customizing Email Notifications
 
-By default, email notifications have a default format that includes standard information as defined in the [__`email_alert`__](https://github.com/apache/incubator-airflow/blob/master/airflow/models.py#L1949) method of the TaskInstance class.
+By default, email notifications have a default format that includes standard information as defined in the __`email_alert`__ method of the TaskInstance class.
 
 
 ```python

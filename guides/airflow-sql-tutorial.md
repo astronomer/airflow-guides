@@ -77,7 +77,7 @@ With those basic concepts in mind, we'll show a few examples of common SQL use c
 
 ### Example 1 - Executing a Query
 
-In this first example, we use a DAG to execute two simple interdependent queries. To do so we use the [SnowflakeOperator](https://airflow.apache.org/docs/stable/_modules/airflow/contrib/operators/snowflake_operator.html). 
+In this first example, we use a DAG to execute two simple interdependent queries. To do so we use the [SnowflakeOperator](https://airflow.apache.org/docs/apache-airflow/1.10.14/_api/airflow/contrib/operators/snowflake_operator/index.html). 
 
 First we need to define our DAG:
 

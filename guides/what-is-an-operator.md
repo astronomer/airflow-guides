@@ -97,5 +97,5 @@ This also uses another concept - [macros and templates](https://www.astronomer.i
 
  Templates can be used to determine runtime parameters (e.g. the range of data for an API call) and also make your code idempotent (each intermediary file is named for the data range it contains).
 
-[S3ToRedshiftTransfer Code](https://github.com/apache/airflow/blob/master/airflow/operators/s3_to_redshift)
+[S3ToRedshiftTransfer Code](https://airflow.apache.org/docs/apache-airflow-providers-amazon/stable/operators/s3_to_redshift.html)
 
