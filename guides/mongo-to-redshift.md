@@ -36,7 +36,7 @@ This will allow you to use the Mongo hook to establish a connection to Mongo and
 
 ### 3. Copy the DAG file
 
-Navigate back into your project directory and create a `dags` folder by running `mkdir dags`. Copy the [Mongo to Redshift DAG file](https://github.com/airflow-plugins/Example-Airflow-DAGs/blob/master/etl/mongo_to_redshift.py) into this folder.
+Navigate back into your project directory and create a `dags` folder by running `mkdir dags`. Copy the [Mongo to Redshift DAG file](https://github.com/airflow-plugins/Example-Airflow-DAGs/tree/master/etl/mongo_to_redshift) into this folder.
 
 ### 4. Customize
 
