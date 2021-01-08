@@ -29,6 +29,33 @@
     },
     {
       "pattern":"https://assets.astronomer.io/.+"
+    },
+    {
+      "pattern":"/docs/.+"
+    },
+    {
+      "pattern":"/trial/.+"
+    },
+    {
+      "pattern":"/guides/.+"
+    },
+    {
+      "pattern":"support.astronomer.io"
+    },
+    {
+      "pattern":"downloads"
+    },
+    {
+      "pattern":"https://houston.+"
+    },
+    {
+      "pattern":"https://app.+"
+    },
+    {
+      "pattern":"/get-astronomer.+"
+    },
+    {
+      "pattern":"/.+"
     }
   ],
   "timeout": "20s",
