@@ -10,21 +10,21 @@ tags: ["Integrations", "Azure", "DAGs"]
 
 ## Overview
 
-[Azure Data Explorer](https://azure.microsoft.com/en-us/services/data-explorer/) (ADX) is a managed data analytics service used for performing real-time analysis of large volumes of streaming data. It is designed particularly for use cases such as IoT applications, big data logging platforms, and SaaS applications. 
+[Azure Data Explorer](https://azure.microsoft.com/en-us/services/data-explorer/) (ADX) is a managed data analytics service used for performing real-time analysis of large volumes of streaming data. It's particularly useful for IoT applications, big data logging platforms, and SaaS applications. 
 
-By making use of Airflow's built-in Azure Data Explorer [Hook](http://airflow.apache.org/docs/apache-airflow-providers-microsoft-azure/stable/_api/airflow/providers/microsoft/azure/hooks/adx/index.html) and [Operator](http://airflow.apache.org/docs/apache-airflow-providers-microsoft-azure/stable/_api/airflow/providers/microsoft/azure/operators/adx/index.html), you can easily integrate ADX queries into your DAGs. In this guide we'll describe how to configure your ADX cluster to work with Airflow, and walk through an example DAG that uses the AzureDataExplorerQueryOperator to run a query against a database in that cluster. 
+Using Airflow's built-in Azure Data Explorer [Hook](http://airflow.apache.org/docs/apache-airflow-providers-microsoft-azure/stable/_api/airflow/providers/microsoft/azure/hooks/adx/index.html) and [Operator](http://airflow.apache.org/docs/apache-airflow-providers-microsoft-azure/stable/_api/airflow/providers/microsoft/azure/operators/adx/index.html), you can easily integrate ADX queries into your DAGs. In this guide, we'll describe how to make your ADX cluster to work with Airflow and walk through an example DAG that runs a query against a database in that cluster. 
 
-If you don't already have an ADX cluster running and want to follow along with this example, you can find instructions for creating a cluster and loading it with some demo data in the [documentation](https://docs.microsoft.com/en-us/azure/data-explorer/create-cluster-database-portal). 
+If you don't already have an ADX cluster running and want to follow along with this example, you can find instructions for creating a cluster and loading it with some demo data in [Microsoft's documentation](https://docs.microsoft.com/en-us/azure/data-explorer/create-cluster-database-portal). 
 
 ## Configuring ADX to Work with Airflow
 
-In order for Airflow to be able to talk to your Azure Data Explorer database, you need to configure service principle authentication. This means you will create and register an Azure AD service principle, and then give that principle permission to access your Azure Data Explorer database. For detailed instructions on how to do this, see the Azure documentation [here](https://docs.microsoft.com/en-us/azure/data-explorer/provision-azure-ad-app).
+In order for Airflow to talk to your Azure Data Explorer database, you need to configure service principle authentication. To do this, you create and register an Azure AD service principle, then give that principle permission to access your Azure Data Explorer database. For detailed instructions on how to do this, refer to the [Azure documentation](https://docs.microsoft.com/en-us/azure/data-explorer/provision-azure-ad-app).
 
 ## Running an ADX Query with Airflow
 
 Once you have your Azure Data Explorer cluster running and service principle authentication configured, you can get started querying a database with Airflow. 
 
-The first step is to set up an Airflow connection to your Azure Data Explorer cluster. If you do this using the Airflow UI, it should look something like this.
+First, set up an Airflow connection to your Azure Data Explorer cluster. If you do this using the Airflow UI, it should look something like this:
 
 ![ADX Connection](https://assets2.astronomer.io/main/guides/azure-data-explorer/adx_connection.png)
 
@@ -74,7 +74,7 @@ with DAG('azure_data_explorer',
     )
 ```
 
-We define the query we want to run, `adx_query`, and then pass that into the AzureDataExplorerQueryOperator, along with the name of the database and the connection ID. When we run this DAG, the results of the query will automatically be pushed to XCom. Navigating to XComs in the Airflow UI, we can see the data is there: 
+We define the query we want to run, `adx_query`, and pass that into the AzureDataExplorerQueryOperator along with the name of the database and the connection ID. When we run this DAG, the results of the query will automatically be pushed to XCom. When we go to XComs in the Airflow UI, we can see the data is there: 
 
 ![ADX Xcom Results](https://assets2.astronomer.io/main/guides/azure-data-explorer/adx_xcom.png)
 
