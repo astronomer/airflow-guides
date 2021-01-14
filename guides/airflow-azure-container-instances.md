@@ -43,6 +43,8 @@ With these points in mind, we recommend using ACI with the AzureContainerInstanc
 
 Using Airflow to create and run an Azure Container Instance is straightforward: You first identify the Azure resource group you want to create the Azure Container Instance in (or create a new one), then ensure your Azure instance has a service principle with write access over that resource group. For more information on setting this up, refer to the [Azure documentation](https://docs.microsoft.com/en-us/azure/active-directory/develop/howto-create-service-principal-portal).
 
+> Note: In Airflow 2.0, provider packages are separate from the core of Airflow. If you are running 2.0 with Astronomer, the `apache-airflow-providers-microsoft-azure` package is already included in our Airlfow Certified Image; if you are not using Astronomer you may need to install this package separately to use the hooks, operators, and connections described here.
+
 Next, create an Airflow connection with the type `Azure Container Instance`. Specify your Client ID in the Login field, Client Secret in the Password field, and Tenant and Subscription IDs in the Extras field as json. It should look something like this:
 
 ![ACI Connection](https://assets2.astronomer.io/main/guides/azure-container-instances/aci_connection.png)
