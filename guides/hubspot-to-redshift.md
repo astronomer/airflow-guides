@@ -69,6 +69,8 @@ Before we get started, be sure you have the following on hand:
   instance via Astronomer, but the core code should work the same regardless of how you’re hosting Airflow
 * Docker running on your machine
 
+> Note: In Airflow 2.0, provider packages are separate from the core of Airflow. If you are running 2.0 with Astronomer, the `apache-airflow-providers-amazon` package is already included in our Airlfow Certified Image; if you are not using Astronomer you may need to install the package separately to use the hooks, operators, and connections described here.
+
 This DAG copies the following objects:
 
 * commits

@@ -17,6 +17,8 @@ Before we get started, be sure you have the following on hand:
 - An instance of Apache Airflow. You can either set this up yourself if you have devops resources or sign up and get going immediately with Astronomer’s managed Airflow service. Note that this guide will use commands using the Astronomer CLI to push dags into production and will assume you’ve spun up an Airflow instance via Astronomer, but the core code should work the same regardless of how you’re hosting Airflow
 - Docker running on your machine
 
+> Note: In Airflow 2.0, provider packages are separate from the core of Airflow. If you are running 2.0, you will need to install `apache-airflow-providers-facebook` and `apache-airflow-providers-amazon` to use the hooks, operators, and connections described here. If you are running 2.0 with Astronomer, the Amazon provider is already included in our Airflow Certified Image, and the Facebook provider can be installed by adding the package to your requirements.txt file.
+
 ### This DAG will create four breakdown reports:
 
 - age_gender

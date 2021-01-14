@@ -47,6 +47,8 @@ Remember that Airflow is primarily an orchestrator, not a transformation framewo
 
 Airflow has many operators available out of the box that make working with SQL easier. Here we'll highlight some commonly used ones that we think you should be aware of, but note that this list isn't comprehensive. For more documentation about Airflow operators, head [here](https://airflow.apache.org/docs/stable/_api/airflow/operators/index.html#).
 
+> Note: In Airflow 2.0, provider packages are separate from the core of Airflow. If you are running 2.0, you may need to install separate packages (e.g. `apache-airflow-providers-snowflake`) to use the hooks, operators, and connections described here. In an Astronomer project this can be accomplished by adding the packages to your requirements.txt file.
+
 ### Action Operators
 
 In Airflow, action operators execute a function. You can use action operators to execute a SQL query against a database. Commonly used SQL-related action operators include:
