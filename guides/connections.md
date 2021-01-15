@@ -11,7 +11,7 @@ This document covers how to set up various connections in Airflow. Connections d
 
 Connections can be maintained in the Airflow Interface (Menu --> Admin --> Connections).
 
-> Note: In Airflow 2.0, provider packages are separate from the core of Airflow, and the Connection Types available are dependent on the provider packages you have installed. For example, in order to see the Snowflake ConnType in the Airflow UI, you'll need the `apache-airflow-providers-snowflake` package. If you are running Airflow 2.0 on Astronomer, you can install provider packages by adding them to your requirements.txt file.
+> **Note:** In Airflow 2.0, provider packages are separate from the core of Airflow, and the Connection Types available are dependent on the provider packages you have installed. For example, in order to see the Snowflake ConnType in the Airflow UI, you'll need the `apache-airflow-providers-snowflake` package. If you are running Airflow 2.0 on Astronomer, you can install provider packages by adding them to your `requirements.txt` file. To learn more, read [Airflow Docs on Provider Packages](https://airflow.apache.org/docs/apache-airflow-providers/index.html).
 
 ### Example Connection Configurations
 

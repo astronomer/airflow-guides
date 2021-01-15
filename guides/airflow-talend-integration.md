@@ -68,7 +68,7 @@ That's all you have to do on the Talend side! Now you can move on to creating an
 
 Using Airflow to interact with the Talend Cloud API is easy using the SimpleHttpOperator. In this example we will show how to execute a job; however, note that there are many other actions you can perform with the Talend API as described in the documentation linked above, and all of these can be accomplished in a similar way. Also note that there are other ways of making an API call in Airflow besides using the SimpleHttpOperator; we have chosen to show this operator because it is the most straight forward for this use case.
 
-> Note: In Airflow 2.0, provider packages are separate from the core of Airflow. If you are running 2.0 with Astronomer, the `apache-airflow-providers-http` package is already included in our Airlfow Certified Image; if you are not using Astronomer you may need to install the package separately to use the hooks, operators, and connections described here.
+> **Note:** In Airflow 2.0, provider packages are separate from the core of Airflow. If you are running 2.0 with Astronomer, the `apache-airflow-providers-http` package is already included in our Astronomer Certified Image. If you are not using Astronomer, you may need to install the package separately to use the hooks, operators, and connections described here. To learn more, read [Airflow Docs on Provider Packages](https://airflow.apache.org/docs/apache-airflow-providers/index.html).
 
 First, we need to set up an Airflow connection to connect to the API. The connection should be an HTTP type, and should be configured like this:
 
