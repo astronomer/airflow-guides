@@ -20,6 +20,8 @@ Before we get started, be sure you have the following on hand:
   instance via Astronomer, but the core code should work the same regardless of how you’re hosting Airflow
 * Docker running on your machine
 
+> **Note:** In Airflow 2.0, provider packages are separate from the core of Airflow. If you are running 2.0, you will need to install `apache-airflow-providers-mongo` and `apache-airflow-providers-amazon` to use the hooks, operators, and connections described here. If you are running 2.0 with Astronomer, the Amazon provider is already included in our Astronomer Certified Image, and the Mongo provider can be installed by adding the package to your `requirements.txt` file. To learn more, read [Airflow Docs on Provider Packages](https://airflow.apache.org/docs/apache-airflow-providers/index.html).
+
 This DAG uses a Mongo collection processing script that accepts a json formatted Mongo schema mapping and outputs both a Mongo query projection and a compatible Redshift schema mapping. This script can be found [here](https://github.com/airflow-plugins/Example-Airflow-DAGs/blob/master/etl/mongo_to_redshift/collections/_collection_processing.py).This DAG also contains a flattening script that removes invalid characters from the Mongo keys as well as scrubbing out the "_$date" suffix that PyMongo appends to datetime fields.
 
 ### 1. Add Connections in Airflow UI
