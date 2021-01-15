@@ -28,9 +28,10 @@ Macros are a tool in Airflow that provide a solution to this problem. Macros ext
 - accessing custom user-defined params
 
 **Note:** a template will always return a string.
+
 ### Blueprints and Views
 
-The [blueprints](http://flask.pocoo.org/docs/0.12/blueprints/) and [views](http://flask.pocoo.org/docs/0.12/views/) components in Airflow are extensions of blueprints and views in the Flask web app framework. Developers have extended the Airflow API to include things such as triggering a DAG run remotely, adding new connections or modifying [Airflow variables](https://pythonhosted.org/airflow/concepts.html#variables). You can extend this to build an entire web app which sits alongside the Airflow webserver. One example of this is a plugin that allows analysts to input SQL through a web UI to be run on a scheduled interval.
+The [blueprints](http://flask.pocoo.org/docs/0.12/blueprints/) and [views](http://flask.pocoo.org/docs/0.12/views/) components in Airflow are extensions of blueprints and views in the Flask web app framework. Developers have extended the Airflow API to include things such as triggering a DAG run remotely, adding new connections or modifying [Airflow variables](https://airflow.apache.org/docs/apache-airflow/stable/concepts.html). You can extend this to build an entire web app which sits alongside the Airflow webserver. One example of this is a plugin that allows analysts to input SQL through a web UI to be run on a scheduled interval.
 
 ### Menu Links
 
@@ -41,11 +42,11 @@ Airflow is a powerful tool that lives at the intersection of developers, analyst
 For example, you may want to modify the Airflow webserver to have two menu link categories where each item is a link, like so:
 
 - Developer
-  - Plugins repository
-  - CI/CD system
+    - Plugins repository
+    - CI/CD system
 - Analyst
-  - Organization-specific Domino install
-  - CI/CD system
-  - AI Management systems
+    - Organization-specific Domino install
+    - CI/CD system
+    - AI Management systems
 
 Doing this provides each user access to the context they need when using an Airflow instance.

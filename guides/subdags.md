@@ -6,7 +6,7 @@ slug: "subdags"
 heroImagePath: null
 tags: ["DAGs", "Subdags"]
 ---
-
+<!-- markdownlint-disable-file -->
 Most DAGs consist of patterns that often repeat themselves. ETL DAGs that are written to best practice usually all share the pattern of grabbing data from a source, loading it to an intermediary file store or _staging_ table, and then pushing it into production data.
 
 Depending on your set up, using a subdag operator could make your DAG cleaner.

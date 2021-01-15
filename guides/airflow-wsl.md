@@ -130,7 +130,7 @@ Click the `+` to add a new configuration and give it a name.
 
 in the script path you will point this to where airflow was install in WSL which should be in your user home directory, so use `~\.local\bin\airflow`.
 
-For parameters enter `test dag_id task_id date`. You are using Airflow's native [test functionality](https://airflow.apache.org/cli.html#test).  
+For parameters enter `test dag_id task_id date`. You are using Airflow's native [test functionality](https://airflow.apache.org/docs/apache-airflow/1.10.2/cli.html).  
 
 For the Python interpreter, choose the interpreter you created in the previous step.
 
@@ -145,6 +145,7 @@ Cmder is console emulator for windows. It is great for interacting with both WSL
 Click [here](https://cmder.net/) to read more and download
 
 In Cmder, click the dropdown by the green plus in the bottom right corner and select `setup tasks`. There should be a `WSL::bash` task. In the commands box, I like to add a line that makes Cmder open to my Windows home folder instead of the Ubuntu home folder. It will look something like this.
+
 ```shell
 set "PATH=%ConEmuBaseDirShort%\wsl;%PATH%" & %ConEmuBaseDirShort%\conemu-cyg-64.exe --wsl -cur_console:pm:/mnt -C "/c/Users/user_name" -e
 ```

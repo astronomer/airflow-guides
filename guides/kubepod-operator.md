@@ -6,9 +6,8 @@ slug: "kubepod-operator"
 heroImagePath: null
 tags: ["Kubernetes", "Operators"]
 ---
-
-
-# Kubernetes PodOperator
+<!-- markdownlint-disable-file -->
+## Kubernetes PodOperator
 
 **Note**: This is only for customers currently running Astronomer Enterprise. Support for Astronomer Cloud will be available soon!
 

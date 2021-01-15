@@ -6,8 +6,8 @@ slug: "managing-dependencies"
 heroImagePath: "https://assets.astronomer.io/website/img/guides/dependencies.png"
 tags: ["Best Practices", "Dependencies", "Basics"]
 ---
-
-# Managing Dependencies
+<!-- markdownlint-disable-file -->
+## Managing Dependencies
 
 _The logic between tasks_
 
@@ -15,7 +15,7 @@ Each DAG object contains a set of tasks that are related by dependencies - the "
 
 Dependencies are one of Airflow's most powerful and popular features - they allow for previously long, brittle jobs to be broken down into granular parts that are safer, more modular, and reusable.
 
-## Simple Dependencies
+### Simple Dependencies
 
 Dependencies can be set syntactically or through bitshift operators.
 
@@ -44,7 +44,7 @@ All three are in line with best practice as long as it is written consistently -
 - `d1.set_downstream(d2)`<br> `d2 >>d3` <br> `d4.set_upstream(d3)`<br>
 
 
-## Dynamically Setting Dependencies
+### Dynamically Setting Dependencies
 
 For a large number of tasks, dependencies can be set in loops:
 
@@ -69,7 +69,7 @@ with dag:
 
 _ What happens here?_
 
-## Trigger Rules
+### Trigger Rules
 
 _Complex Dependencies_
 
@@ -87,11 +87,11 @@ Each trigger rule can have specific use cases: <br> <br>
 
 TriggerRules are defined as Airflow Utils:
 
-## Different Use Cases
+### Different Use Cases
 
 _Extendability vs Safety_
 
-### The `one_failed` rule
+#### The `one_failed` rule
 
 When you have a critically important but _brittle_ task in a workflow (i.e. a large machine learning job, some reporting task, etc.), a good safety check would be adding a task that handles the failure logic. This logic can be implemented dynamically based on how the DAG is being generated.
 
@@ -146,13 +146,13 @@ Though trigger rules can be convenient, they can also be unsafe and the same log
 
 A common use case of exotic trigger rules is a task downstream of all  other tasks that kicks off the necessary logic.
 
-### The `one_success` rule
+#### The `one_success` rule
 
 This rule is particularly helpful when setting up a "safety check" DAG - a DAG that runs as a safetycheck to all your data. If one of the "disaster checks" come back as `True`, the downstream disaster task can run the necessary logic.
 
 **Note:** The same logic can be implemented with the `one_failed` rule.
 
-### The `all_failed` rule
+#### The `all_failed` rule
 
 `all_failed` tells a task to run when all upstream tasks have failed and can be used to execute a fail condition for a workflow.
 
@@ -163,7 +163,7 @@ The workflow may look something like this:
 
 Once again, the same functionality can be achieved by using the `PythonBranchOperator`, a `TriggerDagOperator`,  or just configuring reporting in moore specific way.
 
-## Triggers with LatestOnlyOperator
+### Triggers with LatestOnlyOperator
 
 When scheduling tasks with complex trigger rules with dates in the past, there may be instances where certain tasks can run independently of time and others shouldn't.
 

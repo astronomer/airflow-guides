@@ -8,6 +8,7 @@ tags: ["Best Practices", "Components", "Kubernetes", "Executors"]
 ---
 
 ## Overview
+
 High-Availability (HA) is a concept which refers to a particular service or cluster meeting a specified amount of uptime. In order to meet more stringent uptime requirements, a service or cluster will often leverage a more complex architecture to ensure that downtime is rare and brief when it does occur.
 
 While the Apache Airflow project does not discuss specifics of HA, some in the community have discussed [Airflow HA previously](http://site.clairvoyantsoft.com/making-apache-airflow-highly-available/). Unlike those previous discussions, this article will focus on HA for an Airflow cluster orchestrated by Kubernetes. 
@@ -26,11 +27,11 @@ Kubernetes provides some abstractions around these concepts to help developers e
 
 ### Executors
 
-Airflow provides the user an abstraction around how the work is "executed", known as [executors](https://airflow.apache.org/code.html#executors). 
+Airflow provides the user an abstraction around how the work is "executed", known as [executors](https://airflow.apache.org/docs/apache-airflow/stable/_api/airflow/executors/index.html). 
 
-The [LocalExecutor](https://airflow.apache.org/code.html#airflow.executors.local_executor.LocalExecutor) runs on the same node as the scheduler and therefore can only be scaled up, preventing a user from creating execution redundancy one would see if they were able to scaled out.
+The [LocalExecutor](https://airflow.apache.org/docs/apache-airflow/stable/executor/local.html) runs on the same node as the scheduler and therefore can only be scaled up, preventing a user from creating execution redundancy one would see if they were able to scaled out.
 
-The [CeleryExecutor](https://airflow.apache.org/code.html#airflow.executors.celery_executor.CeleryExecutor) is a common choice for a distributed executor that allows a user to spin up many worker nodes. If a single node goes down, other workers remain available. If workers begin to fall behind, one can scale out the workers to meet the current demand.
+The [CeleryExecutor](https://airflow.apache.org/docs/apache-airflow/stable/executor/celery.html) is a common choice for a distributed executor that allows a user to spin up many worker nodes. If a single node goes down, other workers remain available. If workers begin to fall behind, one can scale out the workers to meet the current demand.
 
 The [KubernetesExecutor](https://airflow.apache.org/kubernetes.html?highlight=kubernetes%20executor) removes the need to run individual workers, instead allowing work to be evenly distributed across the entire Kubernetes cluster. The work is executed inside a Docker container managed by a [Kubernetes Pod](https://kubernetes.io/docs/concepts/workloads/pods/pod/). Pods represent a unique service running on one or more containers and provide a clean abstraction around the creation, execution, termination and deletion of that service.
 

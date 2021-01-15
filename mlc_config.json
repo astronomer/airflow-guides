@@ -1,0 +1,63 @@
+{
+  "ignorePatterns": [
+    {
+      "pattern": "../assets/.+"
+    },
+    {
+      "pattern": "humans@astronomer.io"
+    },
+    {
+      "pattern": "https://localport:8080"
+    },
+    {
+      "pattern": "http://localhost:8080"
+    },
+    {
+      "pattern": "https://airflow.readthedocs.io/.+"
+    },
+    {
+      "pattern":"https://www.linkedin.com/.+"
+    },
+    {
+      "pattern":"https://cwiki.apache.org/.+"    
+    },
+    {
+      "pattern":"https://github.com/mik-laj"
+    },
+    {
+      "pattern":"https://assets2.astronomer.io/.+"
+    },
+    {
+      "pattern":"https://assets.astronomer.io/.+"
+    },
+    {
+      "pattern":"/docs/.+"
+    },
+    {
+      "pattern":"/trial/.+"
+    },
+    {
+      "pattern":"/guides/.+"
+    },
+    {
+      "pattern":"support.astronomer.io"
+    },
+    {
+      "pattern":"downloads"
+    },
+    {
+      "pattern":"https://houston.+"
+    },
+    {
+      "pattern":"https://app.+"
+    },
+    {
+      "pattern":"/get-astronomer.+"
+    }
+  ],
+  "timeout": "20s",
+  "retryOn429": true,
+  "retryCount": 5,
+  "fallbackRetryDelay": "30s",
+  "aliveStatusCodes": [200, 206, 999, 429]
+}

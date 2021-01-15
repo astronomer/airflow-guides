@@ -4,7 +4,10 @@
   "description": "Tutorials and best practices for using Apache Airflow",
   "main": "index.js",
   "scripts": {
-    "start": "npm start"
+    "start": "npm start",
+    "lint": "node_modules/.bin/markdownlint ./guides/",
+    "spellcheck": "node_modules/.bin/mdspell \"guides/*.md\" -n -a --en-us -r",
+    "spellcheck-interactive": "node_modules/.bin/mdspell \"guides/*.md\" -n -a --en-us"
   },
   "repository": {
     "type": "git",
@@ -15,5 +18,10 @@
   "bugs": {
     "url": "https://github.com/astronomer/airflow-guides/issues"
   },
-  "homepage": "https://github.com/astronomer/airflow-guides#readme"
+  "homepage": "https://github.com/astronomer/airflow-guides#readme",
+  "devDependencies": {},
+  "dependencies": {
+    "markdown-spellcheck": "^1.3.1",
+    "markdownlint-cli": "^0.26.0"
+  }
 }

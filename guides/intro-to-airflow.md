@@ -51,9 +51,9 @@ We further discuss Airflow's use cases in our [podcast episode here](https://sou
 
 A Directed Acyclic Graph, or DAG, is a data pipeline defined in Python code. Each DAG represents a collection of tasks you want to run and is organized to show relationships between tasks in Airflow's UI. When breaking down the properties of DAGs, their usefulness becomes clear:
 
-* Directed: If multiple tasks with dependencies exist, each must have at least one defined upstream or downstream task.
-* Acyclic: Tasks are not allowed to create data that goes on to self-reference. This is to avoid creating infinite loops.
-* Graph: All tasks are laid out in a clear structure with processes occurring at clear points with set relationships to other tasks.
+- Directed: If multiple tasks with dependencies exist, each must have at least one defined upstream or downstream task.
+- Acyclic: Tasks are not allowed to create data that goes on to self-reference. This is to avoid creating infinite loops.
+- Graph: All tasks are laid out in a clear structure with processes occurring at clear points with set relationships to other tasks.
 
 For example, the image below shows a valid DAG on the left with a couple of simple dependencies, in contrast to an invalid DAG on the right that is not acyclic.
 
@@ -73,9 +73,10 @@ For a more in-depth review on DAGs, check out our [Intro to DAGs guide](https://
 ![Example DAGs](https://assets2.astronomer.io/main/guides/intro-to-airflow/operator.png)
 
 There are three main categories of operators:
- - **Action Operators** execute a function, like the [PythonOperator](https://airflow.apache.org/docs/apache-airflow/stable/howto/operator/python.html) or [BashOperator](https://airflow.apache.org/docs/apache-airflow/stable/howto/operator/bash.html)
- - **Transfer Operators** move data from a source to a destination, like the [S3ToRedshiftOperator](https://airflow.apache.org/docs/apache-airflow-providers-amazon/stable/operators/s3_to_redshift.html)
- - **Sensor Operators** wait for something to happen, like the [ExternalTaskSensor](https://airflow.readthedocs.io/en/1.9.0/_modules/airflow/operators/sensors.html)
+
+- **Action Operators** execute a function, like the [PythonOperator](https://airflow.apache.org/docs/apache-airflow/stable/howto/operator/python.html) or [BashOperator](https://airflow.apache.org/docs/apache-airflow/stable/howto/operator/bash.html)
+- **Transfer Operators** move data from a source to a destination, like the [S3ToRedshiftOperator](https://airflow.apache.org/docs/apache-airflow-providers-amazon/stable/operators/s3_to_redshift.html)
+- **Sensor Operators** wait for something to happen, like the [ExternalTaskSensor](https://airflow.readthedocs.io/en/1.9.0/_modules/airflow/operators/sensors.html)
 
 Operators are defined individually, but they can pass information to other operators using [XComs](https://airflow.apache.org/docs/apache-airflow/stable/concepts.html?highlight=hook#xcoms).
 

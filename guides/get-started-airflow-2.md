@@ -6,7 +6,7 @@ slug: "get-started-airflow-2"
 heroImagePath: "https://assets2.astronomer.io/main/guides/getting-started-airflow-2.png"
 tags: ["Resources", "Basics"]
 ---
-
+<!-- markdownlint-disable-file -->
 [Apache Airflow 2.0](https://www.astronomer.io/blog/introducing-airflow-2-0) is a momentous open-source release that many are eager to test and adopt.
 
 If you'd like to test Airflow 2.0 on your local machine, Astronomer's [open-source CLI](https://github.com/astronomer/astro-cli) is the fastest and easiest way to do so.
@@ -56,13 +56,13 @@ For more information, refer to the [Astronomer CLI README](https://github.com/as
 
 First, create a new directory for your Airflow project and `cd` to it:
 
-```
+```bash
 $ mkdir <directory-name> && cd <directory-name>
 ```
 
 In the project directory, run:
 
-```
+```bash
 $ astro dev init
 ```
 
@@ -84,7 +84,7 @@ Feel free to refer to the [Astronomer Certified 2.0.0 image source](https://gith
 
 Now, run the following command:
 
-```
+```bash
 $ astro dev start
 ```
 
@@ -96,7 +96,7 @@ This command spins up 3 Docker containers on your machine, 1 each for the Airflo
 
 To check out the Airflow 2.0 UI:
 
-1. Go to http://localhost:8080/
+1. Go to `http://localhost:8080/`
 2. Log in with `admin` as both your username and password
 
 The example DAG in your directory should be populated in the Airflow UI on your local machine.
@@ -115,4 +115,4 @@ https://airflow.apache.org/docs/apache-airflow/stable/upgrade-check.html#upgrade
 
 The Apache Airflow Project strongly recommends that all users interested in running Airflow 2.0 first upgrade to [Airflow 1.10.14](https://github.com/apache/airflow/releases/tag/1.10.14), which was built to make the migration process as easy as possible.
 
-If you find a bug or problem in Airflow, file a GitHub issue in the [Apache Airflow GitHub repo]((https://github.com/apache/airflow/issues)). We'll be working with open source contributors towards subsequent 2.0 releases and are committed to regularly triaging community-reported issues.
+If you find a bug or problem in Airflow, file a GitHub issue in the [Apache Airflow GitHub repo](https://github.com/apache/airflow/issues). We'll be working with open source contributors towards subsequent 2.0 releases and are committed to regularly triaging community-reported issues.

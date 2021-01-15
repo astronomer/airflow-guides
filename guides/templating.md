@@ -6,13 +6,13 @@ slug: "templating"
 heroImagePath: null
 tags: ["Templating", "Best Practices", "Basics"]
 ---
-
+<!-- markdownlint-disable-file -->
 Macros are used to pass dynamic information into task instances at runtime. Since all top-level code in DAG files is interpreted every scheduler "heartbeat," macros and templating allow run-time tasks to be offloaded to the executor instead of the scheduler.  <br> <br>
 Apart from efficiency, they're also powerful tools in forcing jobs to be idempotent.
 
 ## Common Macros and Templates
 
-A list of default variables accessible in all templates can be found here: https://airflow.apache.org/code.html#macros
+A list of default variables accessible in all templates can be found here: `https://airflow.apache.org/docs/apache-airflow/stable/macros-ref.html`
 
 Common macros include:
 
@@ -116,7 +116,7 @@ Luckily, this usually only requires changing a few lines of code:
 
 **1) Specify the field as a `template_field` at the operator level- notice that this requires no changes to the parameters being templated.**
 
-https://github.com/airflow-plugins/google_analytics_plugin/blob/master/operators/google_analytics_reporting_to_s3_operator.py#L41
+`https://github.com/airflow-plugins/google_analytics_plugin/blob/master/operators/google_analytics_reporting_to_s3_operator.py#L41`
 
 ```python
 template_fields = ('s3_key', 'since', 'until')
@@ -124,7 +124,7 @@ template_fields = ('s3_key', 'since', 'until')
 
 **2) Define the corresponding values in the DAG file:**
 
-https://github.com/airflow-plugins/Example-Airflow-DAGs/blob/master/etl/google_analytics_to_redshift.py#L131
+`https://github.com/airflow-plugins/Example-Airflow-DAGs/blob/master/etl/google_analytics_to_redshift.py#L131`
 
 ```python
 SINCE = "{{{{ macros.ds_add(ds, -{0}) }}}}".format(str(LOOKBACK_WINDOW))
@@ -138,7 +138,7 @@ S3_KEY = 'google_analytics/{0}/{1}_{2}_{3}.json'.format(REDSHIFT_SCHEMA,
 
 **3) Instantiate the Operator with the right values:**
 
-https://github.com/airflow-plugins/Example-Airflow-DAGs/blob/master/etl/google_analytics_to_redshift.py#L136
+`https://github.com/airflow-plugins/Example-Airflow-DAGs/blob/master/etl/google_analytics_to_redshift.py#L136`
 
 ```python
 g = GoogleAnalyticsReportingToS3Operator(task_id='get_google_analytics_data',

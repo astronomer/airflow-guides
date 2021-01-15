@@ -35,7 +35,7 @@ This could look like:
 Depending on the use-case, it might be smart to have 2 deployments for each project, a dev and a prod, with each branch on your version control tool tied to a different registry (you can automate by integrating Astronomer with your [CI/CD](https://www.astronomer.io/guides/deploying-dags-with-cicd/) tool).
 
 
-## Separate Projects.
+## Separate Projects
 
 If a certain set of DAGs can't live in the same directory, they should live in separate directories.
 

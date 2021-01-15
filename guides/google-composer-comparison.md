@@ -6,7 +6,7 @@ slug: "google-composer-comparison"
 heroImagePath: null
 tags: []
 ---
-
+<!-- markdownlint-disable-file -->
 |  | Google Cloud Composer | Astronomer Cloud | Astronomer Enterprise |
 |--|-----------------------|------------------|-----------------------|
 | Cost | ~$300 base | ~$110 base (via LocalExecutor) | Negotiated Annual subscription |
@@ -58,11 +58,11 @@ Astronomer Enterprise is entirely cloud agnostic and can be installed on any Kub
 
 ## Monitoring and Logging
 
-**Google Cloud Composer**
+### Google Cloud Composer
 
 Logging in Composer is handled by Stackdriver and based on [fluentd](https://www.fluentd.org). Metrics available in [Cloud Monitoring](https://cloud.google.com/composer/docs/how-to/managing/monitoring-environments) and the [Composer monitoring dashboard](https://cloud.google.com/composer/docs/monitoring-dashboard).
 
-**Astronomer**
+### Astronomer
 
 Logging in Astronomer is handled by [Elasticsearch](https://www.elastic.co/products/elasticsearch).
 Metrics are handled by [Prometheus](https://prometheus.io/).

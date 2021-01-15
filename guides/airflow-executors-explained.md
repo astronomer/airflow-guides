@@ -6,13 +6,13 @@ slug: "airflow-executors-explained"
 heroImagePath: null
 tags: ["Executors", "Basics", "Kubernetes",  "Concurrency",  "Parallelism" ]
 ---
-
+<!-- markdownlint-disable-file -->
 If you're new to Apache Airflow, the world of Executors is difficult to navigate. Even if you're a veteran user overseeing 20+ DAGs, knowing what Executor best suits your use case at any given time isn't black and white - especially as the OSS project (and its utilities) continues to grow and develop.
 
 This guide will do 3 things:
 
 *   Define the core function of an Executor
-*   Contextualize Executors with general Airflow fundamentals
+*  Contextualize Executors with general Airflow fundamentals
 *   Shed some insight to the 3 most popular Executors: Local, Celery, and Kubernetes
 
 We'll give the Sequential Executor an honorable mention, too.
@@ -80,7 +80,7 @@ Heavy Airflow users whose DAGs run in production will find themselves migrating 
 
 At its core, Airflow's CeleryExecutor is built for horizontal scaling.
 
-[Celery](http://www.celeryproject.org/) itself is a way of running python processes in a distributed fashion. To optimize for flexibility and availability, the CeleryExecutor works with a "pool" of independent workers across which it can delegate tasks, via messages. On Celery, your deployment's scheduler adds a message to the queue and the Celery broker delivers it to a Celery worker (perhaps one of many) to execute.
+[Celery](https://docs.celeryproject.org/en/stable/) itself is a way of running python processes in a distributed fashion. To optimize for flexibility and availability, the CeleryExecutor works with a "pool" of independent workers across which it can delegate tasks, via messages. On Celery, your deployment's scheduler adds a message to the queue and the Celery broker delivers it to a Celery worker (perhaps one of many) to execute.
 
 If a worker node is ever down or goes offline, the CeleryExecutor quickly adapts and is able to assign that allocated task or tasks to another worker.
 
@@ -112,7 +112,7 @@ While the LocalExecutor is a great way to save on engineering resources for test
 
 ## KubernetesExecutor
 
-[KubernetesExecutor](https://github.com/apache/airflow/blob/master/docs/kubernetes.rst) leverages the power of [Kubernetes](https://kubernetes.io/) for resource optimization.
+KubernetesExecutor leverages the power of [Kubernetes](https://kubernetes.io/) for resource optimization.
 
 KubernetesExecutor relies on a fixed single Pod that dynamically delegates work and resources. For each and every task that needs to run, the Executor talks to the Kubernetes API to dynamically launch Pods which terminate when that task is completed.
 

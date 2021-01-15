@@ -62,7 +62,7 @@ Connections can be maintained in the Airflow Interface (Menu --> Admin --> Conne
 
 #### Snowflake
 
-* `Host`: https://youraccount.yourregion.snowflakecomputing.com/
+* `Host`: `https://youraccount.yourregion.snowflakecomputing.com/`
 * `Schema`: _your schema name_
 * `Login`: _your username_
 * `Password`: _your password_
@@ -112,6 +112,7 @@ postgres_query = PostgresOperator(
 **Note**: The `Schema` field in Airflow can potentially be a source of confusion as many databases have different meanings for the term.  In Airflow a schema refers to the database name to which a connection is being made.  For example, for a Postgres connection the name of the database should be entered into the `Schema` field and the Postgres idea of schemas should be ignored (or put into the `Extras` field) when defining a connection.
 
 ### Programmatically Modifying Connections
+
 The Airflow Connections class can be modified programmatically to sync with an external secrets manager:
 
 ```python

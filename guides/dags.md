@@ -6,7 +6,7 @@ slug: "dags"
 heroImagePath: "https://assets.astronomer.io/website/img/guides/IntroToDAG_preview.png"
 tags: ["Airflow UI", "DAGs", "Basics"]
 ---
-
+<!-- markdownlint-disable-file -->
 ## Overview
 
 _Core definitions._
@@ -63,7 +63,7 @@ DAGs are a natural fit for batch architecture - they allow you to model natural 
 
 ## DAGs as Functional Programming
 
-https://medium.com/@maximebeauchemin/functional-data-engineering-a-modern-paradigm-for-batch-data-processing-2327ec32c42a
+`https://medium.com/@maximebeauchemin/functional-data-engineering-a-modern-paradigm-for-batch-data-processing-2327ec32c42a`
 
 _Repeatable inputs for repeatable output_
 

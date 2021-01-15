@@ -1,0 +1,49 @@
+# This is a basic workflow to help you get started with Actions
+
+name: CI
+
+# Controls when the action will run. 
+on:
+  # Triggers the workflow on push or pull request events but only for the main branch
+  pull_request:
+    branches: [ main ]
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch: 
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  # This workflow contains a single job called "build"
+  markdown-lint:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      - uses: actions/checkout@v1
+      - uses: actions/setup-node@main
+      - name: lint all mardownfiles
+        run: |
+          yarn install
+          yarn lint
+  link-check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v1
+      - uses: actions/setup-node@main
+      - name: markdown-link-check
+        uses: gaurav-nelson/github-action-markdown-link-check@1.0.8
+        with:
+          config-file: './mlc_config.json'
+          check-modified-files-only: 'yes'
+          base-branch: 'main'
+          folder-path: './guides'
+  spell-check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v1
+      - uses: actions/setup-node@main
+      - name: Check spelling
+        run: |
+          yarn install
+          yarn spellcheck

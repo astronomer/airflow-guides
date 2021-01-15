@@ -7,10 +7,12 @@ heroImagePath: "https://assets.astronomer.io/website/img/guides/IntroToDAG_previ
 tags: ["Hooks", "Operators", "Tasks", "Basics"]
 ---
 
-# Sensors
+## Sensors
+
 Sensors are a special kind of operator. When they run, they will check to see if a certain criteria is met before they complete and let their downstream tasks execute. This is a great way to have portions of your DAG wait on some external system.
 
-## S3 Key Sensor
+### S3 Key Sensor
+
 ```python
 s1 = S3KeySensor(
         task_id='s3_key_sensor',
@@ -19,11 +21,13 @@ s1 = S3KeySensor(
         aws_conn_id='my_aws_connection',
     )
 ```
+
 This sensor will check for the existence of a specified key in S3 every few seconds until it finds it or times out. If it finds the key, it will be marked as success and allow downstream tasks to run. If it times out, it will fail and prevent downstream tasks from running.
 
 [S3KeySensor Code](https://github.com/apache/airflow/blob/master/airflow/sensors/s3_key_sensor.py)
 
-## Sensors Params
+### Sensors Params
+
 There are plenty of other sensors out there that due things such as check a database for a certain row, wait for a certain time of day or sleep for a certain amount of time. All sensors inherit from the `BaseSensorOperator` and have 4 parameters you can set on any sensor.
 
 - **soft_fail:** Set to true to mark the task as SKIPPED on failure

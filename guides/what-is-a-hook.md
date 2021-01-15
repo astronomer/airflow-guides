@@ -7,7 +7,7 @@ heroImagePath: "https://assets.astronomer.io/website/img/guides/IntroToDAG_previ
 tags: ["Hooks", "Operators", "Tasks", "Basics"]
 ---
 
-# Hooks
+## Hooks
 
 Operators are the main building blocks of Airflow, but operators rely heavily upon Hooks to interact with all of their source and destination systems.
 
@@ -88,9 +88,9 @@ class S3Hook(AwsHook):
 
  **Hooks provide an interface in which to interact with an external system, but do not contain the logic for how that system is interacted with.** (in this example, boto3 holds the logic on how to interact with s3)
 
-##### These are the hooks that come with airflow
+### These are the hooks that come with airflow
 
-- https://github.com/apache/airflow/tree/master/airflow/hooks
-- https://github.com/apache/airflow/tree/master/airflow/contrib/hooks
+- `https://github.com/apache/airflow/tree/master/airflow/hooks`
+- `https://github.com/apache/airflow/tree/master/airflow/contrib/hooks`
 
 Of course, you can write hooks to interact with any system you want!
