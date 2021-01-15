@@ -43,7 +43,7 @@ With these points in mind, we recommend using ACI with the AzureContainerInstanc
 
 Using Airflow to create and run an Azure Container Instance is straightforward: You first identify the Azure resource group you want to create the Azure Container Instance in (or create a new one), then ensure your Azure instance has a service principle with write access over that resource group. For more information on setting this up, refer to the [Azure documentation](https://docs.microsoft.com/en-us/azure/active-directory/develop/howto-create-service-principal-portal).
 
-> Note: In Airflow 2.0, provider packages are separate from the core of Airflow. If you are running 2.0 with Astronomer, the `apache-airflow-providers-microsoft-azure` package is already included in our Airlfow Certified Image; if you are not using Astronomer you may need to install this package separately to use the hooks, operators, and connections described here.
+> Note: In Airflow 2.0, provider packages are separate from the core of Airflow. If you are running 2.0 with Astronomer, the `apache-airflow-providers-microsoft-azure` package is already included in our Astronomer Certified Image; if you are not using Astronomer you may need to install this package separately to use the hooks, operators, and connections described here. To learn more, read [Airflow Docs on Provider Packages](https://airflow.apache.org/docs/apache-airflow-providers/index.html).
 
 Next, create an Airflow connection with the type `Azure Container Instance`. Specify your Client ID in the Login field, Client Secret in the Password field, and Tenant and Subscription IDs in the Extras field as json. It should look something like this:
 
@@ -91,15 +91,15 @@ with DAG('azure_container_instances',
 
 The parameters for the operator are:
 
-- **ci_conn_id:** The connection ID for the Airflow connection we created above
-- **registry_conn_id:** The connection ID to connect to a registry. In this case we use DockerHub, which is public and does not require credentials, so we pass in `None`
-- **resource_group:** Our Azure resource group
+- **ci\_conn\_id:** The connection ID for the Airflow connection we created above
+- **registry\_conn\_id:** The connection ID to connect to a registry. In this case we use DockerHub, which is public and does not require credentials, so we pass in `None`
+- **resource\_group:** Our Azure resource group
 - **name:** The name we want to give our ACI. Note that this must be unique within the resource group
 - **image:** The Docker image we want to use for the container. In this case we use a simple Hello World example from Docker
 - **region:** The Azure region we want our ACI deployed to
 - **CPU:** The number of CPUs to allocate to the container. In this example we use the default minimum. For more information on allocating CPUs and memory, refer to the [Azure documentation](https://docs.microsoft.com/en-us/azure/container-instances/container-instances-faq).
-- **memory_in_gb**: The amount of memory to allocate to the container. In example we use the default minimum.
-- **fail_if_exists:** Whether we want the the operator to raise an exception if the container group already exists (default value is True). If it's set to False and the container group name already exists within the given resource group, the operator will attempt to update the container group based on the other parameters before running and terminating upon completion
+- **memory\_in\_gb**: The amount of memory to allocate to the container. In example we use the default minimum.
+- **fail\_if\_exists:** Whether we want the the operator to raise an exception if the container group already exists (default value is True). If it's set to False and the container group name already exists within the given resource group, the operator will attempt to update the container group based on the other parameters before running and terminating upon completion
 
 Note that you can also provide the operator with other parameters such as environment variables, volumes, and a command as needed to run the container.
 
