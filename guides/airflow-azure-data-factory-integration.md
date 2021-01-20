@@ -9,6 +9,7 @@ tags: ["Integrations"]
 > Note: All code in this guide can be found in [this Github repo](https://github.com/astronomer/airflow-azure-data-factory-tutorial).
 
 ## Overview
+
 Azure Data Factory (ADF) is a commonly used service for constructing data pipelines and jobs. With a little preparation, it can be used in combination with Airflow to leverage the best of both tools. Here we'll discuss why you might want to use these two tools together, how Airflow can be used to execute ADF jobs, and a simple example tutorial showing how it all fits together.
 
 ## Why Use Airflow with ADF
@@ -31,7 +32,7 @@ Operators and hooks are the main building blocks of Airflow, and both can be use
 We recommend using Airflow hooks when interacting with any external system. Hooks are used as a way to abstract the methods you would use against a source system. Airflow does not currently have built-in hooks for ADF, but they have been developed and can be found on [Github](https://github.com/flvndh/airflow/blob/issue/10995/azure-data-factory/airflow/providers/microsoft/azure/hooks/azure_data_factory.py). 
 
 
-It is likely that these will be merged into the Airflow project soon, but in the meantime, you can always  import them separately, which is what we do in the example below. 
+It is likely that these will be merged into the Airflow project soon, but in the meantime, you can always import them separately, which is what we do in the example below. 
 
 These hooks build off of the `azure-mgmt-datafactory` Python package; since this is used under the hood, [this](https://docs.microsoft.com/en-us/azure/data-factory/quickstart-create-data-factory-python) resource on interacting with ADF using Python could be helpful for determining parameter names, etc.
 
