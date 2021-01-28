@@ -1,7 +1,7 @@
 ---
 title: "Executing Azure Data Factory Pipelines with Airflow"
 description: "Triggering remote jobs in Azure Data Factory from your Apache Airflow DAGs."
-date: 2020-12-09T00:00:00.000Z
+date: 2021-01-28T00:00:00.000Z
 slug: "airflow-azure-data-factory-integration"
 tags: ["Integrations"]
 ---
