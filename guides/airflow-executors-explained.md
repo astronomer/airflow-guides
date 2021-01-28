@@ -45,7 +45,9 @@ When we're talking about task execution, you'll want to be familiar with these [
 
 - **pool**: Pools are configurable via the Airflow UI and are used to limit the _parallelism_ on any particular set of tasks. You could use it to give some tasks priority over others, or to put a cap on execution for things like hitting a third party API that has rate limits on it, for example.
 
-- **max_threads**: This determines how many linear scheduling _processes_ the scheduler can handle in parallel at any given time. The default value is 2, but adjusting this number gives you some control over CPU usage - the higher the value, the more resources you'll need.
+- **parsing_processes**: This determines how many linear scheduling _processes_ the scheduler can handle in parallel at any given time. The default value is 2, but adjusting this number gives you some control over CPU usage - the higher the value, the more resources you'll need.
+
+  > Note: In Airflow 1.10.13 and prior versions, this setting is called max_threads.
 
   > Note: Rather than trying to find one set of configurations that work for _all_ jobs, we'd recommend grouping jobs by their type as much as you can.
 
