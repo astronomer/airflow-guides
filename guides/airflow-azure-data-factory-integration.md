@@ -86,7 +86,7 @@ Role: Contributor
 
 Assign access to: User, group, or service principal
 
-Next search for your app (david-astro in this example), add it to 'Selected members' and click save. 
+Next search for your app ('david-astro' in this example), add it to 'Selected members' and click save. 
 
 ![ADF Role Assignment](https://assets2.astronomer.io/main/guides/azure-data-factory/adf_add_role_assignment2.png)
 
