@@ -37,8 +37,8 @@ Here are the settings and their default values.
     <td align="center">16</td>
   </tr>
   <tr>
-    <td>max_threads</td>
-    <td>AIRFLOW__SCHEDULER__MAX_THREADS</td>
+    <td>parsing_processes</td>
+    <td>AIRFLOW__SCHEDULER__PARSING_PROCESSES</td>
     <td align="center">2</td>
   </tr>
 </table>
@@ -62,7 +62,9 @@ If you're using Astronomer, you can configure both worker resources and environm
 
 If you decide to increase these settings, Airflow will be able to scale up and process many tasks in parallel. This could however put a strain on the scheduler. For example, you may notice delays in task execution, tasks remaining a in `queued` state for longer than expected, or gaps in the Gantt chart of the Airflow UI.
 
-The **max_threads = 2** setting can be used to increase the number of threads running on the scheduler. This can prevent the scheduler from getting behind, but may also require more resources. If you increase this, you may need to increase CPU and/or memory on your scheduler. This should be set to n-1 where n is the number of CPUs of your scheduler.
+The **parsing_processes = 2** setting can be used to increase the number of threads running on the scheduler. This can prevent the scheduler from getting behind, but may also require more resources. If you increase this, you may need to increase CPU and/or memory on your scheduler. This should be set to n-1 where n is the number of CPUs of your scheduler.
+
+> **Note:** In Airflow 1.10.13 and prior versions, the parsing_processes setting is called max_threads.
 
 On Astronomer, simply increase the slider on the Scheduler to increase CPU and memory.
 
