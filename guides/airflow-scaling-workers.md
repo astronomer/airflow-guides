@@ -1,5 +1,5 @@
 ---
-title: "Scaling out Airflow"
+title: "Scaling Out Airflow"
 description: "How to scale out Airflow workers and the settings needed to maximize parallelism"
 date: 2019-03-13T00:00:00.000Z
 slug: "airflow-scaling-workers"
