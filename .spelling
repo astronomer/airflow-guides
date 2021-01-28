@@ -3,6 +3,15 @@
 # global dictionary is at the start, file overrides afterwards
 # one word per line, to define a file override use ' - filename'
 # where filename is relative to this configuration file
+AzureContainerInstancesOperator
+AzureContainerInstanceHook
+DockerHub
+Covid-19
+david-astro
+Covid
+ConnType
+ci
+gb
 graphql
 pinterest
 shopify
