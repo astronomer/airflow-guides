@@ -20,6 +20,7 @@ Our team at Astronomer has teamed up with the Kedro team to extend the [`kedro-a
 ```bash
 kedro airflow create
 ```
+
 This makes for a super clean experience for anyone looking to deploy their Kedro pipelines to a distributed scheduler for workflow orchestration.
 
 ### Prerequisites
@@ -35,12 +36,12 @@ To use the plugin, you'll need the following running on your machine or a fresh 
 
 We've added some additional functionality to the plugin that makes for a great experience if you use Astronomer. The steps below walk through creating a fresh Astronomer environment with our CLI tool, generating a Kedro project, packaging it up as an Airflow DAG, and building that DAG into your Docker image to be deployed to an Astronomer Airflow environment.
 
-#### Create an Astro project
+### Create an Astro project
 
 1. `mkdir <astro-project-directory> && cd <astro-project-directory>`
 2. Run `astro dev init` to initialize the project.
 
-#### Create a Kedro Project
+### Create a Kedro Project
 
 > Note: Your Kedro project directory should be separate from your Astro project directory
 
@@ -48,7 +49,7 @@ We've added some additional functionality to the plugin that makes for a great e
 2. `cd <kedro-project-directory>`
 3. `kedro install && kedro package`
 
-#### Run the DAG
+### Run the DAG
 
 1. `cd <kedro-project-directory>`
 2. `kedro airflow create -t <astro-project-directory>/dags`
@@ -56,13 +57,13 @@ We've added some additional functionality to the plugin that makes for a great e
 4. `rsync -avp conf <astro-project-directory>/` note: are we fixing this?
 5. `rsync -avp data <astro-project-directory>/`
 6. Change your Astronomer project's `Dockerfile` to the following:
+
     ```docker
     FROM quay.io/astronomer/ap-airflow:2.0.0-buster-onbuild
 
     RUN pip install --user <kedro-project-python-package>-0.1-py3-none-any.whl
     ```
-7. Make sure Docker is running then run `astro dev start` to spin up a local Airflow environment with your shiny new Airflow DAG.
 
-## Conclusion
+7. Make sure Docker is running then run `astro dev start` to spin up a local Airflow environment with your shiny new Airflow DAG.
 
 We're proud to partner with the Kedro team on bringing this plugin experience into the world and look forward to extending it to improve the developer experience even more. Please [get in touch](https://astronomer.io/contact) if you'd like to talk to us about how you use Kedro and Airflow together!
