@@ -24,7 +24,7 @@ In order for Airflow to talk to your Azure Data Explorer database, you need to c
 
 Once you have your Azure Data Explorer cluster running and service principle authentication configured, you can get started querying a database with Airflow. 
 
-> Note: In Airflow 2.0, provider packages are separate from the core of Airflow. If you are running 2.0 with Astronomer, the `apache-airflow-providers-microsoft-azure` package is already included in our Airlfow Certified Image; if you are not using Astronomer you may need to install this package separately to use the hooks, operators, and connections described here.
+> Note: In Airflow 2.0, provider packages are separate from the core of Airflow. If you are running 2.0 with Astronomer, the `apache-airflow-providers-microsoft-azure` package is already included in our Airflow Certified Image; if you are not using Astronomer you may need to install this package separately to use the hooks, operators, and connections described here.
 
 The first step is to set up an Airflow connection to your Azure Data Explorer cluster. If you do this using the Airflow UI, it should look something like this.
 First, set up an Airflow connection to your Azure Data Explorer cluster. If you do this using the Airflow UI, it should look something like this:
