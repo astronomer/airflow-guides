@@ -34,36 +34,44 @@ To use the plugin, you'll need the following running on your machine or a fresh 
 
 ## Try it Out
 
-We've added some additional functionality to the plugin that makes for a great experience if you use Astronomer. The steps below walk through creating a fresh Astronomer environment with our CLI tool, generating a Kedro project, packaging it up as an Airflow DAG, and building that DAG into your Docker image to be deployed to an Astronomer Airflow environment.
+We've added some additional functionality to the plugin that makes for a great integration with Astronomer. To give it a try, we'll use the `astro-iris` starter that's included in the Kedro project; The steps below walk through spinning up a fresh Kedro project and running your pipelines as DAGs on a local Airflow environment.
 
-### Create an Astro project
+### Create an Astro-Kedro project
 
-1. `mkdir <astro-project-directory> && cd <astro-project-directory>`
-2. Run `astro dev init` to initialize the project.
-
-### Create a Kedro Project
-
-> Note: Your Kedro project directory should be separate from your Astro project directory
-
-1. Run `kedro new --starter pandas-iris` to create a new Kedro project. The Kedro CLI will walk you through setup.
+1. `kedro new --starter git+https://github.com/quantumblacklabs/kedro-starters.git --checkout master --directory astro-iris` to build your starter directory. Note that in Kedro 0.17.1 and beyond this command will be simplified to `kedro new --starter astro-iris`.
 2. `cd <kedro-project-directory>`
-3. `kedro install && kedro package`
+3. `kedro install`
+4. `kedro package`
+   
+### Prepare and run the project in Astro
 
-### Run the DAG
+1. `cp src/dist/*.whl ./`
+2. `kedro catalog create --pipeline=__default__`
+3. Edit your `conf/base/catalog/__default__.yml` and configure datasets to be persisted, e.g.
 
-1. `cd <kedro-project-directory>`
-2. `kedro airflow create -t <astro-project-directory>/dags`
-3. `cp src/dist/*.whl <astro-project-directory>/`
-4. `rsync -avp conf <astro-project-directory>/` note: are we fixing this?
-5. `rsync -avp data <astro-project-directory>/`
-6. Change your Astronomer project's `Dockerfile` to the following:
-
-    ```docker
-    FROM quay.io/astronomer/ap-airflow:2.0.0-buster-onbuild
-
-    RUN pip install --user <kedro-project-python-package>-0.1-py3-none-any.whl
+    ```yaml
+    example_train_x:
+    type: pickle.PickleDataSet
+    filepath: data/05_model_input/example_train_x.pkl
+    example_train_y:
+    type: pickle.PickleDataSet
+    filepath: data/05_model_input/example_train_y.pkl
+    example_test_x:
+    type: pickle.PickleDataSet
+    filepath: data/05_model_input/example_test_x.pkl
+    example_test_y:
+    type: pickle.PickleDataSet
+    filepath: data/05_model_input/example_test_y.pkl
+    example_model:
+    type: pickle.PickleDataSet
+    filepath: data/06_models/example_model.pkl
+    example_predictions:
+    type: pickle.PickleDataSet
+    filepath: data/07_model_output/example_predictions.pkl`
     ```
 
-7. Make sure Docker is running then run `astro dev start` to spin up a local Airflow environment with your shiny new Airflow DAG.
+4. Make sure you have the `kedro-airflow` plugin installed, then run `pip install kedro-airflow`
+5. `kedro airflow create -t dags/`
+6. Make sure you have the Astro CLI installed and have Docker running on your machine, then run `astro dev start` to fire up a local Airflow instance and visualize your DAGs.
 
 We're proud to partner with the Kedro team on bringing this plugin experience into the world and look forward to extending it to improve the developer experience even more. Please [get in touch](https://astronomer.io/contact) if you'd like to talk to us about how you use Kedro and Airflow together!
