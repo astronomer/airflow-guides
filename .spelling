@@ -5,6 +5,7 @@
 # where filename is relative to this configuration file
 AzureContainerInstancesOperator
 AzureContainerInstanceHook
+AzureDataExplorerQueryOperator
 DockerHub
 Covid-19
 david-astro
@@ -77,6 +78,7 @@ toolset
 hoc
 grafana
 metabase
+auth_method
 cloudwatch
 mozaik
 whitelisted
