@@ -133,7 +133,7 @@ If there is a failure in the job itself, like in one of the notebooks in this ex
 
 ![Error Log Example](https://assets2.astronomer.io/main/guides/databricks-tutorial/databricks_failure_airflow_log.png)
 
-In the case above we could click on the URL link to get to the Datatbricks log in order to debug the issue.
+In the case above we could click on the URL link to get to the Databricks log in order to debug the issue.
 
 ## Where to Go From Here
 
