@@ -3,16 +3,6 @@
 # global dictionary is at the start, file overrides afterwards
 # one word per line, to define a file override use ' - filename'
 # where filename is relative to this configuration file
-AzureContainerInstancesOperator
-AzureContainerInstanceHook
-AzureDataExplorerQueryOperator
-DockerHub
-Covid-19
-david-astro
-Covid
-ConnType
-ci
-gb
 graphql
 pinterest
 shopify
@@ -70,7 +60,7 @@ autoscaler
 airflow
 airflowers
 iberman
-boolean 
+boolean
 astronomerio
 dbaas
 datahub
@@ -78,7 +68,6 @@ toolset
 hoc
 grafana
 metabase
-auth_method
 cloudwatch
 mozaik
 whitelisted
@@ -917,7 +906,7 @@ Mika
 Heino
 Solita
 VideoAmp
-How-to's 
+How-to's
 Peyman
 Mohajerian
 Vinayak
@@ -1488,14 +1477,14 @@ Create_DAG
 __`e
 ____
 - guides/facebook-ads-to-redshift.md
-age_gender 
+age_gender
 device_platform
 region_country
 no_breakdown
 account_id
 ad_id
 adset_id
-ad_name 
+ad_name
 adset_name
 campaign_id
 date_start
@@ -1514,7 +1503,7 @@ facebook_ads_to_redshift.py
 v18.09
 - guides/github-to-redshift.md
 issue_comments
-pull_requests 
+pull_requests
 github_to_redshift.py
 - guides/google-analytics-to-redshift.md
 v4
@@ -1616,3 +1605,10 @@ mongo_to_redshift.py
  - guides/airflow-databricks.md
 parameterizing
 granularly
+AzureContainerInstancesOperator
+ci\_conn\_id
+DockerHub
+memory\_in\_gb
+parsing_processes
+max_threads
+ConnType
