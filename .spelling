@@ -1606,9 +1606,14 @@ mongo_to_redshift.py
 parameterizing
 granularly
 AzureContainerInstancesOperator
+AzureDataExplorerQueryOperator
 ci\_conn\_id
 DockerHub
 memory\_in\_gb
 parsing_processes
 max_threads
 ConnType
+auth_method
+AzureContainerInstanceHook
+Covid-19
+david-astro
