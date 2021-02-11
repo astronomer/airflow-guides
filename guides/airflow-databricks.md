@@ -29,7 +29,8 @@ There are currently two operators in the Databricks provider package:
 - The `DatabricksSubmitRunOperator` makes use of the Databricks [Runs Submit API Endpoint](https://docs.databricks.com/dev-tools/api/latest/jobs.html#runs-submit) and submits a new Spark job run to Databricks.
 - The `DatabricksRunNowOperator` makes use of the Databricks [Run Now API Endpoint](https://docs.databricks.com/dev-tools/api/latest/jobs.html#run-now) and runs an existing Spark job.
 
-The `DatabricksRunNowOperator` should be used when you have an existing job defined in your Databricks account that you want to trigger using Airflow. The `DatabricksSubmitRunOperator` does not require any existing infrastructure to be configured in Databricks; it will launch a new cluster that you define for the operator, and then run a provided Spark job before terminating the cluster upon completion.
+The `DatabricksRunNowOperator` should be used when you have an existing job defined in your Databricks workspace that you want to trigger using Airflow. The `DatabricksSubmitRunOperator` should be used if you want to manage the definition of your Databricks job and its cluster configuration within Airflow. Both operators allow you to run the job on a Databricks General Purpose cluster you have already created or on a separate Job Cluster that is created for the job and terminated upon the job’s completion. 
+
 
 Both operators are thoroughly documented in the [provider code](https://github.com/apache/airflow/blob/master/airflow/providers/databricks/operators/databricks.py); we recommend reading through the doc strings on both operators to get familiar with them.
 
@@ -53,7 +54,7 @@ Note that it is also possible to use your login credentials to authenticate, alt
 
 In order to use the `DatabricksRunNowOperator` you must have a job already defined in your Databricks workspace. If you are new to creating jobs on Databricks, [this guide](https://docs.databricks.com/jobs.html) walks through all the basics.
 
-To follow the example DAG below, you will want to create a job that has a cluster attached, and has a parameterized notebook as a task. For more information on parameterizing a notebook, see [this post](https://forums.databricks.com/questions/176/how-do-i-pass-argumentsvariables-to-notebooks.html).
+To follow the example DAG below, you will want to create a job that has a cluster attached, and has a parameterized notebook as a task. For more information on parameterizing a notebook, see [this page](https://docs.databricks.com/notebooks/widgets.html).
 
 Once you have created a job, you should be able to see it in the Databricks UI Jobs tab like this:
 
@@ -122,17 +123,17 @@ For the `DatabricksSubmitRunOperator`, we need to provide parameters for the clu
 
 We also need to provide the task that will be run. In this example we provide the `notebook_task`, which is the path to the Databricks notebook we want to run. Note that this could alternatively be a Spark JAR task, Spark Python task, or Spark submit task, which would be defined using the `spark_jar_task`, `spark_python_test`, or `spark_submit_task` parameters respectively. The operator will look for one of these four options to be defined.
 
-For the `DatabricksRunNowOperator`, we only need to provide the `job_id` for the job we want to submit, which you can find on the Jobs tab of your Databricks account as shown in the screenshot above. However, you can also provide `notebook_params`, `python_params` or `spark_submit_params` as needed for your job. In this case we have parameterized our notebook to take in a `Variable` integer parameter, and have passed in '5' for this example.
+For the `DatabricksRunNowOperator`, we only need to provide the `job_id` for the job we want to submit, since the job parameters should already be configured in Databricks. You can find on the `job_id` on the Jobs tab of your Databricks account as shown in the screenshot above. However, you can also provide `notebook_params`, `python_params` or `spark_submit_params` as needed for your job. In this case we have parameterized our notebook to take in a `Variable` integer parameter, and have passed in '5' for this example.
 
 ### Error Handling
 
 When using either of these operators, any failures in submitting the job, starting or accessing the cluster, or connecting with the Databricks API, will propagate to a failure of the Airflow task and error messages will be shown in the logs.
 
-If there is a failure in the job itself, like in one of the notebooks in this example, that failure will also propagate to a failure of the Airflow task. However, in that case the error message may not be shown in the logs. For example, if we set up the notebook in Job ID 5 in the example above to have a bug in it, we get a failure in the tasks and the Airflow task log looks something like this:
+If there is a failure in the job itself, like in one of the notebooks in this example, that failure will also propagate to a failure of the Airflow task. In that case the error message may not be shown in the Airflow logs, but the logs should include a URL link to the Databricks job status which will include errors, print statements, etc. For example, if we set up the notebook in Job ID 5 in the example above to have a bug in it, we get a failure in the task and the Airflow task log looks something like this:
 
 ![Error Log Example](https://assets2.astronomer.io/main/guides/databricks-tutorial/databricks_failure_airflow_log.png)
 
-Print statements in the notebook will also not propagate through to the Airflow logs.
+In the case above we could click on the URL link to get to the Datatbricks log in order to debug the issue.
 
 ## Where to Go From Here
 
