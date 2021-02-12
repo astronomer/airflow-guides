@@ -127,9 +127,9 @@ For both operators we need to provide the `databricks_conn_id` and necessary par
 
 For the `DatabricksSubmitRunOperator`, we need to provide parameters for the cluster that will be spun up (`new_cluster`). This should include, at a minimum: 
 
-* Spark version
-* Number of workers
-* Node type ID 
+- Spark version
+- Number of workers
+- Node type ID 
 
 These can be defined more granularly as needed. For more information on what Spark version runtimes are available, see the [Databricks documentation](https://docs.databricks.com/dev-tools/api/latest/index.html#runtime-version-strings).
 
