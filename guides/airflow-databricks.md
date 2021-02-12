@@ -18,9 +18,15 @@ Astronomer has many customers who use Databricks to run jobs as part of complex 
 
 The Databricks provider package includes many hooks and operators that allow users to accomplish most common Databricks-related use cases without writing a ton of code.
 
+> **Note:** In Airflow 2.0, provider packages are separate from the core of Airflow. If you are running 2.0, you may need to install the `apache-airflow-providers-databricks` provider package to use the hooks, operators, and connections described here. In an Astronomer project this can be accomplished by adding the packages to your `requirements.txt` file. To learn more, read [Airflow Docs on Provider Packages](https://airflow.apache.org/docs/apache-airflow-providers/index.html).
+
 ### Hooks
 
-Using the [Databricks hook](https://github.com/apache/airflow/blob/master/airflow/providers/databricks/hooks/databricks.py) is the best way to interact with a Databricks cluster or job from Airflow. The hook has methods to submit and run jobs to the Databricks REST API, which are used by the operators described below. There are also additional methods users can leverage to get information about runs or jobs, cancel, start, or terminate a cluster, and install and uninstall libraries on a cluster.
+Using the [Databricks hook](https://github.com/apache/airflow/blob/master/airflow/providers/databricks/hooks/databricks.py) is the best way to interact with a Databricks cluster or job from Airflow. The hook has methods to submit and run jobs to the Databricks REST API, which are used by the operators described below. There are also additional methods users can leverage to:
+
+- Get information about runs or jobs
+- Cancel, start, or terminate a cluster
+- Install and uninstall libraries on a cluster
 
 ### Operators
 
