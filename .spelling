@@ -1613,3 +1613,6 @@ anonymized
 marketo_to_redshift.py
  - guides/mongo-to-redshift.md
 mongo_to_redshift.py
+ - guides/airflow-databricks.md
+parameterizing
+granularly
