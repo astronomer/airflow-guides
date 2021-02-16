@@ -124,7 +124,7 @@ This means a few things:
     *   Memory allocation
     *   Service accounts
     *   Airflow image
-
+> **Note:** The Kubernetes Executor is available on Astronomer and does not require that you have your own Kubernetes environment. To try it out, [get in touch with us](https://www.astronomer.io/get-astronomer).
 **Scale to Near-Zero**
 
 With the Local and Celery Executors, a deployment whose DAGs run once a day will operate with a fixed set of resources for the full 24 hours - only 1 hour of which actually puts those resources to use. That's 23 hours of resources you're paying for but don't deliver.
