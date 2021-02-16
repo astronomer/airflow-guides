@@ -127,7 +127,7 @@ This means a few things:
     *   Service accounts
     *   Airflow image
 
-> Note: The Kubernetes Executor is available on Astronomer. If you want to experiment with the KubernetesExecutor, [start a free trial](https://www.astronomer.io/trial/).
+> **Note:** The Kubernetes Executor is available on Astronomer and does not require that you have your own Kubernetes environment. To try it out, [get in touch with us](https://www.astronomer.io/get-astronomer).
 
 **Scale to Near-Zero**
 
