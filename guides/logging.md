@@ -153,7 +153,7 @@ Configuring logging is done through both `env` variables and setting up a new `l
 
 - Copy the entire contents of `airflow_local_settings.py` from the `config_templates` directory into `log_config.py`. Change the variable name called `DEFAULT_LOGGING_CONFIG` to `LOGGING_CONFIG`.
 
-- Inside `airflow.cfg`, locate the environmental variable called `LOGGING_CONFIG_CLASS`, inside the Airflow Core settings. Change this to reflect the path to your new `log_config,py` file. In most cases, this will be as such, but adapt to your own needs:
+- Inside `airflow.cfg`, locate the environmental variable called `LOGGING_CONFIG_CLASS`, inside the Airflow Core settings. Change this to reflect the path to your new `log_config.py` file. In most cases, this will be as such, but adapt to your own needs:
 
 ```python
  LOGGING_CONFIG_CLASS = airflow.config.log_config.LOGGING_CONFIG
