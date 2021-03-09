@@ -15,7 +15,7 @@ While Kedro is an excellent option for data engineers and data scientists lookin
 
 ## The Plugin
 
-Our team at Astronomer has teamed up with the Kedro team to extend the [`kedro-airflow`](https://github.com/quantumblacklabs/kedro-airflow) plugin to accommodate a significantly improved developer experience. With this plugin, you can translate your Kedro pipeline into a clean, legible, and well-structured Apache Airflow DAG with one simple command:
+In close partnership with the team at Kedro, we've recently extended the [`kedro-airflow`](https://github.com/quantumblacklabs/kedro-airflow) plugin to accommodate a significantly improved developer experience. With this plugin, you can translate your Kedro pipeline into a clean, legible, and well-structured Apache Airflow DAG with one simple command:
 
 ```bash
 kedro airflow create
