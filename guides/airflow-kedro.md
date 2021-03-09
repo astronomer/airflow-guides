@@ -1,6 +1,6 @@
 ---
 title: "Deploying Kedro Pipelines to Apache Airflow"
-description: "How to use the kedro-airflow plugin to smoothly change your Kedro pipelines into Apache Airflow DAGs and deploy them to a production environment."
+description: "How to use the kedro-airflow plugin to change your Kedro pipelines into Apache Airflow DAGs and deploy them to a production environment."
 date: 2021-01-28T00:00:00.000Z
 slug: "airflow-kedro"
 heroImagePath: null
