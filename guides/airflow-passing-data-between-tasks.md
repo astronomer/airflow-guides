@@ -18,17 +18,17 @@ Before we dive into the specifics, there are a couple of high-level concepts tha
 
 ### Ensure Idempotency
 
-An important concept for any data pipeline, including an Airflow DAG, is [idempotency](https://en.wikipedia.org/wiki/Idempotence). This is the property whereby an operation can be applied multiple times without changing the result. We often hear about this concept as it applies to your entire DAG; i.e. if you execute the same DAGRun multiple times, you will get the same result. However, this concept also applies to tasks within your DAG; you can imagine that if every task in your DAG is idempotent, your full DAG will be idempotent as well. 
+An important concept for any data pipeline, including an Airflow DAG, is [idempotency](https://en.wikipedia.org/wiki/Idempotence). This is the property whereby an operation can be applied multiple times without changing the result. We often hear about this concept as it applies to your entire DAG; if you execute the same DAGRun multiple times, you will get the same result. However, this concept also applies to tasks within your DAG; if every task in your DAG is idempotent, your full DAG will be idempotent as well. 
 
 When designing a DAG that passes data between tasks, it is important to ensure that each task is idempotent. This will help you recover and ensure no data is lost should you have any failures.
 
-### Keep in Mind the Size of Your Data
+### Consider the Size of Your Data
 
-Knowing the size of the data you are passing between Airflow tasks is important when deciding which implementation method to use. As we'll describe in detail below, XComs are one method of passing data between task, but they are only appropriate for small amounts of data. Large data sets will require a method making use of intermediate storage and possible utilizing an external processing framework.
+Knowing the size of the data you are passing between Airflow tasks is important when deciding which implementation method to use. As we'll describe in detail below, XComs are one method of passing data between task, but they are only appropriate for small amounts of data. Large data sets will require a method making use of intermediate storage and possibly utilizing an external processing framework.
 
 ## XCom
 
-The first method for passing data between Airflow tasks is to use XComs. XComs are an important feature of Airflow when it comes to sharing task data, so we'll talk about them in depth here.
+The first method for passing data between Airflow tasks is to use XCom, which is a key Airflow feature for sharing task data.
 
 ### What is XCom
 
