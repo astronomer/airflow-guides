@@ -32,9 +32,9 @@ The first method for passing data between Airflow tasks is to use XCom, which is
 
 ### What is XCom
 
-[XCom](https://airflow.apache.org/docs/apache-airflow/stable/concepts.html?highlight=xcom#concepts-xcom) is short for cross-communication, and is a native feature within Airflow. XComs allow tasks to exchange task metadata or small amounts of data, and are defined by a key, value, and timestamp. 
+[XCom](https://airflow.apache.org/docs/apache-airflow/stable/concepts.html?highlight=xcom#concepts-xcom) (short for cross-communication) is a native feature within Airflow. XComs allow tasks to exchange task metadata or small amounts of data. They are defined by a key, value, and timestamp. 
 
-XComs can be "pushed", meaning sent by a task, or "pulled", meaning received by a task. When an XCom is pushed, it is stored in Airflow's metadata database and is made available to all other tasks. Any time a task returns a value (e.g. if your Python callable for your PythonOperator has a return), that value will automatically be pushed to XCom. Tasks can also be configured to push XComs by calling the `xcom_push()` method. Similarly, `xcom_pull()` can be used in a task to receive an XCom. 
+XComs can be "pushed", meaning sent by a task, or "pulled", meaning received by a task. When an XCom is pushed, it is stored in Airflow's metadata database and made available to all other tasks. Any time a task returns a value (e.g. if your Python callable for your PythonOperator has a return), that value will automatically be pushed to XCom. Tasks can also be configured to push XComs by calling the `xcom_push()` method. Similarly, `xcom_pull()` can be used in a task to receive an XCom. 
 
 You can view your XComs in the Airflow UI by navigating to Admin → XComs. You should see something like this:
 
@@ -44,7 +44,9 @@ You can view your XComs in the Airflow UI by navigating to Admin → XComs. You 
 
 XComs should be used to pass **small** amounts of data between tasks. Things like task metadata, dates, model accuracy, or single value query results are all ideal data to use with XCom. 
 
-While there is nothing stopping you from passing small data sets with XCom, be very careful when doing so. This is not what XCom was designed for, and using it to pass data like pandas dataframes can degrade the performance of your DAGs and take up storage in the metadata database. XCom should definitely not be used for passing large data sets between tasks. The limit for the size of the XCom is determined by which metadata database you are using:
+While there is nothing stopping you from passing small data sets with XCom, be very careful when doing so. This is not what XCom was designed for, and using it to pass data like pandas dataframes can degrade the performance of your DAGs and take up storage in the metadata database. 
+
+XCom cannot be used for passing large data sets between tasks. The limit for the size of the XCom is determined by which metadata database you are using:
 
 - Postgres: 1 Gb
 - SQLite: 2 Gb
@@ -54,11 +56,11 @@ You can see that these limits aren't very big. And even if you think your data m
 
 ### XCom Backends
 
-It is possible to use a different service (such as S3) to store XComs and change the serialization and deserialization behavior of tasks results in XCom by setting up a [custom XCom backend](https://airflow.apache.org/docs/apache-airflow/stable/concepts.html?highlight=xcom#custom-xcom-backend). This is a large concept in its own right, so we won't go into too much detail here, but you can start by reading more about it in the linked Airflow documentation.
+It is possible to use a different service (such as S3) to store XComs and change the serialization and deserialization behavior of tasks results in XCom by setting up a custom XCom backend. This is a concept in its own right, so we won't go into too much detail here, but you can start by reading more about it in the [Apache Airflow documentation](https://airflow.apache.org/docs/apache-airflow/stable/concepts.html?highlight=xcom#custom-xcom-backend).
 
 ### Example DAGs
 
-In this section, we'll show a couple of example DAGs that use XCom to pass data between tasks. For this example, we're interested in analyzing the increase in total number of Covid tests for the current day for a particular state. To implement this use case, we will have one task that makes a request to the [Covid Tracking API](https://covidtracking.com/data/api) and pulls the `totalTestResultsIncrease` parameter from the results; we will then have another task that takes that result and continues with some sort of analysis. This is a valid use case for XCom, because the data being passed between the tasks is a single integer.
+In this section, we'll show a couple of example DAGs that use XCom to pass data between tasks. For this example, we're interested in analyzing the increase in total number of Covid tests for the current day for a particular state. To implement this use case, we will have one task that makes a request to the [Covid Tracking API](https://covidtracking.com/data/api) and pulls the `totalTestResultsIncrease` parameter from the results. We will then use another task to take that result and complete some sort of analysis. This is a valid use case for XCom, because the data being passed between the tasks is a single integer.
 
 ```python
 from airflow import DAG
@@ -121,21 +123,21 @@ with DAG('xcom_dag',
     opr_get_covid_data >> opr_analyze_testing_data
 ```
 
-In this DAG we have two PythonOperators which share data using the `xcom_push` and `xcom_pull` functions. Note that in the `get_testing_increase` function we have used the `xcom_push` method so that we could specify the `key` name. We could have also simply had the function return the `testing_increase` value, because any value returned by an operator in Airflow will automatically be pushed to XCom; if we had used this method, the XCom key would be "returned_value". 
+In this DAG we have two PythonOperators which share data using the `xcom_push` and `xcom_pull` functions. Note that in the `get_testing_increase` function, we used the `xcom_push` method so that we could specify the `key` name. Alternatively, we could have made the function return the `testing_increase` value, because any value returned by an operator in Airflow will automatically be pushed to XCom; if we had used this method, the XCom key would be "returned_value". 
 
 For the `xcom_pull` call in the `analyze_testing_increases` function, we specify the `key` and `task_ids` associated with the XCom we want to retrieve. Note that this allows you to pull any XCom value (or multiple values) at any time into a task; it does not need to be from the task immediately prior as shown in this example
 
-If we run this DAG and then navigate to the XComs page in the UI, we will see a new row has been added for our `get_testing_increase_data_wa` task with the key `testing_increase` and Value returned from the API.
+If we run this DAG and then go to the XComs page in the Airflow UI, we see that a new row has been added for our `get_testing_increase_data_wa` task with the key `testing_increase` and Value returned from the API.
 
 ![Example XCom](https://assets2.astronomer.io/main/guides/xcom/example_xcom.png)
 
-And in the logs for the `analyze_data` task, we can see the value from the prior task was printed, meaning the value was successfully retrieved from XCom.
+In the logs for the `analyze_data` task, we can see the value from the prior task was printed, meaning the value was successfully retrieved from XCom.
 
 ![Example XCom Log](https://assets2.astronomer.io/main/guides/xcom/example_xcom_log.png)
 
 ## TaskFlow API
 
-Another way to implement this use case is to make use of the [TaskFlow API](https://airflow.apache.org/docs/apache-airflow/stable/tutorial_taskflow_api.html) that is a new feature released with Airflow 2.0. With the TaskFlow API, returned values are pushed to XCom as they would be normally, but XCom values can be pulled simply by adding the key as an input to the function as shown in the example DAG below.
+Another way to implement this use case is to use the [TaskFlow API](https://airflow.apache.org/docs/apache-airflow/stable/tutorial_taskflow_api.html) that was released with Airflow 2.0. With the TaskFlow API, returned values are pushed to XCom as usual, but XCom values can be pulled simply by adding the key as an input to the function as shown in the following DAG:
 
 ```python
 from airflow.decorators import dag, task
@@ -181,7 +183,7 @@ This DAG is functionally the same as the first one, but thanks to the TaskFlow A
 
 As mentioned above, XCom can be a great option for sharing data between tasks because it doesn't rely on any tools external to Airflow itself. However, it is only designed to be used for very small amounts of data. What if the data you need to pass is a little bit larger, for example a small dataframe?
 
-The best way to manage this use case is to use intermediary data storage. This means saving your data to some system external to Airflow at the end of one task, and reading it in from that system in the next task. Commonly this is done using cloud file storage such as S3, GCS, Azure Blob Storage, etc., but it could also be done by loading the data in either a temporary or persistent table in a database.
+The best way to manage this use case is to use intermediary data storage. This means saving your data to some system external to Airflow at the end of one task, then reading it in from that system in the next task. This is commonly done using cloud file storage such as S3, GCS, Azure Blob Storage, etc., but it could also be done by loading the data in either a temporary or persistent table in a database.
 
 We'll note here that while this is a great way to pass data that is too large to be managed with XCom, you should still exercise caution. Airflow is meant to be an orchestrator, not an execution framework. If your data is very large, it is probably a good idea to complete any processing using a framework like Spark or compute-optimized data warehouses like Snowflake or dbt.
 
