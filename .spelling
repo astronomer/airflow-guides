@@ -1618,3 +1618,7 @@ mongo_to_redshift.py
 parameterizing
 granularly
 parsing_processes
+ - guides/airflow-passing-data-between-tasks.md
+deserialization
+returned_value
+dbt
