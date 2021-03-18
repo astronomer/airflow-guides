@@ -6,7 +6,7 @@ slug: "airflow-azure-data-factory-integration"
 tags: ["Integrations", "Azure"]
 ---
 
-> Note: All code in this guide can be found in [this Github repo](https://github.com/astronomer/airflow-azure-data-factory-tutorial).
+> Note: All code in this guide can be found in [this Github repo](https://github.com/astronomer/azure-operator-tutorials).
 
 ## Overview
 
@@ -29,20 +29,16 @@ Operators and hooks are the main building blocks of Airflow, and both can be use
 
 ### Hooks
 
-We recommend using Airflow hooks when interacting with any external system. Hooks are used as a way to abstract the methods you would use against a source system. Airflow does not currently have built-in hooks for ADF, but they have been developed and can be found on [Github](https://github.com/flvndh/airflow/blob/issue/10995/azure-data-factory/airflow/providers/microsoft/azure/hooks/azure_data_factory.py). 
+We recommend using Airflow hooks when interacting with any external system. Hooks are used as a way to abstract the methods you would use against a source system. The Microsoft Azure Airflow provider has an [Azure Data Factory hook](https://github.com/apache/airflow/blob/master/airflow/providers/microsoft/azure/hooks/azure_data_factory.py) that is the easiest way to interact with ADF from your Airflow DAG. 
 
-
-It is likely that these will be merged into the Airflow project soon, but in the meantime, you can always import them separately, which is what we do in the example below. 
-
-These hooks build off of the `azure-mgmt-datafactory` Python package; since this is used under the hood, [this](https://docs.microsoft.com/en-us/azure/data-factory/quickstart-create-data-factory-python) resource on interacting with ADF using Python could be helpful for determining parameter names, etc.
-
+This hook builds off of the `azure-mgmt-datafactory` Python package; since this is used under the hood, [this](https://docs.microsoft.com/en-us/azure/data-factory/quickstart-create-data-factory-python) resource on interacting with ADF using Python could be helpful for determining parameter names, etc.
 
 It is worth noting that you could also use the ADF API directly to run a pipeline or perform some other operations. Even though we don't recommend this method over using hooks, it is still helpful to understand how the [API](https://docs.microsoft.com/en-us/rest/api/datafactory/v1/data-factory-data-factory) works when developing a DAG that interacts with ADF since the API is used under the hood.
 
 
 ### Operators
 
-There is currently no published Azure Data Factory operator, although given that hooks have been developed we expect that an operator will not be far behind. You could make your own ADF operator that builds off of the hooks mentioned above. Or you can use the PythonOperator and build your own function that suits your use case; this is the method we show in the example below.
+There is currently no published Azure Data Factory operator, although given that a hook has been developed we expect that an operator will not be far behind. You could make your own ADF operator that builds off of the hook mentioned above. Or you can use the PythonOperator and build your own function that suits your use case; this is the method we show in the example below.
 
 ## Example
 
@@ -98,13 +94,15 @@ Additional detail on requirements for interacting with Azure Data Factory using 
 
 Now that we have an existing ADF job that should be runnable externally to Azure, we will create a DAG that will execute that pipeline with parameters we pass in. Let's say in this scenario we want to create a DAG that will execute the pipeline described above for yesterday's date, so that we grab recent Covid data and drop it in our file storage.
 
-As mentioned above, we will use the ADF hooks already developed with the PythonOperator. The DAG code is straight forward:
+> **Note:** In Airflow 2.0, provider packages are separate from the core of Airflow. For this example, you will need at least version 1.2.0 of the `apache-airflow-providers-microsoft-azure` package. If you are running Airflow 2.0 with Astronomer, the `apache-airflow-providers-microsoft-azure` package is already included in our Airflow Certified Image; if you are not using Astronomer you may need to install this package separately to use the hooks and connections described here. 
+
+As mentioned above, we will use the ADF hook with the PythonOperator. The DAG code is straight forward:
 
 ```python
 from airflow import DAG
 from datetime import datetime, timedelta
 from airflow.operators.python_operator import PythonOperator
-from hooks.azure_data_factory_hook import AzureDataFactoryHook
+from airflow.providers.microsoft.azure.hooks.azure_data_factory import AzureDataFactoryHook
 
 azure_data_factory_conn = 'azure_data_factory_conn'
 
