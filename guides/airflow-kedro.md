@@ -28,7 +28,7 @@ This makes for a super clean experience for anyone looking to deploy their Kedro
 To use the plugin, you'll need the following running on your machine or a fresh virtual environment:
 
 - [The Astronomer CLI](https://www.astronomer.io/docs/cloud/stable/develop/cli-quickstart#step-1-install-the-astronomer-cli)
-- [Kedro](https://www.astronomer.io/docs/cloud/stable/develop/cli-quickstart#step-1-install-the-astronomer-cli)
+- [Kedro](https://github.com/quantumblacklabs/kedro)
 - [The `kedro-airflow` Plugin](https://github.com/quantumblacklabs/kedro-airflow)
 - [Docker](https://docs.docker.com/docker-for-mac/install/)
 
@@ -38,7 +38,7 @@ We've added some additional functionality to the plugin that makes for a great i
 
 ### Create an Astro-Kedro project
 
-1. `kedro new --starter git+https://github.com/quantumblacklabs/kedro-starters.git --checkout master --directory astro-iris` to build your starter directory. Note that in Kedro 0.17.1 and beyond this command will be simplified to `kedro new --starter astro-iris`.
+1. `kedro new --starter astro-iris` to build your starter directory.
 2. `cd <kedro-project-directory>`
 3. `kedro install`
 4. `kedro package`
@@ -51,23 +51,23 @@ We've added some additional functionality to the plugin that makes for a great i
 
     ```yaml
     example_train_x:
-    type: pickle.PickleDataSet
-    filepath: data/05_model_input/example_train_x.pkl
+        type: pickle.PickleDataSet
+        filepath: data/05_model_input/example_train_x.pkl
     example_train_y:
-    type: pickle.PickleDataSet
-    filepath: data/05_model_input/example_train_y.pkl
+        type: pickle.PickleDataSet
+        filepath: data/05_model_input/example_train_y.pkl
     example_test_x:
-    type: pickle.PickleDataSet
-    filepath: data/05_model_input/example_test_x.pkl
+        type: pickle.PickleDataSet
+        filepath: data/05_model_input/example_test_x.pkl
     example_test_y:
-    type: pickle.PickleDataSet
-    filepath: data/05_model_input/example_test_y.pkl
+        type: pickle.PickleDataSet
+        filepath: data/05_model_input/example_test_y.pkl
     example_model:
-    type: pickle.PickleDataSet
-    filepath: data/06_models/example_model.pkl
+        type: pickle.PickleDataSet
+        filepath: data/06_models/example_model.pkl
     example_predictions:
-    type: pickle.PickleDataSet
-    filepath: data/07_model_output/example_predictions.pkl`
+        type: pickle.PickleDataSet
+        filepath: data/07_model_output/example_predictions.pkl`
     ```
 
 4. Make sure you have the `kedro-airflow` plugin installed, then run `pip install kedro-airflow`
