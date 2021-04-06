@@ -32,6 +32,9 @@ This walkthrough assumes that you have:
 
 After setting up the project, you will see a `great_expectations` directory which contains several sub-directories, as well as the `great_expectations.yml` configuration file. Once that’s done, you can move on to invoking validation from Airflow, as described in the next section.
 
+
+> Note: If you are running Airflow 2.0 and beyond, you will need to also change the value of `enable_xcom_pickling` to `true` in your airflow.cfg.
+
 ## Using the Great Expectations Airflow Operator
 
 The [Great Expectations Airflow operator](https://github.com/great-expectations/airflow-provider-great-expectations) provides a convenient method for loading an existing Expectation Suite and using it to validate a batch of data. You can point the operator to any location by setting the `data_context_root_dir` parameter-- more that below. In order to use the operator in your DAG, follow these steps:
