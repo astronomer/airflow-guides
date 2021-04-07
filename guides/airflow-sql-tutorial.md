@@ -54,7 +54,7 @@ Airflow has many operators available out of the box that make working with SQL e
 
 ### Action Operators
 
-In Airflow, action operators execute a function. You can use action operators (or hooks if no operator is availble) to execute a SQL query against a database. Commonly used SQL-related action operators include:
+In Airflow, action operators execute a function. You can use action operators (or hooks if no operator is available) to execute a SQL query against a database. Commonly used SQL-related action operators include:
 
 - [PostgresOperator](https://registry.astronomer.io/providers/postgres/modules/postgresoperator)
 - [MssqlHook](https://registry.astronomer.io/providers/mssql/modules/mssqlhook)

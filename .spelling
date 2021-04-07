@@ -1437,6 +1437,11 @@ parameterize
 SnowflakeOperator
 param
 S3toSnowflakeTransferOperator
+MssqlHook
+GCSToBigQueryOperator
+PostgresToGCSOperator
+BaseSQLToGCSOperator
+VerticaToMySqlOperator
 - guides/airflow-talend-integration.md
 www.talend.com
 how-to-deploy-talend-jobs-as-docker-images-to-amazon-azure-and-google-cloud-registries
