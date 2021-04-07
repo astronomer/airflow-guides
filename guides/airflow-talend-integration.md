@@ -41,7 +41,7 @@ Each method has pros and cons, and the method you choose will likely depend on y
 
 ## Executing Talend Jobs Using the Cloud API
 
-The first way of executing Talend jobs from Airflow is using the Talend Cloud API via the SimpleHttpOperator in Airflow. This method is ideal if you have Talend Cloud jobs that do not have downstream dependencies.
+The first way of executing Talend jobs from Airflow is using the Talend Cloud API via the [SimpleHttpOperator](https://registry.astronomer.io/providers/http/modules/simplehttpoperator) in Airflow. This method is ideal if you have Talend Cloud jobs that do not have downstream dependencies.
 
 Below we will show how to configure your Talend Cloud account to work with the API, and an example DAG that will execute a workflow. If you are unfamiliar with the Talend Cloud API, the documentation at these links are helpful: 
 
@@ -123,7 +123,7 @@ Finally, note that because the API call will simply trigger the job, the Airflow
 
 ## Executing Talend Jobs with KubernetesPodOperator
 
-The second way to execute Talend jobs with Airflow is to containerize them and execute them from Airflow using the KubernetesPodOperator. This is a good option if you are using Talend studio, and if you have tasks that are dependent on your Talend jobs completing first.
+The second way to execute Talend jobs with Airflow is to containerize them and execute them from Airflow using the [KubernetesPodOperator](https://registry.astronomer.io/providers/kubernetes/modules/kubernetespodoperator). This is a good option if you are using Talend studio, and if you have tasks that are dependent on your Talend jobs completing first.
 
 Here we'll show how to containerize an existing Talend job, and then execute some containerized jobs with dependencies using the KubernetesPodOperator in Airflow.
 

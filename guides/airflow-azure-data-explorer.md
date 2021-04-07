@@ -12,7 +12,7 @@ tags: ["Integrations", "Azure", "DAGs"]
 
 [Azure Data Explorer](https://azure.microsoft.com/en-us/services/data-explorer/) (ADX) is a managed data analytics service used for performing real-time analysis of large volumes of streaming data. It's particularly useful for IoT applications, big data logging platforms, and SaaS applications. 
 
-Using Airflow's built-in Azure Data Explorer [Hook](http://airflow.apache.org/docs/apache-airflow-providers-microsoft-azure/stable/_api/airflow/providers/microsoft/azure/hooks/adx/index.html) and [Operator](http://airflow.apache.org/docs/apache-airflow-providers-microsoft-azure/stable/_api/airflow/providers/microsoft/azure/operators/adx/index.html), you can easily integrate ADX queries into your DAGs. In this guide, we'll describe how to make your ADX cluster to work with Airflow and walk through an example DAG that runs a query against a database in that cluster. 
+Using Airflow's built-in Azure Data Explorer [Hook](https://registry.astronomer.io/providers/microsoft-azure/modules/azuredataexplorerhook) and [Operator](https://registry.astronomer.io/providers/microsoft-azure/modules/azuredataexplorerqueryoperator), you can easily integrate ADX queries into your DAGs. In this guide, we'll describe how to make your ADX cluster to work with Airflow and walk through an example DAG that runs a query against a database in that cluster. 
 
 If you don't already have an ADX cluster running and want to follow along with this example, you can find instructions for creating a cluster and loading it with some demo data in [Microsoft's documentation](https://docs.microsoft.com/en-us/azure/data-explorer/create-cluster-database-portal). 
 
@@ -38,7 +38,7 @@ The required pieces for the connection are:
 - **Password:** your client secret
 - **Extra:** should include at least "tenant" with your tenant ID, and "auth_method" with your chosen authentication method. Based on the auth method, you may also need to specify "certificate" and/or "thumbprint" parameters.
 
-For more information on setting up this connection, including available authentication methods, see the [ADX hook documentation](https://github.com/apache/airflow/blob/master/airflow/providers/microsoft/azure/hooks/adx.py).
+For more information on setting up this connection, including available authentication methods, see the [ADX hook documentation](https://registry.astronomer.io/providers/microsoft-azure/modules/azuredataexplorerhook).
 
 Next, we define our DAG:
 
