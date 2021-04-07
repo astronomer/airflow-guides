@@ -66,7 +66,7 @@ In Airflow, action operators execute a function. You can use action operators (o
 
 Transfer operators move data from a source to a destination. For SQL-related tasks, they can often be used in the 'Extract-Load' portion of an ELT pipeline and can significantly reduce the amount of code you need to write. Some examples are:
 
-- [S3ToSnowflakeTransferOperator](https://registry.astronomer.io/providers/snowflake/modules/s3tosnowflakeoperator_)
+- [S3ToSnowflakeTransferOperator](https://registry.astronomer.io/providers/snowflake/modules/s3tosnowflakeoperator)
 - [S3toRedshiftOperator](https://registry.astronomer.io/providers/amazon/modules/s3toredshiftoperator)
 - [GCSToBigQueryOperator](https://registry.astronomer.io/providers/google/modules/gcstobigqueryoperator)
 - [PostgresToGCSOperator](https://registry.astronomer.io/providers/google/modules/postgrestogcsoperator)
