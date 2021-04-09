@@ -12,7 +12,7 @@ tags: ["Plugins", "XCom"]
 
 In December 2020, the Apache Airflow project took a huge step forward with the release of [Airflow 2.0](https://www.astronomer.io/blog/introducing-airflow-2-0). One of the main new features in this release was the [TaskFlow API](https://airflow.apache.org/docs/apache-airflow/stable/concepts.html#taskflow-api), which was introduced to solve the challenge of explicitly passing messages between Airflow tasks. The TaskFlow API abstracts the task and dependency management layer away from users, which greatly improves the experience of working with Xcoms.
 
-One of the features of the TaskFlow API that increases the flexibility of XComs is support for a [custom XCom backend](https://airflow.apache.org/docs/apache-airflow/stable/concepts.html?highlight=xcom#custom-xcom-backend). This means that rather than store XComs in Airflow's metadata database by default, you can push and pull XComs to and from an external system such as S3, GCS, or HDFS. You can also implement your own serialization / deserialization methods building off of the subclass of `BaseXCom`. 
+One of the features of the TaskFlow API that increases the flexibility of XComs is support for a [custom XCom backend](https://airflow.apache.org/docs/apache-airflow/stable/concepts.html?highlight=xcom#custom-xcom-backend). This means that rather than store XComs in Airflow's metadata database by default, you can push and pull XComs to and from an external system such as S3, GCS, or HDFS. You can also implement your own serialization / deserialization methods to define how XComs are handled. 
 
 This guide discusses the benefits of using an XCom backend, shows an example of implementing an XCom backend with S3, and describes how to set this up if you're running Airflow on the Astronomer platform.
 
@@ -31,7 +31,7 @@ XCom backends provide much more flexibility than you would have using traditiona
 
 This is more ideal for production environments because you can more easily manage what happens to your XComs over time, and you don't need to worry about periodically cleaning up the metadata database with another DAG.
 
-All of this can be great if you want to pass information between your tasks flexibly and sustainably. However, even though a custom XCom backend will allow you to pass more data between your tasks, Airflow is still not designed to be a processing framework. 
+All of this can be great if you want to pass information between your tasks flexibly and sustainably, such as when you are using an operator that returns metadata by default. However, even though a custom XCom backend will allow you to pass more data between your tasks, Airflow is still not designed to be a processing framework. 
 
 XComs were designed to pass *messages* between your tasks, such as metadata or other small amounts of data. If you want to pass large amounts of data between tasks, we recommend using an external processing framework such as Apache Spark, and using Airflow only for orchestration. 
 
@@ -39,7 +39,7 @@ For more information on these concepts, read [Passing Data Between Airflow Tasks
 
 ### Example Use Case: Great Expectations
 
-As a more practical example, using [Great Expectations](https://greatexpectations.io/) with Airflow is an ideal use case for implementing a custom XCom backend. Great Expectations is an open source Python-based data validation framework, and thanks to the [Great Expectations Airflow provider](https://registry.astronomer.io/providers/great-expectations), it integrates seamlessly with Airflow.
+Using [Great Expectations](https://greatexpectations.io/) with Airflow is an ideal use case for implementing a custom XCom backend. Great Expectations is an open source Python-based data validation framework. Thanks to the [Great Expectations Airflow provider](https://registry.astronomer.io/providers/great-expectations), it integrates seamlessly with Airflow.
 
 The `GreatExpectationsOperator` can be used in Airflow DAGs to perform data quality checks before moving to downstream tasks (for more information on using Great Expectations with Airflow, check out our [guide](https://www.astronomer.io/guides/airflow-great-expectations) on the topic). The operator returns various results from the tests that were run on your data. 
 
@@ -55,7 +55,9 @@ In this section, we'll cover the general steps for setting up an XCom backend wi
 
 The first step to setting up a custom XCom backend is to configure the backend you want to use. This guide describes how to set up an S3 backend on AWS, but the process would be similar if you used another service such as Azure blob storage or GCS.
 
-- Create a bucket. In S3, make sure to block public access, enable versioning, and give the bucket a unique name.
+In your S3 account:
+
+1. Create a bucket. In S3, make sure to block public access, enable versioning, and give the bucket a unique name.
 2. Create a policy for your bucket that will allow Airflow to access it. Ensure the policy allows read and write actions over the bucket as shown in the following screenshot:
 
     ![XCom Backend Policy](https://assets2.astronomer.io/main/guides/xcom/xcom_backend_policy.png)
@@ -64,11 +66,11 @@ The first step to setting up a custom XCom backend is to configure the backend y
 
 ### 2. Configure Your Airflow Environment
 
-The next step is configuring your Airflow environment to ensure it can connect to your custom backend. There are many ways you could accomplish this, some of which are more secure and sustainable than others. The end goal here is to define the relevant default connection such that it connects to your custom backend; for this example with S3, this means defining the `AIRFLOW_CONN_AWS_DEFAULT` environment variable, or setting up an `aws_default` connection in the UI. 
+The next step is defining a connection so your Airflow environment can connect to your custom backend. To do so for this example with S3, you can either define the `AIRFLOW_CONN_AWS_DEFAULT` environment variable, or set up an `aws_default` connection in the UI. 
 
 > Note: If Airflow is running in the same environment as your XCom Backend (e.g. Airflow is running in EC2 and your backend is an S3 bucket), you can likely assume a Role rather than having to provide credentials, which is in general more secure.
 
-For this example, we set up the connection in the UI. Using the access credentials from the user generated in the last step of the section above, that looks something like this:
+For this example, we set up the connection in the UI. Using the access credentials from the user generated in the section above, that looks something like this:
 
 ![XCom Backend Connection](https://assets2.astronomer.io/main/guides/xcom/xcom_backend_connection_secret.png)
 
@@ -295,4 +297,4 @@ with DAG(
     ge_batch_kwargs_list_pass >> ge_batch_kwargs_pass >> ge_checkpoint_pass
 ```
 
-Now if we run this DAG, we will see three XCom files in our S3 bucket, one for each operator. With this implementation, we didn't need to enable XCom pickling, can version and access our XCom data easily, and are not filling up the Airflow metadata database, making this a much more sustainable way of using this popular operator.
+When we run this DAG, we will see three XCom files in our S3 bucket, one for each operator. With this implementation, we didn't need to enable XCom pickling, we can version and access our XCom data easily, and we are not filling up the Airflow metadata database, making this a much more sustainable way of using this popular operator.
