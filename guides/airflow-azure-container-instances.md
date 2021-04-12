@@ -16,7 +16,7 @@ tags: ["Integrations", "Azure", "DAGs"]
 
 ### The Azure Container Instances Operator
 
-The easiest way to orchestrate Azure Container Instances with Airflow is to use the [AzureContainerInstancesOperator](https://airflow.apache.org/docs/apache-airflow/stable/_modules/airflow/contrib/operators/azure_container_instances_operator.html). This operator starts a container on ACI, runs the container, and terminates the container when all processes are completed. 
+The easiest way to orchestrate Azure Container Instances with Airflow is to use the [AzureContainerInstancesOperator](https://registry.astronomer.io/providers/microsoft-azure/modules/azurecontainerinstancesoperator). This operator starts a container on ACI, runs the container, and terminates the container when all processes are completed. 
 
 The only prerequisites for using this operator are:
 
@@ -24,7 +24,7 @@ The only prerequisites for using this operator are:
 - An [Azure Service Principle](https://docs.microsoft.com/en-us/azure/active-directory/develop/app-objects-and-service-principals) that has write permissions over that resource group
 - A docker image to use for the container (either publicly or privately available)
 
-This operator can also be used to run existing container instances and make certain updates, including the docker image, environment variables, or commands. Some updates to existing container groups are not possible with the operator, including CPU, memory, and GPU; those updates require deleting the existing container group and recreating it, which can be accomplished using the [AzureContainerInstanceHook](https://github.com/apache/airflow/blob/master/airflow/providers/microsoft/azure/hooks/azure_container_instance.py).
+This operator can also be used to run existing container instances and make certain updates, including the docker image, environment variables, or commands. Some updates to existing container groups are not possible with the operator, including CPU, memory, and GPU; those updates require deleting the existing container group and recreating it, which can be accomplished using the [AzureContainerInstanceHook](https://registry.astronomer.io/providers/microsoft-azure/modules/azurecontainerinstancehook).
 
 ### When to use ACI
 
@@ -35,7 +35,7 @@ If you are not running on [AKS](https://azure.microsoft.com/en-us/services/kuber
 - It's easy to use and requires little setup
 - You can run containers in different regions
 - It's typically the cheapest; since no virtual machines or higher-level services are required, **you only pay for the memory and CPU used by your container group while it is active**
-- Unlike the [DockerOperator](https://airflow.apache.org/docs/apache-airflow/1.10.4/_api/airflow/operators/docker_operator/index.html), it does not require running a container on the host machine
+- Unlike the [DockerOperator](https://registry.astronomer.io/providers/docker/modules/dockeroperator), it does not require running a container on the host machine
 
 With these points in mind, we recommend using ACI with the AzureContainerInstancesOperator for testing or lightweight tasks that don't require scaling. For heavy production workloads, we recommend sticking with AKS and the KubernetesPodOperator.
 

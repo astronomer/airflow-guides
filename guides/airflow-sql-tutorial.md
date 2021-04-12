@@ -54,24 +54,24 @@ Airflow has many operators available out of the box that make working with SQL e
 
 ### Action Operators
 
-In Airflow, action operators execute a function. You can use action operators to execute a SQL query against a database. Commonly used SQL-related action operators include:
+In Airflow, action operators execute a function. You can use action operators (or hooks if no operator is available) to execute a SQL query against a database. Commonly used SQL-related action operators include:
 
-- PostgresOperator
-- MssqlOperator
-- MysqlOperator
-- SnowflakeOperator
-- BigQueryOperator
+- [PostgresOperator](https://registry.astronomer.io/providers/postgres/modules/postgresoperator)
+- [MssqlHook](https://registry.astronomer.io/providers/mssql/modules/mssqlhook)
+- [MysqlOperator](https://registry.astronomer.io/providers/mysql/modules/mysqloperator)
+- [SnowflakeOperator](https://registry.astronomer.io/providers/snowflake/modules/snowflakeoperator)
+- [BigQueryOperator](https://registry.astronomer.io/providers/google/modules/bigqueryexecutequeryoperator)
 
 ### Transfer Operators
 
 Transfer operators move data from a source to a destination. For SQL-related tasks, they can often be used in the 'Extract-Load' portion of an ELT pipeline and can significantly reduce the amount of code you need to write. Some examples are:
 
-- S3ToSnowflakeTransferOperator
-- S3toRedshiftOperator
-- GoogleCloudStorageToBigQueryOperator
-- PostgresToGoogleCloudStorageOperator
-- BaseSQLToGoogleCloudStorageOperator
-- VerticaToMySqlTransfer
+- [S3ToSnowflakeTransferOperator](https://registry.astronomer.io/providers/snowflake/modules/s3tosnowflakeoperator)
+- [S3toRedshiftOperator](https://registry.astronomer.io/providers/amazon/modules/s3toredshiftoperator)
+- [GCSToBigQueryOperator](https://registry.astronomer.io/providers/google/modules/gcstobigqueryoperator)
+- [PostgresToGCSOperator](https://registry.astronomer.io/providers/google/modules/postgrestogcsoperator)
+- [BaseSQLToGCSOperator](https://registry.astronomer.io/providers/google/modules/basesqltogcsoperator)
+- [VerticaToMySqlOperator](https://registry.astronomer.io/providers/mysql/modules/verticatomysqloperator)
 
 ## Examples
 
@@ -79,7 +79,7 @@ With those basic concepts in mind, we'll show a few examples of common SQL use c
 
 ### Example 1 - Executing a Query
 
-In this first example, we use a DAG to execute two simple interdependent queries. To do so we use the [SnowflakeOperator](https://airflow.apache.org/docs/apache-airflow/1.10.14/_api/airflow/contrib/operators/snowflake_operator/index.html). 
+In this first example, we use a DAG to execute two simple interdependent queries. To do so we use the [SnowflakeOperator](https://registry.astronomer.io/providers/snowflake/modules/snowflakeoperator). 
 
 First we need to define our DAG:
 
@@ -220,7 +220,7 @@ WHERE date = {{ params.date }}
 
 Our next example loads data from an external source into a table in our database. We grab data from an API and save it to a flat file on S3, which we then load into Snowflake. 
 
-We use the [S3toSnowflakeTransferOperator](https://github.com/apache/airflow/blob/master/airflow/providers/snowflake/transfers/s3_to_snowflake.py) to limit the code we have to write. 
+We use the [S3toSnowflakeTransferOperator](https://registry.astronomer.io/providers/snowflake/modules/s3tosnowflakeoperator) to limit the code we have to write. 
 
 First, we create a DAG that pulls COVID data from an [API endpoint](https://covidtracking.com/data/api) for California, Colorado, Washington, and Oregon, saves the data to comma-separated values (CSVs) on S3, and loads each of those CSVs to Snowflake using the transfer operator. Here's the DAG code:
 
