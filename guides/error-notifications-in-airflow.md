@@ -214,7 +214,7 @@ with dag:
 ![SlackNotifications](https://assets2.astronomer.io/main/guides/dag_failure_notification.png)
 
 
-Alternatively, a [SlackOperator](https://registry.astronomer.io/providers/slack/modules/slackapipostoperator) can be used.
+Alternatively, a [SlackAPIPostOperator](https://registry.astronomer.io/providers/slack/modules/slackapipostoperator) can be used.
 
 ```python
 t2 = SlackAPIPostOperator(task_id='post_slack_{0}'.format(job['source']),
