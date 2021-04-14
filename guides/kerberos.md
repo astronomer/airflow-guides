@@ -31,7 +31,7 @@ pip install apache-airflow[kerberos]
 
 As far as hook support goes, each hook has to implement the Kerberos ticket renewal to support it.  Most hooks don't have this yet, but Kerberizing a hook isn't particularly difficult.
 
-A few hooks for services that people commonly use Kerberos for like Spark clusters have the support built-in already.  SparkSubmitHook is one that already has Kerberos support.
+A few hooks for services that people commonly use Kerberos for like Spark clusters have the support built-in already.  [SparkSubmitHook](https://registry.astronomer.io/providers/spark/modules/sparksubmithook) is one that already has Kerberos support.
 
 We recommend using built-in hooks with Kerberos support if they work for your use case.  If that's not an option, we recommend, contributing support to a particular hook.  You can also reach out to us for Airflow services work.
 

@@ -11,11 +11,11 @@ tags: ["Kubernetes", "Operators"]
 
 **Note**: This is only for customers currently running Astronomer Enterprise. Support for Astronomer Cloud will be available soon!
 
-Running the KubernetesPodOperator on Airflow 1.9
+Running the [KubernetesPodOperator](https://registry.astronomer.io/providers/kubernetes/modules/kubernetespodoperator) on Airflow 1.9
 
-The KubernetesPodOperator spins up a pod to run a Docker container in. If you are running Airflow on Kubernetes, it is preferable to do this rather than use the DockerOperator.
+The `KubernetesPodOperator` spins up a pod to run a Docker container in. If you are running Airflow on Kubernetes, it is preferable to do this rather than use the [DockerOperator](https://registry.astronomer.io/providers/docker/modules/dockeroperator).
 
-This tutorial is for anyone using Airflow 1.9 and would like to use the KubernetesPodOperator without upgrading their version of Airflow.
+This tutorial is for anyone using Airflow 1.9 and would like to use the `KubernetesPodOperator` without upgrading their version of Airflow.
 
 It assumes a Dockerized Airflow setup (in this case, the Astronomer Setup), but should apply to any Airflow set up.
 

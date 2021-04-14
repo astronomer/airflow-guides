@@ -7,7 +7,7 @@ heroImagePath: null
 tags: ["DAGs", "Subdags"]
 ---
 <!-- markdownlint-disable-file -->
-> **Note:** Astronomer highly recommends staying away from SubDAGs if the intended use of the SubDAG is to simply group tasks within a DAG's Graph View.  Airflow 2.0 introduces [Task Groups](https://airflow.apache.org/docs/apache-airflow/stable/concepts.html#taskgroup) which is a UI grouping concept that satisfies this purpose without the performance and functional issues of SubDAGs.  While the SubDagOperator will continue to be supported, Task Groups are intended to replace it long-term.
+> **Note:** Astronomer highly recommends avoiding SubDAGs if the intended use of the SubDAG is to simply group tasks within a DAG's Graph View.  Airflow 2.0 introduces [Task Groups](https://airflow.apache.org/docs/apache-airflow/stable/concepts.html#taskgroup) which is a UI grouping concept that satisfies this purpose without the performance and functional issues of SubDAGs.  While the `SubDagOperator` will continue to be supported, Task Groups are intended to replace it long-term.
 
 
 Most DAGs consist of patterns that often repeat themselves. ETL DAGs that are written to best practice usually all share the pattern of grabbing data from a source, loading it to an intermediary file store or _staging_ table, and then pushing it into production data.
@@ -52,7 +52,7 @@ def load_subdag(parent_dag_name, child_dag_name, args):
 
 ```
 
-This object should then be called when instantiating the SubDagOperator:
+This object should then be called when instantiating the `SubDagOperator`:
 
 ```python
 load_tasks = SubDagOperator(
@@ -69,7 +69,7 @@ load_tasks = SubDagOperator(
 ```
 
 - The SubDAG should be named with a `parent.child` style or Airflow will throw an error.
-- The state of the SubDagOperator and the tasks themselves are independent - a SubDagOperator marked as success (or failed) will not affect the underlying tasks._This can be dangerous_
+- The state of the `SubDagOperator` and the tasks themselves are independent - a `SubDagOperator` marked as success (or failed) will not affect the underlying tasks. _This can be dangerous._
 - SubDAGs should be scheduled the same as their parent DAGs or unexpected behavior might occur.
 
 ## Avoiding Deadlock
@@ -83,8 +83,8 @@ Airflow 1.10 has changed the default SubDAG execution method to use the Sequenti
 
 ### Slots on the worker pool
 
-The SubDagOperator kicks off an entire DAG when it is put on a worker slot. Each task in the child DAG takes up a slot until the entire SubDAG has completed. The parent operator will take up a worker slot until each child task has completed. This could cause delays in other task processing
+The `SubDagOperator` kicks off an entire DAG when it is put on a worker slot. Each task in the child DAG takes up a slot until the entire SubDAG has completed. The parent operator will take up a worker slot until each child task has completed. This could cause delays in other task processing
 
 In mathematical terms, each SubDAG is behaving like a _vertex_ (a single point in a graph) instead of a _graph_.
 
-Depending on the scale and infrastructure, a specialized queue can be added just for SubDAGs (assuming a CeleryExecutor), but a cleaner workaround is to avoid SubDAGs entirely.
+Depending on the scale and infrastructure, a specialized queue can be added just for SubDAGs (assuming a `CeleryExecutor`), but a cleaner workaround is to avoid SubDAGs entirely.

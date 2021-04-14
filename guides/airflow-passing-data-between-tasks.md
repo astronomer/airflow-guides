@@ -34,7 +34,7 @@ The first method for passing data between Airflow tasks is to use XCom, which is
 
 [XCom](https://airflow.apache.org/docs/apache-airflow/stable/concepts.html?highlight=xcom#concepts-xcom) (short for cross-communication) is a native feature within Airflow. XComs allow tasks to exchange task metadata or small amounts of data. They are defined by a key, value, and timestamp.
 
-XComs can be "pushed", meaning sent by a task, or "pulled", meaning received by a task. When an XCom is pushed, it is stored in Airflow's metadata database and made available to all other tasks. Any time a task returns a value (e.g. if your Python callable for your PythonOperator has a return), that value will automatically be pushed to XCom. Tasks can also be configured to push XComs by calling the `xcom_push()` method. Similarly, `xcom_pull()` can be used in a task to receive an XCom.
+XComs can be "pushed", meaning sent by a task, or "pulled", meaning received by a task. When an XCom is pushed, it is stored in Airflow's metadata database and made available to all other tasks. Any time a task returns a value (e.g. if your Python callable for your [PythonOperator](https://registry.astronomer.io/providers/apache-airflow/modules/pythonoperator) has a return), that value will automatically be pushed to XCom. Tasks can also be configured to push XComs by calling the `xcom_push()` method. Similarly, `xcom_pull()` can be used in a task to receive an XCom.
 
 You can view your XComs in the Airflow UI by navigating to Admin → XComs. You should see something like this:
 
@@ -123,7 +123,7 @@ with DAG('xcom_dag',
     opr_get_covid_data >> opr_analyze_testing_data
 ```
 
-In this DAG we have two PythonOperators which share data using the `xcom_push` and `xcom_pull` functions. Note that in the `get_testing_increase` function, we used the `xcom_push` method so that we could specify the `key` name. Alternatively, we could have made the function return the `testing_increase` value, because any value returned by an operator in Airflow will automatically be pushed to XCom; if we had used this method, the XCom key would be "returned_value".
+In this DAG we have two `PythonOperator` tasks which share data using the `xcom_push` and `xcom_pull` functions. Note that in the `get_testing_increase` function, we used the `xcom_push` method so that we could specify the `key` name. Alternatively, we could have made the function return the `testing_increase` value, because any value returned by an operator in Airflow will automatically be pushed to XCom; if we had used this method, the XCom key would be "returned_value".
 
 For the `xcom_pull` call in the `analyze_testing_increases` function, we specify the `key` and `task_ids` associated with the XCom we want to retrieve. Note that this allows you to pull any XCom value (or multiple values) at any time into a task; it does not need to be from the task immediately prior as shown in this example
 
@@ -268,4 +268,4 @@ with DAG('intermediary_data_storage_dag',
     generate_file >> process_data
 ```
 
-In this DAG we make use of the `S3Hook` to save data retrieved from the API to a CSV on S3 in the `generate_file` task. The `process_data` task then grabs that data from S3, converts it to a dataframe for processing, and then saves the processed data back to a new CSV on S3.
+In this DAG we make use of the [S3Hook](https://registry.astronomer.io/providers/amazon/modules/s3hook) to save data retrieved from the API to a CSV on S3 in the `generate_file` task. The `process_data` task then grabs that data from S3, converts it to a dataframe for processing, and then saves the processed data back to a new CSV on S3.
