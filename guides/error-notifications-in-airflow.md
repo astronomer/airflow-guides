@@ -183,7 +183,7 @@ At Astronomer, we drop Airflow notifications in shared Slack channels instead of
 
 #### Adding a Slack Integration
 
-Add this [integration](`https://slack.com/apps/A0F81496D-email`) and pick a channel to drop alerts in.
+Add this [integration](https://slack.com/apps/A0F81496D-email) and pick a channel to drop alerts in.
 
 The email address generated can be added to the list of emails like any other:
 

@@ -81,7 +81,7 @@ my_ge_task = GreatExpectationsOperator(
 
 By default, a Great Expectations task will run validation and raise an `AirflowException` if any of the tests fail. To override this behavior and continue running even if tests fail, set the `fail_task_on_validation_failure` flag to `false`.
 
-For more information about possible parameters and examples, see the [README in the repository](https://github.com/great-expectations/airflow-provider-great-expectations), and the [example DAG in the provider package](https://github.com/great-expectations/airflow-provider-great-expectations/tree/main/great_expectations_provider/examples).
+For more information about possible parameters and examples, see the [README in the repository](https://github.com/great-expectations/airflow-provider-great-expectations), and the [example DAG in the provider package](https://registry.astronomer.io/providers/great-expectations/example-dags/example-great-expectations-dag).
 
 ## Using the Great Expectations Operator in an Astronomer Airflow Deployment
 

@@ -15,7 +15,7 @@ At a high-level, AWS Lambda lets you run code without provisioning or managing s
 
 It can be directly triggered by a variety of services, and can be orchestrated into workflows. Naturally, the latter can effectively be done via Apache Airflow.
 
-In general, we'd recommend using a serverless framework such as [Zappa](https://www.zappa.io/) or [Serverless](https://serverless.com/), as there is a surprising amount of boilerplate involved in writing, deploying, updating, and maintaining both serverless functions and an API Gateway.
+In general, we'd recommend using a serverless framework such as [Serverless](https://serverless.com/), as there is a surprising amount of boilerplate involved in writing, deploying, updating, and maintaining both serverless functions and an API Gateway.
 
 ## Lambda & Airflow
 
@@ -25,7 +25,7 @@ To call an AWS Lambda function in Airflow, you have a few options.
 
 The simplest way to call the AWS Lambda function in Airflow is to [invoke](https://boto3.readthedocs.io/en/latest/reference/services/lambda.html#Lambda.Client.invoke) it in [Boto3](https://aws.amazon.com/sdk-for-python/) as a [PythonOperator](https://registry.astronomer.io/providers/apache-airflow/modules/pythonoperator).
 
-The [AwsLambdaHook](https://registry.astronomer.io/providers/amazon/modules/awslambdahook) itself uses the [AwsBaseHook](https://registry.astronomer.io/providers/amazon/modules/awsbasehook), which is a wrapper around the boto3 library (the standard way to interact with AWS via Python). If you add the AWS connections correctly, you can use the hook in one of your self-written operators to trigger a particular Lambda function. 
+The [AwsLambdaHook](https://registry.astronomer.io/providers/amazon/modules/awslambdahook) itself uses the [AwsBaseHook](https://registry.astronomer.io/providers/amazon/modules/awsbasehook), which is a wrapper around the boto3 library (the standard way to interact with AWS via Python). If you add the AWS connections correctly, you can use the hook in one of your self-written operators to trigger a particular Lambda function.
 
 ### 2. Use the SimpleHttpOperator
 
@@ -58,5 +58,4 @@ If AWS Lambda doesn't fit your needs, you can likely run what you need using the
 -  [Selenium](https://seleniumhq.github.io/selenium/docs/api/py/)
 - Headless Chrome with [pyppeteer](https://github.com/miyakogi/pyppeteer) - (example [here](https://duo.com/decipher/driving-headless-chrome-with-python))
 
-- [Zeit Now](https://zeit.co/blog/serverless-docker) Serverless
-Docker Beta - (example [here](https://github.com/zeit/now-examples/tree/master/python-flask>))
+- [Zeit Now](https://zeit.co/blog/serverless-docker) Serverless Docker Beta

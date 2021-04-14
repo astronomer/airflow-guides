@@ -16,7 +16,6 @@ tweet us at [@astronomerio](https://twitter.com/astronomerio/).
 ## Airflow 101
 
 * [“Apache Airflow and the Future of Data Engineering: A Q&A”][20] - Maxime Beauchemin, Lyft
-* [“Apache Airflow for the confused”][13] - Jonathan Pichot, NYC City Planning
 * [“Modern Data Pipelines with Apache Airflow”][5] - Taylor Edmiston & Andy Cooper, Astronomer
 * [“Airflow 101 Slides”][27] - Burasakorn Sabyeying, Pronto Group
 * [“Airflow: The Missing Context”][3] - Dotan Nahum, Como
@@ -24,7 +23,6 @@ tweet us at [@astronomerio](https://twitter.com/astronomerio/).
 
 ## Love Letters
 
-* [“I’m sorry Cron, I’ve met AirBnB’s Airflow”][24] - Daniel del Valle, Telecable
 * [“Why Robinhood uses Airflow”][16] - Vineet Goel, Robinhood
 * [“Going with the Flow: A Four-part Series”][17] - Dustin Stansbury, Quizlet
 * [“How Sift Trains Thousands of Models using Apache Airflow”][7] - Duy Tran, Sift
@@ -74,7 +72,6 @@ tweet us at [@astronomerio](https://twitter.com/astronomerio/).
 [10]: https://medium.com/@rchang/a-beginners-guide-to-data-engineering-part-i-4227c5c457d7 "A Beginner’s Guide to Data Engineering — Part I"
 [11]: https://medium.com/@maximebeauchemin/functional-data-engineering-a-modern-paradigm-for-batch-data-processing-2327ec32c42a "Functional Data Engineering — a modern paradigm for batch data processing"
 [12]: https://drivy.engineering/data-quality/ "Data Quality Checkers"
-[13]: https://blog.capitalplanning.nyc/apache-airflow-for-the-confused-b588935669df?gi=5475d851b32b "Apache Airflow for the confused explained using airplanes"
 [14]: https://medium.com/a-r-g-o/installing-apache-airflow-on-ubuntu-aws-6ebac15db211 "Installing Apache Airflow on Ubuntu/AWS"
 [15]: https://www.zillow.com/data-science/airflow-at-zillow/ "Airflow at Zillow: Easily Authoring and Managing ETL Pipelines"
 [16]: https://robinhood.engineering/why-robinhood-uses-airflow-aed13a9a90c8 "Why Robinhood uses Airflow"

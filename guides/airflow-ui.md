@@ -103,7 +103,7 @@ Similar to `Variables`, `XComs` can be used as places to store information on th
 
 However, `Variables` are designed to be a place to store constants, whereas `XComs` are designed to communicate between tasks.
 
-For more information on `XComs`, visit the [Airflow documentation](`https://airflow.apache.org/concepts.html#xcoms`)
+For more information on `XComs`, visit the [Airflow documentation](https://airflow.apache.org/concepts.html#xcoms)
 
 ![ui_xcom](https://assets.astronomer.io/website/img/guides/ui_xcom.png)
 _Various bits of metadata that have been passed back and forth between DAGs_.
