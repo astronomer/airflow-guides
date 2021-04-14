@@ -89,6 +89,7 @@ At a high level, the combined system of DAGs, operators, and tasks looks like th
 [Hooks](https://airflow.apache.org/docs/apache-airflow/stable/concepts.html?highlight=hook#hooks) are Airflow's way of interfacing with third-party systems. They allow you to connect to external APIs and databases like Hive, S3, GCS, MySQL, Postgres, etc. They act as building blocks for operators. Secure information such as authentication credentials are kept out of hooks - that information is stored via Airflow connections in the encrypted metadata db that lives under your Airflow instance.
 
 ### Providers
+
 [Providers](https://airflow.apache.org/docs/apache-airflow-providers/index.html) are community-maintained packages that includes all of the core `Operators` and `Hooks` for a given service (e.g. Amazon, Google, Salesforce, etc.).  As part of Airflow 2.0 these packages are delivered multiple, separate but connected packages and can be directly installed to an Airflow environment.
 
 > To browse and search all of the available Providers and modules, visit the [Astronomer Registry](https://registry.astronomer.io), the discovery and distribution hub for Apache Airflow integrations created to aggregate and curate the best bits of the ecosystem.
