@@ -28,7 +28,7 @@ Oozie is an open-source workflow scheduling system written in Java for Hadoop sy
 
 ### Compatibility
 
-The main difference between Oozie and Airflow is their compatibility with data platforms and tools. Oozie was primarily designed to work within the Hadoop ecosystem. Contributors have expanded Oozie to work with other Java applications, but this expansion is limited to what the community has contributed. Airflow, on the other hand, is quite a bit more flexible in its interaction with third-party applications. In-memory task execution can be invoked via simple bash or Python commands. With the addition of the [KubernetesPodOperator](https://airflow.readthedocs.io/en/latest/howto/operator/kubernetes.html), Airflow can even schedule execution of arbitrary Docker images written in any language. With these features, Airflow is quite extensible as an agnostic orchestration layer that does not have a bias for any particular ecosystem.
+The main difference between Oozie and Airflow is their compatibility with data platforms and tools. Oozie was primarily designed to work within the Hadoop ecosystem. Contributors have expanded Oozie to work with other Java applications, but this expansion is limited to what the community has contributed. Airflow, on the other hand, is quite a bit more flexible in its interaction with third-party applications. In-memory task execution can be invoked via simple bash or Python commands. With the addition of the [KubernetesPodOperator](https://registry.astronomer.io/providers/kubernetes/modules/kubernetespodoperator), Airflow can even schedule execution of arbitrary Docker images written in any language. With these features, Airflow is quite extensible as an agnostic orchestration layer that does not have a bias for any particular ecosystem.
 
 ### Python vs. Java
 
@@ -45,4 +45,3 @@ Oozie has 584 stars and 16 active contributors on Github. See below for an image
 ![oozie](https://assets2.astronomer.io/main/guides/oozie_contrib_2020.png)
 
 Community contributions are significant in that they're reflective of the community's faith in the future of the project and indicate that the community is actively developing features. If your existing tools are embedded in the Hadoop ecosystem, Oozie will be an easy orchestration tool to adopt. If you want to future proof your data infrastructure and instead adopt a framework with an active community that will continue to add features, support, and extensions that accommodate more robust use cases and integrate more widely with the modern data stack, go with Apache Airflow.
-

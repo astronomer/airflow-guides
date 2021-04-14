@@ -24,7 +24,7 @@ Using hooks and operators whenever possible makes your DAGs easier to read, easi
 
 ### Keep Lengthy SQL Code out of your DAG
 
-Best practice is to avoid top-level code in your DAG file. If you have a SQL query, it should be kept in its own .sql file and imported into your DAG. 
+Best practice is to avoid top-level code in your DAG file. If you have a SQL query, it should be kept in its own .sql file and imported into your DAG.
 
 For example, at Astronomer we use the following file structure to store scripts like SQL queries in the `include/` directory:
 
@@ -79,7 +79,7 @@ With those basic concepts in mind, we'll show a few examples of common SQL use c
 
 ### Example 1 - Executing a Query
 
-In this first example, we use a DAG to execute two simple interdependent queries. To do so we use the [SnowflakeOperator](https://registry.astronomer.io/providers/snowflake/modules/snowflakeoperator). 
+In this first example, we use a DAG to execute two simple interdependent queries. To do so we use the [SnowflakeOperator](https://registry.astronomer.io/providers/snowflake/modules/snowflakeoperator).
 
 First we need to define our DAG:
 
@@ -132,7 +132,7 @@ CALL sp_pi();
 CALL sp_pi_squared();
 ```
 
-`sp_pi()` and `sp_pi_squared()` are two stored procedures that we have defined in our Snowflake instance. Note that the SQL in these files could be any type of query you need to execute; sprocs are used here just as an example. 
+`sp_pi()` and `sp_pi_squared()` are two stored procedures that we have defined in our Snowflake instance. Note that the SQL in these files could be any type of query you need to execute; sprocs are used here just as an example.
 
 Finally, we need to set up a connection to Snowflake. There are a few ways to manage connections using Astronomer, including [IAM roles](https://www.astronomer.io/docs/enterprise/stable/customize-airflow/integrate-iam), [secrets managers](https://www.astronomer.io/docs/enterprise/stable/customize-airflow/secrets-backend), and the [Airflow API](https://www.astronomer.io/docs/enterprise/stable/customize-airflow/airflow-api). For this example, we set up a connection using the Airflow UI. In this DAG our connection is called `snowflake`, and the connection should look something like this:
 
@@ -177,11 +177,11 @@ with DAG('parameterized_query',
          )
 ```
 
-The DAG is essentially the same as the one in Example 1: we have a SnowflakeOperator that will execute a query stored in the `param-query.sql` script in our include/ directory. The difference is in the query itself:
+The DAG is essentially the same as the one in Example 1: we have a `SnowflakeOperator` that will execute a query stored in the `param-query.sql` script in our include/ directory. The difference is in the query itself:
 
 ```sql
-SELECT * 
-FROM STATE_DATA 
+SELECT *
+FROM STATE_DATA
 WHERE date = {{ yesterday_ds_nodash }}
 ```
 
@@ -192,8 +192,8 @@ In this example, we have parameterized the query to dynamically select data for 
 We recommend using Airflow variables or macros whenever possible to increase flexibility and make your workflows [idempotent](https://en.wikipedia.org/wiki/Idempotence). The above example will work with any Airflow variables; for example, we could access a variable from our Airflow config like this:
 
 ```sql
-SELECT * 
-FROM STATE_DATA 
+SELECT *
+FROM STATE_DATA
 WHERE state = {{ conf['state_variable'] }}
 ```
 
@@ -211,16 +211,16 @@ opr_param_query = SnowflakeOperator(
 And then reference that param in your SQL file like this:
 
 ```sql
-SELECT * 
-FROM STATE_DATA 
+SELECT *
+FROM STATE_DATA
 WHERE date = {{ params.date }}
 ```
 
 ### Example 3 - Loading Data
 
-Our next example loads data from an external source into a table in our database. We grab data from an API and save it to a flat file on S3, which we then load into Snowflake. 
+Our next example loads data from an external source into a table in our database. We grab data from an API and save it to a flat file on S3, which we then load into Snowflake.
 
-We use the [S3toSnowflakeTransferOperator](https://registry.astronomer.io/providers/snowflake/modules/s3tosnowflakeoperator) to limit the code we have to write. 
+We use the [S3toSnowflakeTransferOperator](https://registry.astronomer.io/providers/snowflake/modules/s3tosnowflakeoperator) to limit the code we have to write.
 
 First, we create a DAG that pulls COVID data from an [API endpoint](https://covidtracking.com/data/api) for California, Colorado, Washington, and Oregon, saves the data to comma-separated values (CSVs) on S3, and loads each of those CSVs to Snowflake using the transfer operator. Here's the DAG code:
 
@@ -243,7 +243,7 @@ def upload_to_s3(endpoint, date):
 
     # Base URL
     url = 'https://covidtracking.com/api/v1/states/'
-    
+
     # Grab data
     res = requests.get(url+'{0}/{1}.csv'.format(endpoint, date))
 
@@ -349,9 +349,9 @@ def pivot_data(**kwargs):
 
     #Save dataframe to S3
     s3_hook = S3Hook(aws_conn_id=S3_CONN_ID)
-    s3_hook.load_string(pivot_df.to_csv(index=False), 
-                        '{0}.csv'.format(filename), 
-                        bucket_name=BUCKET, 
+    s3_hook.load_string(pivot_df.to_csv(index=False),
+                        '{0}.csv'.format(filename),
+                        bucket_name=BUCKET,
                         replace=True)
 
 default_args = {
@@ -394,7 +394,7 @@ In the DAG, the Python function `pivot_data` executes the SQL query and saves th
 
 ## Example 5 - Using Dag-Factory
 
-If you have SQL users who aren't familiar with Airflow or don't know any Python, they can use [dag-factory](https://github.com/ajbosco/dag-factory) to generate DAGs using a YAML configuration file. 
+If you have SQL users who aren't familiar with Airflow or don't know any Python, they can use [dag-factory](https://github.com/ajbosco/dag-factory) to generate DAGs using a YAML configuration file.
 
 Once you've installed dag-factory in your Airflow environment (in Astronomer you can add it to your `requirements.txt` file), you can add your SQL query tasks to a YAML configuration file in the `include/` directory like this:
 

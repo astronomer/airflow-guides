@@ -1,6 +1,6 @@
 ---
 title: "Branching in Airflow"
-description: "Use Apache Airflow's BranchOperator and ShortCircuitOperator to execute conditional branches in your workflow"
+description: "Use Apache Airflow's BranchPythonOperator and ShortCircuitOperator to execute conditional branches in your workflow"
 date: 2018-05-21T00:00:00.000Z
 slug: "airflow-branch-operator"
 heroImagePath: null
@@ -9,7 +9,7 @@ tags: ["DAGs", "Operators", "Basics", "Tasks"]
 
 ## BranchPythonOperator
 
-A powerful tool in Airflow is branching via the `BranchPythonOperator`. The `BranchPythonOperator` is similar to the `PythonOperator` in that it takes a Python function as an input, but it returns a task id (or list of task_ids) to decide which part of the graph to go down. This can be used to iterate down certain paths in a DAG based off the result of a function.
+A powerful tool in Airflow is branching via the [BranchPythonOperator](https://registry.astronomer.io/providers/apache-airflow/modules/branchpythonoperator). The `BranchPythonOperator` is similar to the [PythonOperator](https://registry.astronomer.io/providers/apache-airflow/modules/pythonoperator) in that it takes a Python function as an input, but it returns a task id (or list of task_ids) to decide which part of the graph to go down. This can be used to iterate down certain paths in a DAG based off the result of a function.
 
 ```python
 def return_branch(**kwargs):
@@ -19,7 +19,7 @@ def return_branch(**kwargs):
     return random.choice(branches)
 ```
 
-In a DAG, the `BranchOperator` will take this function as an argument:
+In a DAG, the `BranchPythonOperator` will take this function as an argument:
 
 ```python
 from airflow.operators.python_operator import BranchPythonOperator
@@ -64,9 +64,9 @@ with DAG("branch_operator_guide", default_args=default_args, schedule_interval=N
 
 The DAG will proceed based on the output of the function passed in.
 
-> Note: You can't have an empty path when skipping tasks - the `skipped` state will apply to all tasks immediately downstream of whatever task is skipped. Depending on your use case, it may make sense to add a DummyOperator downstream of a task that can be skipped before the branches from the `BranchPythonOperator` meet.
+> Note: You can't have an empty path when skipping tasks - the `skipped` state will apply to all tasks immediately downstream of whatever task is skipped. Depending on your use case, it may make sense to add a `DummyOperator` downstream of a task that can be skipped before the branches from the `BranchPythonOperator` meet.
 
-Under the hood, the `BranchPythonOperator` simply inherits the PythonOperator:
+Under the hood, the `BranchPythonOperator` simply inherits the `PythonOperator`:
 
 ```python
 class BranchPythonOperator(PythonOperator, SkipMixin):
@@ -91,7 +91,7 @@ class BranchPythonOperator(PythonOperator, SkipMixin):
 
 ## ShortCircuitOperator
 
-The `BranchOperator` is great for any sort of _conditional_ logic to determine which dependency to respect. Other use cases may call for the `ShortCircuitOperator`:
+The `BranchPythonOperator` is great for any sort of _conditional_ logic to determine which dependency to respect. Other use cases may call for the [ShortCircuitOperator](https://registry.astronomer.io/providers/apache-airflow/modules/shortcircuitoperator):
 
 ```python
 class ShortCircuitOperator(PythonOperator, SkipMixin):

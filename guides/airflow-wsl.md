@@ -16,9 +16,7 @@ WSL is a relatively new and feature of Windows. It's frequently updated and its 
 
 Make sure you follow the link to initialize your new distro instance. This will create a Linux username and password. Remember this password- it is needed to use `sudo` going forward. Also run `sudo apt update && sudo apt upgrade` to make sure everything is up to date.
 
-#### Warning
-
-Files in the Linux file system should not be accessed from Windows, as they can end up getting corrupted. Do not open or edit any files from processes running in Windows such as explorer, notepad, atom, or another IDE.
+> **Warning:** Files in the Linux file system should not be accessed from Windows, as they can end up getting corrupted. Do not open or edit any files from processes running in Windows such as Explorer, Notepad, Atom, or another IDE.
 
 However, Linux can access files in the Windows file system. Because of this capability, I like to organize all my project files in the Windows file system. For example, you can create a folder in `C:/Users/your_username/airflow` and use it as your `AIRFLOW_HOME` directory. You can edit files (DAGs, plugins, etc.) in here with your favorite Windows editors (notepad, atom, PyCharm, etc.) and then use them with Airflow from WSL.
 
@@ -54,7 +52,9 @@ Run `pip3 --version` to make sure it's installed correctly.
 
 ### Installing Airflow
 
-This step should be no different than installing Airflow in any normal Ubuntu environment. If you want, you can include other Airflow modules such as postgres or s3. Some of these may require dependencies to be installed on Ubuntu using `sudo apt install [your_dependency]`.
+This step should be no different than installing Airflow in any normal Ubuntu environment. If you want, you can include other Airflow modules or Providers such as [Postgres](https://registry.astronomer.io/providers/postgres) or [AWS](https://registry.astronomer.io/providers/amazon).
+
+> You can now find all available Providers and modules on the [Astronomer Registry](https://registry.astronomer.io), the discovery and distribution hub for Apache Airflow integrations created to aggregate and curate the best bits of the ecosystem.
 
 Run `pip3 install apache-airflow`.
 
@@ -76,7 +76,7 @@ Close and reopen Ubuntu. `airflow version` should now show you the version of ai
 
 And that’s it- happy Airflowing!
 
-**Note:** You *could* use a python virtual environment to install Airflow. Below I’ll talk about using PyCharm IDE with WSL and, at the time this post was written, PyCharm doesn’t support virtual environments with WSL.
+**Note:** You *could* use a Python virtual environment to install Airflow. Below I’ll talk about using PyCharm IDE with WSL and, at the time this post was written, PyCharm doesn’t support virtual environments with WSL.
 
 ### Using Astronomer
 
@@ -150,4 +150,4 @@ In Cmder, click the dropdown by the green plus in the bottom right corner and se
 set "PATH=%ConEmuBaseDirShort%\wsl;%PATH%" & %ConEmuBaseDirShort%\conemu-cyg-64.exe --wsl -cur_console:pm:/mnt -C "/c/Users/user_name" -e
 ```
 
-And that's just about it! Please do reach out if you have any questions or feedback on this guide- happy Airflowing!
+And that's just about it! Please do [reach out](https://www.astronomer.io/contact) if you have any questions or feedback on this guide- happy Airflowing!

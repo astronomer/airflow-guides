@@ -59,7 +59,6 @@ In this example, we're going to be using [virtualenvwrapper](https://virtualenvw
     The `secret` here is called a `mount_point`. Generally, a user might create a separate mount point for each application consuming secrets from Vault.
     To organize our secrets, we specify the `/connection` path and put all Airflow connections in this path. This path is fully configurable.
 
-
     For the purposes of this example, `smtp_default` is the secret name we're using. You can store arbitrary key/value pairs in this secret. By default, Airflow will look for the `conn_uri` inside the `smtp_default` key.
 
     Confirm that you can retrieve the Secret:
@@ -86,7 +85,7 @@ In this example, we're going to be using [virtualenvwrapper](https://virtualenvw
         from airflow.operators.python_operator import PythonOperator
         from datetime import datetime
         from airflow.hooks.base_hook import BaseHook
-        
+
         def get_secrets(**kwargs):
             conn = BaseHook.get_connection(kwargs['my_conn_id'])
             print(f"Password: {conn.password}, Login: {conn.login}, URI: {conn.get_uri()}, Host: {conn.host}")

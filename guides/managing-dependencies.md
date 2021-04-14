@@ -140,7 +140,7 @@ with dag:
 
 ![one_failed](https://assets.astronomer.io/website/img/guides/fail_logic_notification.png)
 
-**Note:** Similar logic can be implemented by specifying an `on_failure_callback` if using a PythonOperator. The `trigger_rule` is better used when triggering a custom operator.
+**Note:** Similar logic can be implemented by specifying an `on_failure_callback` if using a [PythonOperator](https://registry.astronomer.io/providers/apache-airflow/modules/pythonoperator). The `trigger_rule` is better used when triggering a custom operator.
 
 Though trigger rules can be convenient, they can also be unsafe and the same logic can usually be implemented using safer features.
 
@@ -148,7 +148,7 @@ A common use case of exotic trigger rules is a task downstream of all  other tas
 
 #### The `one_success` rule
 
-This rule is particularly helpful when setting up a "safety check" DAG - a DAG that runs as a safetycheck to all your data. If one of the "disaster checks" come back as `True`, the downstream disaster task can run the necessary logic.
+This rule is particularly helpful when setting up a "safety check" DAG - a DAG that runs as a safety check to all your data. If one of the "disaster checks" come back as `True`, the downstream disaster task can run the necessary logic.
 
 **Note:** The same logic can be implemented with the `one_failed` rule.
 
@@ -161,11 +161,11 @@ The workflow may look something like this:
 
 **Note:** The final task was set to `skipped`
 
-Once again, the same functionality can be achieved by using the `PythonBranchOperator`, a `TriggerDagOperator`,  or just configuring reporting in moore specific way.
+Once again, the same functionality can be achieved by using the [BranchPythonOperator](https://registry.astronomer.io/providers/apache-airflow/modules/branchpythonoperator), a [TriggerDagRunOperator](https://registry.astronomer.io/providers/apache-airflow/modules/triggerdagrunoperator), or just configuring reporting in more specific way.
 
 ### Triggers with LatestOnlyOperator
 
-When scheduling tasks with complex trigger rules with dates in the past, there may be instances where certain tasks can run independently of time and others shouldn't.
+When scheduling tasks with complex trigger rules with dates in the past, there may be instances where certain tasks can run independently of time and others shouldn't.  The [LatestOnlyOperator](https://registry.astronomer.io/providers/apache-airflow/modules/latestonlyoperator) handles this scenario.
 
 The parameters can also be set in the DAG configuration as above - the scheduling may get a bit messy, but it can save computing resources and add a layer of safety.
 
@@ -220,4 +220,3 @@ Computing resources would be saved on past DAG runs.
 
 ![tree](https://assets.astronomer.io/website/img/guides/trigger_latest_only_tree.png)
 The latest run would execute the necessary downstream logic.
- 

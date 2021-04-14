@@ -15,7 +15,7 @@ If you're just getting your feet wet, you're probably wondering what all the hyp
 
 In 2015, Airbnb experienced a problem. They were growing like crazy and had a massive amount of data that was only getting larger. To achieve the vision of becoming a fully data-driven organization, they had to grow their workforce of data engineers, data scientists, and analysts — all of whom had to regularly automate processes by writing scheduled batch jobs. To satisfy the need for a robust scheduling tool,  [Maxime Beauchemin](https://soundcloud.com/the-airflow-podcast/the-origins-of-airflow) created and open-sourced Airflow with the idea that it would allow them to quickly author, iterate on, and monitor their batch data pipelines.
 
-Since Maxime's first commit way back then, Airflow has come a long way. The project joined the official Apache Foundation Incubator in April of 2016, where it lived and grew until it graduated as a top-level project on January 8th, 2019. Almost two years later, as of December 2020, Airflow has over 1,400 contributors, 11,230 commits, and 19,800 stars on Github. On December 17th 2020, [Airflow 2.0](https://www.astronomer.io/blog/introducing-airflow-2-0) was released, bringing with it major upgrades and powerful new features. Airflow is used by thousands of Data Engineering teams around the world and continues to be adopted as the community grows stronger. 
+Since Maxime's first commit way back then, Airflow has come a long way. The project joined the official Apache Foundation Incubator in April of 2016, where it lived and grew until it graduated as a top-level project on January 8th, 2019. Almost two years later, as of December 2020, Airflow has over 1,400 contributors, 11,230 commits, and 19,800 stars on Github. On December 17th 2020, [Airflow 2.0](https://www.astronomer.io/blog/introducing-airflow-2-0) was released, bringing with it major upgrades and powerful new features. Airflow is used by thousands of Data Engineering teams around the world and continues to be adopted as the community grows stronger.
 
 ## Overview
 
@@ -74,9 +74,9 @@ For a more in-depth review on DAGs, check out our [Intro to DAGs guide](https://
 
 There are three main categories of operators:
 
-- **Action Operators** execute a function, like the [PythonOperator](https://airflow.apache.org/docs/apache-airflow/stable/howto/operator/python.html) or [BashOperator](https://airflow.apache.org/docs/apache-airflow/stable/howto/operator/bash.html)
-- **Transfer Operators** move data from a source to a destination, like the [S3ToRedshiftOperator](https://airflow.apache.org/docs/apache-airflow-providers-amazon/stable/operators/s3_to_redshift.html)
-- **Sensor Operators** wait for something to happen, like the [ExternalTaskSensor](https://airflow.readthedocs.io/en/1.9.0/_modules/airflow/operators/sensors.html)
+- **Action Operators** execute a function, like the [PythonOperator](https://registry.astronomer.io/providers/apache-airflow/modules/pythonoperator) or [BashOperator](https://registry.astronomer.io/providers/apache-airflow/modules/bashoperator)
+- **Transfer Operators** move data from a source to a destination, like the [S3ToRedshiftOperator](https://registry.astronomer.io/providers/amazon/modules/s3toredshiftoperator)
+- **Sensor Operators** wait for something to happen, like the [ExternalTaskSensor](https://registry.astronomer.io/providers/apache-airflow/modules/externaltasksensor)
 
 Operators are defined individually, but they can pass information to other operators using [XComs](https://airflow.apache.org/docs/apache-airflow/stable/concepts.html?highlight=hook#xcoms).
 
@@ -87,6 +87,11 @@ At a high level, the combined system of DAGs, operators, and tasks looks like th
 ### Hooks
 
 [Hooks](https://airflow.apache.org/docs/apache-airflow/stable/concepts.html?highlight=hook#hooks) are Airflow's way of interfacing with third-party systems. They allow you to connect to external APIs and databases like Hive, S3, GCS, MySQL, Postgres, etc. They act as building blocks for operators. Secure information such as authentication credentials are kept out of hooks - that information is stored via Airflow connections in the encrypted metadata db that lives under your Airflow instance.
+
+### Providers
+[Providers](https://airflow.apache.org/docs/apache-airflow-providers/index.html) are community-maintained packages that includes all of the core `Operators` and `Hooks` for a given service (e.g. Amazon, Google, Salesforce, etc.).  As part of Airflow 2.0 these packages are delivered multiple, separate but connected packages and can be directly installed to an Airflow environment.
+
+> To browse and search all of the available Providers and modules, visit the [Astronomer Registry](https://registry.astronomer.io), the discovery and distribution hub for Apache Airflow integrations created to aggregate and curate the best bits of the ecosystem.
 
 ### Plugins
 
@@ -99,6 +104,6 @@ Airflow plugins represent a combination of Hooks and Operators that can be used 
 
 ## Learn by Doing
 
-If you'd like to get started playing around with Airflow on your local machine, check out our [Astronomer CLI](https://github.com/astronomer/astro-cli)- it's open source and completely free to use. With the CLI, you can spin up Airflow locally and start getting your hands dirty with the core concepts mentioned above in just a few minutes. 
+If you'd like to get started playing around with Airflow on your local machine, check out our [Astronomer CLI](https://github.com/astronomer/astro-cli)- it's open source and completely free to use. With the CLI, you can spin up Airflow locally and start getting your hands dirty with the core concepts mentioned above in just a few minutes.
 
 As always, please feel free to [reach out to us](https://astronomer.io/contact) if you have any questions or if there's anything we can do to help you on your Airflow journey!

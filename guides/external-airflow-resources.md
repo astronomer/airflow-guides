@@ -59,7 +59,8 @@ tweet us at [@astronomerio](https://twitter.com/astronomerio/).
 
 ## Other
 
-* [Awesome Airflow Resources](https://github.com/jghoman/awesome-apache-airflow)  - A great collection of Airflow Resources in a dedicated GitHub repo, curated by [Jakob Homan](https://twitter.com/BlueBoxTraveler)
+* [Astronomer Registry](https://registry.astronomer.io) - The discovery and distribution hub for Apache Airflow integrations created to aggregate and curate the best bits of the ecosystem.
+* [Awesome Airflow Resources](https://github.com/jghoman/awesome-apache-airflow) - A great collection of Airflow Resources in a dedicated GitHub repo, curated by [Jakob Homan](https://twitter.com/BlueBoxTraveler)
 
 [0]: https://blog.socialcops.com/engineering/apache-airflow-disease-outbreaks-india/ "How to create a workflow in Apache Airflow to track disease outbreaks in India"
 [1]: https://wecode.wepay.com/posts/improving-airflow-ui-security "Improving Airflow UI Security"

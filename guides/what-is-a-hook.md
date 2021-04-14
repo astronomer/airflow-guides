@@ -13,10 +13,11 @@ Operators are the main building blocks of Airflow, but operators rely heavily up
 
 Hooks are used as a away to abstract the methods you would use against a source system. Hooks should be used when interacting with any external system.
 
-The `S3Hook` below just shows how a hook can import a standard library (in this case, boto3) and expose some of the most common methods.
+The [S3Hook](https://registry.astronomer.io/providers/amazon/modules/s3hook) below just shows how a hook can import a standard library (in this case, boto3) and expose some of the most common methods.
 
 The full code for the hook is [here](https://github.com/apache/airflow/blob/master/airflow/hooks/S3_hook.py)
 
+> To browse and search all of the available Hooks in Airflow, visit the [Astronomer Registry](https://registry.astronomer.io/modules?types=hooks), the discovery and distribution hub for Apache Airflow integrations created to aggregate and curate the best bits of the ecosystem.
 
 ```python
 class S3Hook(AwsHook):
@@ -84,9 +85,9 @@ class S3Hook(AwsHook):
         return response
 ```
 
- This Hook inherits from the `AWSHook` which inherits from the `BaseHook`. All Hooks inherit from the `BaseHook` which contains the logic for how hooks interact with `Airflow Connections`. `Connections`  are Airflow's built in credential-store for your source/destination systems. Hooks are designed to handle these in a clean, reusable way. Tasks that use a hook will have an input parameter for the `conn_id` of the connection you wish to use.
+ This Hook inherits from the [AwsBaseHook](https://registry.astronomer.io/providers/amazon/modules/awsbasehook) which inherits from the [BaseHook](https://registry.astronomer.io/providers/apache-airflow/modules/basehook). All Hooks inherit from the `BaseHook` which contains the logic for how hooks interact with `Airflow Connections`. `Connections`  are Airflow's built in credential-store for your source/destination systems. Hooks are designed to handle these in a clean, reusable way. Tasks that use a hook will have an input parameter for the `conn_id` of the connection you wish to use.
 
- **Hooks provide an interface in which to interact with an external system, but do not contain the logic for how that system is interacted with.** (in this example, boto3 holds the logic on how to interact with s3)
+ **Hooks provide an interface in which to interact with an external system, but do not contain the logic for how that system is interacted with.** (in this example, boto3 holds the logic on how to interact with S3)
 
 ### These are the hooks that come with airflow
 
