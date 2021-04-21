@@ -11,9 +11,8 @@ As workflows are being developed and built upon by different team members, they 
 
 The first level of complexity can usually be handled by some sort of error messaging - throw an error notification to a particular person or group based on a workflow's failure.
 
-Branching can be helpful for performing conditional logic - execute a set of tasks based off of a condition. For situations where that is not enough - **The TriggerDagRunOperator can be used to kick off entire DAGs.**
+Branching can be helpful for performing conditional logic - execute a set of tasks based off of a condition. For situations where that is not enough - **The [TriggerDagRunOperator](https://registry.astronomer.io/providers/apache-airflow/modules/triggerdagrunoperator) can be used to kick off entire DAGs.**
 
-`https://github.com/apache/incubator-airflow/blob/master/airflow/operators/dagrun_operator.py`
 
 ## Define a controller and a target  DAG
 

@@ -16,7 +16,7 @@ Email notifications are great for monitoring Airflow workflows. They can be sent
 
 Notifications set at the DAG level filter down to each task in the DAG - generally in the `default_args`.
 
-By default, `email_on_failure` is set to `True`
+By default, `email_on_failure` is set to `True` as part of the [BaseOperator](https://github.com/apache/airflow/blob/60a032f4b829eb41b84c907ff663560d50284989/airflow/models/baseoperator.py#L270).
 
 
 ```python
@@ -36,7 +36,7 @@ with DAG('sample_dag',
     ...
 ```
 
-Any task in this DAG's context will send a failure email to all addresses in the emails array
+Any task in this DAG's context will send a failure email to all addresses in the emails array.
 
 ### Different Levels of Notifications
 
@@ -44,7 +44,7 @@ Failure notifications are the most common, but different levels can be set where
 
 Emails on retries are great for testing if failures are by caused extraneous factors like load on an external system. If this is the case, consider setting `retry_exponential_backoff` to `True`.
 
-[BaseOperator](https://github.com/apache/airflow/blob/60a032f4b829eb41b84c907ff663560d50284989/airflow/models/baseoperator.py#L270)
+
 
 
 ```python
@@ -72,9 +72,7 @@ with DAG('sample_dag',
 
 ### Isolating Tasks
 
-For some use cases, it might be helpful to only have failure emails for certain tasks. The BaseOperator that all Airflow Operators inherit from has support for these arguments if you don't want them defined at the DAG level.
-
-[BaseOperator](https://github.com/apache/airflow/blob/60a032f4b829eb41b84c907ff663560d50284989/airflow/models/baseoperator.py#L265)
+For some use cases, it might be helpful to only have failure emails for certain tasks. The `BaseOperator` that all Airflow Operators inherit from has support for these arguments if you don't want them defined at the DAG level.
 
 
 ```python
@@ -108,7 +106,7 @@ with DAG('sample_dag',
 
 ### Customizing Email Notifications
 
-By default, email notifications have a default format that includes standard information as defined in the __`email_alert`__ method of the TaskInstance class.
+By default, email notifications have a default format that includes standard information as defined in the __`email_alert`__ method of the `TaskInstance` class.
 
 
 ```python
@@ -132,7 +130,7 @@ def email_alert(self, exception):
     send_email(task.email, title, body)
 ```
 
-This can be modified greatly by simply overriding this method. Try dropping the below into an existing dag and see what happens.
+This can be modified greatly by simply overriding this method. Try dropping the below into an existing DAG and see what happens.
 
 
 ```python
@@ -170,7 +168,7 @@ from airflow.utils.email import send_email
 
 def failure_email(context):  
 
-    email_title = "Airflow Task {tak_id} Failed".format(context['task_instance'].task_id)
+    email_title = "Airflow Task {task_id} Failed".format(context['task_instance'].task_id)
 
     email_body = "{task_id} in {dag_id} failed.".format(context['task_instance'].task_id, context['task_instance'].dag_id)
 
@@ -179,11 +177,13 @@ def failure_email(context):
 
 ### Setting Up Alerts in Slack
 
-At Astronomer, we drop Airflow notifications in shared slack channels instead of emails. There are a few ways to accomplish this:
+> You can now find the [Slack Provider](https://registry.astronomer.io/providers/slack) on the [Astronomer Registry](https://registry.astronomer.io), the discovery and distribution hub for Apache Airflow integrations created to aggregate and curate the best bits of the ecosystem.
+
+At Astronomer, we drop Airflow notifications in shared Slack channels instead of emails. There are a few ways to accomplish this:
 
 #### Adding a Slack Integration
 
-Add this integration: `https://slack.com/apps/A0F81496D-email` and pick a channel to drop alerts in.
+Add this [integration](https://slack.com/apps/A0F81496D-email) and pick a channel to drop alerts in.
 
 The email address generated can be added to the list of emails like any other:
 
@@ -214,7 +214,7 @@ with dag:
 ![SlackNotifications](https://assets2.astronomer.io/main/guides/dag_failure_notification.png)
 
 
-Alternatively, a `SlackOperator` can be used.
+Alternatively, a [SlackAPIPostOperator](https://registry.astronomer.io/providers/slack/modules/slackapipostoperator) can be used.
 
 ```python
 t2 = SlackAPIPostOperator(task_id='post_slack_{0}'.format(job['source']),

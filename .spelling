@@ -70,7 +70,7 @@ autoscaler
 airflow
 airflowers
 iberman
-boolean 
+boolean
 astronomerio
 dbaas
 datahub
@@ -917,7 +917,7 @@ Mika
 Heino
 Solita
 VideoAmp
-How-to's 
+How-to's
 Peyman
 Mohajerian
 Vinayak
@@ -1437,6 +1437,11 @@ parameterize
 SnowflakeOperator
 param
 S3toSnowflakeTransferOperator
+MssqlHook
+GCSToBigQueryOperator
+PostgresToGCSOperator
+BaseSQLToGCSOperator
+VerticaToMySqlOperator
 - guides/airflow-talend-integration.md
 www.talend.com
 how-to-deploy-talend-jobs-as-docker-images-to-amazon-azure-and-google-cloud-registries
@@ -1489,14 +1494,14 @@ Create_DAG
 __`e
 ____
 - guides/facebook-ads-to-redshift.md
-age_gender 
+age_gender
 device_platform
 region_country
 no_breakdown
 account_id
 ad_id
 adset_id
-ad_name 
+ad_name
 adset_name
 campaign_id
 date_start
@@ -1515,7 +1520,7 @@ facebook_ads_to_redshift.py
 v18.09
 - guides/github-to-redshift.md
 issue_comments
-pull_requests 
+pull_requests
 github_to_redshift.py
 - guides/google-analytics-to-redshift.md
 v4
@@ -1622,7 +1627,11 @@ parsing_processes
 deserialization
 returned_value
 dbt
- - guides/custom-xcom-backends.md
 serializable
 versioning
 deserializing
+AwsLambdaHook
+AwsBaseHook
+BaseSensorOperator
+PostgresHook
+SSHHook

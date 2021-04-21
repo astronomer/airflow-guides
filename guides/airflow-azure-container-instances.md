@@ -16,40 +16,40 @@ tags: ["Integrations", "Azure", "DAGs"]
 
 ### The Azure Container Instances Operator
 
-The easiest way to orchestrate Azure Container Instances with Airflow is to use the [AzureContainerInstancesOperator](https://airflow.apache.org/docs/apache-airflow/stable/_modules/airflow/contrib/operators/azure_container_instances_operator.html). This operator starts a container on ACI, runs the container, and terminates the container when all processes are completed. 
+The easiest way to orchestrate Azure Container Instances with Airflow is to use the [AzureContainerInstancesOperator](https://registry.astronomer.io/providers/microsoft-azure/modules/azurecontainerinstancesoperator). This operator starts a container on ACI, runs the container, and terminates the container when all processes are completed.
 
 The only prerequisites for using this operator are:
 
 - An Azure account with a [resource group](https://docs.microsoft.com/en-us/azure/azure-resource-manager/management/manage-resource-groups-portal) created
 - An [Azure Service Principle](https://docs.microsoft.com/en-us/azure/active-directory/develop/app-objects-and-service-principals) that has write permissions over that resource group
-- A docker image to use for the container (either publicly or privately available)
+- A Docker image to use for the container (either publicly or privately available)
 
-This operator can also be used to run existing container instances and make certain updates, including the docker image, environment variables, or commands. Some updates to existing container groups are not possible with the operator, including CPU, memory, and GPU; those updates require deleting the existing container group and recreating it, which can be accomplished using the [AzureContainerInstanceHook](https://github.com/apache/airflow/blob/master/airflow/providers/microsoft/azure/hooks/azure_container_instance.py).
+This operator can also be used to run existing container instances and make certain updates, including the docker image, environment variables, or commands. Some updates to existing container groups are not possible with the operator, including CPU, memory, and GPU; those updates require deleting the existing container group and recreating it, which can be accomplished using the [AzureContainerInstanceHook](https://registry.astronomer.io/providers/microsoft-azure/modules/azurecontainerinstancehook).
 
 ### When to use ACI
 
-There are multiple ways to manage containers with Airflow on Azure. The most flexible and scalable method is to use the [KubernetesPodOperator](https://airflow.apache.org/docs/apache-airflow/stable/kubernetes.html). This lets you run any container as a Kubernetes pod, which means you can pass in resource requests and other native Kubernetes parameters. Using this operator requires an [AKS](https://azure.microsoft.com/en-us/services/kubernetes-service/) cluster (or a hand-rolled Kubernetes cluster).
+There are multiple ways to manage containers with Airflow on Azure. The most flexible and scalable method is to use the [KubernetesPodOperator](https://registry.astronomer.io/providers/kubernetes/modules/kubernetespodoperator). This lets you run any container as a Kubernetes pod, which means you can pass in resource requests and other native Kubernetes parameters. Using this operator requires an [AKS](https://azure.microsoft.com/en-us/services/kubernetes-service/) cluster (or a hand-rolled Kubernetes cluster).
 
 If you are not running on [AKS](https://azure.microsoft.com/en-us/services/kubernetes-service/), ACI can be a great choice:
 
 - It's easy to use and requires little setup
 - You can run containers in different regions
 - It's typically the cheapest; since no virtual machines or higher-level services are required, **you only pay for the memory and CPU used by your container group while it is active**
-- Unlike the [DockerOperator](https://airflow.apache.org/docs/apache-airflow/1.10.4/_api/airflow/operators/docker_operator/index.html), it does not require running a container on the host machine
+- Unlike the [DockerOperator](https://registry.astronomer.io/providers/docker/modules/dockeroperator), it does not require running a container on the host machine
 
-With these points in mind, we recommend using ACI with the AzureContainerInstancesOperator for testing or lightweight tasks that don't require scaling. For heavy production workloads, we recommend sticking with AKS and the KubernetesPodOperator.
+With these points in mind, we recommend using ACI with the `AzureContainerInstancesOperator` for testing or lightweight tasks that don't require scaling. For heavy production workloads, we recommend sticking with AKS and the `KubernetesPodOperator`.
 
 ## Example
 
 Using Airflow to create and run an Azure Container Instance is straightforward: You first identify the Azure resource group you want to create the Azure Container Instance in (or create a new one), then ensure your Azure instance has a service principle with write access over that resource group. For more information on setting this up, refer to the [Azure documentation](https://docs.microsoft.com/en-us/azure/active-directory/develop/howto-create-service-principal-portal).
 
-> Note: In Airflow 2.0, provider packages are separate from the core of Airflow. If you are running 2.0 with Astronomer, the `apache-airflow-providers-microsoft-azure` package is already included in our Astronomer Certified Image; if you are not using Astronomer you may need to install this package separately to use the hooks, operators, and connections described here. To learn more, read [Airflow Docs on Provider Packages](https://airflow.apache.org/docs/apache-airflow-providers/index.html).
+> Note: In Airflow 2.0, provider packages are separate from the core of Airflow. If you are running 2.0 with Astronomer, the [Microsoft Provider](https://registry.astronomer.io/providers/microsoft-azure) package is already included in our Astronomer Certified Image; if you are not using Astronomer you may need to install this package separately to use the hooks, operators, and connections described here. To learn more, read [Airflow Docs on Provider Packages](https://airflow.apache.org/docs/apache-airflow-providers/index.html).
 
-Next, create an Airflow connection with the type `Azure Container Instance`. Specify your Client ID in the Login field, Client Secret in the Password field, and Tenant and Subscription IDs in the Extras field as json. It should look something like this:
+Next, create an Airflow connection with the type Azure Container Instance. Specify your Client ID in the Login field, Client Secret in the Password field, and Tenant and Subscription IDs in the Extras field as json. It should look something like this:
 
 ![ACI Connection](https://assets2.astronomer.io/main/guides/azure-container-instances/aci_connection.png)
 
-Lastly, define a DAG using the AzureContainerInstancesOperator:
+Lastly, define a DAG using the `AzureContainerInstancesOperator`:
 
 ```python
 from airflow import DAG
@@ -99,7 +99,7 @@ The parameters for the operator are:
 - **region:** The Azure region we want our ACI deployed to
 - **CPU:** The number of CPUs to allocate to the container. In this example we use the default minimum. For more information on allocating CPUs and memory, refer to the [Azure documentation](https://docs.microsoft.com/en-us/azure/container-instances/container-instances-faq).
 - **memory\_in\_gb**: The amount of memory to allocate to the container. In example we use the default minimum.
-- **fail\_if\_exists:** Whether we want the the operator to raise an exception if the container group already exists (default value is True). If it's set to False and the container group name already exists within the given resource group, the operator will attempt to update the container group based on the other parameters before running and terminating upon completion
+- **fail\_if\_exists:** Whether we want the the operator to raise an exception if the container group already exists (default value is `True`). If it's set to False and the container group name already exists within the given resource group, the operator will attempt to update the container group based on the other parameters before running and terminating upon completion
 
 Note that you can also provide the operator with other parameters such as environment variables, volumes, and a command as needed to run the container.
 

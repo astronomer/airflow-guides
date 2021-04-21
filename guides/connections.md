@@ -11,7 +11,7 @@ This document covers how to set up various connections in Airflow. Connections d
 
 Connections can be maintained in the Airflow Interface (Menu --> Admin --> Connections).
 
-> **Note:** In Airflow 2.0, provider packages are separate from the core of Airflow, and the Connection Types available are dependent on the provider packages you have installed. For example, in order to see the Snowflake ConnType in the Airflow UI, you'll need the `apache-airflow-providers-snowflake` package. If you are running Airflow 2.0 on Astronomer, you can install provider packages by adding them to your `requirements.txt` file. To learn more, read [Airflow Docs on Provider Packages](https://airflow.apache.org/docs/apache-airflow-providers/index.html).
+> **Note:** In Airflow 2.0, Provider packages are separate from the core of Airflow, and the Connection Types available are dependent on the provider packages you have installed. For example, in order to see the Snowflake ConnType in the Airflow UI, you'll need the [Snowflake Provider](https://registry.astronomer.io/providers/snowflake) package. If you are running Airflow 2.0 on Astronomer, you can install Provider packages by adding them to your `requirements.txt` file. To learn more, read [Airflow Docs on Provider Packages](https://airflow.apache.org/docs/apache-airflow-providers/index.html) and also browse all available Providers and modules in the [Astronomer Registry](https://registry.astronomer.io/).
 
 ### Example Connection Configurations
 
@@ -101,11 +101,11 @@ Depending on the Hook or Operator used, Connections can be called directly in th
 ```python
 
 postgres_query = PostgresOperator(
-            task_id="query_one",
-            postgres_conn_id=<my_postgres_conn_id>,
-            sql=<my_sql_statement>,
-            autocommit=True,
-        )
+    task_id="query_one",
+    postgres_conn_id=<my_postgres_conn_id>,
+    sql=<my_sql_statement>,
+    autocommit=True,
+)
 ```
 
 
@@ -126,6 +126,7 @@ def create_connections(session=None):
         except:
             logger.info("Port is not numeric for source")
             continue
+
         host = source.get("host", "")
         port = source.get("port", "5439")
         db = source.get("db", "")
@@ -152,7 +153,7 @@ def create_connections(session=None):
             logger.info(
                 "Failed creating connection"
             logger.info(e)
-				
+
 ```
 
 **Note:** The `conn_id` does not have a uniqueness constraint within Airflow, so be sure to delete exist connections before programmatically creating new ones. If two `Connections` have the same name, Airflow will randomly pick which one to use.

@@ -15,7 +15,7 @@ For those evaluating [Apache Airflow](https://airflow.apache.org/) and [Luigi](h
 
 ## Airflow Overview
 
-Created by [Airbnb Data Engineer Maxime Beauchemin](https://www.linkedin.com/in/maximebeauchemin), Airflow is an open source workflow management system designed for authoring, scheduling, and monitoring workflows as [DAGs, or directed acyclic graphs](https://www.astronomer.io/guides/dags/). Workflows are written in Python, which makes for flexible interaction with third-party APIs, databases, infrastructure layers, and data systems. As measured by Github stars and number of contributors, Apache Airflow is the most popular open-source workflow management tool on the market today.
+Created by [Airbnb Data Engineer Maxime Beauchemin](https://www.linkedin.com/in/maximebeauchemin), Airflow is an open-source workflow management system designed for authoring, scheduling, and monitoring workflows as [DAGs, or directed acyclic graphs](https://www.astronomer.io/guides/dags/). Workflows are written in Python, which makes for flexible interaction with third-party APIs, databases, infrastructure layers, and data systems. As measured by Github stars and number of contributors, Apache Airflow is the most popular open-source workflow management tool on the market today.
 
 
 ## Luigi Overview
@@ -29,13 +29,13 @@ Luigi is an open-source framework developed by ex-Spotify engineer [Erik Bernhar
 
 Users write data pipelines in Python in both Luigi and Airflow, which makes them compatible with third-party tools. Almost every tool that you’d need to interface with programmatically has a Python integration, library, or API client. Where Airflow and Luigi differentiate is in Airflow’s use of operators, which allow for users to leverage community-contributed integrations. The Airflow community maintains operators for hundreds of external tools.
 
-With the addition of the [KubernetesPodOperator](https://airflow.readthedocs.io/en/latest/howto/operator/kubernetes.html), Airflow can even schedule and execute arbitrary Docker images written in any language. Luigi’s Python base makes it compatible with many different APIs. However, Airflow is quite extensible as an agnostic orchestration layer that does not have a bias for any particular ecosystem.
+With the addition of the [KubernetesPodOperator](https://registry.astronomer.io/providers/kubernetes/modules/kubernetespodoperator), Airflow can even schedule and execute arbitrary Docker images written in any language. Luigi’s Python base makes it compatible with many different APIs. However, Airflow is quite extensible as an agnostic orchestration layer that does not have a bias for any particular ecosystem.
 
-### User Interface 
+### User Interface
 
 Airflow and Luigi both have UIs that allow you to visualize your DAGs. Both UIs help show the state of tasks (i.e., pending, failed, success, etc.). One big difference between UIs is that task logs were made easy to be found in Airflow, while this is not the case in Luigi. When a task fails, it can be very advantageous to see logs available for that task to determine why it failed.
 
-### Scalability 
+### Scalability
 
 Airflow includes a centralized scheduler that allows it to efficiently scale the amount of DAGs and tasks that it is running with its different executors. Luigi does not have a scheduler and relies on cron jobs to schedule tasks. The number of cron workers limits the number of processes that can run at a time, which limits the scalability of Luigi. Additionally, Luigi cannot rerun tasks because they run with cron. Airflow allows the user to rerun tasks as many times as needed.
 

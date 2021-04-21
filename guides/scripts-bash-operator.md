@@ -7,11 +7,11 @@ heroImagePath: null
 tags: ["DAGs", "Operators"]
 ---
 <!-- markdownlint-disable-file -->
-[Apache Airflow's BashOperator](https://airflow.apache.org/docs/apache-airflow/stable/howto/operator/bash.html) is an easy way to execute bash commands in your workflow. If the DAG you wrote executes a bash command or script, this is the operator you will want to use to define the task.
+[Apache Airflow's BashOperator](https://registry.astronomer.io/providers/apache-airflow/modules/bashoperator) is an easy way to execute bash commands in your workflow. If the DAG you wrote executes a bash command or script, this is the operator you will want to use to define the task.
 
 However, running shell scripts can always run into trouble with permissions, particularly with `chmod`.
 
-This guide will walk you through what to do if you are having trouble executing bash scripts using the BashOperator in Airflow.
+This guide will walk you through what to do if you are having trouble executing bash scripts using the `BashOperator` in Airflow.
 
 ## Executing Shell Scripts
 
@@ -35,9 +35,9 @@ If we try to `chmod +x test.sh` inside of the container's bash terminal, we get:
 chmod: test.sh: Read-only file system.
 ```
 
-Looking at a snippet of the `execute` function for the BashOperator, we see that operator searches for the script in a temporary directory. That exact line in the source code is [here](https://github.com/apache/incubator-airflow/blob/27309b13f17402eaa61d4e4fede8785effa8bbb7/airflow/operators/bash_operator.py#L90). The `cwd` argument of the `Popen` function allows the child process to change its working directory. In Airflow, this parameter is set to `None` by default. To work around this, we need to specify the full file path within the `Dockerfile`, which we'll come back to below.
+Looking at a snippet of the `execute` function for the `BashOperator`, we see that operator searches for the script in a temporary directory. That exact line in the source code is [here](https://github.com/apache/incubator-airflow/blob/27309b13f17402eaa61d4e4fede8785effa8bbb7/airflow/operators/bash_operator.py#L90). The `cwd` argument of the `Popen` function allows the child process to change its working directory. In Airflow, this parameter is set to `None` by default. To work around this, we need to specify the full file path within the `Dockerfile`, which we'll come back to below.
 
-[Access the full BashOperator source code](https://airflow.apache.org/docs/apache-airflow/1.10.3/_modules/airflow/operators/bash_operator.html)
+[Access the full `BashOperator` source code](https://airflow.apache.org/docs/apache-airflow/1.10.3/_modules/airflow/operators/bash_operator.html)
 
 ## Solution
 

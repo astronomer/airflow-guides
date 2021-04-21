@@ -13,7 +13,7 @@ However, actually scheduling these tasks can be tricky, as much of it is driven 
 
 ## DagRuns
 
-A DagRun is an object representing an instantiation of the DAG.
+A `DagRun` is an object representing an instantiation of the DAG.
 
 DAGs may or may not have a schedule, which informs how DagRuns are created. `schedule_interval` is defined as a DAG argument, and receives a cron expression as a `str`, or a `datetime.timedelta` object.
 
@@ -159,7 +159,7 @@ This will ensure sequential data loads, but may also stop progress if a job is l
 
 ### LatestOnlyOperator
 
-The [LatestOnlyOperator](https://airflow.apache.org/concepts.html#latest-run-only) can explicitly accomplish the same functionality as some of the scheduling parameters (assuming default `trigger_rules`). The `LatestOnlyOperator` skips all tasks that are not for the most recent DagRun.
+The [LatestOnlyOperator](https://registry.astronomer.io/providers/apache-airflow/modules/latestonlyoperator) can explicitly accomplish the same functionality as some of the scheduling parameters (assuming default `trigger_rules`). The `LatestOnlyOperator` skips all tasks that are not for the most recent `DagRun`.
 
 This can be helpful for tasks that are naturally idempotent or can be run independently of time (i.e. no time based input).
 
@@ -190,4 +190,4 @@ with dag:
         l_o >> t1
 ```
 
-All tasks downstream of the LatestOnlyOperator are skipped on all DagRuns past DagRuns.
+All tasks downstream of the `LatestOnlyOperator` are skipped on all past `DagRuns`.

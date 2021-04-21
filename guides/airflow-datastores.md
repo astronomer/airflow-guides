@@ -15,7 +15,7 @@ XCom, short for "cross communication," are stores of key, value, and timestamps 
 
 XCom can be "pushed" or "pulled" by all TaskInstances (by using `xcom_push()` or `xcom_pull()`, respectively).
 
-All values that are returned by an Operator's `execute()` method, or from a PythonOperator's `python_callable` are pushed to XCom.
+All values that are returned by an Operator's `execute()` method, or from the `python_callable` within a [PythonOperator](https://registry.astronomer.io/providers/apache-airflow/modules/pythonoperator) are pushed to XCom.
 
 ```python
 def generate_values(**kwargs):
@@ -30,7 +30,7 @@ with dag:
         provide_context=True)
 ```
 
-Information about where to pull the xcom value from is found in the task's context:
+Information about where to pull the XCom value from is found in the task's context:
 
 ```python
 def manipulate_values(**kwargs):
@@ -49,7 +49,7 @@ t2 = PythonOperator(
 
 Similar to XComs, Variables are key-value stores in Airflow's metadata database. However, Variables are just key-value stores - they don't store the "conditions" (`execution_date`, `TaskInstance`, etc.) that led to a value being produced.
 
-Variables can be pushed and pulled in a similar fashion to `XComs`:
+Variables can be pushed and pulled in a similar fashion to XComs:
 
 ```python
 config = Variable.get("db_config")
@@ -87,24 +87,28 @@ Variables can be used as static value stores to generate DAGs from config files.
 Define the variable:
 
 ```json
-[{
-  "table": "users",
-  "schema":"app_one",
- "s3_bucket":"etl_bucket",
- "s3_key":"app_one_users",
- "redshift_conn_id":"postgres_default" },
- {
-   "table": "users",
-   "schema":"app_two",
- "s3_bucket":"etl_bucket",
- "s3_key":"app_two_users",
- "redshift_conn_id":"postgres_default"}]
+[
+    {
+        "table": "users",
+        "schema":"app_one",
+        "s3_bucket":"etl_bucket",
+        "s3_key":"app_one_users",
+        "redshift_conn_id":"postgres_default"
+    },
+    {
+        "table": "users",
+        "schema":"app_two",
+        "s3_bucket":"etl_bucket",
+        "s3_key":"app_two_users",
+        "redshift_conn_id":"postgres_default"
+    }
+]
  ```
 
 Call the Variable in the dag file:
 
 ```python
-sync_config = json.loads(Variable.get("sync_config"))
+sync_config = Variable.get("sync_config", deserialize_json=True)
 
 with dag:
     start = DummyOperator(task_id='begin_dag')

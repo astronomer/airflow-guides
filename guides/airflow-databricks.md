@@ -12,7 +12,7 @@ tags: ["Integrations", "DAGs"]
 
 [Databricks](https://databricks.com/) is a popular unified data and analytics platform built around [Apache Spark](https://spark.apache.org/) that provides users with fully managed Apache Spark clusters and interactive workspaces. At Astronomer we believe that best practice is to use Airflow primarily as an orchestrator, and to use an execution framework like Apache Spark to do the heavy lifting of data processing. It follows that using Airflow to orchestrate Databricks jobs is a natural solution for many common use cases.
 
-Astronomer has many customers who use Databricks to run jobs as part of complex pipelines. This can easily be accomplished by leveraging the [Databricks provider](https://github.com/apache/airflow/tree/master/airflow/providers/databricks), which includes Airflow hooks and operators that are actively maintained by the Databricks and Airflow communities. In this guide, we'll discuss the hooks and operators available for interacting with Databricks clusters and run jobs, and we'll show an example of how to use both available operators in an Airflow DAG.
+Astronomer has many customers who use Databricks to run jobs as part of complex pipelines. This can easily be accomplished by leveraging the [Databricks provider](https://registry.astronomer.io/providers/databricks), which includes Airflow hooks and operators that are actively maintained by the Databricks and Airflow communities. In this guide, we'll discuss the hooks and operators available for interacting with Databricks clusters and run jobs, and we'll show an example of how to use both available operators in an Airflow DAG.
 
 ## Databricks Hooks and Operators
 
@@ -22,7 +22,7 @@ The Databricks provider package includes many hooks and operators that allow use
 
 ### Hooks
 
-Using the [Databricks hook](https://github.com/apache/airflow/blob/master/airflow/providers/databricks/hooks/databricks.py) is the best way to interact with a Databricks cluster or job from Airflow. The hook has methods to submit and run jobs to the Databricks REST API, which are used by the operators described below. There are also additional methods users can leverage to:
+Using the [Databricks hook](https://registry.astronomer.io/providers/databricks/modules/databrickshook) is the best way to interact with a Databricks cluster or job from Airflow. The hook has methods to submit and run jobs to the Databricks REST API, which are used by the operators described below. There are also additional methods users can leverage to:
 
 - Get information about runs or jobs
 - Cancel, start, or terminate a cluster
@@ -38,7 +38,7 @@ There are currently two operators in the Databricks provider package:
 The `DatabricksRunNowOperator` should be used when you have an existing job defined in your Databricks workspace that you want to trigger using Airflow. The `DatabricksSubmitRunOperator` should be used if you want to manage the definition of your Databricks job and its cluster configuration within Airflow. Both operators allow you to run the job on a Databricks General Purpose cluster you've already created or on a separate Job Cluster that is created for the job and terminated upon the job’s completion. 
 
 
-Both operators are thoroughly documented in the [provider code](https://github.com/apache/airflow/blob/master/airflow/providers/databricks/operators/databricks.py); we recommend reading through the doc strings on both operators to get familiar with them.
+Documentation for both operators can be found [here](https://registry.astronomer.io/providers/databricks?type=operators).
 
 ## Example - Using Airflow with Databricks
 

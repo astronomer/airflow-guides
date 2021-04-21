@@ -12,7 +12,7 @@ Apart from efficiency, they're also powerful tools in forcing jobs to be idempot
 
 ## Common Macros and Templates
 
-A list of default variables accessible in all templates can be found here: `https://airflow.apache.org/docs/apache-airflow/stable/macros-ref.html`
+A list of default variables accessible in all templates can be found here: [https://airflow.apache.org/docs/apache-airflow/stable/macros-ref.html](https://airflow.apache.org/docs/apache-airflow/stable/macros-ref.html)
 
 Common macros include:
 
@@ -25,18 +25,19 @@ Common macros include:
 Templates can be set directly in the DAG file:
 
 ```python
-dag = DAG('example_template_once_v2',
-          schedule_interval='@once',
-          default_args=default_args)
+dag = DAG(
+    'example_template_once_v2',
+    schedule_interval='@once',
+    default_args=default_args
+)
 
 
 def test(**kwargs):
-
     first_date = kwargs.get('execution_date', None)
     next_execution_date = '{{ next_execution_date }}'
 
-    print("NEXT EXECUTION DATE {0}".format(next_execution_date))
-    print("EXECUTION DATE: {0}".format(first_date))
+    print('NEXT EXECUTION DATE {0}'.format(next_execution_date))
+    print('EXECUTION DATE: {0}'.format(first_date))
 
 
 with dag:
@@ -45,9 +46,8 @@ with dag:
         task_id='show_template',
         python_callable=test,
         op_args={'execution_date': execution_date},
-        provide_context=True)
-
-
+        provide_context=True
+    )
 ```
 
 ## Rendering Tasks
@@ -60,39 +60,47 @@ From the Github to Redshift workflow we have been working with, we execute a pos
 get_individual_issue_counts = \
     """
     INSERT INTO github.issue_count_by_user
-    (SELECT login, sum(count) as count, timestamp
-     FROM
-            ((SELECT
-                m.login, count(i.id),
-                cast('{{ execution_date + macros.timedelta(hours=-4) }}' as timestamp) as timestamp
-            FROM github.astronomerio_issues i
+    SELECT
+        login,
+        SUM(count) AS count,
+        timestamp
+    FROM (
+        SELECT
+            m.login,
+            COUNT(i.id),
+            CAST('{{ execution_date + macros.timedelta(hours=-4) }}' AS TIMESTAMP) AS timestamp
+        FROM github.astronomerio_issues i
             JOIN github.astronomerio_members m
-            ON i.assignee_id = m.id
-            WHERE i.state = 'open'
-            GROUP BY m.login
-            ORDER BY login)
+              ON i.assignee_id = m.id
+        WHERE i.state = 'open'
+        GROUP BY m.login
+        ORDER BY m.login
         UNION
-            (SELECT
-                m.login, count(i.id),
-                cast('{{ execution_date + macros.timedelta(hours=-4) }}' as timestamp) as timestamp
-            FROM github.astronomerio_issues i
+        SELECT
+            m.login,
+            COUNT(i.id),
+            CAST('{{ execution_date + macros.timedelta(hours=-4) }}' AS TIMESTAMP) AS timestamp
+        FROM github.astronomerio_issues i
             JOIN github.astronomerio_members m
-            ON i.assignee_id = m.id
-            WHERE i.state = 'open'
-            GROUP BY m.login
-            ORDER BY login)
+              ON i.assignee_id = m.id
+        WHERE i.state = 'open'
+        GROUP BY m.login
+        ORDER BY m.login
         UNION
-            (SELECT
-                m.login,
-                count(i.id),
-                cast('{{ execution_date + macros.timedelta(hours=-4) }}' as timestamp) as timestamp
-            FROM github."airflow-plugins_issues" i
+        SELECT
+            m.login,
+            COUNT(i.id),
+            CAST('{{ execution_date + macros.timedelta(hours=-4) }}' AS TIMESTAMP) AS timestamp
+        FROM github."airflow-plugins_issues" i
             JOIN github."airflow-plugins_members" m
-            ON i.assignee_id = m.id
-            WHERE i.state = 'open'
-            GROUP BY m.login
-            ORDER BY login))
-    GROUP BY login, timestamp);
+              ON i.assignee_id = m.id
+        WHERE i.state = 'open'
+        GROUP BY m.login
+        ORDER BY m.login
+    )
+    GROUP BY
+        login,
+        timestamp;
     """
 ```
 
@@ -110,13 +118,13 @@ The corresponding timestamp has been rendered into the TaskInstance.
 
 One of templating's best use-cases is turning tasks idempotent.
 
-Any sort of intermediate file, timebased SQL, or anything else that has the time as an input should always be templated.
+Any sort of intermediate file, time-based SQL, or anything else that has the time as an input should always be templated.
 
 Luckily, this usually only requires changing a few lines of code:
 
 **1) Specify the field as a `template_field` at the operator level- notice that this requires no changes to the parameters being templated.**
 
-`https://github.com/airflow-plugins/google_analytics_plugin/blob/master/operators/google_analytics_reporting_to_s3_operator.py#L41`
+[https://github.com/airflow-plugins/google_analytics_plugin/blob/master/operators/google_analytics_reporting_to_s3_operator.py#L41](https://github.com/airflow-plugins/google_analytics_plugin/blob/master/operators/google_analytics_reporting_to_s3_operator.py#L41)
 
 ```python
 template_fields = ('s3_key', 'since', 'until')
@@ -124,40 +132,45 @@ template_fields = ('s3_key', 'since', 'until')
 
 **2) Define the corresponding values in the DAG file:**
 
-`https://github.com/airflow-plugins/Example-Airflow-DAGs/blob/master/etl/google_analytics_to_redshift.py#L131`
+[https://github.com/airflow-plugins/Example-Airflow-DAGs/blob/master/etl/google_analytics_to_redshift.py#L131](https://github.com/airflow-plugins/Example-Airflow-DAGs/blob/master/etl/google_analytics_to_redshift.py#L131)
 
 ```python
-SINCE = "{{{{ macros.ds_add(ds, -{0}) }}}}".format(str(LOOKBACK_WINDOW))
-UNTIL = "{{ ds }}"
+SINCE = '{{{{ macros.ds_add(ds, -{0}) }}}}'.format(str(LOOKBACK_WINDOW))
+UNTIL = '{{ ds }}'
 
-S3_KEY = 'google_analytics/{0}/{1}_{2}_{3}.json'.format(REDSHIFT_SCHEMA,
-                                                                GOOGLE_ANALYTICS_CONN_ID,
-                                                                view_id,
-                                                                "{{ ts_nodash }}")
+S3_KEY = 'google_analytics/{0}/{1}_{2}_{3}.json'.format(
+    REDSHIFT_SCHEMA,
+    GOOGLE_ANALYTICS_CONN_ID,
+    view_id,
+    '{{ ts_nodash }}'
+)
 ```
 
 **3) Instantiate the Operator with the right values:**
 
-`https://github.com/airflow-plugins/Example-Airflow-DAGs/blob/master/etl/google_analytics_to_redshift.py#L136`
+[https://github.com/airflow-plugins/Example-Airflow-DAGs/blob/master/etl/google_analytics_to_redshift.py#L136](https://github.com/airflow-plugins/Example-Airflow-DAGs/blob/master/etl/google_analytics_to_redshift.py#L136)
 
 ```python
-g = GoogleAnalyticsReportingToS3Operator(task_id='get_google_analytics_data',
-                                                 google_analytics_conn_id=GOOGLE_ANALYTICS_CONN_ID,
-                                                 view_id=view_id,
-                                                 since=SINCE,
-                                                 until=UNTIL,
-                                                 sampling_level=SAMPLING_LEVEL,
-                                                 dimensions=DIMENSIONS,
-                                                 metrics=METRICS,
-                                                 page_size=PAGE_SIZE,
-                                                 include_empty_rows=INCLUDE_EMPTY_ROWS,
-                                                 s3_conn_id=S3_CONN_ID,
-                                                 s3_bucket=S3_BUCKET,
-                                                 s3_key=S3_KEY
-                                                 )
+g = GoogleAnalyticsReportingToS3Operator(
+    task_id='get_google_analytics_data',
+    google_analytics_conn_id=GOOGLE_ANALYTICS_CONN_ID,
+    view_id=view_id,
+    since=SINCE,
+    until=UNTIL,
+    sampling_level=SAMPLING_LEVEL,
+    dimensions=DIMENSIONS,
+    metrics=METRICS,
+    page_size=PAGE_SIZE,
+    include_empty_rows=INCLUDE_EMPTY_ROWS,
+    s3_conn_id=S3_CONN_ID,
+    s3_bucket=S3_BUCKET,
+    s3_key=S3_KEY
+)
 ```
 
-## Schedule Based Templates
+> For more information on the `GoogleAnalyticsReportingToS3Operator`, as well as other available Google Analytics Operators and Hooks, visit the [Astronomer Registry](https://registry.astronomer.io), the discovery and distribution hub for Apache Airflow integrations created to aggregate and curate the best bits of the ecosystem.
+
+## Schedule-Based Templates
 
 Since macros are rendered at runtime, a DAG's `schedule_interval` should be taken into account when testing and deploying DAGs.
 
@@ -178,18 +191,18 @@ default_args = {
     'retry_delay': timedelta(minutes=5),
 }
 
-dag = DAG('example_template_once_v2',
-          schedule_interval='@once',
-          default_args=default_args)
-
+dag = DAG(
+    'example_template_once_v2',
+    schedule_interval='@once',
+    default_args=default_args
+)
 
 def test(**kwargs):
-
     first_date = kwargs.get('execution_date', None)
     next_execution_date = '{{ next_execution_date }}'
 
-    print("NEXT EXECUTION DATE {0}".format(next_execution_date))
-    print("EXECUTION DATE: {0}".format(first_date))
+    print('NEXT EXECUTION DATE {0}'.format(next_execution_date))
+    print('EXECUTION DATE: {0}'.format(first_date))
 
 
 with dag:
@@ -198,7 +211,8 @@ with dag:
         task_id='show_template',
         python_callable=test,
         template_dict={'execution_date': execution_date},
-        provide_context=True)
+        provide_context=True
+    )
 
 ```
 

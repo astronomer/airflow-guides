@@ -10,15 +10,15 @@ tags: ["DAGs", "XCom", "Tasks", "Dependencies"]
 
 ## Introduction
 
-Sharing data between tasks is a very common use case in Airflow. If you've been writing DAGs, you probably know that breaking them up into appropriately small tasks is best practice for debugging and recovering quickly from failures. But, maybe one of your downstream tasks requires metadata about an upstream task, or processes the results of the task immediately before it. 
+Sharing data between tasks is a very common use case in Airflow. If you've been writing DAGs, you probably know that breaking them up into appropriately small tasks is best practice for debugging and recovering quickly from failures. But, maybe one of your downstream tasks requires metadata about an upstream task, or processes the results of the task immediately before it.
 
-There are a few methods you can use to implement data sharing between your Airflow tasks. In this guide, we'll walk through the two most commonly used methods, discuss when to use each, and show some example DAGs to demonstrate the implementation. 
+There are a few methods you can use to implement data sharing between your Airflow tasks. In this guide, we'll walk through the two most commonly used methods, discuss when to use each, and show some example DAGs to demonstrate the implementation.
 
-Before we dive into the specifics, there are a couple of high-level concepts that are important when writing DAGs where data is shared between tasks. 
+Before we dive into the specifics, there are a couple of high-level concepts that are important when writing DAGs where data is shared between tasks.
 
 ### Ensure Idempotency
 
-An important concept for any data pipeline, including an Airflow DAG, is [idempotency](https://en.wikipedia.org/wiki/Idempotence). This is the property whereby an operation can be applied multiple times without changing the result. We often hear about this concept as it applies to your entire DAG; if you execute the same DAGRun multiple times, you will get the same result. However, this concept also applies to tasks within your DAG; if every task in your DAG is idempotent, your full DAG will be idempotent as well. 
+An important concept for any data pipeline, including an Airflow DAG, is [idempotency](https://en.wikipedia.org/wiki/Idempotence). This is the property whereby an operation can be applied multiple times without changing the result. We often hear about this concept as it applies to your entire DAG; if you execute the same DAGRun multiple times, you will get the same result. However, this concept also applies to tasks within your DAG; if every task in your DAG is idempotent, your full DAG will be idempotent as well.
 
 When designing a DAG that passes data between tasks, it is important to ensure that each task is idempotent. This will help you recover and ensure no data is lost should you have any failures.
 
@@ -32,9 +32,9 @@ The first method for passing data between Airflow tasks is to use XCom, which is
 
 ### What is XCom
 
-[XCom](https://airflow.apache.org/docs/apache-airflow/stable/concepts.html?highlight=xcom#concepts-xcom) (short for cross-communication) is a native feature within Airflow. XComs allow tasks to exchange task metadata or small amounts of data. They are defined by a key, value, and timestamp. 
+[XCom](https://airflow.apache.org/docs/apache-airflow/stable/concepts.html?highlight=xcom#concepts-xcom) (short for cross-communication) is a native feature within Airflow. XComs allow tasks to exchange task metadata or small amounts of data. They are defined by a key, value, and timestamp.
 
-XComs can be "pushed", meaning sent by a task, or "pulled", meaning received by a task. When an XCom is pushed, it is stored in Airflow's metadata database and made available to all other tasks. Any time a task returns a value (e.g. if your Python callable for your PythonOperator has a return), that value will automatically be pushed to XCom. Tasks can also be configured to push XComs by calling the `xcom_push()` method. Similarly, `xcom_pull()` can be used in a task to receive an XCom. 
+XComs can be "pushed", meaning sent by a task, or "pulled", meaning received by a task. When an XCom is pushed, it is stored in Airflow's metadata database and made available to all other tasks. Any time a task returns a value (e.g. if your Python callable for your [PythonOperator](https://registry.astronomer.io/providers/apache-airflow/modules/pythonoperator) has a return), that value will automatically be pushed to XCom. Tasks can also be configured to push XComs by calling the `xcom_push()` method. Similarly, `xcom_pull()` can be used in a task to receive an XCom.
 
 You can view your XComs in the Airflow UI by navigating to Admin → XComs. You should see something like this:
 
@@ -42,9 +42,9 @@ You can view your XComs in the Airflow UI by navigating to Admin → XComs. You 
 
 ### When to Use XComs
 
-XComs should be used to pass **small** amounts of data between tasks. Things like task metadata, dates, model accuracy, or single value query results are all ideal data to use with XCom. 
+XComs should be used to pass **small** amounts of data between tasks. Things like task metadata, dates, model accuracy, or single value query results are all ideal data to use with XCom.
 
-While there is nothing stopping you from passing small data sets with XCom, be very careful when doing so. This is not what XCom was designed for, and using it to pass data like pandas dataframes can degrade the performance of your DAGs and take up storage in the metadata database. 
+While there is nothing stopping you from passing small data sets with XCom, be very careful when doing so. This is not what XCom was designed for, and using it to pass data like pandas dataframes can degrade the performance of your DAGs and take up storage in the metadata database.
 
 XCom cannot be used for passing large data sets between tasks. The limit for the size of the XCom is determined by which metadata database you are using:
 
@@ -80,7 +80,7 @@ def get_testing_increase(state, ti):
     res = requests.get(url+'{0}/current.json'.format(state))
     testing_increase = json.loads(res.text)['totalTestResultsIncrease']
 
-    ti.xcom_push(key='testing_increase', value=testing_increase) 
+    ti.xcom_push(key='testing_increase', value=testing_increase)
 
 def analyze_testing_increases(state, ti):
     """
@@ -123,7 +123,7 @@ with DAG('xcom_dag',
     opr_get_covid_data >> opr_analyze_testing_data
 ```
 
-In this DAG we have two PythonOperators which share data using the `xcom_push` and `xcom_pull` functions. Note that in the `get_testing_increase` function, we used the `xcom_push` method so that we could specify the `key` name. Alternatively, we could have made the function return the `testing_increase` value, because any value returned by an operator in Airflow will automatically be pushed to XCom; if we had used this method, the XCom key would be "returned_value". 
+In this DAG we have two `PythonOperator` tasks which share data using the `xcom_push` and `xcom_pull` functions. Note that in the `get_testing_increase` function, we used the `xcom_push` method so that we could specify the `key` name. Alternatively, we could have made the function return the `testing_increase` value, because any value returned by an operator in Airflow will automatically be pushed to XCom; if we had used this method, the XCom key would be "returned_value".
 
 For the `xcom_pull` call in the `analyze_testing_increases` function, we specify the `key` and `task_ids` associated with the XCom we want to retrieve. Note that this allows you to pull any XCom value (or multiple values) at any time into a task; it does not need to be from the task immediately prior as shown in this example
 
@@ -177,7 +177,7 @@ def taskflow():
 dag = taskflow()
 ```
 
-This DAG is functionally the same as the first one, but thanks to the TaskFlow API there is less code required overall, and no additional code required for passing the data between the tasks using XCom. 
+This DAG is functionally the same as the first one, but thanks to the TaskFlow API there is less code required overall, and no additional code required for passing the data between the tasks using XCom.
 
 ## Intermediary Data Storage
 
@@ -252,7 +252,7 @@ with DAG('intermediary_data_storage_dag',
          default_args=default_args,
          catchup=False
          ) as dag:
-    
+
     generate_file = PythonOperator(
         task_id='generate_file_{0}'.format(state),
         python_callable=upload_to_s3,
@@ -268,4 +268,4 @@ with DAG('intermediary_data_storage_dag',
     generate_file >> process_data
 ```
 
-In this DAG we make use of the `S3Hook` to save data retrieved from the API to a CSV on S3 in the `generate_file` task. The `process_data` task then grabs that data from S3, converts it to a dataframe for processing, and then saves the processed data back to a new CSV on S3.
+In this DAG we make use of the [S3Hook](https://registry.astronomer.io/providers/amazon/modules/s3hook) to save data retrieved from the API to a CSV on S3 in the `generate_file` task. The `process_data` task then grabs that data from S3, converts it to a dataframe for processing, and then saves the processed data back to a new CSV on S3.

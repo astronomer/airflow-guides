@@ -13,6 +13,8 @@ Operators are the main building blocks of Airflow DAGs. They are classes that en
 
 When you create an instance of an operator in a DAG and provide it with it's required parameters, it becomes a task. Many tasks can be added to a DAG along with their dependencies. When Airflow executes that task for a given `execution_date`, it becomes a task instance.
 
+> To browse and search all of the available Operators in Airflow, visit the [Astronomer Registry](https://registry.astronomer.io/modules?types=operators), the discovery and distribution hub for Apache Airflow integrations created to aggregate and curate the best bits of the ecosystem.
+
 
 ### BashOperator
 
@@ -24,7 +26,7 @@ t1 = BashOperator(
         )
 ```
 
-This `BashOperator` simply runs a bash command and echos "Hello World"
+This [BashOperator](https://registry.astronomer.io/providers/apache-airflow/modules/bashoperator) simply runs a bash command and echos `"Hello World"`
 
 [BashOperator Code](https://github.com/apache/airflow/blob/master/airflow/operators/bash_operator.py)
 
@@ -42,7 +44,7 @@ t2 = PythonOperator(
         )
 ```
 
-The `PythonOperator` will call a python function defined earlier in our code. You can pass parameters to the function via the `op_kwargs` parameter. This task will print "Hello from Airflow" when it runs.
+The [PythonOperator](https://registry.astronomer.io/providers/apache-airflow/modules/pythonoperator) will call a python function defined earlier in our code. You can pass parameters to the function via the `op_kwargs` parameter. This task will print "Hello from Airflow" when it runs.
 
 [PythonOperator Code](https://github.com/apache/airflow/blob/master/airflow/operators/python_operator.py)
 
@@ -57,7 +59,7 @@ t3 = PostgresOperator(
     )
 ```
 
-This operator will issue a sql statement against a postgres database. Credentials for the database are stored in an airflow connection called `my_postgres_connection`. If you look at the code for the `PostgresOperator`, it uses a `PostgresHook` to actually interact with the database.
+This operator will issue a sql statement against a postgres database. Credentials for the database are stored in an airflow connection called `my_postgres_connection`. If you look at the code for the [PostgresOperator](https://registry.astronomer.io/providers/postgres/modules/postgresoperator), it uses a [PostgresHook](https://registry.astronomer.io/providers/postgres/modules/postgreshook) to actually interact with the database.
 
 [PostgresOperator](https://github.com/apache/airflow/blob/master/airflow/operators/postgres_operator.py)
 
@@ -71,16 +73,16 @@ t4 = SSHOperator(
     )
 ```
 
-Like the `BashOperator`, the `SSHOperator` allows you to run a bash command, but has built in support to ssh into a remote machine to run commands there.
+Like the `BashOperator`, the [SSHOperator](https://registry.astronomer.io/providers/ssh/modules/sshoperator) allows you to run a bash command, but has built in support to SSH into a remote machine to run commands there.
 
-The private key to authenticate to the remote server is stored in Airflow Connections as `my_ssh_conenction`. This key can be referred to in all DAGs, so the operator itself only needs the command you want to run. This operator uses an `SSHHook` to establish the ssh connection and run the command.
+The private key to authenticate to the remote server is stored in Airflow Connections as `my_ssh_conenction`. This key can be referred to in all DAGs, so the operator itself only needs the command you want to run. This operator uses an [SSHHook](https://registry.astronomer.io/providers/ssh/modules/sshhook) to establish the ssh connection and run the command.
 
 [SSHOperator Code](https://github.com/apache/airflow/blob/master/airflow/contrib/operators/ssh_operator.py)
 
 ### S3 To Redshift Operator
 
 ```python
-t5 = S3ToRedshiftTransfer(
+t5 = S3ToRedshiftOperator(
         task_id='S3ToRedshift',
         schema='public',
         table='my_table',
@@ -91,11 +93,10 @@ t5 = S3ToRedshiftTransfer(
     )
 ```
 
-This operator loads data from S3 to Redshift via Redshift's COPY command. This is in a family of operators called `Transfer Operators` - operators designed to move data from one system (S3) to another (Redshift). Notice it has two Airflow connections in the parameters, one for Redshift and one for S3.
+The [S3ToRedshiftOperator](https://registry.astronomer.io/providers/amazon/modules/s3toredshiftoperator) operator loads data from S3 to Redshift via Redshift's COPY command. This is in a family of operators called `Transfer Operators` - operators designed to move data from one system (S3) to another (Redshift). Notice it has two Airflow connections in the parameters, one for Redshift and one for S3.
 
-This also uses another concept - [macros and templates](https://www.astronomer.io/guides/templating/). In the `s3_key` parameter, jinja template notation is used to pass in the execution date for this DAG Run formatted as a string with no dashes (`ds_nodash` - a predefined macro in Airflow). It will look for a key formatted similarly to `my_s3_bucket/20190711/my_file.csv`, with the timestamp dependent on when the file ran. 
+This also uses another concept - [macros and templates](https://www.astronomer.io/guides/templating/). In the `s3_key` parameter, Jinja template notation is used to pass in the execution date for this DAG Run formatted as a string with no dashes (`ds_nodash` - a predefined macro in Airflow). It will look for a key formatted similarly to `my_s3_bucket/20190711/my_file.csv`, with the timestamp dependent on when the file ran. 
 
  Templates can be used to determine runtime parameters (e.g. the range of data for an API call) and also make your code idempotent (each intermediary file is named for the data range it contains).
 
-[S3ToRedshiftTransfer Code](https://airflow.apache.org/docs/apache-airflow-providers-amazon/stable/operators/s3_to_redshift.html)
-
+[S3ToRedshiftOperator Code](https://github.com/apache/airflow/blob/master/airflow/providers/amazon/aws/transfers/s3_to_redshift.py)
