@@ -10,7 +10,7 @@ tags: ["Plugins", "XCom"]
 
 ## Overview
 
-In December 2020, the Apache Airflow project took a huge step forward with the release of [Airflow 2.0](https://www.astronomer.io/blog/introducing-airflow-2-0). One of the main new features in this release was the [TaskFlow API](https://airflow.apache.org/docs/apache-airflow/stable/concepts.html#taskflow-api), which was introduced to solve the challenge of explicitly passing messages between Airflow tasks. The TaskFlow API abstracts the task and dependency management layer away from users, which greatly improves the experience of working with Xcoms.
+In December 2020, the Apache Airflow project took a huge step forward with the release of [Airflow 2.0](https://www.astronomer.io/blog/introducing-airflow-2-0). One of the main new features in this release was the [TaskFlow API](https://airflow.apache.org/docs/apache-airflow/stable/concepts.html#taskflow-api), which was introduced to solve the challenge of explicitly passing messages between Airflow tasks. The TaskFlow API abstracts the task and dependency management layer away from users, which greatly improves the experience of working with XComs.
 
 One of the features of the TaskFlow API that increases the flexibility of XComs is support for a [custom XCom backend](https://airflow.apache.org/docs/apache-airflow/stable/concepts.html?highlight=xcom#custom-xcom-backend). This means that rather than store XComs in Airflow's metadata database by default, you can push and pull XComs to and from an external system such as S3, GCS, or HDFS. You can also implement your own serialization / deserialization methods to define how XComs are handled. 
 
