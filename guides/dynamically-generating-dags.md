@@ -172,7 +172,7 @@ for n in range(1, number_of_dags):
 
 ```
 
-If we look at the scheduler logs, we can see this variable was pulled into the DAG and, and 15 DAGs were added to the DagBag based on the its value.
+If we look at the scheduler logs, we can see this variable was pulled into the DAG and, and 15 DAGs were added to the DagBag based on its value.
 
 ![Logs showing 15 DAGs added to DagBag](https://assets.astronomer.io/website/img/guides/dag_logs.png)
 
