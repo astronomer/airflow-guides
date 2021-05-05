@@ -7,13 +7,15 @@ heroImagePath: null
 tags: ["Workers", "Concurrency", "Parallelism", "DAGs"]
 ---
 <!-- markdownlint-disable-file -->
-As data pipelines grow in complexity, the need to have a flexible and scalable architecture is more important than ever. Airflow's Celery Executor makes it easy to scale out workers horizontally when you need to execute lots of tasks in parallel. There are however some "gotchas" to look out for. Even folks familiar with using the Celery Executor might wonder, "Why are more tasks not running even after I add workers?""
+One of Airflow's most important features is its ability to run at any scale. Because Airflow is 100% code, you need to only update a few key settings across your environment when to scale up your data pipelines.
 
-This common issue is the result of a number of different Airflow settings you can tweak to reach max parallelism and performance. Settings are maintained in the airflow.cfg file and can also be overridden using environment variables.
+In this guide, we'll walk through the key Airflow components related to scale. We'll also provide guidance on when and how to scale Airflow to best suit your needs.
 
-See the guide on [Airflow Executors](https://www.astronomer.io/guides/airflow-executors-explained/) for more info on which executor is right for you.
+## Scale Airflow Using Settings
 
-Here are the settings and their default values.
+One of the ways you can control the scale of Airflow is through environment-level settings. These can be configured either in your `airflow.cfg` file or through setting environment variables.
+
+The following table includes some of they key settings you'll want to update when scaling Airflow:
 
 <table>
   <tr>
@@ -44,47 +46,44 @@ Here are the settings and their default values.
 </table>
 
 
-**parallelism** is the max number of task instances that can run concurrently on airflow. This means that across all running DAGs, no more than 32 tasks will run at one time.
+- `parallelism` is the maximum number of task instances that can run concurrently on Airflow. By default, across all running DAGs, no more than 32 tasks will run at one time. You might want to increase this value if you notice that tasks are stuck in a queue for extended periods of time.
 
-**dag_concurrency** is the number of task instances allowed to run concurrently within a *specific dag*. In other words, you could have 2 DAGs running 16 tasks each in parallel, but a single DAG with 50 tasks would also only run 16 tasks - not 32
+- `dag_concurrency` is the maximum number of tasks that can run concurrently within a specific DAG. By default, a DAG can have a maximum of 16 tasks running at once.
 
-These are the main two settings that can be tweaked to fix the common "Why are more tasks not running even after I add workers?"
+    If you scale the computational resources of Airflow, such as Celery Workers or Kubernetes pods, and still notice that tasks aren't running as expected, you might have to increase the values of both `parallelism` and `dag_concurrency`.
 
-**worker_concurrency** is related, but it determines how many tasks a single worker can process. So, if you have 4 workers running at a worker concurrency of 16, you could process up to 64 tasks at once. Configured with the defaults above, however, only 32 would actually run in parallel. (and only 16 if all tasks are in the same DAG)
+- `worker_concurrency` is the maximum number of tasks that a single Celery Worker can process at once. This setting applies only when using the Celery Executor.
 
-**Pro tip:** If you increase worker_concurrency, make sure your worker has enough resources to handle the load. You may need to increase CPU and/or memory on your workers. Note: This setting only impacts the CeleryExecutor
+    If you increase `worker_concurrency`, you might also need to provision additional CPU and/or memory for your workers.
 
-If you're using Astronomer, you can configure both worker resources and environment variables directly through the UI. For more info and screenshots of our sweet sliders, check out our Astronomer UI guide [here](https://www.astronomer.io/docs/astronomer-ui/).
+- `parsing_processes` is the maximum number of threads that can run on the Scheduler at once. Scaling up DAG-level settings like `parallelism` results in additional strain on the Scheduler, so we recommend scaling this alongside your other settings. If you notice a delay in tasks being scheduled, you might need to increase this value or provision additional CPU and/or memory for your Scheduler.
 
-![image](https://assets2.astronomer.io/main/guides/airflow-scaling-workers/worker_slider.png)
+    > **Note:** In Airflow 1.10.13 and prior versions, the parsing_processes setting is called max_threads
 
-### Scheduler Impact
+Putting it all together, let's assume we have an Airflow environment that uses all of the default settings and uses 4 Celery Workers to process tasks. Because we have 4 Celery Workers and `worker_concurrency=16`, we could theoretically run 64 tasks at once. Because `parallelism=32`, however, only 32 tasks are able to run at once across Airflow. Moreover, if all of these tasks exist within a single DAG, we'd be able to run only 16 tasks at once because `dag_concurrency=16`.
 
-If you decide to increase these settings, Airflow will be able to scale up and process many tasks in parallel. This could however put a strain on the scheduler. For example, you may notice delays in task execution, tasks remaining a in `queued` state for longer than expected, or gaps in the Gantt chart of the Airflow UI.
-
-The **parsing_processes = 2** setting can be used to increase the number of threads running on the scheduler. This can prevent the scheduler from getting behind, but may also require more resources. If you increase this, you may need to increase CPU and/or memory on your scheduler. This should be set to n-1 where n is the number of CPUs of your scheduler.
-
-> **Note:** In Airflow 1.10.13 and prior versions, the parsing_processes setting is called max_threads.
-
-On Astronomer, simply increase the slider on the Scheduler to increase CPU and memory.
-
-![image](https://assets2.astronomer.io/main/guides/airflow-scaling-workers/scheduler_slider.png)
-
-### Pools
+## Scale Airflow Using Pools
 
 Finally, **pools** are a way of limiting the number of concurrent instances of a specific type of task. This is great if you have a lot of workers in parallel, but you don’t want to overwhelm a source or destination.
 
-For example, with the default settings above, and a DAG with 50 tasks to pull data from a REST API, when the DAG starts, you would get 16 workers hitting the API at once and you may get some throttling errors back from your API. You can create a pool and give it a limit of 5. Then assign all of the tasks to that pool. Even though you have plenty of free workers, only 5 will run at one time.
+For example, let's assume Airflow uses the default `airflow.cfg` settings above. Let's also assume we have a DAG with 50 tasks that each pull data from a REST API. When the DAG starts, 16 workers will be accessing the API at once, which may result in throttling errors from the API. What if we want to limit the rate of tasks, but only for tasks that access this API?
 
-You can create a pool directly in the Admin section of the Airflow web UI
+Using pools, we can control how many tasks can run across a specific subset of DAGs. If we assign a single pool to multiple tasks, the pool ensures that no more than a given number of tasks between the DAGs are running at once. As you scale Airflow, you'll want to use pools to manage resource usage across your tasks.
 
-![image](https://assets2.astronomer.io/main/guides/airflow-scaling-workers/create_pool.png)
+To create a pool:
 
-And then assign your task to the pool
-```python
-t1 = MyOperator(
-  task_id='pull_from_api',
-  dag=dag,
-  pool='My_REST_API'
-)
+1. In the Airflow UI, go to **Admin** > **Pools**.
+
+2. Create a pool with a name and a number of slots. In this example, we created a pool with 5 slots, meaning that no more than 5 tasks assigned to the pool can run at a single time:
+
+    ![image](https://assets2.astronomer.io/main/guides/airflow-scaling-workers/create_pool.png)
+
+3. Assign your tasks to the pool:
+
+    ```python
+    t1 = MyOperator(
+      task_id='pull_from_api',
+      dag=dag,
+      pool='My_REST_API'
+    )
 ```
