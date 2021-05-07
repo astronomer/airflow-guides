@@ -41,11 +41,13 @@ This animated gif shows the above example with the UI interactions of expanding 
 
 ![UI Task Group](https://assets2.astronomer.io/main/guides/task-groups/task-groups-ui.gif)
 
-**Note:** When your task is within a task group, your callable taskid will be group_id.task_id. This ensures the uniqueness of the task_id across the DAG. This is important to remember when calling tasks like for XCOMs or branching operator decisions. 
+**Note:** When your task is within a task group, your callable task ID will be group_id.task_id. This ensures the uniqueness of the task_id across the DAG. This is important to remember when calling specific tasks like for XCOM passing or branching operator decisions. 
 
 #### Dynamically Generating Task Groups
 
-Task Groups can be dynamically generated to make use of patterns within your code. When calling an API, you may call a number of objects that have similar downstream tasks. This allows you to group by API objects for a simpler UI experience, that can be drilled into to see specific task status.
+Task Groups can be dynamically generated to make use of patterns within your code. 
+
+When calling an API, you may call a number of objects that have similar downstream tasks. This allows you to group by API objects for a simpler UI experience, that can be drilled into to see specific task statuses.
 
 ```python
     for g_id in range(1,3):
@@ -59,7 +61,7 @@ Task Groups can be dynamically generated to make use of patterns within your cod
 
 ##### Ordering Tasks Groups
 
-By default using a loop to generate your tasks groups, will put them in parallel. In cases where your tasks groups are dependent on elements of another task group then you'll want to run them sequentially. Like when processing tables with foreign keys, your primary table records will need to exist before you can load your foreign table.
+By default using a loop to generate your tasks groups, will put them in parallel. In cases where your tasks groups are dependent on elements of another task group then you'll want to run them sequentially. For example, when processing tables with foreign keys your primary table records will need to exist before you can load your foreign table.
 
 ```python
     groups = []
