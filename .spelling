@@ -1636,4 +1636,3 @@ AwsBaseHook
 BaseSensorOperator
 PostgresHook
 SSHHook
-group_id.task_id
