@@ -82,9 +82,11 @@ To check current values for an existing Airflow environment, navigate to **Admin
 
 - **`max_active_runs_per_dag`** determines the maximum number of active DAG Runs (per DAG) the Airflow Scheduler can handle at any given time. If this is set to 16, that means the Scheduler can handle up to 16 active DAG runs per DAG. In Airflow, a [DAG Run](https://airflow.apache.org/docs/apache-airflow/stable/dag-run.html) represents an instantiation of a DAG in time, much like a task instance represents an instantiation of a task.
 
-### Example
+### Concurrency Example
 
-Let's assume we have an Airflow environment that uses the default settings defined above and runs 4 Celery Workers. If we have 4 Celery Workers and `worker_concurrency=16`, we could theoretically run 64 tasks at once. Because `parallelism=32`, however, only 32 tasks are able to run at once across Airflow. Moreover, if all of these tasks exist within a single DAG, we'd be able to run only 16 tasks at once because `dag_concurrency=16`.
+Let's assume we have an Airflow environment that uses the default settings defined above and runs 4 Celery Workers. If we have 4 Celery Workers and `worker_concurrency=16`, we could theoretically run 64 tasks at once. Because `parallelism=32`, however, only 32 tasks are able to run at once across Airflow.
+
+If all of these tasks exist within a single DAG and `dag_concurrency=16`, however, we'd be further limited to a maximum of 16 tasks at once.
 
 ## DAG-level Airflow Settings
 
@@ -92,33 +94,33 @@ There are two primary DAG-level Airflow settings users can define in code:
 
 - **`max_active_run`** is the maximum number of active DAG Runs allowed for the DAG in question. Once this limit is hit, the Scheduler will not create new active DAG Runs. If this setting is not defined, the value of `max_active_runs_per_dag` (described above) is assumed.
 
-```
-# Allow a maximum of 3 active runs of this DAG at any given time
-dag = DAG('my_dag_id', max_active_runs=3)
-```
+  ```
+  # Allow a maximum of 3 active runs of this DAG at any given time
+  dag = DAG('my_dag_id', max_active_runs=3)
+  ```
 
 - **`concurrency`** is the maximum number of task instances allowed to run concurrently across all active DAG runs of the DAG for which this setting is defined. This allows you to set 1 DAG to be able to run 32 tasks at once, while another DAG might only be able to run 16 tasks at once. If this setting is not defined, the value of `dag_concurrency` (described above) is assumed.
 
-For example:
+  For example:
 
-```
-# Allow a maximum of concurrent 10 tasks across a max of 3 active DAG runs
-dag = DAG('my_dag_id', concurrency=10, max_active_runs=3)
-```
+  ```
+  # Allow a maximum of concurrent 10 tasks across a max of 3 active DAG runs
+  dag = DAG('my_dag_id', concurrency=10,  max_active_runs=3)
+  ```
 
 ## Task-level Airflow Settings
 
 There are two primary task-level Airflow settings users can define in code:
 
-- **`pool`** is a way to limit the number of concurrent instances of a specific type of task. This is great if you have a lot of Workers or DAG Runs in parallel, but you want to avoid an API rate limit or otherwise don't want to overwhelm a data source or destination. For more information, read [Pools](https://airflow.apache.org/docs/apache-airflow/stable/concepts.html?highlight=pools#pools) in Airflow documentation.
+- **`pool`** is a way to limit the number of concurrent instances of a specific type of task. This is great if you have a lot of Workers or DAG Runs in parallel, but you want to avoid an API rate limit or otherwise don't want to overwhelm a data source or destination. For more information, read [Pools](https://airflow.apache.org/docs/apache-airflow/stable/concepts.html?highlight=pools#pools) in Airflow's documentation.
 
 - **`task_concurrency`** is a limit to the amount of times the same task can execute across multiple DAG Runs.
 
-For example, you might set the following in your task definition:
+  For example, you might set the following in your task definition:
 
-```
-t1 = PythonOperator(pool='my_custom_pool', task_concurrency=14)
-```
+  ```
+  t1 = PythonOperator(pool='my_custom_pool', task_concurrency=14)
+  ```
 
 ### Airflow Pools Best Practices
 
