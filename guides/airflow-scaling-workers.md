@@ -7,15 +7,30 @@ heroImagePath: null
 tags: ["Workers", "Concurrency", "Parallelism", "DAGs"]
 ---
 <!-- markdownlint-disable-file -->
-One of Airflow's most important features is its ability to run at any scale. Because Airflow is 100% code, you need to only update a few key settings across your environment when to scale up your data pipelines.
 
-In this guide, we'll walk through the key Airflow components related to scale. We'll also provide guidance on when and how to scale Airflow to best suit your needs.
+## Overview
 
-## Scale Airflow Using Settings
+One of Apache Airflow's biggest strengths is its ability to scale as the needs of your team grow. To make the most of Airflow's extensibility, there are a few key settings that you should consider modifying as you scale up your data pipelines.
 
-One of the ways you can control the scale of Airflow is through environment-level settings. These can be configured either in your `airflow.cfg` file or through setting environment variables.
+Airflow exposes a number of parameters that are closely related to DAG and task-level performance. These fall into 3 categories:
 
-The following table includes some of they key settings you'll want to update when scaling Airflow:
+- Environment-level settings
+- DAG-level settings
+- Operator-level settings
+
+Environment-level settings are generally set in the `airflow.cfg` file or through environment variables, while DAG and task-level settings are typically specified in code.
+
+In this guide, we'll walk through key values in each category in the context of scale and performance.
+
+## Environment-level Airflow Settings
+
+Environment-level settings are typically set in the `airflow.cfg` file, which is required in all Airflow projects. All settings in this file have a default value that can be overriden by modifying the file directly. Default values are taken from the [default_airflow.cfg file](https://github.com/apache/airflow/blob/master/airflow/config_templates/default_airflow.cfg) in Airflow project source code.
+
+To check current values for an existing Airflow environment, navigate to **Admin** > **Configurations** in the Airflow UI. For more information, read [Setting Configuration Options](https://airflow.apache.org/docs/apache-airflow/stable/howto/set-config.html) or [Configuration Reference](https://airflow.apache.org/docs/apache-airflow/stable/configurations-ref.html) in Airflow documentation.
+
+> **Note:** If you're running on Astronomer, these settings can be modified via Environment Variables. For more information, read [Environment Variables on Astronomer](https://www.astronomer.io/docs/cloud/stable/deploy/environment-variables).
+
+### Default Values
 
 <table>
   <tr>
@@ -43,30 +58,71 @@ The following table includes some of they key settings you'll want to update whe
     <td>AIRFLOW__SCHEDULER__PARSING_PROCESSES</td>
     <td align="center">2</td>
   </tr>
+    <td>max_active_runs_per_dag</td>
+    <td>AIRFLOW__CORE__MAX_ACTIVE_RUNS_PER_DAG</td>
+    <td align="center">16</td>
+  </tr>
 </table>
 
+### Setting Descriptions
 
-- `parallelism` is the maximum number of task instances that can run concurrently on Airflow. By default, across all running DAGs, no more than 32 tasks will run at one time. You might want to increase this value if you notice that tasks are stuck in a queue for extended periods of time.
+- **`parallelism`** is the maximum number of tasks that can run concurrently within a single Airflow environment. If this setting is set to 32, no more than 32 tasks can run at once across all DAGs. Think of this as "maximum active tasks anywhere." If you notice that tasks are stuck in a queue for extended periods of time, this is a value you may want to increase.
 
-- `dag_concurrency` is the maximum number of tasks that can run concurrently within a specific DAG. By default, a DAG can have a maximum of 16 tasks running at once.
+- **`dag_concurrency`** determines how many task instances the Airflow Scheduler is able to schedule at once per DAG. Think of this as "maximum tasks that can be scheduled at once, per DAG."
 
-    If you scale the computational resources of Airflow, such as Celery Workers or Kubernetes pods, and still notice that tasks aren't running as expected, you might have to increase the values of both `parallelism` and `dag_concurrency`.
+  If you increase the amount of resources available to Airflow (such as Celery Workers or Kubernetes Pods) and notice that tasks are still not running as expected, you might have to increase the values of both `parallelism` and `dag_concurrency`.
 
-- `worker_concurrency` is the maximum number of tasks that a single Celery Worker can process at once. This setting applies only when using the Celery Executor.
+- **`worker_concurrency`** is only applicable to users running the [Celery Executor](https://airflow.apache.org/docs/apache-airflow/stable/executor/celery.html). It determines how many tasks each Celery Worker can run at any given time. If this value is not set, the Celery Executor will run a maximum of 16 tasks concurrently by default.
 
-    If you increase `worker_concurrency`, you might also need to provision additional CPU and/or memory for your workers.
+  This number is limited by `dag_concurrency`. If you have 1 Worker and want it to match your environment's capacity, `worker_concurrency` should be equal to `parallelism`. If you increase `worker_concurrency`, you might also need to provision additional CPU and/or memory for your Workers.   
 
-- `parsing_processes` is the maximum number of threads that can run on the Scheduler at once. Scaling up DAG-level settings like `parallelism` results in additional strain on the Scheduler, so we recommend scaling this alongside your other settings. If you notice a delay in tasks being scheduled, you might need to increase this value or provision additional CPU and/or memory for your Scheduler.
+- **`parsing_processes`** is the maximum number of threads that can run on the Airflow Scheduler at once. Increasing the value of `parallelism` results in additional strain on the Scheduler, so we recommend increasing `parsing_processes` as well. If you notice a delay in tasks being scheduled, you might need to increase this value or provision additional resources for your Scheduler.
 
-    > **Note:** In Airflow 1.10.13 and prior versions, the parsing_processes setting is called max_threads
+    > **Note:** This setting was renamed in Airflow 1.10.14. In earlier versions, it is defined as `max_threads` ([source](https://github.com/apache/airflow/commit/486134426bf2cd54fae1f75d9bd50715b8369ca1)).
 
-Putting it all together, let's assume we have an Airflow environment that uses all of the default settings and uses 4 Celery Workers to process tasks. Because we have 4 Celery Workers and `worker_concurrency=16`, we could theoretically run 64 tasks at once. Because `parallelism=32`, however, only 32 tasks are able to run at once across Airflow. Moreover, if all of these tasks exist within a single DAG, we'd be able to run only 16 tasks at once because `dag_concurrency=16`.
+- **`max_active_runs_per_dag`** determines the maximum number of active DAG Runs (per DAG) the Airflow Scheduler can handle at any given time. If this is set to 16, that means the Scheduler can handle up to 16 active DAG runs per DAG. In Airflow, a [DAG Run](https://airflow.apache.org/docs/apache-airflow/stable/dag-run.html) represents an instantiation of a DAG in time, much like a task instance represents an instantiation of a task.
 
-## Scale Airflow Using Pools
+### Example
 
-Finally, **pools** are a way of limiting the number of concurrent instances of a specific type of task. This is great if you have a lot of workers in parallel, but you don’t want to overwhelm a source or destination.
+Let's assume we have an Airflow environment that uses the default settings defined above and runs 4 Celery Workers. If we have 4 Celery Workers and `worker_concurrency=16`, we could theoretically run 64 tasks at once. Because `parallelism=32`, however, only 32 tasks are able to run at once across Airflow. Moreover, if all of these tasks exist within a single DAG, we'd be able to run only 16 tasks at once because `dag_concurrency=16`.
 
-For example, let's assume Airflow uses the default `airflow.cfg` settings above. Let's also assume we have a DAG with 50 tasks that each pull data from a REST API. When the DAG starts, 16 workers will be accessing the API at once, which may result in throttling errors from the API. What if we want to limit the rate of tasks, but only for tasks that access this API?
+## DAG-level Airflow Settings
+
+There are two primary DAG-level Airflow settings users can define in code:
+
+- **`max_active_run`** is the maximum number of active DAG Runs allowed for the DAG in question. Once this limit is hit, the Scheduler will not create new active DAG Runs. If this setting is not defined, the value of `max_active_runs_per_dag` (described above) is assumed.
+
+```
+# Allow a maximum of 3 active runs of this DAG at any given time
+dag = DAG('my_dag_id', max_active_runs=3)
+```
+
+- **`concurrency`** is the maximum number of task instances allowed to run concurrently across all active DAG runs of the DAG for which this setting is defined. This allows you to set 1 DAG to be able to run 32 tasks at once, while another DAG might only be able to run 16 tasks at once. If this setting is not defined, the value of `dag_concurrency` (described above) is assumed.
+
+For example:
+
+```
+# Allow a maximum of concurrent 10 tasks across a max of 3 active DAG runs
+dag = DAG('my_dag_id', concurrency=10, max_active_runs=3)
+```
+
+## Task-level Airflow Settings
+
+There are two primary task-level Airflow settings users can define in code:
+
+- **`pool`** is a way to limit the number of concurrent instances of a specific type of task. This is great if you have a lot of Workers or DAG Runs in parallel, but you want to avoid an API rate limit or otherwise don't want to overwhelm a data source or destination. For more information, read [Pools](https://airflow.apache.org/docs/apache-airflow/stable/concepts.html?highlight=pools#pools) in Airflow documentation.
+
+- **`task_concurrency`** is a limit to the amount of times the same task can execute across multiple DAG Runs.
+
+For example, you might set the following in your task definition:
+
+```
+t1 = PythonOperator(pool='my_custom_pool', task_concurrency=14)
+```
+
+### Airflow Pools Best Practices
+
+Let's assume an Airflow environment with the Celery Executor uses the default `airflow.cfg` settings above. Let's also assume we have a DAG with 50 tasks that each pull data from a REST API. When the DAG starts, 16 Celery Workers will be accessing the API at once, which may result in throttling errors from the API. What if we want to limit the rate of tasks, but only for tasks that access this API?
 
 Using pools, we can control how many tasks can run across a specific subset of DAGs. If we assign a single pool to multiple tasks, the pool ensures that no more than a given number of tasks between the DAGs are running at once. As you scale Airflow, you'll want to use pools to manage resource usage across your tasks.
 
@@ -74,16 +130,16 @@ To create a pool:
 
 1. In the Airflow UI, go to **Admin** > **Pools**.
 
-2. Create a pool with a name and a number of slots. In this example, we created a pool with 5 slots, meaning that no more than 5 tasks assigned to the pool can run at a single time:
+2. Create a pool with a name and a number of slots. In this example, we created a pool with 5 slots. This means that no more than 5 tasks assigned to the pool can run at a single time.
 
     ![image](https://assets2.astronomer.io/main/guides/airflow-scaling-workers/create_pool.png)
 
 3. Assign your tasks to the pool:
 
-    ```python
+  ```python
     t1 = MyOperator(
       task_id='pull_from_api',
       dag=dag,
       pool='My_REST_API'
     )
-```
+  ```
