@@ -76,7 +76,7 @@ To check current values for an existing Airflow environment, navigate to **Admin
 
   This number is limited by `dag_concurrency`. If you have 1 Worker and want it to match your environment's capacity, `worker_concurrency` should be equal to `parallelism`. If you increase `worker_concurrency`, you might also need to provision additional CPU and/or memory for your Workers.   
 
-- **`parsing_processes`** is the maximum number of threads that can run on the Airflow Scheduler at once. Increasing the value of `parallelism` results in additional strain on the Scheduler, so we recommend increasing `parsing_processes` as well. If you notice a delay in tasks being scheduled, you might need to increase this value or provision additional resources for your Scheduler.
+- **`parsing_processes`** is the maximum number of threads that can run on the Airflow Scheduler at once. Increasing the value of `parallelism` results in additional strain on the Scheduler, so we recommend increasing `parsing_processes` as well. If you notice a delay in tasks being scheduled, you might need to increase this value or provision additional resources for your Scheduler. If you're running on Astronomer, read [Configure your Airflow Deployment](https://www.astronomer.io/docs/cloud/stable/deploy/configure-deployment#scale-core-resources) for more information on scaling up your Scheduler.
 
     > **Note:** This setting was renamed in Airflow 1.10.14. In earlier versions, it is defined as `max_threads` ([source](https://github.com/apache/airflow/commit/486134426bf2cd54fae1f75d9bd50715b8369ca1)).
 
@@ -145,3 +145,5 @@ To create a pool:
       pool='My_REST_API'
     )
   ```
+
+> **Note:** If you're developing locally with the Astronomer CLI, you can define Airflow Pools in the `airflow_settings.yaml` file that was automatically generated when you initialized your Airflow project with `$ astro dev init`. This file allow you to set Pools, Variables, and Connections in a single file such that you don't have to manually re-create them in the Airflow UI every time you restart your environment. For more information, read [Customize your Airflow Image on Astronomer](https://www.astronomer.io/docs/cloud/stable/develop/customize-image#configure-airflowsettingsyaml).
