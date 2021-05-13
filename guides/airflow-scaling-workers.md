@@ -10,7 +10,7 @@ tags: ["Workers", "Concurrency", "Parallelism", "DAGs"]
 
 ## Overview
 
-One of Apache Airflow's biggest strengths is its ability to scale as the needs of your team grow. To make the most of Airflow's extensibility, there are a few key settings that you should consider modifying as you scale up your data pipelines.
+One of Apache Airflow's biggest strengths is its scalability. To make the most of Airflow, there are a few key settings that you should consider modifying as you scale up your data pipelines.
 
 Airflow exposes a number of parameters that are closely related to DAG and task-level performance. These fall into 3 categories:
 
@@ -24,9 +24,9 @@ In this guide, we'll walk through key values in each category in the context of 
 
 ## Environment-level Airflow Settings
 
-Environment-level settings are typically set in the `airflow.cfg` file, which is required in all Airflow projects. All settings in this file have a default value that can be overriden by modifying the file directly. Default values are taken from the [default_airflow.cfg file](https://github.com/apache/airflow/blob/master/airflow/config_templates/default_airflow.cfg) in Airflow project source code.
+Environment-level settings are typically set in the `airflow.cfg` file, which is required in all Airflow projects. All settings in this file have a default value that can be overridden by modifying the file directly. Default values are taken from the [default_airflow.cfg file](https://github.com/apache/airflow/blob/master/airflow/config_templates/default_airflow.cfg) in Airflow project source code.
 
-To check current values for an existing Airflow environment, navigate to **Admin** > **Configurations** in the Airflow UI. For more information, read [Setting Configuration Options](https://airflow.apache.org/docs/apache-airflow/stable/howto/set-config.html) or [Configuration Reference](https://airflow.apache.org/docs/apache-airflow/stable/configurations-ref.html) in Airflow documentation.
+To check current values for an existing Airflow environment, go to **Admin** > **Configurations** in the Airflow UI. For more information, read [Setting Configuration Options](https://airflow.apache.org/docs/apache-airflow/stable/howto/set-config.html) or [Configuration Reference](https://airflow.apache.org/docs/apache-airflow/stable/configurations-ref.html) in Airflow documentation.
 
 > **Note:** If you're running on Astronomer, these settings can be modified via Environment Variables. For more information, read [Environment Variables on Astronomer](https://www.astronomer.io/docs/cloud/stable/deploy/environment-variables).
 
@@ -146,4 +146,4 @@ To create a pool:
     )
   ```
 
-> **Note:** If you're developing locally with the Astronomer CLI, you can define Airflow Pools in the `airflow_settings.yaml` file that was automatically generated when you initialized your Airflow project with `$ astro dev init`. This file allow you to set Pools, Variables, and Connections in a single file such that you don't have to manually re-create them in the Airflow UI every time you restart your environment. For more information, read [Customize your Airflow Image on Astronomer](https://www.astronomer.io/docs/cloud/stable/develop/customize-image#configure-airflowsettingsyaml).
+> **Note:** If you're developing locally with the Astronomer CLI, you can define Airflow Pools in the `airflow_settings.yaml` file that was automatically generated when you initialized your Airflow project with `$ astro dev init`. You can use this file to set Pools, Variables, and Connections without needing to manually recreate them in the Airflow UI whenever you restart your environment. For more information, read [Customize your Airflow Image on Astronomer](https://www.astronomer.io/docs/cloud/stable/develop/customize-image#configure-airflowsettingsyaml).
