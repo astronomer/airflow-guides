@@ -92,7 +92,7 @@ If all of these tasks exist within a single DAG and `dag_concurrency=16`, howeve
 
 There are two primary DAG-level Airflow settings users can define in code:
 
-- **`max_active_run`** is the maximum number of active DAG Runs allowed for the DAG in question. Once this limit is hit, the Scheduler will not create new active DAG Runs. If this setting is not defined, the value of `max_active_runs_per_dag` (described above) is assumed.
+- **`max_active_runs`** is the maximum number of active DAG Runs allowed for the DAG in question. Once this limit is hit, the Scheduler will not create new active DAG Runs. If this setting is not defined, the value of `max_active_runs_per_dag` (described above) is assumed.
 
   ```
   # Allow a maximum of 3 active runs of this DAG at any given time
