@@ -18,7 +18,7 @@ SubDAGs are DAGs embedded in DAGs whereas Task Groups exist in your original DAG
 To use Task Groups you'll need to use the following import statement.
 
 ```python 
-    from airflow.utils.task_group import TaskGroup
+from airflow.utils.task_group import TaskGroup
 ```
 
 When creating Task Groups, you can use the same dependency operators (<< and >>), these will be applied to all the tasks within the grouping.
