@@ -7,169 +7,250 @@ heroImagePath: "https://assets.astronomer.io/website/img/guides/bestwritingpract
 tags: ["DAGs", "Best Practices", "Basics", "Templating", "Tasks"]
 ---
 
-Welcome to our guide on writing Airflow DAGs. In this piece, we'll walk through some high-level concepts involved in Airflow DAGs, explain what to stay away from, and cover some useful tricks that will hopefully be helpful to you.
+Writing Airflow DAGs is typically a pretty easy skill to pick up if you know a little bit of Python; you just need to instantiate your DAG and your operators and you're off and running. However, writing optimized DAGs that make the most of Airflow can sometimes feel like more of an art than a science. In this guide, we'll cover some best practices when writing DAGs that will help ensure your pipelines are efficient and sustainable.
 
-If you're interested in further DAG writing help or general Airflow assistance, we offer support packages that give you on-demand access to Airflow experts. [Drop us a line](https://www.astronomer.io/#request) if you'd like to chat.
+In general, most of the best practices we cover here fall into two categories: DAG design, and using Airflow as an orchestrator. For an in-depth walk through and examples of some of the concepts covered here, check out our DAG writing best practices [webinar recording](https://www.astronomer.io/blog/dag-writing-best-practices-in-apache-airflow), and our [Github repo](https://github.com/astronomer/webinar-dag-writing-best-practices) with good and bad example DAGs.
 
-### Idempotency
 
-Data pipelines are a messy business with a lot of various components that can fail. [Idempotent](https://en.wikipedia.org/wiki/Idempotence) DAGs allow you to deliver results faster when something breaks and can save you from losing data down the road.
+## Idempotency
 
-### Use Retries
+Before we jump into best practices specific to Airflow, we'll call out one, idempotency, which applies to all data pipelines. Idempotency is very important, and you may notice that other best practices in this guide are in part to support this one.
 
-In a distributed environment where task containers are executed on shared hosts, it's possible for tasks to be killed off unexpectedly. When this happens you may see Airflow's logs mention a zombie process.
+[Idempotency]((https://en.wikipedia.org/wiki/Idempotence)) is the concept whereby an operation can be repeated multiple times without changing the result. A common example is a crosswalk button; no matter how many times you push the button, you're going to get the same result. With a DAG, this translates to the same DAG, if run multiple times, will generate the same results. Applying this concept will make recovery from any failures in your DAGs easier, and ensure data loss is prevented.
 
-A [zombie process](https://en.wikipedia.org/wiki/Zombie_process) occurs when Airflow goes to check on the process for a task that it thinks is running but finds out that the process was killed or is otherwise not actually running. (It could have been killed for any number of reasons.)
+## DAG Design
 
-This can often be resolved by bumping up retries on the task. A good range to try is ~2–4 retries.
+The first category of best practices specific to Airflow relate to DAG design. These are practices that will help ensure your DAGs are idempotent, efficient, and readable.
+
+### Keep Tasks Atomic
+
+When breaking up your pipeline into individual tasks, ideally each task should be atomic. This means each task should be responsible for one operation that can be re-run independently of the others, which supports idempotency.
+
+### Use Template Fields, Variables, and Macros
+
+Using templated fields in Airflow allows for the field to be set using environment variables and jinja templating. Doing so helps keep your DAGs idempotent, and ensures you aren't executing functions on every scheduler heartbeat (see the section below on avoiding top level code for more about this).
+
+For example, if your DAG needs to be date parameterized you should use an Airflow date variable rather than a Python function that determines the date.
+
+```python
+# Variables used by tasks
+# Bad example - Define today's and yesterday's date using datetime module
+today = datetime.today()
+yesterday = datetime.today() - timedelta(1)
+```
+
+The example above creates date variables that can be used by tasks by calling `datetime` package functions. If this code is in the DAG file, these functions will be executed on every scheduler heartbeat, which may not be performant. Even more importantly, this doesn't produce an idempotent DAG; if you needed to rerun a previously failed DAG Run for a past date, you wouldn't be able to do so with this implementation because the date variable is relative to the actual date, not the DAG execution date. 
+
+A better way of implementing is using an Airflow variable:
+
+```python
+# Variables used by tasks
+# Good example - Define yesterday's date with an Airflow variable
+yesterday = {{ yesterday_ds_nodash }}
+```
+
+Airflow has many built in [variables and macros](https://airflow.apache.org/docs/apache-airflow/stable/macros-ref.html) that can easily be used, or you can create your own templated field to pass in information at runtime. For more on this topic check out our guide on [templating and macros in Airflow](https://www.astronomer.io/guides/templating).
+
 
 ### Incremental Record Filtering
 
-When possible, seek to break out your pipelines into incremental extracts and loads. This results in each DagRun representing only a small subset of your total dataset. This means that a failure in one subset of the data won't affect the rest of your DagRuns from completing successfully.
+Wherever possible, it is ideal to break out your pipelines into incremental extracts and loads. For example, if you have a DAG that runs hourly, each DAG Run should process only records from that hour, rather than the whole dataset. This results in each DAG Run representing only a small subset of your total dataset, which means that a failure in one subset of the data won't prevent the rest of your DAG Runs from completing successfully, and you can rerun the DAG for only the data that failed rather than reprocessing the entire dataset. This contributes to keeping your DAGs idempotent.
 
-There are three ways you can achieve incremental pipelines.
+There are multiple ways you can achieve incremental pipelines. The two best and most common methods are described below.
 
 #### Last Modified Date
 
-This is the gold standard for incremental loads. Ideally each record in your source system contains a column containing the last time the record was modified. Every DAG run then looks for records that were updated within it's specified date parameters.
+Using a last modified date is the gold standard for incremental loads. Ideally, each record in your source system has a column containing the last time the record was modified. Every DAG Run then looks for records that were updated within its specified date parameters.
 
-For example, a DAG that runs hourly will have 24 runs times a day. Each DAG run will be responsible for loading any records that fall between the start and end of it's hour. When any of those runs fail it will not stop the others from continuing to run.
+For example, with a DAG that runs hourly, each DAG Run will be responsible for loading any records that fall between the start and end of its hour. If any of those runs fail, it will not impact other runs.
 
 #### Sequence IDs
 
-When a last modified date is not available, a sequence or incrementing ID, can be used for incremental loads. This logic works best when the source records are only being appended to and never updated. If the source records are updated you should seek to implement a Last Modified Date in that source system and key your logic off of that. In the case of the source system not being updated, basing your incremental logic off of a sequence ID can be a sound way to filter pipeline records without a last modified date.
+When a last modified date is not available, a sequence or incrementing ID can be used for incremental loads. This logic works best when the source records are only being appended to and never updated. If the source records are updated you should seek to implement a last modified date in that source system and key your logic off of that. In the case of the source system not being updated, basing your incremental logic off of a sequence ID can be a sound way to filter pipeline records without a last modified date.
 
-### Limit how much data gets pulled into a task
 
-Every task gets run in its own container with limited memory (based on the selected plan) in Astronomer Cloud. If the task container doesn't have enough memory for a task, it will fail with:
-`{jobs.py:2127} INFO - Task exited with return code -9`.
+### Avoid Top Level Code in Your DAG File
 
-Try to limit in memory manipulations (some packages like pandas are very memory intensive) and use intermediary data storage whenever possible.
+In the case of an Airflow DAG, we use "top level code" to mean any code that isn't part of your DAG or operator instantiations. 
 
-### Intermediary Data Storage
+Airflow executes all code in the `DAGS_Folder` on every scheduler heartbeat, so from a technical perspective even a small amount of top level code can cause performance issues. You especially don't want top level code that is making requests to external systems, like an API or a database, or any function calls outside of your tasks. Additionally, lots of top level code in your DAG files makes them harder to read, maintain, update, and debug.
 
-It can be tempting to write your DAGs so that they move data directly from your source to destination. It usually makes for less code and involves less pieces, but doing so removes your ability to re-run just the extract or load portion of the pipeline individually. By putting an intermediary storage layer such as S3 or SQL Staging tables in between your source and destination, you can separate the testing and re-running of the extract and load.
+Try to treat your DAG file like a config file and leave all the heavy lifting for hooks and operators. If your DAGs need to access additional code such as a SQL script or a Python function, keep that code in a separate file that can be read into your DAG.
 
-If you are using s3 as your intermediary, it is best to set a policy restricted to a dedicated s3 bucket to use in your Airflow s3 connection object. This policy will need to read, write, and delete objects.
+For example, if you have a `PostgresOperator` that is executing a SQL query, you don't want to put that query directly into your DAG file like this:
 
-An example policy allowing this is below:
+```python
+from airflow import DAG
+from airflow.providers.postgres.operators.postgres import PostgresOperator
+from datetime import datetime, timedelta
 
-```json
-{
-    "Version": "2012-10-17",
-    "Statement": [
-        {
-            "Sid": "1",
-            "Effect": "Allow",
-            "Action": [
-                "s3:PutObject",
-                "s3:GetObject",
-                "s3:ListBucket",
-                "s3:DeleteObject"
-            ],
-            "Resource": [
-                "arn:aws:s3:::{bucketName}",
-                "arn:aws:s3:::{bucketName}/*"
-            ]
-        }
-    ]
+#Default settings applied to all tasks
+default_args = {
+    'owner': 'airflow',
+    'depends_on_past': False,
+    'email_on_failure': False,
+    'email_on_retry': False,
+    'retries': 1,
+    'retry_delay': timedelta(minutes=1)
 }
+
+#Instantiate DAG
+with DAG('bad_practices_dag_1',
+         start_date=datetime(2021, 1, 1),
+         max_active_runs=3,
+         schedule_interval='@daily',
+         default_args=default_args,
+         catchup=False
+         ) as dag:
+
+    t0 = DummyOperator(task_id='start')  
+
+    #Bad example with top level SQL code in the DAG file
+    query_1 = PostgresOperator(
+        task_id='covid_query_wa',
+        postgres_conn_id='postgres_default',
+        sql='''with yesterday_covid_data as (
+                SELECT *
+                FROM covid_state_data
+                WHERE date = {{ params.today }}
+                AND state = 'WA'
+            ),
+            today_covid_data as (
+                SELECT *
+                FROM covid_state_data
+                WHERE date = {{ params.yesterday }}
+                AND state = 'WA'
+            ),
+            two_day_rolling_avg as (
+                SELECT AVG(a.state, b.state) as two_day_avg
+                FROM yesterday_covid_data a
+                JOIN yesterday_covid_data b 
+                ON a.state = b.state
+            )
+            SELECT a.state, b.state, c.two_day_avg
+            FROM yesterday_covid_data a
+            JOIN today_covid_data b
+            ON a.state=b.state
+            JOIN two_day_rolling_avg c
+            ON a.state=b.two_day_avg;''',
+            params={'today': today, 'yesterday':yesterday}
+    )
 ```
 
-For more details, please visit: `https://docs.aws.amazon.com/AmazonS3/latest/dev/using-with-s3-actions.html#using-with-s3-actions-related-to-bucket-subresources`
+Instead, you would want to keep that SQL code in a separate file (`covid_state_query.sql` below), and call it into your DAG like this:
 
-Depending on your data retention policy you could modify the load logic and re-run the entire historical pipeline without having to re-run the extracts. This is also useful in situations where you no longer have access to the source system (i.e. hit an API limit).
+```python
+from airflow import DAG
+from airflow.providers.postgres.operators.postgres import PostgresOperator
+from datetime import datetime, timedelta
 
-### Use Template Fields when writing custom hooks and operators
+#Default settings applied to all tasks
+default_args = {
+    'owner': 'airflow',
+    'depends_on_past': False,
+    'email_on_failure': False,
+    'email_on_retry': False,
+    'retries': 1,
+    'retry_delay': timedelta(minutes=1)
+}
 
-Specifying that a field is templatable allows for it to be set by using environment variables using jinja templating.
+#Instantiate DAG
+with DAG('good_practices_dag_1',
+         start_date=datetime(2021, 1, 1),
+         max_active_runs=3,
+         schedule_interval='@daily',
+         default_args=default_args,
+         catchup=False,
+         template_searchpath='/usr/local/airflow/include' #include path to look for external files
+         ) as dag:
 
-For example, the `s3_key` and `since` and `until` fields are set as `template_fields` here:
- `https://github.com/airflow-plugins/google_analytics_plugin/blob/master/operators/google_analytics_reporting_to_s3_operator.py#L41`
-
- This allows for these values to be dynamically set by the `schedule_interval`.
-
-### depends_on_past and wait_for_downstream can be used for added safety
-
-`depends_on_past` and `wait_for_downstream` are set at the DAG level, but filters down to tasks. If `depends_on_past` is set to `true`, the previously scheduled task instance needs to have succeeded before the next task instance will be scheduled (assuming all dependencies are met). Additionally, if `wait_for_downstream` is set to `true`, a task will wait for all tasks downstream of the previously scheduled task to finish before being scheduled.
-
-Using these effectively can help ensure data integrity when scheduling a backfill where data is aggregated by some time interval.
-
-### Static start_date
-
-A dynamic start_date is misleading. It can cause failures when clearing out failed task instances and missing DAG runs.
-
-## Transformations
-
-Look to implement an ELT (extract, load, transform) data pipeline pattern with your DAG definition file. This means that you should look to offload as much of the transformation logic to the source systems or the destinations systems as possible. With python at your fingertips it can be tempting to attempt the transformations in the DAG but offloading those transformations to the source or destination systems will lead to better overall performance and keeps your DAG lean and readable.
-
-### Use Staging Tables
-
-Try to use staging tables before pushing to a final destination. This makes debugging errors easier as you'll have the exact data that caused an error and adds a layer of safety.
-
-**Note** By default, each task counts as its own database session, so avoid temporary tables that only last a session. Instead, have the last task in your DAG clear out intermediary tables if everything runs successfully.
-
-### Mongo Source
-
-Use [aggregation pipelines](https://docs.mongodb.com/manual/core/aggregation-pipeline/) to perform your transformations on extract from a Mongo source.
-
-### SQL Source
-
-Try to do basic transformations and aggregations in SQL queries - this offloads transformation logic onto the source system and keeps your DAG readable.
-
-## Readability
-
-### Use a consistent file structure
-
-To keep any custom plugins easy for someone else to use, use a consistent file structure. At Astronomer, we use:
-
-```bash
-plugin_name/
-├── README.md  <--- High level description of what the plugin contains and what it does
-├── __init__.py  <--- Calls the Airflow plugins manager
-├── hooks  <-- Contains the hook
-│   ├── __init__.py
-│   └── hook_one.py
-└── operators  <--- Contains the operators
-    ├── __init__.py
-    └── operator_one.py
+        query = PostgresOperator(
+            task_id='covid_query_{0}'.format(state),
+            postgres_conn_id='postgres_default',
+            sql='covid_state_query.sql', #reference query kept in separate file
+            params={'state': "'" + state + "'"}
+        )
 ```
 
-See [here](https://github.com/airflow-plugins/) for examples!
+### Use a Consistent Method for Task Dependencies
 
-### Change the name of your DAG when you change the start date
+In Airflow, task dependencies can be set multiple ways. You can use `set_upstream()` and `set_downstream()` functions, or use `<<` or `>>` operators. Which method you use is a matter of personal preference, but for readability it's best practice to choose a consistent method.
 
-Changing the `start_date` of a DAG creates a new entry in Airflow's database, which could confuse the scheduler because there will be two DAGs with the same name but different schedules.
-
-Changing the name of a DAG also creates a new entry in the database, which powers the dashboard, so follow a consistent naming convention since changing a DAG's name doesn't delete the entry in the database for the old name.
-
-### Avoid top level code in your DAG file
-
-The Airflow executor executes top level code on every heartbeat, so a small amount of top level code can cause performance issues. Try to treat the DAG file like a config file and leave all the heavy lifting for the hook and operator.
-
-### Task Dependencies
-
-Task dependencies are set using `set_upstream()` and `set_downstream()`. Using either will depend on your preferences, but it is best to stay consistent with which one you use.
-
-#### Example
-
-Instead of this
+For example, instead of mixing methods like this:
 
 ```python
 task_1.set_downstream(task_2)
 task_3.set_upstream(task_2)
+task_3 >> task_4
 ```
 
-Try to be consistent with this
+Try to be consistent with something like this:
 
 ```python
-task_1.set_downstream(task_2)
-task_2.set_downstream(task_3)
+task_1 >> task_2 >> [task_3, task_4]
 ```
 
-or this
 
-```python
-task_3 >> task_2
-task_2 >> task_1
+## Use Airflow as an Orchestrator
+
+The next category of best practices is to use Airflow as an orchestrator; this will allow you to make the most of Airflow as it was designed, and ensure it can scale to meet your needs. Sticking to the following best practices will help ensure you don't experience common pitfalls using Airflow as the right tool for the wrong job.
+
+### Make Use of Provider Packages
+
+A good way to ensure you're using Airflow as it was designed is to make use of [provider packages](https://airflow.apache.org/docs/apache-airflow-providers/) to orchestrate jobs with other tools. One of the best things about Airflow is its robust and active community, which has resulted in many integrations between Airflow and other tools in the data ecosystem. Wherever possible, it's best practice to make use of these existing integrations. This allows for easier Airflow adoption for teams that may already be using existing tools, and means you have to write less code since many existing hooks and operators have taken care of that for you.
+
+For easy discovery of all the great provider packages out there, check out the [Astronomer Registry](https://registry.astronomer.io/).
+
+### Don't Use Airflow as a Processing Framework
+
+Airflow was not designed to be a processing framework. Since DAGs are written in Python, you have the power of Python behind you and it can be tempting to make use of data processing libraries like Pandas. However, processing large amounts of data within your Airflow tasks will not scale well, and should only be used in cases where the data are limited in size. A better option for scalability is to offload any heavy duty processing to a framework like [Apache Spark](https://spark.apache.org/), and use Airflow to orchestrate those jobs.
+
+If you must process small data within Airflow, we would recommend the following:
+
+- Ensure your Airflow infrastructure has the necessary resources.
+- Use the Kubernetes Executor to isolate task processing and have more control over resources at the task level.
+- Use a [custom XCom backend](https://www.astronomer.io/guides/custom-xcom-backends) if you need to pass any data between the tasks so you don't overload your metadata database.
+
+### Use Intermediary Data Storage
+
+It can be tempting to write your DAGs so that they move data directly from your source to destination. It usually makes for less code and involves fewer pieces, but doing so removes your ability to re-run just the extract or load portion of the pipeline individually. By putting an intermediary storage layer such as S3 or SQL Staging tables in between your source and destination, you can separate the testing and re-running of the extract and load.
+
+Depending on your data retention policy, you could modify the load logic and re-run the entire historical pipeline without having to re-run the extracts. This is also useful in situations where you no longer have access to the source system (e.g. hit an API limit).
+
+### Use an ELT Framework
+
+Whenever possible, look to implement an ELT (extract, load, transform) data pipeline pattern with your DAGs. This means that you should look to offload as much of the transformation logic to the source systems or the destinations systems as possible, and is one way of ensuring you aren't using Airflow as your processing framework. Many modern data warehouse tools, such as [Snowflake](https://www.snowflake.com/), give you easy to access to compute to support the ELT framework, and are easily used in conjunction with Airflow.
+
+
+## Other Best Practices
+
+Finally, here are a few other noteworthy best practices that don't fall under the two categories above.
+
+### Use a Consistent File Structure
+
+Having a consistent file structure for Airflow projects can help keep things organized and easy to adopt when working with Airflow both within teams and across teams. At Astronomer, we use:
+
+```bash
+├── dags/ # Where your DAGs go
+│   ├── example-dag.py # An example dag that comes with the initialized project
+├── Dockerfile # For Astronomer's Docker image and runtime overrides
+├── include/ # For any other files you'd like to include
+├── plugins/ # For any custom or community Airflow plugins
+├── packages.txt # For OS-level packages
+└── requirements.txt # For any Python packages
+
 ```
+
+### Use DAG Name and Start Date Properly
+
+You should always use a static `start_date` with your DAGs. A dynamic start_date is misleading, and can cause failures when clearing out failed task instances and missing DAG runs.
+
+Additionally, if you change the `start_date` of your DAG you should also change the DAG name. Changing the `start_date` of a DAG creates a new entry in Airflow's database, which could confuse the scheduler because there will be two DAGs with the same name but different schedules.
+
+Changing the name of a DAG also creates a new entry in the database, which powers the dashboard, so follow a consistent naming convention since changing a DAG's name doesn't delete the entry in the database for the old name.
+
+### Set Retries at the DAG Level
+
+Even if your code is perfect, failures happen. In a distributed environment where task containers are executed on shared hosts, it's possible for tasks to be killed off unexpectedly. When this happens you may see Airflow's logs mention a [zombie process]((https://en.wikipedia.org/wiki/Zombie_process)).
+
+Issues like this can be resolved by using task retries. Best practice is to set retries as a `default_arg` so they are applied at the DAG level, and get more granular for specific tasks only where necessary. A good range to try is ~2–4 retries.
