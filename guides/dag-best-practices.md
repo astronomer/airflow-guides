@@ -16,7 +16,7 @@ In general, most of the best practices we cover here fall into two categories: D
 
 Before we jump into best practices specific to Airflow, we'll call out one, idempotency, which applies to all data pipelines. Idempotency is very important, and you may notice that other best practices in this guide are in part to support this one.
 
-[Idempotency]((https://en.wikipedia.org/wiki/Idempotence)) is the concept whereby an operation can be repeated multiple times without changing the result. A common example is a crosswalk button; no matter how many times you push the button, you're going to get the same result. With a DAG, this translates to the same DAG, if run multiple times, will generate the same results. Applying this concept will make recovery from any failures in your DAGs easier, and ensure data loss is prevented.
+[Idempotency](https://en.wikipedia.org/wiki/Idempotence) is the concept whereby an operation can be repeated multiple times without changing the result. A common example is a crosswalk button; no matter how many times you push the button, you're going to get the same result. With a DAG, this translates to the same DAG, if run multiple times, will generate the same results. Applying this concept will make recovery from any failures in your DAGs easier, and ensure data loss is prevented.
 
 ## DAG Design
 
@@ -251,6 +251,6 @@ Changing the name of a DAG also creates a new entry in the database, which power
 
 ### Set Retries at the DAG Level
 
-Even if your code is perfect, failures happen. In a distributed environment where task containers are executed on shared hosts, it's possible for tasks to be killed off unexpectedly. When this happens you may see Airflow's logs mention a [zombie process]((https://en.wikipedia.org/wiki/Zombie_process)).
+Even if your code is perfect, failures happen. In a distributed environment where task containers are executed on shared hosts, it's possible for tasks to be killed off unexpectedly. When this happens you may see Airflow's logs mention a [zombie process](https://en.wikipedia.org/wiki/Zombie_process).
 
 Issues like this can be resolved by using task retries. Best practice is to set retries as a `default_arg` so they are applied at the DAG level, and get more granular for specific tasks only where necessary. A good range to try is ~2–4 retries.
