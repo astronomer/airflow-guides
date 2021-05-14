@@ -43,7 +43,7 @@ This animated visual shows the above example with the UI interactions of expandi
 
 ![UI Task Group](https://assets2.astronomer.io/main/guides/task-groups/task_groups_ui.gif)
 
-**Note:** When your task is within a task group, your callable task_id will be the task_id prefixed with the group_id (i.e. group_id.task_id). This ensures the uniqueness of the task_id across the DAG. This is important to remember when calling specific tasks like for XCOM passing or branching operator decisions. 
+> **Note:** When your task is within a task group, your callable `task_id` will be the `task_id` prefixed with the `group_id` (i.e. `group_id.task_id`). This ensures the uniqueness of the task_id across the DAG. This is important to remember when calling specific tasks like for XCOM passing or branching operator decisions. 
 
 #### Dynamically Generating Task Groups
 
