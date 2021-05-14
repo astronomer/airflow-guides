@@ -21,7 +21,7 @@ To use Task Groups you'll need to use the following import statement.
 from airflow.utils.task_group import TaskGroup
 ```
 
-When creating Task Groups, you can use the same dependency operators (<< and >>), these will be applied to all the tasks within the grouping.
+When adding task groups to a DAG, you can use dependency operators (`<<` and `>>`) in the same way that you can with individual tasks. 
 
 ```python
 t0 = DummyOperator(task_id='start')
