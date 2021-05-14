@@ -354,6 +354,7 @@ max_active_runs_per_dag
 worker_concurrency
 kubectl
 airflow.cfg
+default_airflow.cfg
 quo
 pw
 typeform
