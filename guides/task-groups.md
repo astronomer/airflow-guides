@@ -13,7 +13,7 @@ In December 2020, [Task Groups](https://airflow.apache.org/docs/apache-airflow/s
 
 SubDAGs are DAGs embedded in DAGs whereas Task Groups exist in your original DAG. Tasks Groups allow you to group and organize your tasks within your DAG's graph view, without the added complexity and performance issues of SubDAGs (i.e. deadlocking, worker slots, etc.)
 
-### Creating Task Groups
+## Creating Task Groups
 
 To use Task Groups you'll need to use the following import statement.
 
@@ -45,7 +45,7 @@ This animated visual shows the above example with the UI interactions of expandi
 
 > **Note:** When your task is within a task group, your callable `task_id` will be the `task_id` prefixed with the `group_id` (i.e. `group_id.task_id`). This ensures the uniqueness of the task_id across the DAG. This is important to remember when calling specific tasks like for XCOM passing or branching operator decisions. 
 
-#### Dynamically Generating Task Groups
+## Dynamically Generating Task Groups
 
 Task Groups can be dynamically generated to make use of patterns within your code. 
 
@@ -63,7 +63,7 @@ for g_id in range(1,3):
 
 ![Dynamic Task Group](https://assets2.astronomer.io/main/guides/task-groups/dynamic_task_groups.png)
 
-##### Ordering Tasks Groups
+## Ordering Tasks Groups
 
 By default using a loop to generate your tasks groups, will put them in parallel. In cases where your tasks groups are dependent on elements of another task group then you'll want to run them sequentially. For example, when processing tables with foreign keys your primary table records will need to exist before you can load your foreign table.
 
@@ -88,7 +88,7 @@ for g_id in range(1,4):
 
 ![Task Group Dependencies](https://assets2.astronomer.io/main/guides/task-groups/task_group_dependencies.png)
 
-#### Nesting Task Groups
+## Nesting Task Groups
 
 For additional complexity, you can nest Task Groups. 
 
