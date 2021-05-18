@@ -12,6 +12,7 @@ tags: ["DAGs", "Subdags", "Task Groups", "Best Practices"]
 Prior to the release of [Airflow 2.0](https://www.astronomer.io/blog/introducing-airflow-2-0) in December 2020, in order to group tasks and create modular workflows within Airflow users had to use SubDAGs. SubDAGs were a way of presenting a cleaner looking DAG by capitalizing on code patterns. For example, ETL DAGs usually share a pattern of tasks that extract data from a source, transform the data, and load it somewhere. The SubDAG can visually group the repetitive tasks into one UI task, making the pattern between tasks clearer.
 
 However, SubDAGs are really DAGs embedded in your DAG which can create both performance and functional issues:
+
 - When a SubDAG is triggered, the SubDAG and child tasks take up worker slots until the entire SubDAG is complete. This can delay other task processing and, depending on your number of worker slots, can lead to deadlocking.
 - SubDAGs have their own parameters, schedule, and enabled settings. When these are not consistent with their parent DAG, unexpected behavior can occur.
 
@@ -143,5 +144,6 @@ This shows the expanded view of the nested task groups we generated above.
 Task groups are a dynamic and scalable UI grouping concept that solve for the functional and performance issues of SubDAGs. 
 
 Ultimately task groups give you the flexibility to group and organize your tasks in a number of ways, to help guide your usage of them think about:
+
 - What patterns exist in your DAG?
 - How can simplifying your DAG's graph can better communicate its purpose?
