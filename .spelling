@@ -957,7 +957,6 @@ kedro
 idempotence
  - posts/4-pillars-to-becoming-data-driven.md
 astronomer.io
-default_airflow.cfg
  - posts/why-we-built-our-data-platform-on-aws-and-why-we-rebuilt-it-with-open-source.md
 checkpointing
  - posts/why-is-my-data-playing-hard-to-get.md
