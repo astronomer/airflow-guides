@@ -110,7 +110,7 @@ In the above example, we added an additional task to group 1 based on our `group
 
 ## Nesting Task Groups
 
-For additional complexity, you can nest task groups. Building on our previous ETL example, when calling API endpoints we may need to process new records for each endpoint before we can process updates to them.
+For additional complexity, you can nest Task Groups. Building on our previous ETL example, when calling API endpoints we may need to process new records for each endpoint before we can process updates to them.
 
 In the following code, our top-level Task Groups represent our new and updated record processing, while the nested Task Groups represent our API endpoint processing:
 
