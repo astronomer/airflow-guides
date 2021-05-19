@@ -147,4 +147,4 @@ Task Groups are a dynamic and scalable UI grouping concept that eliminate the fu
 Ultimately, Task Groups give you the flexibility to group and organize your tasks in a number of ways. To help guide your implementation of Task Groups, think about:
 
 - What patterns exist in your DAGs?
-- How can simplifying your DAG's graph can better communicate its purpose?
+- How can simplifying your DAG's graph better communicate its purpose?
