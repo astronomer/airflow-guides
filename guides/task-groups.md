@@ -57,7 +57,9 @@ In the Airflow UI, Task Groups look like tasks with blue shading. When we expand
 
 ## Dynamically Generating Task Groups
 
-Like tasks and [DAGs](https://www.astronomer.io/guides/dynamically-generating-dags), tasks groups can be dynamically generated to make use of patterns within your code. In an ETL DAG, you may call different API endpoints (i.e. a customer and contact table) that have similar downstream tasks but that can be processed independently. Here we can group the tasks by API endpoint, that like manually written task groups, can be drilled into from the Airflow UI to see specific tasks if needed. In the code below, we iterate over our desired groupings which creates multiple groups, with the same inner tasks where their passed parameters can change based on the `group_id`.
+[Just like with DAGs](https://www.astronomer.io/guides/dynamically-generating-dags), Task Groups can be dynamically generated to make use of patterns within your code. In an ETL DAG, you might have have similar downstream tasks that can be processed independently, such as when you call different API endpoints for data that needs to be processed and stored in the same way. For this use case, we can dynamically generate Task Groups by API endpoint. Just like with manually written Task Groups, generated Task Groups can be drilled into from the Airflow UI to see specific tasks. 
+
+In the code below, we use iteration to create multiple Task Groups. While the tasks and dependencies remain the same across Task Groups, we can change which parameters are passed in to each Task Group based on the `group_id`:
 
 ```python
 for g_id in range(1,3):
