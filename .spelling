@@ -1491,6 +1491,7 @@ depends_on_past
 wait_for_downstream
 - guides/dynamically-generating-dags.md
 Create_DAG
+ELT-type
 - guides/error-notifications-in-airflow.md
 __`e
 ____
@@ -1636,3 +1637,5 @@ AwsBaseHook
 BaseSensorOperator
 PostgresHook
 SSHHook
+ - guides/airflow-scaling-workers.md
+default_airflow.cfg
