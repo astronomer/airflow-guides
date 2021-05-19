@@ -144,7 +144,7 @@ This shows the expanded view of the nested task groups we generated above.
 
 Task groups are a dynamic and scalable UI grouping concept that solve for the functional and performance issues of SubDAGs. 
 
-Ultimately task groups give you the flexibility to group and organize your tasks in a number of ways, to help guide your usage of them think about:
+Ultimately, Task Groups give you the flexibility to group and organize your tasks in a number of ways. To help guide your implementation of Task Groups, think about:
 
 - What patterns exist in your DAGs?
 - How can simplifying your DAG's graph can better communicate its purpose?
