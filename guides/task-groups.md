@@ -18,7 +18,7 @@ However, SubDAGs were really just DAGs embedded in other DAGs. This caused both 
 
 Unlike SubDAGs, [Task Groups](https://airflow.apache.org/docs/apache-airflow/stable/concepts.html#taskgroup) are just a UI grouping concept. Starting in Airflow 2.0, you can use Task Groups to organize tasks within your DAG's graph view in the Airflow UI. This avoids the added complexity and performance issues of SubDAGs, all while using less code!
 
-In this guide, we'll walk through how to create task groups and show some example DAGs to demonstrate their scalability in more complicated DAGs.
+In this guide, we'll walk through how to create Task Groups and show some example DAGs to demonstrate their scalability.
 
 ## Creating Task Groups
 
