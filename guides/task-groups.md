@@ -69,7 +69,7 @@ for g_id in range(1,3):
         t1 >> t2
 ```
 
-This shows the expanded view of the task groups we generated above.
+This screenshot shows the expanded view of the Task Groups we generated above in the Airflow UI:
 
 ![Dynamic Task Group](https://assets2.astronomer.io/main/guides/task-groups/dynamic_task_groups.png)
 
