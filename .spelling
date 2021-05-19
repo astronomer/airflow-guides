@@ -1639,3 +1639,5 @@ AwsBaseHook
 BaseSensorOperator
 PostgresHook
 SSHHook
+ - guides/airflow-scaling-workers.md
+default_airflow.cfg
