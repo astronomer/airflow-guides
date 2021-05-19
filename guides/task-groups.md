@@ -28,7 +28,7 @@ To use Task Groups you'll need to use the following import statement.
 from airflow.utils.task_group import TaskGroup
 ```
 
-For our first example, we'll instantiate a Task Group using a `with` statement and provide a `group_id`. Inside our task group, we'll define our two tasks, `t1` and `t2`, and their respective dependencies. 
+For our first example, we'll instantiate a Task Group using a `with` statement and provide a `group_id`. Inside our Task Group, we'll define our two tasks, `t1` and `t2`, and their respective dependencies. 
 
 You can use dependency operators (`<<` and `>>`) on Task Groups in the same way that you can with individual tasks. Dependencies applied to a Task Group are applied across its tasks. In the following code, we'll add additional dependencies to `t0` and `t3` to the Task Group, which automatically applies the same dependencies across `t1` and `t2`:  
 
@@ -53,7 +53,7 @@ In the Airflow UI, Task Groups look like tasks with blue shading. When we expand
 
 ![UI Task Group](https://assets2.astronomer.io/main/guides/task-groups/task_groups_ui.gif)
 
-> **Note:** When your task is within a task group, your callable `task_id` will be the `task_id` prefixed with the `group_id` (i.e. `group_id.task_id`). This ensures the uniqueness of the task_id across the DAG. This is important to remember when calling specific tasks with XCOM passing or branching operator decisions.
+> **Note:** When your task is within a Task Group, your callable `task_id` will be the `task_id` prefixed with the `group_id` (i.e. `group_id.task_id`). This ensures the uniqueness of the task_id across the DAG. This is important to remember when calling specific tasks with XCOM passing or branching operator decisions.
 
 ## Dynamically Generating Task Groups
 
@@ -74,11 +74,11 @@ This screenshot shows the expanded view of the Task Groups we generated above in
 
 ![Dynamic Task Group](https://assets2.astronomer.io/main/guides/task-groups/dynamic_task_groups.png)
 
-What if your task groups can't be processed independently? Next, we'll show how to call task groups and define dependencies between them.
+What if your Task Groups can't be processed independently? Next, we'll show how to call Task Groups and define dependencies between them.
 
 ## Ordering Tasks Groups
 
-By default, using a loop to generate your task groups will put them in parallel. If your tasks groups are dependent on elements of another task group, you'll want to run them sequentially. For example, when loading tables with foreign keys, your primary table records need to exist before you can load your foreign table.
+By default, using a loop to generate your Task Groups will put them in parallel. If your Task Groups are dependent on elements of another Task Group, you'll want to run them sequentially. For example, when loading tables with foreign keys, your primary table records need to exist before you can load your foreign table.
 
 In the example below, our third dynamically generated Task Group has a foreign key constraint on both our first and second dynamically generated Task Groups, so we'll want to process it last. To do this, we'll create an empty list and append our Task Group objects as they are generated. Using this list, we can reference the Task Groups and define their dependencies to each other:
 
@@ -107,7 +107,7 @@ The following screenshot shows how these Task Groups appear in the Airflow UI:
 
 ### Conditioning on Task Groups
 
-In the above example, we added an additional task to `group1` based on our `group_id`. This was to demonstrate that even though we're dynamically creating Task Groups to take advantage of patterns, we can still introduce variations to the pattern while avoiding code redundancies from building each task group definition manually.
+In the above example, we added an additional task to `group1` based on our `group_id`. This was to demonstrate that even though we're dynamically creating Task Groups to take advantage of patterns, we can still introduce variations to the pattern while avoiding code redundancies from building each Task Group definition manually.
 
 ## Nesting Task Groups
 
