@@ -100,7 +100,7 @@ for g_id in range(1,4):
 [groups[0] , groups[1]] >> groups[2]
 ```
 
-This shows the task group dependencies. 
+The following screenshot shows how these Task Groups appear in the Airflow UI:
 
 ![Task Group Dependencies](https://assets2.astronomer.io/main/guides/task-groups/task_group_dependencies.png)
 
