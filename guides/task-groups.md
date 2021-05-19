@@ -28,7 +28,6 @@ To use Task Groups you'll need to use the following import statement.
 from airflow.utils.task_group import TaskGroup
 ```
 
-
 For our first example, we'll instantiate a Task Group using a `with` statement and provide a `group_id`. Inside our task group, we'll define our two tasks, `t1` and `t2`, and their respective dependencies. 
 
 You can use dependency operators (`<<` and `>>`) on Task Groups in the same way that you can with individual tasks. Dependencies applied to a Task Group are applied across its tasks. In the following code, we'll add additional dependencies to `t0` and `t3` to the Task Group, which automatically applies the same dependencies across `t1` and `t2`:  
@@ -50,7 +49,7 @@ t3 = DummyOperator(task_id='end')
 t0 >> tg1 >> t3
 ```
 
-In the Airflow UI, Task Groups look like tasks with blue shading. When we expand `group1` by clicking on it, we see that the grouped tasks have same dependencies that we defined in our code:
+In the Airflow UI, Task Groups look like tasks with blue shading. When we expand `group1` by clicking on it, we see blue circles where the Task Group's dependencies have been applied to the grouped tasks. The task(s) immediately to the right of the first blue circle (`t1`) get the group's upstream dependencies and the task(s) immediately to the left (`t2`) of the last blue circle get the group's downstream dependencies. 
 
 ![UI Task Group](https://assets2.astronomer.io/main/guides/task-groups/task_groups_ui.gif)
 
@@ -79,7 +78,7 @@ What if your task groups can't be processed independently? Next, we'll show how 
 
 By default, using a loop to generate your task groups will put them in parallel. If your tasks groups are dependent on elements of another task group, you'll want to run them sequentially. For example, when loading tables with foreign keys, your primary table records need to exist before you can load your foreign table.
 
-In the example below, our third dynamically generated Task Group requires foreign keys from both our first and second dynamically generated Task Groups, so we'll want to process it last. To do this, we'll create an empty list and append our Task Group objects as they are generated. Using this list, we can reference the Task Groups and define their dependencies to each other:
+In the example below, our third dynamically generated Task Group has a foreign key constraint on both our first and second dynamically generated Task Groups, so we'll want to process it last. To do this, we'll create an empty list and append our Task Group objects as they are generated. Using this list, we can reference the Task Groups and define their dependencies to each other:
 
 ```python
 groups = []
