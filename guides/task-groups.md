@@ -9,7 +9,7 @@ tags: ["DAGs", "Subdags", "Task Groups", "Best Practices"]
 
 ## Overview
 
-Prior to the release of [Airflow 2.0](https://www.astronomer.io/blog/introducing-airflow-2-0) in December 2020, in order to group tasks and create modular workflows within Airflow users had to use SubDAGs. SubDAGs were a way of presenting a cleaner looking DAG by capitalizing on code patterns. For example, ETL DAGs usually share a pattern of tasks that extract data from a source, transform the data, and load it somewhere. The SubDAG can visually group the repetitive tasks into one UI task, making the pattern between tasks clearer.
+Prior to the release of [Airflow 2.0](https://www.astronomer.io/blog/introducing-airflow-2-0) in December 2020, the only way to group tasks and create modular workflows within Airflow was to use SubDAGs. SubDAGs were a way of presenting a cleaner looking DAG by capitalizing on code patterns. For example, ETL DAGs usually share a pattern of tasks that extract data from a source, transform the data, and load it somewhere. The SubDAG would visually group the repetitive tasks into one UI task, making the pattern between tasks clearer.
 
 However, SubDAGs are really DAGs embedded in your DAG which can create both performance and functional issues:
 
