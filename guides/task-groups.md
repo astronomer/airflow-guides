@@ -104,7 +104,7 @@ The following screenshot shows how these Task Groups appear in the Airflow UI:
 
 ![Task Group Dependencies](https://assets2.astronomer.io/main/guides/task-groups/task_group_dependencies.png)
 
-## Conditioning on Task Groups
+### Conditioning on Task Groups
 
 In the above example, we added an additional task to group 1 based on our `group_id`. This was to demonstrate that even though we're dynamically creating task groups and tasks to take advantage of patterns we can still introduce variations to the pattern while avoiding code redundancies from building each task group definition manually.
 
