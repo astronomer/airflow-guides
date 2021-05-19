@@ -106,7 +106,7 @@ The following screenshot shows how these Task Groups appear in the Airflow UI:
 
 ### Conditioning on Task Groups
 
-In the above example, we added an additional task to group 1 based on our `group_id`. This was to demonstrate that even though we're dynamically creating task groups and tasks to take advantage of patterns we can still introduce variations to the pattern while avoiding code redundancies from building each task group definition manually.
+In the above example, we added an additional task to `group1` based on our `group_id`. This was to demonstrate that even though we're dynamically creating Task Groups to take advantage of patterns, we can still introduce variations to the pattern while avoiding code redundancies from building each task group definition manually.
 
 ## Nesting Task Groups
 
