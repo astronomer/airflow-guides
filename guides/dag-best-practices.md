@@ -46,7 +46,7 @@ today = datetime.today()
 yesterday = datetime.today() - timedelta(1)
 ```
 
-The example above creates date variables that can be used by tasks by calling `datetime` package functions. If this code is in the DAG file, these functions will be executed on every scheduler heartbeat, which may not be performant. Even more importantly, this doesn't produce an idempotent DAG; if you needed to rerun a previously failed DAG Run for a past date, you wouldn't be able to do so with this implementation because the date variable is relative to the actual date, not the DAG execution date. 
+If this code is in a DAG file, these functions will be executed on every Scheduler heartbeat, which may not be performant. Even more importantly, this doesn't produce an idempotent DAG: If you needed to rerun a previously failed DAG Run for a past date, you wouldn't be able to because `datetime.today()` is relative to the current date, not the DAG execution date. 
 
 A better way of implementing this is by using an Airflow variable:
 
