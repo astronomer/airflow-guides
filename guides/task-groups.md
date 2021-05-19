@@ -77,7 +77,7 @@ What if your task groups can't be processed independently? Next, we'll show how 
 
 ## Ordering Tasks Groups
 
-By default, using a loop to generate your task groups will put them in parallel. If your tasks groups are dependent on elements of another task group, you'll want to run them sequentially. For example, when loading tables with foreign keys, your primary table records will need to exist before you can load your foreign table.
+By default, using a loop to generate your task groups will put them in parallel. If your tasks groups are dependent on elements of another task group, you'll want to run them sequentially. For example, when loading tables with foreign keys, your primary table records need to exist before you can load your foreign table.
 
 In the example below, our group 3 that we're dynamically generating has foreign keys to both group 1 and group 2 so we'll want to process it last. We create an empty list and append our task group airflow objects as they are generated. Using this list we reference the task groups and define their dependencies to each other.
 
