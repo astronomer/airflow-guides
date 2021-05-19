@@ -112,7 +112,7 @@ In the above example, we added an additional task to group 1 based on our `group
 
 For additional complexity, you can nest task groups. Building on our previous ETL example, when calling API endpoints we may need to process new records for each endpoint before we can process updates to them.
 
-In the code below, our top level task groups represents our new and updated record processing, while the nested task group represents our API endpoint processing. 
+In the following code, our top-level Task Groups represent our new and updated record processing, while the nested Task Groups represent our API endpoint processing:
 
 ```python
 groups = []
