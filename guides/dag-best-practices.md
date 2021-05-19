@@ -31,7 +31,9 @@ The following DAG design principles will help to make your DAGs idempotent, effi
 
 ### Keep Tasks Atomic
 
-When breaking up your pipeline into individual tasks, ideally each task should be atomic. This means each task should be responsible for one operation that can be re-run independently of the others, which supports idempotency.
+When breaking up your pipeline into individual tasks, ideally each task should be atomic. This means each task should be responsible for one operation that can be re-run independently of the others. Said another way, in an atomized a task, a success in part of the task means a success of the entire task. 
+
+For example, in an ETL pipeline you would ideally want your Extract, Transform, and Load operations covered by three separate tasks. Atomizing these tasks allows you to rerun each operation in the pipeline independently, which supports idempotence.
 
 ### Use Template Fields, Variables, and Macros
 
