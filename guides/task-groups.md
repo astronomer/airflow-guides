@@ -16,7 +16,7 @@ However, SubDAGs were really just DAGs embedded in other DAGs. This caused both 
 - When a SubDAG is triggered, the SubDAG and child tasks take up worker slots until the entire SubDAG is complete. This can delay other task processing and, depending on your number of worker slots, can lead to deadlocking.
 - SubDAGs have their own parameters, schedule, and enabled settings. When these are not consistent with their parent DAG, unexpected behavior can occur.
 
-Unlike SubDAGs, [Task Groups](https://airflow.apache.org/docs/apache-airflow/stable/concepts.html#taskgroup) are just a UI grouping concept; allowing you to group and organize your tasks within your DAG's graph view without the added complexity and performance issues of SubDAGs (and with less code!).
+Unlike SubDAGs, [Task Groups](https://airflow.apache.org/docs/apache-airflow/stable/concepts.html#taskgroup) are just a UI grouping concept. Starting in Airflow 2.0, you can use Task Groups to organize tasks within your DAG's graph view in the Airflow UI. This avoids the added complexity and performance issues of SubDAGs, all while using less code!
 
 In this guide, we'll walk through how to create task groups and show some example DAGs to demonstrate their scalability in more complicated DAGs.
 
