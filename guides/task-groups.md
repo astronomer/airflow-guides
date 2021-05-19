@@ -50,7 +50,7 @@ t3 = DummyOperator(task_id='end')
 t0 >> tg1 >> t3
 ```
 
-This animated visual shows the above example with the UI interactions of expanding and collapsing the Task Group.
+In the Airflow UI, Task Groups look like tasks with blue shading. When we expand `group1` by clicking on it, we see that the grouped tasks have same dependencies that we defined in our code:
 
 ![UI Task Group](https://assets2.astronomer.io/main/guides/task-groups/task_groups_ui.gif)
 
