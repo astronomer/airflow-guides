@@ -29,7 +29,9 @@ from airflow.utils.task_group import TaskGroup
 ```
 
 
-Below we instantiate our task group with our `with statement` and provide a `group_id`. Inside our task group, we define our two tasks and their dependencies to each other. Then we add our dependencies to the task group, which automatically applies the same dependencies across the inner tasks.  
+For our first example, we'll instantiate a Task Group using a `with` statement and provide a `group_id`. Inside our task group, we'll define our two tasks, `t1` and `t2`, and their respective dependencies. 
+
+You can use dependency operators (`<<` and `>>`) on Task Groups in the same way that you can with individual tasks. Dependencies applied to a Task Group are applied across its tasks. In the following code, we'll add additional dependencies to `t0` and `t3` to the Task Group, which automatically applies the same dependencies across `t1` and `t2`:  
 
 ```python
 t0 = DummyOperator(task_id='start')
