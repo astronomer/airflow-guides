@@ -136,7 +136,7 @@ for g_id in range(1,3):
 groups[0] >> groups[1]
 ```
 
-This shows the expanded view of the nested task groups we generated above.
+The following screenshot shows the expanded view of the nested Task Groups in the Airflow UI:
 
 ![Nested Task Groups](https://assets2.astronomer.io/main/guides/task-groups/nested_task_groups.png)
 
