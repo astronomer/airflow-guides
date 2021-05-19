@@ -76,7 +76,7 @@ This screenshot shows the expanded view of the Task Groups we generated above in
 
 What if your Task Groups can't be processed independently? Next, we'll show how to call Task Groups and define dependencies between them.
 
-## Ordering Tasks Groups
+## Ordering Task Groups
 
 By default, using a loop to generate your Task Groups will put them in parallel. If your Task Groups are dependent on elements of another Task Group, you'll want to run them sequentially. For example, when loading tables with foreign keys, your primary table records need to exist before you can load your foreign table.
 
