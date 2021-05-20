@@ -29,7 +29,7 @@ Operators and hooks are the main building blocks of Airflow, and both can be use
 
 ### Hooks
 
-We recommend using Airflow hooks when interacting with any external system. Hooks are used as a way to abstract the methods you would use against a source system. The Microsoft Azure Airflow provider has an [Azure Data Factory hook](https://github.com/apache/airflow/blob/master/airflow/providers/microsoft/azure/hooks/azure_data_factory.py) that is the easiest way to interact with ADF from your Airflow DAG.
+We recommend using Airflow hooks when interacting with any external system. Hooks are used as a way to abstract the methods you would use against a source system. The Microsoft Azure Airflow provider has an [Azure Data Factory hook](https://registry.astronomer.io/providers/microsoft-azure/modules/azuredatafactoryhook) that is the easiest way to interact with ADF from your Airflow DAG.
 
 This hook builds off of the `azure-mgmt-datafactory` Python package; since this is used under the hood, [this](https://docs.microsoft.com/en-us/azure/data-factory/quickstart-create-data-factory-python) resource on interacting with ADF using Python could be helpful for determining parameter names, etc.
 
@@ -38,7 +38,7 @@ It is worth noting that you could also use the ADF API directly to run a pipelin
 
 ### Operators
 
-There is currently no published Azure Data Factory operator, although given that a hook has been developed we expect that an operator will not be far behind. You could make your own ADF operator that builds off of the hook mentioned above. Or you can use the `PythonOperator` and build your own function that suits your use case; this is the method we show in the example below.
+There is currently no published Azure Data Factory operator, although given that a hook has been developed we expect that an operator will not be far behind. You could make your own ADF operator that builds off of the hook mentioned above. Or you can use the [PythonOperator](https://registry.astronomer.io/providers/apache-airflow/modules/pythonoperator) and build your own function that suits your use case; this is the method we show in the example below.
 
 ## Example
 
@@ -101,7 +101,7 @@ As mentioned above, we will use the ADF hook with the `PythonOperator`. The DAG 
 ```python
 from airflow import DAG
 from datetime import datetime, timedelta
-from airflow.operators.python_operator import PythonOperator
+from airflow.operators.python import PythonOperator
 from airflow.providers.microsoft.azure.hooks.azure_data_factory import AzureDataFactoryHook
 
 azure_data_factory_conn = 'azure_data_factory_conn'
@@ -130,19 +130,20 @@ default_args = {
     'retry_delay': timedelta(minutes=5)
 }
 
-with DAG('azure_data_factory',
-         start_date=datetime(2019, 1, 1),
-         max_active_runs=1,
-         schedule_interval=timedelta(minutes=30),
-         default_args=default_args,
-         catchup=False
-         ) as dag:
+with DAG(
+    'azure_data_factory',
+    start_date=datetime(2019, 1, 1),
+    max_active_runs=1,
+    schedule_interval=timedelta(minutes=30),
+    default_args=default_args,
+    catchup=False
+) as dag:
 
-         opr_run_pipeline = PythonOperator(
-            task_id='run_pipeline',
-            python_callable=run_adf_pipeline,
-            op_kwargs={'pipeline_name': 'pipeline1', 'date': yesterday_date}
-         )
+    opr_run_pipeline = PythonOperator(
+        task_id='run_pipeline',
+        python_callable=run_adf_pipeline,
+        op_kwargs={'pipeline_name': 'pipeline1', 'date': yesterday_date}
+    )
 ```
 
 There are a few important things to note about this DAG:
