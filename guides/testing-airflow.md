@@ -8,9 +8,9 @@ tags: ["DAGs", "Best Practices", "Testing"]
 
 ## Overview
 
-One of the core principles of Airflow is that your DAGs are defined as Python code. Because you can data pipelines like you would any other piece of code, you can integrate them into a standard software development lifecycle using source control, CI/CD, and automated testing. 
+One of the core principles of Airflow is that your DAGs are defined as Python code. Because you can treat data pipelines like you would any other piece of code, you can integrate them into a standard software development lifecycle using source control, CI/CD, and automated testing. 
 
-Although DAGs are 100% Python code, effectively testing DAGs requires accounting for their unique structure and relationship to other code in your environment.  In this guide, we'll discuss a couple of types of tests that we would recommend to anybody running Airflow in production, including DAG validation testing, unit testing, and data and pipeline integrity testing.
+Although DAGs are 100% Python code, effectively testing DAGs requires accounting for their unique structure and relationship to other code and data in your environment.  In this guide, we'll discuss a couple of types of tests that we would recommend to anybody running Airflow in production, including DAG validation testing, unit testing, and data and pipeline integrity testing.
 
 ### Before you begin
 
