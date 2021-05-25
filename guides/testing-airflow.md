@@ -8,9 +8,11 @@ tags: ["DAGs", "Best Practices", "Testing"]
 
 ## Overview
 
-One of the core principles of Airflow is that your DAGs are defined as Python code. This allows you to treat your data pipelines like you would any other piece of code and integrate them into a standard software development lifecycle, using source control, CI/CD, and automated testing. 
+One of the core principles of Airflow is that your DAGs are defined as Python code. Because you can data pipelines like you would any other piece of code, you can integrate them into a standard software development lifecycle using source control, CI/CD, and automated testing. 
 
-It can often be daunting to figure out the best way to test your Airflow DAGs to ensure they are error free and functioning as intended. Testing, even specific to data pipelines, is a broad topic, and we can't cover every situation here; but we will provide some general guidance for how to get started.  In this guide, we'll discuss a couple of types of tests that we would recommend to anybody running Airflow in production, including DAG validation testing, unit testing, and data and pipeline integrity testing.
+Although DAGs are 100% Python code, effectively testing DAGs requires accounting for their unique structure and relationship to other code in your environment.  In this guide, we'll discuss a couple of types of tests that we would recommend to anybody running Airflow in production, including DAG validation testing, unit testing, and data and pipeline integrity testing.
+
+### Before you begin
 
 If you are newer to test-driven development, or CI/CD in general, we'd recommend the following resources to get started:
 
@@ -21,15 +23,15 @@ If you are newer to test-driven development, or CI/CD in general, we'd recommend
 
 We also recommend checking out [Airflow's documentation on testing DAGs](https://airflow.apache.org/docs/apache-airflow/stable/best-practices.html#testing-a-dag) and [testing guidelines for contributors](https://github.com/apache/airflow/blob/master/TESTING.rst); we'll walk through some of the concepts covered in those docs in more detail below.
 
-### Test Runners
+### Note on test runners
 
-Before we dive into different types of tests for Airflow, we have a quick note on test runners. There are multiple test runners available for Python, including `unittest`, `pytest`, and `nose2`. The OSS Airflow project uses `pytest`, so we will do the same in this guide. However, choosing a test runner in general is a matter of personal preference and experience level, and it may be that a different runner is better for your use case (i.e., there is no requirement to use `pytest` for testing your Airflow DAGs).
+Before we dive into different types of tests for Airflow, we have a quick note on test runners. There are multiple test runners available for Python, including `unittest`, `pytest`, and `nose2`. The OSS Airflow project uses `pytest`, so we will do the same in this guide. However, Airflow doesn't require using a specific test runner. In general, choosing a test runner is a matter of personal preference and experience level, and some test runners might work better than others for a given use case.
 
 ## DAG Validation Testing
 
-DAG validation tests are simple tests to check whether your DAGs are valid and don't have syntax errors. In practice this means checking to make sure your DAG object is defined correctly, won't have any import errors, and is acyclic. 
+DAG validation tests are designed to ensure that your DAG objects are defined correctly, acyclic, and free from import errors. 
 
-These are things that you would likely catch if you were starting with local development of your DAGs. But in cases where you may not have access to a local Airflow environment, or you want an extra layer of security, these tests can make sure simple coding errors don't get deployed and slow down your development. 
+These are things that you would likely catch if you were starting with local development of your DAGs. But in cases where you may not have access to a local Airflow environment, or you want an extra layer of security, these tests can ensure that simple coding errors don't get deployed and slow down your development. 
 
 DAG validation tests apply to all DAGs in your Airflow environment, so you only need to create one test suite.
 
@@ -70,7 +72,7 @@ def test_function_returns_5():
 	assert my_function(input) == 5
 ```
 
-In the context of Airflow, you can write unit tests for any part of your DAG, but they are most frequently applied to hooks and operators. All official Airflow hooks and operators and any provider packages should have unit tests that must pass before merging the code into the project. For an example, check out the [AWS `S3Hook`](https://registry.astronomer.io/providers/amazon/modules/s3hook), which has many accompanying [unit tests](https://github.com/apache/airflow/blob/master/tests/providers/amazon/aws/hooks/test_s3.py). 
+In the context of Airflow, you can write unit tests for any part of your DAG, but they are most frequently applied to hooks and operators. All official Airflow hooks, operators, and provider packages have unit tests that must pass before merging the code into the project. For an example, check out the [AWS `S3Hook`](https://registry.astronomer.io/providers/amazon/modules/s3hook), which has many accompanying [unit tests](https://github.com/apache/airflow/blob/master/tests/providers/amazon/aws/hooks/test_s3.py). 
 
 If you have your own custom hooks or operators, we highly recommend using unit tests to check logic and functionality. For example, say we have a custom operator that checks if a number is even:
 
@@ -112,7 +114,7 @@ class EvenNumberCheckOperator(unittest.TestCase):
 			self.odd = 11
 
 	def test_even(self):
-      """TTests that the EvenNumberCheckOperator returns True for 10."""
+      """Tests that the EvenNumberCheckOperator returns True for 10."""
       task = EvenNumberCheckOperator(my_operator_param=self.even, task_id='even', dag=self.dag)
       ti = TaskInstance(task=task, execution_date=datetime.now())
       result = task.execute(ti.get_template_context())
@@ -128,19 +130,21 @@ class EvenNumberCheckOperator(unittest.TestCase):
 
 Note that if your DAGs contain `PythonOperators` that execute your own Python functions, it is a good idea to write unit tests for those functions as well. 
 
-The most common way of implementing unit tests in production is to automate them as part of your CI/CD process. Your CI tool executes the tests, and then stops the deployment process if any errors occur.
+The most common way of implementing unit tests in production is to automate them as part of your CI/CD process. Your CI tool executes the tests and stops the deployment process if any errors occur.
 
 ### Mocking
 
-Sometimes unit tests require mocking, or imitating an external system, dataset, or other object. For example, you might use mocking with an Airflow unit test if you are testing a connection, but don't have access to the metadata database. Another example could be if you are testing an operator that executes an external service through an API endpoint, but you don't want to actually wait for that service to run a simple test. Mocking can be used in these cases to simulate the objects you are testing. Many [Airflow tests](https://github.com/apache/airflow/tree/master/tests) have examples of mocking. [This blog post](https://godatadriven.com/blog/testing-and-debugging-apache-airflow/) also has a useful section on mocking Airflow that may be helpful for getting started.
+Sometimes unit tests require mocking: the imitation of an external system, dataset, or other object. For example, you might use mocking with an Airflow unit test if you are testing a connection, but don't have access to the metadata database. Another example could be if you are testing an operator that executes an external service through an API endpoint, but you don't want to actually wait for that service to run a simple test. 
+
+Many [Airflow tests](https://github.com/apache/airflow/tree/master/tests) have examples of mocking. [This blog post](https://godatadriven.com/blog/testing-and-debugging-apache-airflow/) also has a useful section on mocking Airflow that may be helpful for getting started.
 
 ## Data Integrity Testing
 
-Data integrity tests attempt to prevent data quality issues from breaking your pipelines or negatively impacting downstream systems. These tests could also be used to ensure your DAG tasks produce the expected output given the data coming in. They are somewhat different in scope than the code-related tests described in previous sections, since your data is likely not static like your DAG code is. 
+Data integrity tests are designed to prevent data quality issues from breaking your pipelines or negatively impacting downstream systems. These tests could also be used to ensure your DAG tasks produce the expected output when processing a given piece of data. They are somewhat different in scope than the code-related tests described in previous sections, since your data is not static like a DAG. 
 
-One straight forward way of implementing data integrity tests is to build them directly into your DAGs. This allows you to make use of Airflow dependencies to manage any errant data in whatever way makes sense for your use case.
+One straightforward way of implementing data integrity tests is to build them directly into your DAGs. This allows you to make use of Airflow dependencies to manage any errant data in whatever way makes sense for your use case.
 
-There are many ways you could integrate data checks into your DAG. One method worth calling out is using [Great Expectations](https://greatexpectations.io/) (GE), an open source Python framework for data validations. You can make use of the [Great Expectations provider package](https://registry.astronomer.io/providers/great-expectations) to easily integrate GE tasks into your DAGs. In practice, you might have something like the following DAG, which runs an Azure Data Factory pipeline that generates data, and then runs a GE check on the data before sending an email.
+There are many ways you could integrate data checks into your DAG. One method worth calling out is using [Great Expectations](https://greatexpectations.io/) (GE), an open source Python framework for data validations. You can make use of the [Great Expectations provider package](https://registry.astronomer.io/providers/great-expectations) to easily integrate GE tasks into your DAGs. In practice, you might have something like the following DAG, which runs an Azure Data Factory pipeline that generates data, then runs a GE check on the data before sending an email.
 
 ```python
 from airflow import DAG
@@ -227,6 +231,6 @@ with DAG('adf_great_expectations',
          run_pipeline >> download_data >> ge_check >> send_email
 ```
 
-If the GE check fails, any downstream tasks will be skipped. Implementing checkpoints like this allow you to either conditionally branch your pipeline to deal with data that doesn't meet your criteria, or potentially skip all downstream tasks so problematic data is not loaded into your data warehouse or fed to a model. For more information on conditional DAG design, check out the documentation on [Airflow Trigger Rules](https://airflow.apache.org/docs/apache-airflow/2.0.0/concepts.html#trigger-rules) and our guide on [branching in Airflow](https://www.astronomer.io/guides/airflow-branch-operator).
+If the GE check fails, any downstream tasks will be skipped. Implementing checkpoints like this allows you to either conditionally branch your pipeline to deal with data that doesn't meet your criteria, or potentially skip all downstream tasks so problematic data won't be loaded into your data warehouse or fed to a model. For more information on conditional DAG design, check out the documentation on [Airflow Trigger Rules](https://airflow.apache.org/docs/apache-airflow/2.0.0/concepts.html#trigger-rules) and our guide on [branching in Airflow](https://www.astronomer.io/guides/airflow-branch-operator).
 
 It's also worth noting here that data integrity testing will work better at scale if you design your DAGs to load or process data incrementally. We talk more about incremental loading in our [Airflow Best Practices guide](https://www.astronomer.io/guides/dag-best-practices), but in short, processing smaller, incremental chunks of your data in each DAG Run ensures that any data quality issues have a limited blast radius and are easier to recover from.
