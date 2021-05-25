@@ -63,6 +63,8 @@ def test_retries_present():
       assert retries == 2, error_msg
 ```
 
+To see an example of running these tests as part of a CI/CD workflow, check out [this repo](https://github.com/astronomer/airflow-testing-guide), which uses GitHub Actions to run the test suite before deploying the project to an Astronomer Airflow deployment.
+
 ## Unit Testing
 
 [Unit testing](https://en.wikipedia.org/wiki/Unit_testing) is a software testing method where small chunks of source code are tested individually to ensure they function as intended. The goal is to isolate testable logic inside of small, well-named functions, for example:
