@@ -3,7 +3,7 @@ title: "Testing Airflow DAGs"
 description: "How to apply test-driven development practices to your Airflow DAGs."
 date: 2021-05-25T00:00:00.000Z
 slug: "testing-airflow"
-heroImagePath: "https://assets2.astronomer.io/main/guides/Testing%20Airflow%20DAGs-1.png"
+heroImagePath: "https://assets2.astronomer.io/main/guides/testing-airflow-dags.png"
 tags: ["DAGs", "Best Practices", "Testing"]
 ---
 
