@@ -8,25 +8,25 @@ tags: ["DAGs", "Subdags"]
 
 ## Overview
 
-When designing Airflow DAGs, it is often recommended to put all related tasks in the same DAG. However, sometimes this is not practical, and it is necessary to create dependencies between DAGs. According to the Airflow documentation on [cross-DAG dependencies](https://airflow.apache.org/docs/apache-airflow/stable/howto/operator/external_task_sensor.html#cross-dag-dependencies), this can be useful when:
+When designing Airflow DAGs, it is often best practice to put all related tasks in the same DAG. However, it's sometimes necessary create dependencies between DAGs. According to the Airflow documentation on [cross-DAG dependencies](https://airflow.apache.org/docs/apache-airflow/stable/howto/operator/external_task_sensor.html#cross-dag-dependencies), this can be useful when:
 
-- Two DAGs are dependent but have different schedules
-- Different teams are responsible for the DAGs but there are cross-DAG dependencies
-- A task depends on a task in another DAG, but for a different execution date
+- Two DAGs are dependent, but they have different schedules.
+- Two DAGs are dependent, but they are owned by different teams.
+- A task depends on a task in another DAG, but for a different execution date.
 
-For these, or any other scenarios where you have dependent DAGs, we've got you covered! In this guide, we'll discuss multiple methods for implementing cross-DAG dependencies, as well as how to do this if your dependent DAGs are located in different Airflow deployments.
+For any scenario where you have dependent DAGs, we've got you covered! In this guide, we'll discuss multiple methods for implementing cross-DAG dependencies, including how to implement dependencies if your dependent DAGs are located in different Airflow deployments.
 
 > Note: All code in this guide can be found in [this Github repo](https://github.com/astronomer/cross-dag-dependencies-tutorial).
 
-## Cross-DAG Dependencies
+## Implementing Cross-DAG Dependencies
 
-There are multiple ways to implement cross-DAG dependencies in Airflow, including the `TriggerDagRunOperator`, `ExternalTaskSensor`, and the Airflow API. Which you use depends on how your DAG dependencies are configured, and what your Airflow setup looks like. In this section, we detail how to use each method and ideal scenarios for each, as well as how to view dependencies in the Airflow UI.
+There are multiple ways to implement cross-DAG dependencies in Airflow, including the `TriggerDagRunOperator`, `ExternalTaskSensor`, and the Airflow API. Which you use depends on how your DAG dependencies are configured and what your Airflow setup looks like. In this section, we detail how to use each method and ideal scenarios for each, as well as how to view dependencies in the Airflow UI.
 
-Note: it can be tempting to use SubDAGs to handle DAG dependencies, but we highly recommend against doing so as SubDAGs can create performance issues. Instead, use one of the other methods described below.
+> **Note:** It can be tempting to use SubDAGs to handle DAG dependencies, but we highly recommend against doing so as SubDAGs can create performance issues. Instead, use one of the other methods described below.
 
 ### TriggerDagRunOperator
 
-The `TriggerDagRunOperator` is an easy way to implement cross-DAG dependencies. This operator allows you to have a task in one DAG that triggers another DAG in the same Airflow environment. The Astronomer Registry has more documentation for this operator [here](https://registry.astronomer.io/providers/apache-airflow/modules/triggerdagrunoperator).
+The `TriggerDagRunOperator` is an easy way to implement cross-DAG dependencies. This operator allows you to have a task in one DAG that triggers another DAG in the same Airflow environment. Read more in-depth documentation about this operator on the [Astronomer Registry](https://registry.astronomer.io/providers/apache-airflow/modules/triggerdagrunoperator).
 
 The `TriggerDagRunOperator` is ideal in situations where you have one parent DAG, that needs to trigger one or more downstream child DAGs, or if you have dependent DAGs that have both upstream and downstream tasks in the parent DAG. Because you can use this operator for any task in your DAG, it is highly flexible; it can also often be an ideal replacement for SubDAGs. 
 
@@ -85,14 +85,14 @@ with DAG('trigger-dagrun-dag',
 
 There are a couple of things to note when using this operator:
 
-- If your dependent DAG requires a config input, or a specific execution date, these can be specified in the operator using the `conf` and `execution_date` params respectively.
+- If your dependent DAG requires a config input or a specific execution date, these can be specified in the operator using the `conf` and `execution_date` params respectively.
 - If your parent DAG has downstream tasks that require the child DAG to finish first, you should set the `wait_for_completion` param to `True` as shown in the example above. This param defaults to `False`, meaning once the child DAG has started, the parent DAG will mark the task as a success and move on to any downstream tasks.
 
 ### ExternalTaskSensor
 
-The next method for creating cross-DAG dependencies is using the `ExternalTaskSensor`. This method uses a sensor in the child DAG, which will wait until a task is completed in the parent DAG before moving on to other tasks. You can find more info on this sensor [here](https://registry.astronomer.io/providers/apache-airflow/modules/externaltasksensor).
+The next method for creating cross-DAG dependencies is to add a `ExternalTaskSensor` to your child DAG. The child DAG will wait until a task is completed in the parent DAG before moving on to other tasks. You can find more info on this sensor on the [Astronomer Registry](https://registry.astronomer.io/providers/apache-airflow/modules/externaltasksensor).
 
-This method is not as flexible as the `TriggerDagRunOperator`, since the dependency is implemented in the downstream DAG. It is ideal in situations where you have a DAG that can only run after another task or DAG(s) has completed. An example DAG using the `ExternalTaskSensor` is shown below:
+This method is not as flexible as the `TriggerDagRunOperator`, since the dependency is implemented in the downstream DAG. It is ideal in situations where you have a child DAG that can run only after another task in a parent DAG has completed. An example DAG using the `ExternalTaskSensor` is shown below:
 
 ```python
 from airflow import DAG
