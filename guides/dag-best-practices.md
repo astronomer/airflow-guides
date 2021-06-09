@@ -208,7 +208,7 @@ with DAG('bad_practices_dag_2',
         )
 ```
 
-When the scheduler parses this DAG, it will query the `grocery_list` table to construct the operators in the DAG. This query will be run on every scheduler heartbeat, which could cause performance issues. A better implementation would be to have a separate DAG or task that gets the required information from the `grocery_list` table and saves it to an Airflow variable, which can be used by the dynamic DAG.
+When the scheduler parses this DAG, it will query the `grocery_list` table to construct the operators in the DAG. This query will be run on every scheduler heartbeat, which could cause performance issues. A better implementation would be to have a separate DAG or task that gets the required information from the `grocery_list` table and saves it to an XCom or an Airflow variable, which can be used by the dynamic DAG.
 
 ### Use a Consistent Method for Task Dependencies
 
