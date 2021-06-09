@@ -82,11 +82,11 @@ When a last modified date is not available, a sequence or incrementing ID can be
 
 In the context of Airflow, we use "top-level code" to mean any code that isn't part of your DAG or operator instantiations. 
 
-Because Airflow executes all code in the `DAGS_Folder` on every Scheduler heartbeat, even a small amount of top-level code can cause performance issues. Top-level code that makes requests to external systems, like an API or a database, or makes function calls outside of your tasks is especially problematic. Additionally, top-level code makes it harder to read, maintain, update, and debug DAGs.
+Because Airflow executes all code in the `DAGS_Folder` on every scheduler heartbeat, top-level code that makes requests to external systems, like an API or a database, or makes function calls outside of your tasks can cause performance issues. Additionally, including code that isn't part of your DAG or operator instantiations in your DAG file makes the DAG harder to read, maintain, and update.
 
 Treat your DAG file like a config file and leave all of the heavy lifting to the hooks and operators that you instantiate within the file. If your DAGs need to access additional code such as a SQL script or a Python function, keep that code in a separate file that can be read into a DAG Run.
 
-In this example of what _not_ to do, a `PostgresOperator` executes a SQL query that was dropped directly into the DAG file:
+For one example of what _not_ to do, in the DAG below a `PostgresOperator` executes a SQL query that was dropped directly into the DAG file:
 
 ```python
 from airflow import DAG
@@ -146,7 +146,7 @@ with DAG('bad_practices_dag_1',
     )
 ```
 
-To avoid that SQL code running on every Scheduler heartbeat, you would want to keep it in a separate file and call it into your DAG. In the following example, we call in a file named `covid_state_query.sql` into our PostgresOperator instantiation, which embodies the best practice:
+Keeping the query in the DAG file like this makes the DAG harder to read and maintain. Instead, in the DAG below we call in a file named `covid_state_query.sql` into our PostgresOperator instantiation, which embodies the best practice:
 
 ```python
 from airflow import DAG
@@ -180,6 +180,35 @@ with DAG('good_practices_dag_1',
             params={'state': "'" + state + "'"}
         )
 ```
+
+Another example that goes against this best practice is the DAG below, which dynamically generates `PostgresOperator` tasks based on records pulled from a database.
+
+```python
+from airflow import DAG
+from airflow.providers.postgres.operators.postgres import PostgresOperator
+from airflow.providers.postgres.hooks.postgres import PostgresHook
+from datetime import datetime, timedelta
+
+hook = PostgresHook('database_conn')
+result = hook.get_records("SELECT * FROM grocery_list;")
+
+with DAG('bad_practices_dag_2',
+         start_date=datetime(2021, 1, 1),
+         max_active_runs=3,
+         schedule_interval='@daily',
+         default_args=default_args,
+         catchup=False
+         ) as dag:
+
+    for grocery_item in result:
+        query = PostgresOperator(
+            task_id='query_{0}'.format(result),
+            postgres_conn_id='postgres_default',
+            sql="INSERT INTO purchase_order VALUES (value1, value2, value3);"
+        )
+```
+
+When the scheduler parses this DAG, it will query the `grocery_list` table to construct the operators in the DAG. This query will be run on every scheduler heartbeat, which could cause performance issues. A better implementation would be to have a separate DAG or task that gets the required information from the `grocery_list` table and saves it to an XCom or an Airflow variable, which can be used by the dynamic DAG.
 
 ### Use a Consistent Method for Task Dependencies
 
