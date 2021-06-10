@@ -3,7 +3,7 @@ title: "Cross-DAG Dependencies"
 description: "How to implement dependencies between your Airflow DAGs."
 date: 2021-06-07T00:00:00.000Z
 slug: "cross-dag-dependencies"
-tags: ["DAGs", "Subdags"]
+tags: ["DAGs", "Subdags", "Dependencies"]
 ---
 
 ## Overview
@@ -151,7 +151,7 @@ with DAG('external-task-sensor-dag',
 
 In this DAG, `downstream_task1` waits for the `bash_print_date2` task of `example_dag` to complete before moving on to execute the rest of the downstream tasks (`downstream_task2`). The graph view of the DAG looks like this:
 
-![External Task Sensor Grapg](https://assets2.astronomer.io/main/guides/cross-dag-dependencies/external_task_sensor_graph.png)
+![External Task Sensor Graph](https://assets2.astronomer.io/main/guides/cross-dag-dependencies/external_task_sensor_graph.png)
 
 If you want the downstream DAG to wait for the entire upstream DAG to finish instead of a specific task, you can set the `external_task_id` to `None`. In this case, we specify that the external task must have a state of `success` for the downstream task to succeed, as defined by the `allowed_states` and `failed_states`. 
 
