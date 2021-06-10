@@ -46,7 +46,7 @@ from datetime import datetime, timedelta
 
 def print_task_type(**kwargs):
     """
-    Dummy function to call before and after depdendent DAG.
+    Dummy function to call before and after dependent DAG.
     """
     print(f"The {kwargs['task_type']} task has completed.")
 
@@ -100,7 +100,7 @@ There are a couple of things to note when using this operator:
 
 ### ExternalTaskSensor
 
-The next method for creating cross-DAG dependencies is to add a `ExternalTaskSensor` to your downstream DAG. The downstream DAG will wait until a task is completed in the upstream DAG before moving on to the rest of the DAG. You can find more info on this sensor on the [Astronomer Registry](https://registry.astronomer.io/providers/apache-airflow/modules/externaltasksensor).
+The next method for creating cross-DAG dependencies is to add an `ExternalTaskSensor` to your downstream DAG. The downstream DAG will wait until a task is completed in the upstream DAG before moving on to the rest of the DAG. You can find more info on this sensor on the [Astronomer Registry](https://registry.astronomer.io/providers/apache-airflow/modules/externaltasksensor).
 
 This method is not as flexible as the `TriggerDagRunOperator`, since the dependency is implemented in the downstream DAG. It is ideal in situations where you have a downstream DAG that is dependent on multiple upstream DAGs. An example DAG using the `ExternalTaskSensor` is shown below:
 
