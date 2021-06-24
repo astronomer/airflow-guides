@@ -197,7 +197,9 @@ smtp_port = 587
 smtp_mail_from = noreply@astronomer.io
 ```
 
-You can also set these values using environment variables; if you are running on the Astronomer platform, you can set up SMTP this way since the `airflow.cfg` cannot be directly edited. In this case, all parameters are preceded by `AIRFLOW__SMTP__`, consistent with Airflow environment variable naming convention. For example, `smtp_host` can be specified by setting the `AIRFLOW__SMTP__SMTP_HOST` variable. For more on Airflow email configuration, check out the [Airflow documentation](https://airflow.apache.org/docs/apache-airflow/stable/howto/email-config.html). For more on email alerting on the Astronomer platform, see the 'Notifications on Astronomer' section below.
+You can also set these values using environment variables. In this case, all parameters are preceded by `AIRFLOW__SMTP__`, consistent with Airflow environment variable naming convention. For example, `smtp_host` can be specified by setting the `AIRFLOW__SMTP__SMTP_HOST` variable. For more on Airflow email configuration, check out the [Airflow documentation](https://airflow.apache.org/docs/apache-airflow/stable/howto/email-config.html). 
+
+> Note: If you are running on the Astronomer platform, you can set up SMTP using environment variables since the `airflow.cfg` cannot be directly edited. For more on email alerting on the Astronomer platform, see the 'Notifications on Astronomer' section below.
 
 ### Customizing Email Notifications
 
