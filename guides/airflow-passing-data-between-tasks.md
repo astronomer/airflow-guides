@@ -54,9 +54,9 @@ XCom cannot be used for passing large data sets between tasks. The limit for the
 
 You can see that these limits aren't very big. And even if you think your data might squeak just under, don't use XComs. Instead, see the section below on using intermediary data storage, which is more appropriate for larger chunks of data.  
 
-### XCom Backends
+### Custom XCom Backends
 
-It is possible to use a different service (such as S3) to store XComs and change the serialization and deserialization behavior of tasks results in XCom by setting up a custom XCom backend. This is a concept in its own right, so we won't go into too much detail here, but you can start by reading more about it in the [Apache Airflow documentation](https://airflow.apache.org/docs/apache-airflow/stable/concepts.html?highlight=xcom#custom-xcom-backend).
+[Custom XCom Backends](https://airflow.apache.org/docs/apache-airflow/stable/concepts.html?highlight=xcom#custom-xcom-backend) are a new feature available in Airflow 2.0 and greater. Using an XCom backend means you can push and pull XComs to and from an external system such as S3, GCS, or HDFS rather than the default of Airflow's metadata database. You can also implement your own serialization / deserialization methods to define how XComs are handled. This is a concept in its own right, so we won't go into too much detail here, but you can learn more by reading our [guide on implementing custom XCom backends](https://www.astronomer.io/guides/custom-xcom-backends).
 
 ### Example DAGs
 
