@@ -9,40 +9,10 @@ tags: []
 <!-- markdownlint-disable-file -->
 |  | Google Cloud Composer | Astronomer Cloud | Astronomer Enterprise |
 |--|-----------------------|------------------|-----------------------|
-| Cost | ~$300 base | ~$110 base (via LocalExecutor) | Negotiated Annual subscription |
 | Hosting | Managed service hosted in Google's cloud environment | Managed service hosted in Astronomer's cloud environment | Installed in your Kubernetes cluster |
 | Monitoring and Logging | Deployment level metrics and logging in the Cloud Console | Deployment level metrics and logging in the Astronomer UI | Prometheus/Grafana + Elasticsearch, Fluentd, Kibana (EFK) stack to track resource usage across all Airflow deployments |
 | Support | Community support via Stack Overflow, Slack. [Commercial support](https://cloud.google.com/support) with many plans including 15-min response time for P1 cases in Premium Support | [Commercial support](https://support.astronomer.io/) that includes access to Airflow PMC members, and a [community forum](https://forum.astronomer.io) | 24x7 Business-Critical SLAs available |
 | Services | [QwikiLabs training](https://www.qwiklabs.com/), [Google Certification](https://cloud.google.com/certification), [Google on-site training](https://cloud.google.com/training), and [Consulting services](https://cloud.google.com/consulting) | [Astronomer SpaceCamp](https://astronomer.io/spacecamp) for on-site Airflow training | [Astronomer SpaceCamp](https://astronomer.io/spacecamp) for on-site Airflow training |
-
-## Cost
-
-### Google Cloud Composer
-
-Based on the [estimates provided](https://cloud.google.com/composer/pricing), a single, full-time instance of Composer:
-
-- Costs ~$300/month
-- Assumes 3 workers using `n1-standard-1` (1 vCPU; 3.75GB) machine types
-- Does not include Storage and Compute Engine costs
-
-### Astronomer
-
-Astronomer Cloud is billed based on exact resources used per deployment. On Astronomer, you're free to adjust resource allocation to each Airflow component (Scheduler, Webserver and Celery Workers) to best fit your budget and use case.
-
-Based on our default resource allocation, it breaks down to:
-
-- $110/mo for a default deployment with Airflow's Local Executor
-- $250/mo for a default deployment with the Celery Executor
-- $290/mo for a default deployment with the Kubernetes Executor
-
-Node limits for any single task (based on Google's standard-16 machine type) are:
-
-- 58 GB of Memory/RAM
-- 15 CPU
-
-For more details, check out our [pricing doc](https://astronomer.io/docs/pricing).
-
-Astronomer Enterprise is priced based on an annual subscription license. Please [contact us](https://astronomer.io/contact) if you'd like to get a quote.
 
 ## System Packages
 
