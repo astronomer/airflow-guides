@@ -10,7 +10,7 @@ tags: ["DAGs", "Integrations"]
 
 Notebooks are great tools for quickly developing code and presenting data visualizations. They are frequently used in exploratory data analysis, data science, and analytics, and reporting.
 
-Translating code written in a notebook to code running in production can be challenging. Maybe you've developed a machine learning model in a notebook, and now you need to run that model on a schedule and publish the results. Fortunately, Airflow can take care of this for you! Within the vast collection of [Airflow provider packages](https://registry.astronomer.io/), there are hooks and operators you can use to orchestrate almost any type of notebook.
+Translating code written in a notebook to code running in production can be challenging. Maybe you've developed a machine learning model in a notebook, and now you need to run that model on a schedule and publish the results. Most notebooks do not come with built-in scheduling and orchestration capabilities, and can't easily integrate with other services. Fortunately, Airflow can take care of this for you! Within the vast collection of [Airflow provider packages](https://registry.astronomer.io/), there are hooks and operators you can use to orchestrate almost any type of notebook while taking advantage of Airflow's vast scheduling capabilities.
 
 In this guide, we'll cover how to orchestrate commonly used notebooks with Airflow, including Jupyter, Databricks, and SageMaker notebooks. 
 
