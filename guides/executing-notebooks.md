@@ -100,16 +100,16 @@ Databricks notebooks can be easily orchestrated with Airflow by using the [Datab
 
 SageMaker notebooks can be easily orchestrated with Airflow by using the [AWS provider](https://registry.astronomer.io/providers/amazon/). There are multiple SageMaker operators and sensors available within the provider that cover a wide range of SageMaker features:
 
-- `[SageMakerEndpointOperator](https://registry.astronomer.io/providers/amazon/modules/sagemakerendpointoperator)`: creates a SageMaker endpoint
-- `[SageMakerEndpointConfigOperator](https://registry.astronomer.io/providers/amazon/modules/sagemakerendpointconfigoperator)`: creates a SageMaker endpoint config
-- `[SageMakerModelOperator](https://registry.astronomer.io/providers/amazon/modules/sagemakermodeloperator)`: creates a SageMaker model
-- `[SageMakerProcessingOperator](https://registry.astronomer.io/providers/amazon/modules/sagemakerprocessingoperator)`: initiates a SageMaker processing job
-- `[SageMakerTrainingOperator](https://registry.astronomer.io/providers/amazon/modules/sagemakertrainingoperator)`: initiates a SageMaker training job
-- `[SageMakerTranformOperator](https://registry.astronomer.io/providers/amazon/modules/sagemakertransformoperator)`: initiates a SageMaker transform job
-- `[SageMakerTuningOperator](https://registry.astronomer.io/providers/amazon/modules/sagemakertuningoperator)`: initiates a SageMaker hyperparameter tuning job
-- `[SageMakerEndpointSensor](https://registry.astronomer.io/providers/amazon/modules/sagemakerendpointsensor)`: waits until the endpoint state is terminated
-- `[SageMakerTransformSensor](https://registry.astronomer.io/providers/amazon/modules/sagemakertransformsensor)`: waits until the transform state is terminated
-- `[SageMakerTuningSensor](https://registry.astronomer.io/providers/amazon/modules/sagemakertuningsensor)`: waits until the tuning state is terminated
-- `[SageMakerTrainingSensor](https://registry.astronomer.io/providers/amazon/modules/sagemakertrainingsensor)`: waits until the training state is terminated
+- [`SageMakerEndpointOperator`](https://registry.astronomer.io/providers/amazon/modules/sagemakerendpointoperator): creates a SageMaker endpoint
+- [`SageMakerEndpointConfigOperator`](https://registry.astronomer.io/providers/amazon/modules/sagemakerendpointconfigoperator): creates a SageMaker endpoint config
+- [`SageMakerModelOperator`](https://registry.astronomer.io/providers/amazon/modules/sagemakermodeloperator): creates a SageMaker model
+- [`SageMakerProcessingOperator`](https://registry.astronomer.io/providers/amazon/modules/sagemakerprocessingoperator): initiates a SageMaker processing job
+- [`SageMakerTrainingOperator`](https://registry.astronomer.io/providers/amazon/modules/sagemakertrainingoperator): initiates a SageMaker training job
+- [`SageMakerTranformOperator`](https://registry.astronomer.io/providers/amazon/modules/sagemakertransformoperator): initiates a SageMaker transform job
+- [`SageMakerTuningOperator`](https://registry.astronomer.io/providers/amazon/modules/sagemakertuningoperator): initiates a SageMaker hyperparameter tuning job
+- [`SageMakerEndpointSensor`](https://registry.astronomer.io/providers/amazon/modules/sagemakerendpointsensor): waits until the endpoint state is terminated
+- [`SageMakerTransformSensor`](https://registry.astronomer.io/providers/amazon/modules/sagemakertransformsensor): waits until the transform state is terminated
+- [`SageMakerTuningSensor`](https://registry.astronomer.io/providers/amazon/modules/sagemakertuningsensor): waits until the tuning state is terminated
+- [`SageMakerTrainingSensor`](https://registry.astronomer.io/providers/amazon/modules/sagemakertrainingsensor): waits until the training state is terminated
 
 We will be publishing another guide shortly with more details on how to use this provider and example SageMaker and Airflow use cases. Check back soon!
