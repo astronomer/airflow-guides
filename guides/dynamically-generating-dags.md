@@ -115,13 +115,13 @@ for n in range(1, 4):
 
 And if we look at the Airflow UI we can see the DAGs have been created:
 
-![First 10 generated DAGs in the Airflow UI](https://assets.astronomer.io/website/img/guides/hello_world_1_thru_10.png)
+![DAGs from Loop](https://assets2.astronomer.io/main/guides/dynamic-dags/dag_from_loop_zoom.png)
 
 ### Example: Generate DAGs From Variables
 
 As mentioned above, the input parameters don't have to exist in the DAG file itself. Another common form of generating DAGs is by setting values in a Variable object.
 
-![Airflow UI variables tab with a DAG Number variable](https://assets.astronomer.io/website/img/guides/dag_number_var.png)
+![Airflow UI variables tab with a DAG Number variable](https://assets2.astronomer.io/main/guides/dynamic-dags/dag_number_variable.png)
 
 We can retrieve this value by importing the Variable class and passing it into our `range`. Because we want the interpreter to register this file as valid regardless of whether the variable exists, the `default_var` is set to 3.
 
@@ -172,13 +172,9 @@ for n in range(1, number_of_dags):
 
 ```
 
-If we look at the scheduler logs, we can see this variable was pulled into the DAG and, and 15 DAGs were added to the DagBag based on its value.
-
-![Logs showing 15 DAGs added to DagBag](https://assets.astronomer.io/website/img/guides/dag_logs.png)
-
 We can then go to the Airflow UI and see all of the new DAGs that have been created.
 
-![15 generated DAGs in the Airflow UI](https://assets.astronomer.io/website/img/guides/hello_world_1_thru_15.png)
+![15 generated DAGs in the Airflow UI](https://assets2.astronomer.io/main/guides/dynamic-dags/dag_from_variables.png)
 
 ### Example: Generate DAGs From Connections
 
@@ -186,7 +182,7 @@ Another way to define input parameters for dynamically generating DAGs is by def
 
 To implement this method, we can pull the connections we have in our Airflow metadata database by instantiating the "Session" and querying the "Connection" table. We can also filter this query so that it only pulls connections that match a certain criteria.
 
-![List of connections in the Airflow UI](https://assets.astronomer.io/website/img/guides/connections.png)
+![List of connections in the Airflow UI](https://assets2.astronomer.io/main/guides/dynamic-dags/connections.png)
 
 ```python
 from airflow import DAG, settings
@@ -239,9 +235,9 @@ for conn in conns:
 
 Notice that like before we are accessing the Models library to bring in the `Connection` class (as we did previously with the `Variable` class). We are also accessing the `Session()` class from `settings`, which will allow us to query the current database session.
 
-![title](https://assets.astronomer.io/website/img/guides/connection_dags.png)
+![DAGs created from connections](https://assets2.astronomer.io/main/guides/dynamic-dags/dag_from_connections.png)
 
-We can see that all of the connections that match our filter have now been created as a unique DAG. The one connection we had which did not match (`SOME_OTHER_DATABASE`) has been ignored.
+We can see that all of the connections that match our filter have now been created as a unique DAG.
 
 ## Multiple-File Methods
 
