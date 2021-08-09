@@ -288,7 +288,7 @@ default_args = {
     'owner': 'airflow',
     'depends_on_past': False,
     'email_on_failure': True,
-    'email': 'kenten@astronomer.io',
+    'email': 'noreply@astronomer.io',
     'email_on_retry': False,
     'sla': timedelta(seconds=30)
 }
@@ -340,7 +340,7 @@ default_args = {
     'owner': 'airflow',
     'depends_on_past': False,
     'email_on_failure': True,
-    'email': 'kenten@astronomer.io',
+    'email': 'noreply@astronomer.io',
     'email_on_retry': False
 }
 
