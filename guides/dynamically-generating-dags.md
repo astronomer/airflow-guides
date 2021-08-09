@@ -174,7 +174,7 @@ for n in range(1, number_of_dags):
 
 We can then go to the Airflow UI and see all of the new DAGs that have been created.
 
-![15 generated DAGs in the Airflow UI](https://assets2.astronomer.io/main/guides/dynamic-dags/dag_from_variables.png)
+![DAGs from Variables in the Airflow UI](https://assets2.astronomer.io/main/guides/dynamic-dags/dag_from_variables.png)
 
 ### Example: Generate DAGs From Connections
 
