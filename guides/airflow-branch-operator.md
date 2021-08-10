@@ -124,3 +124,18 @@ class ShortCircuitOperator(PythonOperator, SkipMixin):
 ```
 
 Notice that given the base `PythonOperator`, children operators can be easily written to incorporate more specific logic.
+
+## Beyond the BranchPythonOperator
+
+<!-- markdownlint-disable MD033 -->
+<iframe src="https://fast.wistia.net/embed/iframe/9c4267f3e4" title="branchpythonoperator Video" allow="autoplay; fullscreen" allowtransparency="true" frameborder="0" scrolling="no" class="wistia_embed" name="wistia_embed" allowfullscreen msallowfullscreen width="100%" height="450"></iframe>
+
+There is much more to the BranchPythonOperator than simply choosing one task over another.
+
+- What if you want to trigger your tasks only on specific days? And not on holidays?  
+- What if you want to trigger a DAG Run only if the previous one succeeded?
+
+For more guidance and best practices on common use cases like the ones above, try out Astronomer's
+[Academy Course on Branching](https://academy.astronomer.io/branching-course) for free today.
+
+See you there! ❤️ 
