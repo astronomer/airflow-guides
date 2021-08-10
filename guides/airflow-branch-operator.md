@@ -127,6 +127,7 @@ Notice that given the base `PythonOperator`, children operators can be easily wr
 
 ## Recap
 
+<!-- markdownlint-disable MD033 -->
 <iframe src="https://fast.wistia.net/embed/iframe/9c4267f3e4" title="branchpythonoperator Video" allow="autoplay; fullscreen" allowtransparency="true" frameborder="0" scrolling="no" class="wistia_embed" name="wistia_embed" allowfullscreen msallowfullscreen width="100%" height="450"></iframe>
 
 There is much more to the BranchPythonOperator than simply choosing tasks over others. 
