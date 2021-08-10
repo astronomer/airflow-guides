@@ -138,4 +138,4 @@ There is much more to the BranchPythonOperator than simply choosing one task ove
 For more guidance and best practices on common use cases like the ones above, try out Astronomer's
 [Academy Course on Branching](https://academy.astronomer.io/branching-course) for free today.
 
-See you there! ❤️
+See you there! ❤️ 
