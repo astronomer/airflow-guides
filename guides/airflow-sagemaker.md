@@ -198,14 +198,14 @@ For this example, we use the [Iris dataset](https://archive.ics.uci.edu/ml/datas
     - A name for the model
     - The Role ARN for execution
     - The image containing the algorithm (in this case the pre-built SageMaker image for KNN)
-    - The S3 path to the model training artifact. 
+    - The S3 path to the model training artifact 
     
     For more information on creating a model, check out the API documentation [here](https://docs.aws.amazon.com/sagemaker/latest/APIReference/API_CreateModel.html).
 4. Evaluate the model on the test data created in Step 1 using the `SageMakerTransformOperator`. This step runs a batch transform to get inferences on the test data from the model created in Step 3. The configuration for this operator requires:
     - Information about the input data source
     - The output results path
     - Resource specifications for the machine running the training job
-    - The name of the model. 
+    - The name of the model 
     
     For more information on submitting a batch transform job, check out the [API documentation](https://docs.aws.amazon.com/sagemaker/latest/APIReference/API_CreateTransformJob.html).
 
