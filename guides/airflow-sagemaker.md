@@ -46,8 +46,8 @@ For our pipeline, we take data from a local CSV and upload it to S3. Then we mak
 
 To implement the complete pipeline, we have to implement the following steps:
 
-- Load the data from local storage (`include/`) into S3 using the `PythonOperator` with `S3Hook`. 
-- Submit a SageMaker transform job to get inferences on the data using the `SageMakerTransformOperator`. The operator requires a transform job configuration, which in this case is provided in the `transform_config` dictionary at the top of the DAG file. At a minimum, the transform job configuration requires:
+1. Load the data from local storage (`include/`) into S3 using the `PythonOperator` with `S3Hook`. 
+2. Submit a SageMaker transform job to get inferences on the data using the `SageMakerTransformOperator`. The operator requires a transform job configuration, which in this case is provided in the `transform_config` dictionary at the top of the DAG file. At a minimum, the transform job configuration requires:
     - A unique name
     - Input data source in S3
     - Output data S3 path
@@ -56,7 +56,7 @@ To implement the complete pipeline, we have to implement the following steps:
 
     For more on what parameters can be passed in the config, check out the [Create Transform Job API documentation](https://docs.aws.amazon.com/sagemaker/latest/APIReference/API_CreateTransformJob.html).
 
-- Upload the inference results to Redshift using the `S3toRedshiftOperator`.
+3. Upload the inference results to Redshift using the `S3toRedshiftOperator`.
 
 > Note: `SageMakerTransformOperator` requires XCom pickling to work successfully because it returns a `datetime` object that is not JSON serializable. To turn on XCom pickling, set `AIRFLOW__CORE__ENABLE_XCOM_PICKLING=True` in your Airflow environment. To use the operator without pickling, consider implementing a [custom XCom backend](https://www.astronomer.io/guides/custom-xcom-backends).
 
@@ -184,9 +184,30 @@ Our second use case is using Airflow to orchestrate an end-to-end ML pipeline in
 For this example, we use the [Iris dataset](https://archive.ics.uci.edu/ml/datasets/iris), and train a built-in SageMaker K-Nearest Neighbors (KNN) model. The general steps in the DAG are:
 
 1. Using a `PythonOperator`, grab the data from the API, complete some pre-processing so the data is compliant with KNN requirements, split into train and test sets, and save them to S3 using the `S3Hook`.
-2. Train the KNN algorithm on the data using the `SageMakerTrainingOperator`. The configuration for this operator requires information about the algorithm, hyper parameters, the input and output data configuration, resource specifications for the machine running the training job, and the Role ARN for execution. For more information about submitting a training job, check out the [API documentation](https://docs.aws.amazon.com/sagemaker/latest/APIReference/API_CreateTrainingJob.html).
-3. Create a SageMaker model based on the training results using the `SageMakerModelOperator`. This step creates a model artifact in SageMaker that can be called on demand to provide inferences. The configuration for this operator requires a name for the model, the Role ARN for execution, the image containing the algorithm (in this case the pre-built SageMaker image for KNN), and the S3 path to the model training artifact. For more information on creating a model, check out the API documentation [here](https://docs.aws.amazon.com/sagemaker/latest/APIReference/API_CreateModel.html).
-4. Evaluate the model on the test data created in Step 1 using the `SageMakerTransformOperator`. This step runs a batch transform to get inferences on the test data from the model created in Step 3. The configuration for this operator requires information about the input data source, the output results path, resource specifications for the machine running the training job, and the name of the model. For more information on submitting a batch transform job, check out the [API documentation](https://docs.aws.amazon.com/sagemaker/latest/APIReference/API_CreateTransformJob.html).
+2. Train the KNN algorithm on the data using the `SageMakerTrainingOperator`. The configuration for this operator requires: 
+    - Information about the algorithm being used
+    - Any required hyper parameters
+    - The input data configuration
+    - The output data configuration
+    - Resource specifications for the machine running the training job 
+    - The Role ARN for execution
+
+    For more information about submitting a training job, check out the [API documentation](https://docs.aws.amazon.com/sagemaker/latest/APIReference/API_CreateTrainingJob.html).
+
+3. Create a SageMaker model based on the training results using the `SageMakerModelOperator`. This step creates a model artifact in SageMaker that can be called on demand to provide inferences. The configuration for this operator requires:
+    - A name for the model
+    - The Role ARN for execution
+    - The image containing the algorithm (in this case the pre-built SageMaker image for KNN)
+    - The S3 path to the model training artifact. 
+    
+    For more information on creating a model, check out the API documentation [here](https://docs.aws.amazon.com/sagemaker/latest/APIReference/API_CreateModel.html).
+4. Evaluate the model on the test data created in Step 1 using the `SageMakerTransformOperator`. This step runs a batch transform to get inferences on the test data from the model created in Step 3. The configuration for this operator requires:
+    - Information about the input data source
+    - The output results path
+    - Resource specifications for the machine running the training job
+    - The name of the model. 
+    
+    For more information on submitting a batch transform job, check out the [API documentation](https://docs.aws.amazon.com/sagemaker/latest/APIReference/API_CreateTransformJob.html).
 
 Putting this all together, the DAG code looks like this:
 
