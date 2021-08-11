@@ -8,15 +8,17 @@ tags: ["DAGs", "Integrations", "Machine Learning"]
 
 ## Overview
 
-[Amazon SageMaker](https://aws.amazon.com/sagemaker/) is a comprehensive AWS machine learning (ML) service that is frequently used by data scientists to develop and deploy ML models at scale. By nature, working with ML models in production requires automation and orchestration for repeated model training, testing, evaluation, and likely integration with other services to acquire and prepare the data. Airflow is the perfect orchestrator to pair with SageMaker to make all this happen smoothly. With Airflow, you can orchestrate each step of your SageMaker pipeline as well as easily integrate with any other services to get and clean your data and store and publish results.
+[Amazon SageMaker](https://aws.amazon.com/sagemaker/) is a comprehensive AWS machine learning (ML) service that is frequently used by data scientists to develop and deploy ML models at scale. By nature, working with ML models in production requires automation and orchestration for repeated model training, testing, evaluation, and likely integration with other services to acquire and prepare data. 
+
+Airflow is the perfect orchestrator to pair with SageMaker. With Airflow, you can easily orchestrate each step of your SageMaker pipeline, integrate with services that clean your data, and store and publish your results using only Python code.
 
 In this guide, we'll review the SageMaker modules available as part of the [AWS Airflow provider](https://registry.astronomer.io/providers/amazon). We'll also provide two example implementations for using SageMaker with Airflow: one for using Airflow to get inferences from an existing SageMaker model, and one for using Airflow to orchestrate a full ML pipeline including creating, training, and testing a new SageMaker model. 
 
-> Note: all code in this guide can be found in [this GitHub repo](https://github.com/astronomer/airflow-sagemaker-tutorial).
+> Note: All of the code in this guide can be found in [this GitHub repo](https://github.com/astronomer/airflow-sagemaker-tutorial).
 
 ## SageMaker Modules
 
-There are multiple SageMaker operators and sensors available within the [AWS provide](https://registry.astronomer.io/providers/amazon)r that cover a wide range of SageMaker features. All are built off of the [SageMakerBaseOperator](https://registry.astronomer.io/providers/amazon/modules/sagemakerbaseoperator), which uses the SageMaker API under the hood. If you're new to working with SageMaker, it can be helpful to review the [API documentation](https://docs.aws.amazon.com/sagemaker/latest/APIReference/API_Operations_Amazon_SageMaker_Service.html) when developing the configuration for any of the available operators and sensors.
+There are multiple SageMaker operators and sensors available within the [AWS provider](https://registry.astronomer.io/providers/amazon) that cover a wide range of SageMaker features. All of these are built off of the [SageMakerBaseOperator](https://registry.astronomer.io/providers/amazon/modules/sagemakerbaseoperator), which uses the SageMaker API under the hood. If you're new to working with SageMaker, it can be helpful to review the [API documentation](https://docs.aws.amazon.com/sagemaker/latest/APIReference/API_Operations_Amazon_SageMaker_Service.html) when configuring any of the available operators and sensors.
 
 In general, each operator will initiate a particular SageMaker job and each sensor will wait for a particular job to complete. Specifically:
 
@@ -32,17 +34,17 @@ In general, each operator will initiate a particular SageMaker job and each sens
 - [`SageMakerTuningSensor`](https://registry.astronomer.io/providers/amazon/modules/sagemakertuningsensor): waits until the tuning state is terminated
 - [`SageMakerTrainingSensor`](https://registry.astronomer.io/providers/amazon/modules/sagemakertrainingsensor): waits until the training state is terminated
 
-The two use case examples below demonstrate how to use some of these operators, but in general most have similar functionality and the same usage patterns should apply. All require an input configuration for the job being executed; documentation on what should be included in each configuration can be found in the Actions section of the API documentation [here](https://docs.aws.amazon.com/sagemaker/latest/APIReference/API_Operations.html).
+The following two use cases demonstrate how to use some of these operators, but they generally all have similar requirements, such as an input configuration for the job being executed. Documentation on what should be included in each configuration can be found in the Actions section of the [API documentation](https://docs.aws.amazon.com/sagemaker/latest/APIReference/API_Operations.html).
 
 ## Use Case 1: Orchestrate Existing SageMaker Model
 
-Our first use case is using Airflow to orchestrate an existing SageMaker model. We will use Airflow to acquire the data, make predictions on that data with a SageMaker model, and store the results in our data warehouse. This use case is relevant if you need to use your model to make predictions (run inferences) on a scheduled or ad-hoc basis; you can run the DAG on a schedule if you know new data is going to be available consistently, or use a sensor to trigger the DAG whenever new data becomes available.
+Our first use case is using Airflow to orchestrate an existing SageMaker model. We will use a DAG to acquire the data, make predictions on that data with a SageMaker model, and store the results in our data warehouse. This use case is relevant if you need to use your model to make predictions (run inferences) on a scheduled or ad-hoc basis. You can run the DAG on a schedule if you know new data is going to be available consistently, or use a sensor to trigger the DAG whenever new data becomes available.
 
-This use case assumes that the SageMaker model already exists and is not being managed by Airflow. For example, you might use a SageMaker notebook to do exploratory data analysis and develop and deploy your model, and then use Airflow to execute that model as needed. For this example, we used the [SageMaker notebooks tutorial](https://docs.aws.amazon.com/sagemaker/latest/dg/gs-console.html) which creates an XGBoost model from a census dataset.
+This use case assumes that the SageMaker model already exists and is not being managed by Airflow. For example, you might use a SageMaker notebook to do exploratory data analysis and develop and deploy your model, and then use Airflow to execute that model as needed. For this example, we used the [SageMaker notebooks tutorial](https://docs.aws.amazon.com/sagemaker/latest/dg/gs-console.html), which creates an XGBoost model from a census dataset.
 
-For our pipeline, we take data from a local CSV and upload it to S3. Then we make predictions on that data with the SageMaker model by submitting a [SageMaker batch transform job](https://docs.aws.amazon.com/sagemaker/latest/dg/how-it-works-batch.html). Batch transforms are useful when you need to run inferences on large datasets, and don't have a persistent endpoint hosted for your model. They require input data to be provided in S3, and will save output results to an S3 path provided. For the last step in our pipeline, we load the results CSV into Redshift.
+For our pipeline, we take data from a local CSV and upload it to S3. Then we make predictions on that data with the SageMaker model by submitting a [SageMaker batch transform job](https://docs.aws.amazon.com/sagemaker/latest/dg/how-it-works-batch.html). Batch transforms are useful when you need to run inferences on large datasets and don't have a persistent endpoint hosted for your model. They require input data to be provided in S3, and will save output results to an S3 path provided. For the last step in our pipeline, we load the results CSV into Redshift.
 
-To implement this pipeline we have the following steps.:
+To implement the complete pipeline, we have to implement the following steps:
 
 - Load the data from local storage (`include/`) into S3 using the `PythonOperator` with `S3Hook`. 
 - Submit a SageMaker transform job to get inferences on the data using the `SageMakerTransformOperator`. The operator requires a transform job configuration, which in this case is provided in the `transform_config` dictionary at the top of the DAG file. At a minimum, the transform job configuration requires:
@@ -163,7 +165,7 @@ with DAG('sagemaker_model',
     upload_data >> predict >> results_to_redshift
 ```
 
-Note that every operator in this DAG utilizes an `aws_conn_id`. For this example, we created an IAM user that has access to all relevant resources, and created the Airflow connection using an access key and token as the Login/Password. If you go this route, the SageMaker operators require a region to be specified as an Extra. The connection should look like this:
+Note that every operator in this DAG utilizes an `aws_conn_id`. For this example, we created an IAM user that has access to all relevant resources, and we created the Airflow connection using an access key and token as the Login/Password. If you go this route, the SageMaker operators require a region to be specified as an **Extra**. The connection should look like this:
 
 ![SageMaker Connection](https://assets2.astronomer.io/main/guides/sagemaker/sagemaker_connection.png)
 
@@ -173,7 +175,7 @@ Now if we run this DAG and go to our SageMaker dashboard, we should see the job 
 
 ![Transform Job](https://assets2.astronomer.io/main/guides/sagemaker/sagemaker_transform_job.png)
 
-The output of the transform job will then be uploaded to Redshift, where we can easily access results. This is a simple form of this use case, but you can imagine that the Airflow DAG could easily be extended to acquire data from an external system, clean or pre-process the data if needed, and complete any other tasks necessary to publish the results after saving them to Redshift.
+The output of the transform job will then be uploaded to Redshift, where we can easily access results. This is a simple form of this use case, but you can easily extend this DAG to acquire data from an external system, clean or pre-process the data if needed, and complete any other tasks necessary to publish the results after saving them to Redshift.
 
 ## Use Case 2: Orchestrate a Full ML Pipeline
 
@@ -182,9 +184,9 @@ Our second use case is using Airflow to orchestrate an end-to-end ML pipeline in
 For this example, we use the [Iris dataset](https://archive.ics.uci.edu/ml/datasets/iris), and train a built-in SageMaker K-Nearest Neighbors (KNN) model. The general steps in the DAG are:
 
 1. Using a `PythonOperator`, grab the data from the API, complete some pre-processing so the data is compliant with KNN requirements, split into train and test sets, and save them to S3 using the `S3Hook`.
-2. Train the KNN algorithm on the data using the `SageMakerTrainingOperator`. The configuration for this operator requires information about the algorithm, hyper parameters, the input and output data configuration, resource specifications for the machine running the training job, and the Role ARN for execution. For more information about submitting a training job, check out the API documentation [here](https://docs.aws.amazon.com/sagemaker/latest/APIReference/API_CreateTrainingJob.html).
+2. Train the KNN algorithm on the data using the `SageMakerTrainingOperator`. The configuration for this operator requires information about the algorithm, hyper parameters, the input and output data configuration, resource specifications for the machine running the training job, and the Role ARN for execution. For more information about submitting a training job, check out the [API documentation](https://docs.aws.amazon.com/sagemaker/latest/APIReference/API_CreateTrainingJob.html).
 3. Create a SageMaker model based on the training results using the `SageMakerModelOperator`. This step creates a model artifact in SageMaker that can be called on demand to provide inferences. The configuration for this operator requires a name for the model, the Role ARN for execution, the image containing the algorithm (in this case the pre-built SageMaker image for KNN), and the S3 path to the model training artifact. For more information on creating a model, check out the API documentation [here](https://docs.aws.amazon.com/sagemaker/latest/APIReference/API_CreateModel.html).
-4. Evaluate the model on the test data created in Step 1 using the `SageMakerTransformOperator`. This step runs a batch transform to get inferences on the test data from the model created in Step 3. The configuration for this operator requires information about the input data source, the output results path, resource specifications for the machine running the training job, and the name of the model. For more information on submitting a batch transform job, check out the API documentation [here](https://docs.aws.amazon.com/sagemaker/latest/APIReference/API_CreateTransformJob.html).
+4. Evaluate the model on the test data created in Step 1 using the `SageMakerTransformOperator`. This step runs a batch transform to get inferences on the test data from the model created in Step 3. The configuration for this operator requires information about the input data source, the output results path, resource specifications for the machine running the training job, and the name of the model. For more information on submitting a batch transform job, check out the [API documentation](https://docs.aws.amazon.com/sagemaker/latest/APIReference/API_CreateTransformJob.html).
 
 Putting this all together, the DAG code looks like this:
 
@@ -371,7 +373,7 @@ When using this DAG, there are a couple of other things to be aware of for your 
 
 - All of the tasks in this DAG make use of a `aws-sagemaker` connection ID to connect to the AWS environment. See the Use Case 1 section above for a description and screenshot of an example connection.
 - Some SageMaker operators may require the `AWS_DEFAULT_REGION` to be set in your Airflow environment in addition to a region being specified in the AWS connection. If you're running on Astronomer, you can set this variable in the UI or in your Dockerfile (e.g. `ENV AWS_DEFAULT_REGION=us-east-2`).
-- Many of the SageMaker operators require a Role ARN to be provided in the configuration. If you don't want to store this directly in your DAG file, you can consider storing it as an Airflow variable.
+- Many of the SageMaker operators require a Role ARN to be provided in the configuration. If you don't want to store this directly in your DAG file, consider storing it as an Airflow variable.
 - Also mentioned in the Use Case 1 section above, some SageMaker operators require XCom pickling to be turned on in order to work because they return objects that are not JSON serializable. To enable XCom pickling, set `AIRFLOW__CORE__ENABLE_XCOM_PICKLING=True`
 
-This highlights a basic example of how Airflow can be used with SageMaker to automate an end-to-end ML pipeline. A natural next step would be to deploy this model to a SageMaker endpoint using the `SageMakerEndpointConfigOperator` and `SageMakerEndpointOperator`, which provisions resources to host the model. In general, the SageMaker modules in the AWS provider allow for many possibilities when using Airflow to orchestrate ML pipelines so no matter your use case, Airflow has you covered.
+This highlights a basic example of how Airflow can be used with SageMaker to automate an end-to-end ML pipeline. A natural next step would be to deploy this model to a SageMaker endpoint using the `SageMakerEndpointConfigOperator` and `SageMakerEndpointOperator`, which provisions resources to host the model. In general, the SageMaker modules in the AWS provider allow for many possibilities when using Airflow to orchestrate ML pipelines. No matter your use case, Airflow has you covered.
