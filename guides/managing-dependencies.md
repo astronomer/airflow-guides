@@ -67,7 +67,7 @@ with dag:
             d1 >> d2 >> final_task
 ```
 
-_ What happens here?_
+_What happens here?_
 
 ### Trigger Rules
 
