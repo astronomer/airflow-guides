@@ -48,6 +48,7 @@ To implement the complete pipeline, we have to implement the following steps:
 
 1. Load the data from local storage (`include/`) into S3 using the `PythonOperator` with `S3Hook`. 
 2. Submit a SageMaker transform job to get inferences on the data using the `SageMakerTransformOperator`. The operator requires a transform job configuration, which in this case is provided in the `transform_config` dictionary at the top of the DAG file. At a minimum, the transform job configuration requires:
+
     - A unique name
     - Input data source in S3
     - Output data S3 path
@@ -185,6 +186,7 @@ For this example, we use the [Iris dataset](https://archive.ics.uci.edu/ml/datas
 
 1. Using a `PythonOperator`, grab the data from the API, complete some pre-processing so the data is compliant with KNN requirements, split into train and test sets, and save them to S3 using the `S3Hook`.
 2. Train the KNN algorithm on the data using the `SageMakerTrainingOperator`. The configuration for this operator requires: 
+
     - Information about the algorithm being used
     - Any required hyper parameters
     - The input data configuration
@@ -195,6 +197,7 @@ For this example, we use the [Iris dataset](https://archive.ics.uci.edu/ml/datas
     For more information about submitting a training job, check out the [API documentation](https://docs.aws.amazon.com/sagemaker/latest/APIReference/API_CreateTrainingJob.html).
 
 3. Create a SageMaker model based on the training results using the `SageMakerModelOperator`. This step creates a model artifact in SageMaker that can be called on demand to provide inferences. The configuration for this operator requires:
+
     - A name for the model
     - The Role ARN for execution
     - The image containing the algorithm (in this case the pre-built SageMaker image for KNN)
@@ -202,6 +205,7 @@ For this example, we use the [Iris dataset](https://archive.ics.uci.edu/ml/datas
     
     For more information on creating a model, check out the API documentation [here](https://docs.aws.amazon.com/sagemaker/latest/APIReference/API_CreateModel.html).
 4. Evaluate the model on the test data created in Step 1 using the `SageMakerTransformOperator`. This step runs a batch transform to get inferences on the test data from the model created in Step 3. The configuration for this operator requires:
+
     - Information about the input data source
     - The output results path
     - Resource specifications for the machine running the training job
