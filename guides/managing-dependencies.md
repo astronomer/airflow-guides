@@ -79,7 +79,7 @@ Operators have a [trigger_rule](https://airflow.apache.org/concepts.html#trigger
 
 Each trigger rule can have specific use cases: <br> <br>
 **all_success:** (default) all parents have succeeded <br>
-**all_failed:** all parents are in a failed or upstream_failed state <br>
+**all_failed:** all parents are in a failed or upstream\_failed state <br>
 **all_done:** all parents are done with their execution <br>
 **one_failed:** fires as soon as at least one parent has failed, it does not wait for all parents to be done <br>
 **one_success:** fires as soon as at least one parent succeeds, it does not wait for all parents to be done <br>
