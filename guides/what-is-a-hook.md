@@ -11,7 +11,7 @@ tags: ["Hooks", "Operators", "Tasks", "Basics"]
 
 Operators are the main building blocks of Airflow, but operators rely heavily upon Hooks to interact with all of their source and destination systems.
 
-Hooks are used as a away to abstract the methods you would use against a source system. Hooks should be used when interacting with any external system.
+Hooks are used as a way to abstract the methods you would use against a source system, but do not contain the logic for how that system is interacted with. Hooks should always be used to connect with any external system.
 
 The [S3Hook](https://registry.astronomer.io/providers/amazon/modules/s3hook) below just shows how a hook can import a standard library (in this case, boto3) and expose some of the most common methods.
 

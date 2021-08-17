@@ -7,49 +7,50 @@ heroImagePath: "https://assets.astronomer.io/website/img/guides/IntroToDAG_previ
 tags: ["Hooks", "Operators", "Tasks", "DAGs"]
 ---
 <!-- markdownlint-disable-file -->
-## How Work Gets Executed
+## How Work Gets Executed in Airflow
 
-**Operators become Tasks**
-- Operators contain the logic - but once they are added to a DAG file with a `task_id` and `dag`, they become **tasks**.
-- Being explicit, when an operator class is instantiated with a `task_id` and `dag` (along with its other settings) it becomes a **task** within a **DAG**.
+### Operators are wrappers around types of work.
 
-**Tasks become Task Instances**
-- Once a series of tasks becomes bundled to the same **DAG** object, the **DAG** can be executed based on its schedule.
-- The scheduler "taps" the **DAG** and begins to execute the **tasks** depending on their dependencies.
-- **Tasks** that get executed have a `execution_date` and are now called **task instances**. These get logged in the metadata database.
+**Operators** contain the logic of how data is processed in a pipeline. There are different Operators for different types of work: some Operators execute general types of code, while others are designed to complete very specific types of work.
 
-**DAGs become DAG Runs**
-- **DAGs** that have run or are running (i.e. have an associated `execution_date`) are referred to as **DAG Runs**.
-- **DAG Runs** are logged in the metadata database with their corresponding states.
-- **Tasks** associated with a **DAG Run** are called **task instances**.
+### An instance of an Operator is a task.
 
-![title](https://assets2.astronomer.io/main/guides/airflow_task_flow.png)
+Operators are reusable task templates, and a **task** is an instantiation of an operator. Tasks take the parameters and process data within the context of the DAG.
 
+### Tasks are nodes in a DAG.
 
-**A Dag Run is an instantiation of a DAG object _in time_.**
+Once you define tasks within a **DAG** object, a DAG can be executed based on its schedule. A built-in Scheduler in Airflow "taps" the DAG and begins to execute the tasks based on their dependencies.
 
-**A Task Instance is an instantiation of a Task _in time_ and _in a DAG object_.**
+A real-time run of a task is called a **task instance**. These task instances get logged in the metadata database with information about when and how they ran.
+
+### DAGs become DAG Runs
+
+If a task instance is a run of a task, then a **DAG Run** is simply an instance of a complete DAG that has run or is currently running. At the code level, a DAG becomes a DAG Run once it has an `execution_date`. Just like with task instances, information about each DAG Run is logged in Airflow’s metadata database.
 
 ## States
 
-_States_ are used to keep track of how scheduled tasks and DAG Runs are doing. DAG Runs and tasks can have the following states:
+One of the key pieces of data stored in Airflow’s metadata database is **State**. States are used to keep track of how task instances and DAG Runs are performing. In the screenshot below, we can see how states are represented in the Airflow UI:
 
-_**DAG States**_<br>
-**Running (Lime)**: The DAG is currently being executed.<br>
-**Success (Green)**: The DAG executed successfully. <br>
-**Failed (Red)**:  The task or DAG failed. <br>
+![Status view in the Airflow UI](https://assets2.astronomer.io/main/docs/airflow-ui/status-view.png)
 
-_**Task States**_<br>
-**None (Light Blue)**: No associated state. Syntactically - set as Python `None`. <br>
-**Queued (Gray)** : The task is waiting to be executed, set as `queued`.<br>
-**Scheduled (Tan)**: The task has been scheduled to run.<br>
-**Running (Lime)**: The task is currently being executed. <br>
-**Failed (Red)**:  The task failed. <br>
-**Success (Green)**: The task executed successfully. <br>
-**Skipped (Pink)**: The task has been skipped due to an upstream condition.<br>
-**Shutdown (Blue)**: The task is up for retry. <br>
-**Removed (Light Grey)**: The task has been removed. <br>
-**Retry (Gold)**: The task is up for retry. <br>
-**Upstream Failed (Orange)**: The task will not be run because of a failed upstream dependency.<br>
+DAG Runs and tasks can have the following states:
 
-![title](https://assets2.astronomer.io/main/guides/states.png)
+### DAG States
+
+- **Running (Lime):** DAG is currently being executed.
+- **Success (Green):** DAG was executed successfully.
+- **Failed (Red):** The task or DAG failed.
+
+### Task States
+
+- **None (Light Blue):** No associated state. Syntactically - set as Python None.
+- **Queued (Gray):** The task is waiting to be executed, set as queued.
+- **Scheduled (Tan):** The task has been scheduled to run.
+- **Running (Lime):** The task is currently being executed.
+- **Failed (Red):** The task failed.
+- **Success (Green):** The task was executed successfully.
+- **Skipped (Pink):** The task has been skipped due to an upstream condition.
+- **Shutdown (Blue):** The task is up for retry.
+- **Removed (Light Grey):** The task has been removed.
+- **Retry (Gold):** The task is up for retry.
+- **Upstream Failed (Orange):** The task will not run because of a failed upstream dependency.
