@@ -29,7 +29,7 @@ If a task instance is a run of a task, then a **DAG Run** is simply an instance 
 
 ## States
 
-One of the key pieces of data stored in Airflow’s metadata database is **State**. States are used to keep track of how task instances and DAG Runs are performing. In the screenshot below, we can see how states are represented in the Airflow UI:
+One of the key pieces of data stored in Airflow’s metadata database is **State**. States are used to keep track of what condition task instances and DAG Runs are in. In the screenshot below, we can see how states are represented in the Airflow UI:
 
 ![Status view in the Airflow UI](https://assets2.astronomer.io/main/docs/airflow-ui/status-view.png)
 
