@@ -3,7 +3,7 @@ title: "Executing Notebooks with Airflow"
 description: "Methods for orchestrating commonly used notebooks with Airflow."
 date: 2021-07-31T00:00:00.000Z
 slug: "executing-notebooks"
-tags: ["DAGs", "Integrations"]
+tags: ["DAGs", "Integrations", "Machine Learning"]
 ---
 
 ## Overview
@@ -98,7 +98,7 @@ Databricks notebooks can be easily orchestrated with Airflow by using the [Datab
 
 [Amazon SageMaker](https://aws.amazon.com/sagemaker/) is a comprehensive AWS machine learning service. One of the features of SageMaker is elastic and shareable notebooks, which are essentially Jupyter notebooks set up to leverage AWS Elastic Computing. If you want a cloud-based solution that can handle large data processing, AWS SageMaker notebooks are a great alternative to Jupyter notebooks.
 
-SageMaker notebooks can be easily orchestrated with Airflow by using the [AWS provider](https://registry.astronomer.io/providers/amazon/). There are multiple SageMaker operators and sensors available within the provider that cover a wide range of SageMaker features:
+SageMaker can be easily integrated with Airflow by using the [AWS provider](https://registry.astronomer.io/providers/amazon/). There are multiple SageMaker operators and sensors available within the provider that cover a wide range of SageMaker features:
 
 - [`SageMakerEndpointOperator`](https://registry.astronomer.io/providers/amazon/modules/sagemakerendpointoperator): creates a SageMaker endpoint
 - [`SageMakerEndpointConfigOperator`](https://registry.astronomer.io/providers/amazon/modules/sagemakerendpointconfigoperator): creates a SageMaker endpoint config
@@ -112,4 +112,4 @@ SageMaker notebooks can be easily orchestrated with Airflow by using the [AWS pr
 - [`SageMakerTuningSensor`](https://registry.astronomer.io/providers/amazon/modules/sagemakertuningsensor): waits until the tuning state is terminated
 - [`SageMakerTrainingSensor`](https://registry.astronomer.io/providers/amazon/modules/sagemakertrainingsensor): waits until the training state is terminated
 
-We will be publishing another guide shortly with more details on how to use this provider and example SageMaker and Airflow use cases. Check back soon!
+For examples of how to use these operators in common machine learning use cases, check out our guide on [using Airflow with SageMaker](https://www.astronomer.io/guides/airflow-sagemaker).
