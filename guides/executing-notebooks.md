@@ -112,4 +112,4 @@ SageMaker can be easily integrated with Airflow by using the [AWS provider](http
 - [`SageMakerTuningSensor`](https://registry.astronomer.io/providers/amazon/modules/sagemakertuningsensor): waits until the tuning state is terminated
 - [`SageMakerTrainingSensor`](https://registry.astronomer.io/providers/amazon/modules/sagemakertrainingsensor): waits until the training state is terminated
 
-For more details on how to use these operators to implement a couple of common machine learning use cases, check out our guide on [using Airflow with SageMaker](https://www.astronomer.io/guides/airflow-sagemaker).
+For examples of how to use these operators in common machine learning use cases, check out our guide on [using Airflow with SageMaker](https://www.astronomer.io/guides/airflow-sagemaker).
