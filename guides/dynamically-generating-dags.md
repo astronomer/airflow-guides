@@ -30,7 +30,7 @@ Some benefits of the single-file method:
 However, there are also drawbacks:
 
 - Since a DAG file isn't actually being created, your visibility into the code behind any specific DAG is limited.
-- Since this method requires a Python file in the `DAG_FOLDER`, the generation code will be executed every time the dag is parsed. How frequently this occurs is controlled by the parameter [min_file_process_interval](https://airflow.apache.org/docs/apache-airflow/stable/configurations-ref.html#min-file-process-interval). This can cause performance issues if the total number of DAGs is large, or if the code is connecting to an external system such as a database. For more on this, see the Scalability section below.
+- Since this method requires a Python file in the `DAG_FOLDER`, the generation code will be executed every time the dag is parsed. How frequently this occurs is controlled by the parameter `min_file_process_interval` ([see Airflow docs](https://airflow.apache.org/docs/apache-airflow/stable/configurations-ref.html#min-file-process-interval)). This can cause performance issues if the total number of DAGs is large, or if the code is connecting to an external system such as a database. For more on this, see the Scalability section below.
 
 In the following examples, the single-file method is implemented differently based on which input parameters are used for generating DAGs.
 
