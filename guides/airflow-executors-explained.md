@@ -39,7 +39,7 @@ When we're talking about task execution, you'll want to be familiar with these [
 
 - **dag_concurrency**: This determines how many task instances your scheduler is able to schedule at once _per DAG_. Think of this as "maximum tasks that can be scheduled at once, per DAG." You might see: `ENV AIRFLOW__CORE__DAG_CONCURRENCY=16`
 
-- **worker_concurrency**: This determines how many tasks _each worker_ can run at any given time. The CeleryExecutor for example, will [by default](https://github.com/apache/airflow/blob/master/airflow/config_templates/default_airflow.cfg#L358) run a max of 16 tasks concurrently. Think of it as "How many tasks each of my workers can take on at any given time." This number will naturally be limited by `dag_concurrency`. If you have 1 worker and want it to match your deployment's capacity, worker_concurrency = parallelism. `ENV AIRFLOW__CELERY__WORKER_CONCURRENCY=9`
+- **worker_concurrency**: This determines how many tasks _each worker_ can run at any given time. The CeleryExecutor for example, will [by default](https://github.com/apache/airflow/blob/master/airflow/config_templates/default_airflow.cfg#L358) run a max of 16 tasks concurrently. Think of it as "How many tasks each of my workers can take on at any given time." This number will naturally be limited by `dag_concurrency`. If you have 1 worker and want it to match your deployment's capacity, worker\_concurrency = parallelism. `ENV AIRFLOW__CELERY__WORKER_CONCURRENCY=9`
 
   > Note: In our experience, parallelism and concurrency are somewhat co-dependent. We'd encourage you to keep them in line with one another.
 
