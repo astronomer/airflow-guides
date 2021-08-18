@@ -60,7 +60,7 @@ with dag:
     for i in range(0, 3):
         d1 = DummyOperator(task_id='task_{0}'.format(i))
         for j in range(0, 3):
-            d2 = PythonOperator(task_id='task_{0}'.format(i),
+            d2 = PythonOperator(task_id='task_{0}_{1}'.format(i, j),
                                 python_callable=test_callable,
                                 provide_context=True)
 
