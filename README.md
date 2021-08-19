@@ -1,8 +1,6 @@
 # Airflow Guides
 
-A curated collection of guides to help with building specific ETL pipelines using Airflow.
-
-These are stepwise instructions for using Astronomer and Apache Airflow, and use various repositories from the open-source [Airflow Plugins Organization](https://github.com/airflow-plugins).
+A curated collection of guides to help with using Airflow for many different use cases.
 
 ---
 
@@ -12,19 +10,35 @@ The Astronomer website uses the `/guides` directory in this repo as a CMS for it
 
 *Note: ONLY `.md` files may be added to the `/guides` directory - no subdirectories or other file-types may be used. The rest of the repo may include files and directories of any kind.*
 
-## Building a new guide
-1) Duplicate an existing guide inside the `/guides` directory
-2) Update the file-name and front-matter, and pay close attention to formatting
-3) Make sure to use `hyphen-seperated-case` when naming your file and declaring your slug
-4) The filename and slug _must match_: i.e `astronomer-roadmap.md` and `slug: "astronomer-roadmap"`
-5) Store all images (inline and hero) in the `astronomer-cdn` bucket on s3 in the `/website/img/guides` directory, and reference them using  `https://assets.astronomer.io/website/img/guides/{filename}`
-6) When the guide is finished, commit all changes to `master`
-7) Rebuild the Astronomer website using the `How to deploy guides` steps below
+## Creating or updating a guide
+1. Clone the repo, and make a branch for your work
+2. If updating an existing guide, find the `.md` file for the guide in question and make the changes. Then skip to step 5. If creating a new guide, move to the next step
+3. Create a new `.md` file in the `/guides` directory
+4. Copy the block that contains title, description, date, slug, and tags from another guide and paste them at the top of your new file. Ensure the formatting stays the same. Update the information for your new guide.
 
-## How to deploy guides
+    **Note:** the date field will determine where the guide shows up on the guides site. If you want your guide to have the 'New' banner while it is the most recent, ensure the date is accurate
 
-1. All changes pushed to airflow-guides will trigger a webhook to rebuild preview.astronomer.io.
-2. To deploy to www.astronomer.io, publish a new release. We are starting at v1.0.0, using semantic versioning. This means, if you publish a new guide, bump the 2nd number eg `v1.1.0`. If you have to edit a guide, bump the 3rd number `v1.1.1`.
+    **Another note:** the slug **must** match the filename, and should use `hyphen-separated-case`. For example, you might have `guide-123.md` which would have `guide-123` as its slug
+
+5. Add your content to your guide file using markdown formatting
+6. If your guide has images, add them to the [web assets repo](https://github.com/astronomer/web-assets) under `main/guides/your-guide-folder`. Reference them in your guide `.md` file with
+
+    `![Image title](<https://assets2.astronomer.io/main/guides/your-guide-folder/your_image.png>)`
+
+7. Ensure that all supporting code for your guide is hosted in a public GitHub repo, and link to that repo from the guide.
+8. Optional: run the markdown lint and spellcheck locally. This will save you time if there are any issues that will be caught by the CI/CD pipeline. For more instructions on this, see the CI/CD Pipeline section below.
+9. Push your branch to the repo and create a pull request and add reviewers. If you aren't sure who to add, add @kentdanas. It is a good idea to have someone from the docs team review for grammar and readability in addition to a content review.
+10. Once your PR has been approved, merge it into the `main` branch.
+
+## Submitting a guide issue
+You can request a change to the Airflow Guides site either in the form of a new guide or a change to an existing guide by submitting an issue in this repo. Please be descriptive in the issue, and use one of the relevant labels:
+
+ - `New Guide`: for new guides
+ - `Guide Enhancement`: for additions to existing guides
+ - `Guide Error/Update`: for content updates to existing guides including to fix technical errors or update content based on new releases
+ - `Guide Typo/Formatting`: for fixes for typos, grammar, formatting, etc.
+
+If you are unsure of who to assign the issue to, you can leave it unassigned. If you are planning on creating a new guide yourself, feel free to create an issue and assign yourself so we know who is working on it.
 
 ## CI/CD Pipeline
 
