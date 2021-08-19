@@ -21,7 +21,7 @@ The Astronomer website uses the `/guides` directory in this repo as a CMS for it
     **Another note:** the slug **must** match the filename, and should use `hyphen-separated-case`. For example, you might have `guide-123.md` which would have `guide-123` as its slug
 
 5. Add your content to your guide file using markdown formatting
-6. If your guide has images, add them to the [web assets repo](https://github.com/astronomer/web-assets) under `main/guides/your-guide-folder`. Reference them in your guide `.md` file with
+6. If your guide has images, add them to the web-assets repo under `main/guides/your-guide-folder`. Reference them in your guide `.md` file with
 
     `![Image title](<https://assets2.astronomer.io/main/guides/your-guide-folder/your_image.png>)`
 
