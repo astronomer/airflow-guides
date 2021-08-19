@@ -322,7 +322,7 @@ for filename in os.listdir(config_filepath):
 
 ```
 
-Now to generate our DAG files, we can either run this script ad-hoc, as part of our CI/CD workflow, or we could create another DAG that would run it periodically. After running the script, our final directory would look like the example below, where the `include/` directory contains the files shown above, and the `dags/` directory contains the two dynamically generated DAGs:
+Now to generate our DAG files, we can either run this script ad-hoc or as part of our CI/CD workflow. After running the script, our final directory would look like the example below, where the `include/` directory contains the files shown above, and the `dags/` directory contains the two dynamically generated DAGs:
 
 ```bash
 dags/
