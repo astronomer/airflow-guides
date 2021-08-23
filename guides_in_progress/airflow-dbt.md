@@ -11,7 +11,15 @@ tags: ["DAGs", "Integrations"]
 
 This guide is a summary of our blog posts with Updater where you’ll learn how to use dbt in Airflow. Check parts [1](https://www.astronomer.io/blog/airflow-dbt-1), [2](https://www.astronomer.io/blog/airflow-dbt-2), and [3](https://www.astronomer.io/blog/airflow-dbt-3) of those posts for more details and discussions.
 
-A tool that often comes up in conversation is [dbt](https://getdbt.com/), an open-source library for analytics engineering that helps users build interdependent SQL models for in-warehouse data transformation. The portion of the modern data engineering workflow that dbt addresses is significant; as ephemeral compute becomes more readily available in the data warehouse itself thanks to tools like [Snowflake](https://snowflake.com/), data engineers have embraced an ETL—>ELT paradigm shift that encourages loading raw data directly into the warehouse and doing transformations on top of the aforementioned ephemeral compute. dbt helps users write, organize, and run these in-warehouse transformations. Given the complementary strengths of both tools, it's common to see teams use Airflow to orchestrate and execute dbt models within the context of a broader ELT pipeline that runs on Airflow and exists as a DAG.
+A tool that often comes up in conversation is [dbt](https://getdbt.com/), an open-source library for analytics engineering that helps users build interdependent SQL models for in-warehouse data transformation. The portion of the modern data engineering workflow that dbt addresses is significant; as ephemeral compute becomes more readily available in the data warehouse itself thanks to tools like [Snowflake](https://snowflake.com/), data engineers have embraced an ETL—>ELT paradigm shift that encourages loading raw data directly into the warehouse and doing transformations on top of the aforementioned ephemeral compute. dbt helps users write, organize, and run these in-warehouse transformations.
+
+Given the complementary strengths of both tools, it's common to see teams use Airflow to orchestrate and execute dbt models within the context of a broader ELT pipeline that runs on Airflow and exists as a DAG. Running dbt with Airflow ensures a reliable, scalable environment for models and the ability to trigger those models only after every prerequisite task is met. Airflow also allows for fine-grained control over dbt tasks, so teams can have observability over every step in their dbt models.
+
+The following sections in this guide serve to answer these questions:
+  - How does Airflow manage dbt models? (Task-Based Solution for dbt)
+  - How can Airflow replace dbt's model orchestration? (Task-Based Solution for dbt)
+  - How can DAGs be updated to reflect changes to the dbt model? (Productionizing With CI/CD)
+  - How can utilities be added to make the updating process cleaner? (dbt Parser Utility)
 
 ## Setup
 
@@ -333,7 +341,7 @@ Putting all of this together, we end up with multiple Airflow DAGs, each running
 Ultimately, this gives us a fully robust, end-to-end solution that captures the ideal scheduling, execution, and observability experience for our dbt models with Apache Airflow.
 For a discussion of limitations, please refer to the [second blog post](https://www.astronomer.io/blog/airflow-dbt-2).
 
-## DBT Parser Utility
+## dbt Parser Utility
 
 The sample code we provided in the previous section demonstrates how to loop through the `manifest.json` file of your dbt DAG to parse out the individual models and dependencies and map them to Airflow tasks. In order to simplify the DAG code when using this pattern, we can use a small convenience utility method that takes care of the parsing. The `DbtDagParser` utility works as follows:
 
