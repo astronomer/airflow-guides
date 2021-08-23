@@ -15,21 +15,19 @@ A tool that often comes up in conversation is [dbt](https://getdbt.com/), an ope
 
 Given the complementary strengths of both tools, it's common to see teams use Airflow to orchestrate and execute dbt models within the context of a broader ELT pipeline that runs on Airflow and exists as a DAG. Running dbt with Airflow ensures a reliable, scalable environment for models and the ability to trigger those models only after every prerequisite task is met. Airflow also allows for fine-grained control over dbt tasks, so teams can have observability over every step in their dbt models.
 
-The following sections in this guide serve to answer these questions:
-  - How does Airflow manage dbt models? (Task-Based Solution for dbt)
-  - How can Airflow replace dbt's model orchestration? (Task-Based Solution for dbt)
-  - How can DAGs be updated to reflect changes to the dbt model? (Productionizing With CI/CD)
-  - How can utilities be added to make the updating process cleaner? (dbt Parser Utility)
+The following two use cases show how to use the dbt with Airflow via the `BashOperator`, first at the project level then at the model level. Two bonus sections show how to extend the second use case to automate changes to the dbt model.
 
 ## Setup
 
 See the [demo repo](https://github.com/astronomer/airflow-dbt-demo) for complete set-up instructions. It includes a sample dbt project used in this guide and complete versions of each DAG.
 
-## Task-Based Solution for dbt
+## Use Case 1: dbt + Airflow at the Project Level
 
-The Task is the smallest unit in Airflow that does work, and Tasks together form a DAG. Tasks typically come as Operators or Sensors. The former execute some bit of code or set command, while the latter wait for an operation to succeed or fail. Using dbt, we have a few options to choose from when it comes to Airflow DAG writing: a [community-contributed Airflow plugin](https://github.com/dwallace0723/dbt-cloud-plugin/) to farm out execution to dbt Cloud, pre-existing dbt Airflow operators in the [community-contributed airflow-dbt python package](https://pypi.org/project/airflow-dbt/), or running dbt commands directly through the [`BashOperator`](https://airflow.apache.org/docs/apache-airflow/stable/howto/operator/bash.html).
+The Task is the smallest unit in Airflow that does work, and Tasks together form a DAG. Tasks typically come as Operators or Sensors. The former execute some bit of code or set command, while the latter wait for an operation to succeed or fail. Using dbt, we have a few options to choose from when it comes to Airflow DAG writing: a [community-contributed Airflow plugin](https://github.com/dwallace0723/dbt-cloud-plugin/) to farm out execution to dbt Cloud, pre-existing dbt Airflow operators in the [community-contributed airflow-dbt python package](https://pypi.org/project/airflow-dbt/), or running dbt commands directly through the [`BashOperator`](https://airflow.apache.org/docs/apache-airflow/stable/howto/operator/bash.html). This guide chooses to use the `BashOperator`, as it demystifies what the dbt operator does under the hood and allows very specific dbt commands to be run.
 
 In Airflow, a task that invokes the `BashOperator` simply executes a shell command. Because the primary dbt interface is the command line, the `BashOperator` proves to be a useful tool to interact with the library; the familiar `dbt run` or `dbt test` commands can be executed directly in Airflow the same way they would be executed in any other shell.
+
+This use case assumes you have followed the steps in the demo repo to set up an environment with a dbt project.
 
 ```
 from datetime import timedelta
@@ -74,6 +72,8 @@ dbt_run >> dbt_test
 If we were to just use the `BashOperator` to run `dbt run` and `dbt test` as above, then we do have a working solution, but one without much visibility into what is going on. Failures are absolute, and the whole `dbt` group of models must be run again, which is potentially costly. The whole DAG is only two Tasks, though, which is great when you want to keep things simple.
 
 ![Beginner dbt DAG](https://www.astronomer.io/static/157f41a5426d04fd477a1a8b8c4c61ad/4ef49/dbt-basic-dag.png)
+
+## Use Case 2: dbt + Airflow at the Model Level
 
 What if we want more visibility into the steps dbt is running in each task? Instead of having a single Airflow DAG that contains a single task to run a group of dbt models, we can have an Airflow DAG run a single task for each model. This means that our entire dbt workflow is available at a much more granular level in the Airflow UI and, most importantly, we have fine-grained control of the success, failure, and retry of each dbt model as a corresponding Airflow task. If a model near the end of our dbt pipeline fails, we can simply fix the broken model and retry that individual task without having to rerun the entire workflow. Plus, we no longer have to worry about defining Sensors to configure interdependency between Airflow DAGs since we've consolidated our work into a single DAG.
 
@@ -169,7 +169,9 @@ for node in data["nodes"].keys():
                 dbt_tasks[upstream_node] >> dbt_tasks[node]
 ```
 
-## Productionizing With CI/CD
+Now we have a solution that allows Airflow to orchestrate a dbt project in detail, giving data engineers visibility into each dbt model without affecting the dependencies each model has. In the next section, we will see how to make this DAG resilient to change.
+
+## Bonus 1: Productionizing With CI/CD
 
 Now that we know how to split dbt out into tasks and orchestrate dbt models at a fine-grained level, our next three questions to tackle are:
 
@@ -341,7 +343,7 @@ Putting all of this together, we end up with multiple Airflow DAGs, each running
 Ultimately, this gives us a fully robust, end-to-end solution that captures the ideal scheduling, execution, and observability experience for our dbt models with Apache Airflow.
 For a discussion of limitations, please refer to the [second blog post](https://www.astronomer.io/blog/airflow-dbt-2).
 
-## dbt Parser Utility
+## Bonus 3: dbt Parser Utility
 
 The sample code we provided in the previous section demonstrates how to loop through the `manifest.json` file of your dbt DAG to parse out the individual models and dependencies and map them to Airflow tasks. In order to simplify the DAG code when using this pattern, we can use a small convenience utility method that takes care of the parsing. The `DbtDagParser` utility works as follows:
 
