@@ -7,47 +7,90 @@ heroImagePath: null
 tags: ["DAGs", "Airflow UI", "Basics", "XCom", "Tasks", "Connections"]
 ---
 
-A notable part of Apache Airflow is its built-in UI, which allows you to see the status of your jobs, their underlying code, and even some meta-data on their execution time. It'll help you both monitor and troubleshoot your workflows and, if used correctly, can make your use of Airflow that more effective.
+A notable feature of Apache Airflow is its UI, which provides insights into your DAGs and DAG Runs. The UI a useful tool for understanding, monitoring, and troubleshooting your pipelines.
 
-Since the UI isn't always the most intuitive, here's a guide that'll walk you through it.
+In this guide, we'll walk through an overview of some of the most useful features and visualizations in the Airflow UI. In general, sections in the guide correspond to the tab at the top of the Airflow UI. If you're not already using Airflow and want to get it up and running to follow along, check out the [Astronomer CLI](https://www.astronomer.io/docs/enterprise/v0.25/develop/cli-quickstart) to quickly run Airflow on your local machine. 
 
-## Getting Started
+> Note: This guide focuses on the Airflow 2 UI, which got a significant refresh over previous Airflow versions. If you haven't upgraded yet, check out this guide on [getting started with Airflow 2.0](https://www.astronomer.io/guides/get-started-airflow-2).
 
-Upon signing into the UI, you'll immediately land on the DAGs dashboard.
+## DAGs
+
+The DAGs view is the landing page when you sign in to Airflow. It shows a list of all your DAGs, the status of recent DAG Runs and tasks, the time of the last DAG Run, and basic metadata about the DAG like the owner and the schedule.
 
 ![dashboard](https://assets.astronomer.io/website/img/guides/dags_dashboard.png)
 
-Your initial options:
+From the DAGs view you can:
 
-- **On/Off Toggle** To the left of the DAG name, look for an on/off toggle that allows you to pause any DAG at any time. By default, DAGs are instantiated as off.
+ - Pause/unpause a DAG with the toggle to the left of the DAG name
+ - Filter the list of DAGs shown to active, paused, or all DAGs
+ - Trigger, refresh, or delete a DAG with the buttons in the Actions section
+ - Navigate quickly to other DAG-specific pages from the Links section
 
-- **Recent Tasks** shows a summary of the last scheduled DAG run.
+To drill down on a specific DAG, you can click on its name or use one of the Links. This will give you access to the views described in the following sections.
 
-- **Show Paused DAGs** at the bottom of the page can be used to hide/show DAGs that are currently turned off.
+### Graph View
+The graph view shows a visualization of the tasks and dependencies in your DAG and their current status for a specific DAG Run. This view is particularly useful when reviewing and developing a DAG as it allows you to quickly see what is happening in the DAG.
 
-- **Links** on the right-hand side will allow you to toggle between views for that DAG (tree, gantt, etc.)
+Clicking on a specific task in the graph will give you links to additional views and actions you can take on that task instance.
 
-- **DAG Runs** are a history of how that DAG has run in the past.
+Specifically, the additional views available are:
 
-**Note**: If a DAG has a small _i_ next to it, it means that a DAG with that name was once there, but is no longer found in the database. We'll expand on this later.
+- **Instance Details:**  Shows the fully rendered task - an exact summary of what the task does (attributes, values, templates, etc.).
+- **Rendered:** Shows the task's metadata after it has been templated.
+- **Log:** Shows the logs of that particular `TaskInstance`.
+- **All Instances:** Shows a historical view of task instances and statuses for that particular task.
+- **Filter Upstream:** Updates the Graph View to show only the task selected and any upstream tasks.
 
-Paused DAGs can be toggled to be hidden from the UI - but we would advise against this. There's usually a reason why something is paused.
+The actions available for the task instance are:
+- **Run**: Manually runs a specific task in the DAG. You have the ability to ignoring dependencies and the current task state when you do this.
+- **Clear**: Removes that task run from the metadata database. This is one way of manually re-running a task (and any downstream tasks, if you choose). You can choose to also clear upstream or downstream tasks, or past or future task runs.
+- **Mark Failed:** Changes the task's status to failed. This will update the metadata database and stop downstream tasks from running if that is how you have defined your DAG. You have additional capabilities for marking past and future task instances as failed and for marking upstream or downstream tasks as failed at the same time.
+- **Mark Success:** Changes the task's status to success. This will update the metadata database and allow downstream tasks to run if that is how you have defined your DAG. You have additional capabilities for marking past and future task instances as successful and for marking upstream or downstream tasks as successful at the same time.
 
-![paused_dags](https://assets.astronomer.io/website/img/guides/paused_dags.png)
+### Tree View
 
-## Admin Panel
+The tree view shows a tree representation of the DAG and its tasks across time. Each column represents a DAG Run and each square is a task instance in that DAG Run. Task instances are color-coded according to their status. DAG Runs with a black border represent scheduled runs, whereas DAG Runs with no border are manually triggered.
+
+Clicking on a specific task instance in the tree will give you links to the same additional views and actions described in the graph view section above.
+
+### Calendar View
+
+The calendar view is new as of Airflow 2.1. It shows the state of DAG runs overlaid on a calendar. States are represented by color. If there were multiple DAG runs on the same day that had different states (e.g. one failed, one success), the color will be a gradient between green (success) and red (failed).
+
+### Code View
+
+The code view shows the code that is used to generate the DAG. While your code should live in source control, the code view can be a useful way of gaining quick insight into what is going on in the DAG. Note that code for the DAG cannot be edited directly in the UI.
+
+![dag_details](https://assets.astronomer.io/website/img/guides/code_view.png)
+
+Also note, this view only shows code from the file that generated the DAG; it does not show any code that may be imported in the DAG, such as custom hooks or operators, or code in your `/include` directory.
+
+### Additional DAG Views
+
+There are a couple of additional DAG views that we don't cover in depth here, but are still good to be aware of:
+
+ - **Task Duration:** Shows a line graph of the duration of each task over time.
+ - **Task Tries:** Shows a line graph of the number of each task tries in a DAG Run over time.
+ - **Landing Times:** Shows a line graph of the time of day each task started over time.
+ - **Gantt:**: Shows a Gantt chart with the duration of each task for the chosen DAG Run.
+
+## Security
+
+The Security tab links to multiple pages, including List Users and List Roles, that can be used to review and manage Airflow RBAC. For more information on working with RBAC in Airflow, check out the [documentation](https://airflow.apache.org/docs/apache-airflow/1.10.12/security.html?highlight=ldap).
+
+Note that if you are running Airflow on Astronomer, the Astronomer RBAC will extend into Airflow and take precedence (i.e. there is no need for you to use Airflow RBAC in addition). Astronomer RBAC can be managed from the Astronomer UI, and 
+
+## Browse
+
+
+
+## Admin
 
 The Admin panel will have information regarding things that are ancillary to DAGs. Note that for now, Astronomer handles the _Pools_ and _Configuration_ views as environment variables, so they cannot be changed from the UI.
 
 ![admin](https://assets.astronomer.io/website/img/guides/admin_views.png)
 
-### Users
 
-Here, you'll be able to see the users that have access to your instance, and their corresponding username (email address used for login).
-
-This view won't be helpful for much at the moment, but it will be roped into the Role Based Authentication system on Airflow's roadmap.
-
-![users](https://assets.astronomer.io/website/img/guides/airflow_users.png)
 
 ### Connections
 
@@ -113,55 +156,11 @@ Things can get tricky when putting data here, so Astronomer recommends staying a
 
 ## Browsing Tasks
 
-### Tree View
 
-Clicking on an individual DAG brings out the Tree View by default. This shows a summary of the past few DAG runs, indicating its status from left to right. If any workflows are late or running behind, you'll be able to see on what exact task something failed and troubleshoot from there.
 
-![tree_view](https://assets.astronomer.io/website/img/guides/tree_view.png)
-_In the example above, this DAG has succeeded for 23 of the last 25 runs._
 
-### Graph View
 
-The Graph View shows the actual DAG down to the task level.
-![graph_view](https://assets.astronomer.io/website/img/guides/graph_view.png)
 
-Double-clicking on an individual task offers a few options:
-
-![task_options](https://assets.astronomer.io/website/img/guides/task_options.png)
-
-- **Task Instance Details:**  Shows the fully rendered task - an exact summary of what the task does (attributes, values, templates, etc.)
-- **Rendered:** Shows the task's metadata after it's been templated
-- **Task Instances:** A historical view of that particular task - times it ran successfully, failed, was skipped, etc.
-- **View Log:** Brings you to Logs of that particular `TaskInstance`.
-- **Clear**: Removes that task runs existence from Airflow's metadata. This clears all downstream tasks and runs that task and all downstream tasks again. (_This is the recommended way to re-run a task_).
-- **Mark Success:** Sets a task to success. This will update the task's status in the metadata and allow downstream tasks to run.
-
-### Code View
-
-While the code for your pipeline is in source control, this is a quick way to get to the code that generates the DAG.
-
-![dag_details](https://assets.astronomer.io/website/img/guides/code_view.png)
-
-**Note:** This only covers the DAG file itself, not the underlying code in the operators and plugins.
-
-### Details
-
-This shows a summary for the past run of the DAG. There's no information that is unique to this view, but it offers a good summary.
-
-![dag_details](https://assets.astronomer.io/website/img/guides/dag_details.png)
-
-## Data Profiling
-
-### Visualizing Metadata
-
-Airflow offers a slew of metadata on individual DAG runs along with a few visualizations.
-
-**Gantt View** is helpful for breaking down run times of individual tasks:
-![gantt_view](https://assets.astronomer.io/website/img/guides/gantt_view.png)
-
-**Landing Times** allows you to compare how tasks have performed over time:
-
-![landing_times](https://assets.astronomer.io/website/img/guides/landing_times.png)
 
 ## Manipulating Tasks and DAGs in Aggregate
 
@@ -190,14 +189,6 @@ If you're running a DAG but intentionally stopped it (turned it "off") during ex
 
 ![delete_task_instances](https://assets.astronomer.io/website/img/guides/delete_task_instances.png)
 
-### DAGs
 
-The same can be done for DAGs from _Browse > DAG Runs_. This can be particularly helpful when migrating databases or re-running all history for a job with just a small change.
+## Docs
 
-![browse_dag_runs](https://assets.astronomer.io/website/img/guides/browse_dag_runs.png)
-
-### SLA Misses
-
-SLA misses can also be viewed at a task level.
-
-![delete_task_instances](https://assets.astronomer.io/website/img/guides/sla_misses.png)
