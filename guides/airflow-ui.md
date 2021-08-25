@@ -19,7 +19,9 @@ In this guide, we'll walk through an overview of some of the most useful feature
 
 The DAGs view is the landing page when you sign in to Airflow. It shows a list of all your DAGs, the status of recent DAG Runs and tasks, the time of the last DAG Run, and basic metadata about the DAG like the owner and the schedule.
 
-![dashboard](https://assets.astronomer.io/website/img/guides/dags_dashboard.png)
+![DAGs View](https://assets2.astronomer.io/main/guides/airflow-ui/ui_dags.png)
+
+> Note: All screenshots in this guide were taken from an [Astronomer Certified](https://www.astronomer.io/docs/enterprise/v0.25/astronomer-certified/image-architecture) Airflow image. Other than the additional `Astronomer` tab and some modified colors, the UI is the same as that of OSS Airflow. 
 
 From the DAGs view you can:
 
@@ -31,9 +33,14 @@ From the DAGs view you can:
 To drill down on a specific DAG, you can click on its name or use one of the Links. This will give you access to the views described in the following sections.
 
 ### Graph View
+
 The graph view shows a visualization of the tasks and dependencies in your DAG and their current status for a specific DAG Run. This view is particularly useful when reviewing and developing a DAG as it allows you to quickly see what is happening in the DAG.
 
+![Graph View](https://assets2.astronomer.io/main/guides/airflow-ui/ui_graph.png)
+
 Clicking on a specific task in the graph will give you links to additional views and actions you can take on that task instance.
+
+![Graph Actions](https://assets2.astronomer.io/main/guides/airflow-ui/ui_graph_actions.png)
 
 Specifically, the additional views available are:
 
@@ -53,17 +60,21 @@ The actions available for the task instance are:
 
 The tree view shows a tree representation of the DAG and its tasks across time. Each column represents a DAG Run and each square is a task instance in that DAG Run. Task instances are color-coded according to their status. DAG Runs with a black border represent scheduled runs, whereas DAG Runs with no border are manually triggered.
 
+![Tree View](https://assets2.astronomer.io/main/guides/airflow-ui/ui_tree.png)
+
 Clicking on a specific task instance in the tree will give you links to the same additional views and actions described in the graph view section above.
 
 ### Calendar View
 
 The calendar view is new as of Airflow 2.1. It shows the state of DAG runs overlaid on a calendar. States are represented by color. If there were multiple DAG runs on the same day that had different states (e.g. one failed, one success), the color will be a gradient between green (success) and red (failed).
 
+![Calendar View](https://assets2.astronomer.io/main/guides/airflow-ui/ui_calendar.png)
+
 ### Code View
 
 The code view shows the code that is used to generate the DAG. While your code should live in source control, the code view can be a useful way of gaining quick insight into what is going on in the DAG. Note that code for the DAG cannot be edited directly in the UI.
 
-![dag_details](https://assets.astronomer.io/website/img/guides/code_view.png)
+![Code View](https://assets2.astronomer.io/main/guides/airflow-ui/ui_code.png)
 
 Also note, this view only shows code from the file that generated the DAG; it does not show any code that may be imported in the DAG, such as custom hooks or operators, or code in your `/include` directory.
 
@@ -80,7 +91,7 @@ There are a couple of additional DAG views that we won't cover in depth here, bu
 
 The Security tab links to multiple pages, including List Users and List Roles, that can be used to review and manage Airflow RBAC. For more information on working with RBAC in Airflow, check out the [documentation](https://airflow.apache.org/docs/apache-airflow/1.10.12/security.html?highlight=ldap).
 
-SCREENSHOT
+![Security](https://assets2.astronomer.io/main/guides/airflow-ui/ui_security_menu.png)
 
 Note that if you are running Airflow on Astronomer, the Astronomer RBAC will extend into Airflow and take precedence (i.e. there is no need for you to use Airflow RBAC in addition to Astronomer RBAC). Astronomer RBAC can be managed from the Astronomer UI, so the Security tab may be less relevant for Astronomer users.
 
@@ -88,11 +99,11 @@ Note that if you are running Airflow on Astronomer, the Astronomer RBAC will ext
 
 The Browse tab links to multiple pages that provide additional insight into and control over your DAGs, DAG Runs, and Task Instances for all DAGs in your Airflow environment in one place. 
 
-SCREENSHOT
+![Browse](https://assets2.astronomer.io/main/guides/airflow-ui/ui_browse_menu.png)
 
 The DAG Runs and Task Instances (shown in the screenshot below) pages are the easiest way to view and manipulate these objects in aggregate. If you need to re-run tasks in multiple DAG Runs, you can do so from this page by selecting all relevant tasks and clearing their status. 
 
-SCREENSHOT
+![Task Instance](https://assets2.astronomer.io/main/guides/airflow-ui/ui_task_instance.png)
 
 Other views in the Browse tab include: 
 
@@ -107,19 +118,21 @@ Other views in the Browse tab include:
 
 The Admin tab links to pages for content related to Airflow administration (i.e. not specific to any particular DAG). Many of these pages can be used to both view and modify your Airflow environment.
 
+![Admin](https://assets2.astronomer.io/main/guides/airflow-ui/ui_admin_menu.png)
+
 For example, the Connections page shows all Airflow connections stored in your environment. You can click on the `+` to add a new connection. For more on `Connections`, check out this guide: [Managing Your Connections in Airflow](https://www.astronomer.io/guides/connections/).
 
-SCREENSHOT
+![Connections](https://assets2.astronomer.io/main/guides/airflow-ui/ui_connections.png)
 
 Similarly, the XComs page shows a list of all XComs stored in the metadata database and allows you to easily delete them.
 
-SCREENSHOT
+![XCom](https://assets2.astronomer.io/main/guides/airflow-ui/ui_xcoms.png)
 
 Other pages in the Admin tab include:
 
  - **Variables:** View and manage [Airflow variables](https://airflow.apache.org/docs/apache-airflow/stable/howto/variable.html).
  - **Configuration:** View the contents of your `airflow.cfg` file. Note that this can be disabled by your Airflow admin for security reasons.
- - **Plugins:**: View any [Airflow plugins](https://airflow.apache.org/docs/apache-airflow/stable/plugins.html) defined in your environment.
+ - **Plugins:** View any [Airflow plugins](https://airflow.apache.org/docs/apache-airflow/stable/plugins.html) defined in your environment.
  - **Pools:** View and manage [Airflow pools](https://airflow.apache.org/docs/apache-airflow/stable/concepts/pools.html).
 
 
@@ -132,6 +145,7 @@ The Docs tab provides links out to external Airflow resources including:
  - [The Airflow GitHub repo](https://github.com/apache/airflow)
  - The REST API Swagger and and Redoc documentation
 
+![Docs](https://assets2.astronomer.io/main/guides/airflow-ui/ui_docs_menu.png)
 
 ## Conclusion
 
