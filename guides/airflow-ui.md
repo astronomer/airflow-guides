@@ -7,7 +7,9 @@ heroImagePath: null
 tags: ["DAGs", "Airflow UI", "Basics", "XCom", "Tasks", "Connections"]
 ---
 
-A notable feature of Apache Airflow is its UI, which provides insights into your DAGs and DAG Runs. The UI a useful tool for understanding, monitoring, and troubleshooting your pipelines.
+## Overview
+
+A notable feature of Apache Airflow is the [UI](https://airflow.apache.org/docs/apache-airflow/stable/ui.html#), which provides insights into your DAGs and DAG Runs. The UI a useful tool for understanding, monitoring, and troubleshooting your pipelines.
 
 In this guide, we'll walk through an overview of some of the most useful features and visualizations in the Airflow UI. In general, sections in the guide correspond to the tab at the top of the Airflow UI. If you're not already using Airflow and want to get it up and running to follow along, check out the [Astronomer CLI](https://www.astronomer.io/docs/enterprise/v0.25/develop/cli-quickstart) to quickly run Airflow on your local machine. 
 
@@ -67,7 +69,7 @@ Also note, this view only shows code from the file that generated the DAG; it do
 
 ### Additional DAG Views
 
-There are a couple of additional DAG views that we don't cover in depth here, but are still good to be aware of:
+There are a couple of additional DAG views that we won't cover in depth here, but are still good to be aware of:
 
  - **Task Duration:** Shows a line graph of the duration of each task over time.
  - **Task Tries:** Shows a line graph of the number of each task tries in a DAG Run over time.
@@ -78,117 +80,61 @@ There are a couple of additional DAG views that we don't cover in depth here, bu
 
 The Security tab links to multiple pages, including List Users and List Roles, that can be used to review and manage Airflow RBAC. For more information on working with RBAC in Airflow, check out the [documentation](https://airflow.apache.org/docs/apache-airflow/1.10.12/security.html?highlight=ldap).
 
-Note that if you are running Airflow on Astronomer, the Astronomer RBAC will extend into Airflow and take precedence (i.e. there is no need for you to use Airflow RBAC in addition). Astronomer RBAC can be managed from the Astronomer UI, and 
+SCREENSHOT
+
+Note that if you are running Airflow on Astronomer, the Astronomer RBAC will extend into Airflow and take precedence (i.e. there is no need for you to use Airflow RBAC in addition to Astronomer RBAC). Astronomer RBAC can be managed from the Astronomer UI, so the Security tab may be less relevant for Astronomer users.
 
 ## Browse
 
+The Browse tab links to multiple pages that provide additional insight into and control over your DAGs, DAG Runs, and Task Instances for all DAGs in your Airflow environment in one place. 
+
+SCREENSHOT
+
+The DAG Runs and Task Instances (shown in the screenshot below) pages are the easiest way to view and manipulate these objects in aggregate. If you need to re-run tasks in multiple DAG Runs, you can do so from this page by selecting all relevant tasks and clearing their status. 
+
+SCREENSHOT
+
+Other views in the Browse tab include: 
+
+ - **Jobs:** Shows a list of all jobs that have been completed. This includes executed tasks as well as scheduler jobs.
+ - **Audit Logs:** Shows a list of events that have occured in your Airflow environment that can be used for auditing purposes.
+ - **Task Reschedules:** Shows a list of all tasks that have been rescheduled.
+ - **SLA Misses:** Shows any tasks that have missed their SLAs.
+ - **DAG Dependencies:** Shows a graphical representation of any cross-DAG dependencies in your Airflow environment. 
 
 
 ## Admin
 
-The Admin panel will have information regarding things that are ancillary to DAGs. Note that for now, Astronomer handles the _Pools_ and _Configuration_ views as environment variables, so they cannot be changed from the UI.
+The Admin tab links to pages for content related to Airflow administration (i.e. not specific to any particular DAG). Many of these pages can be used to both view and modify your Airflow environment.
 
-![admin](https://assets.astronomer.io/website/img/guides/admin_views.png)
+For example, the Connections page shows all Airflow connections stored in your environment. You can click on the `+` to add a new connection. For more on `Connections`, check out this guide: [Managing Your Connections in Airflow](https://www.astronomer.io/guides/connections/).
 
+SCREENSHOT
 
+Similarly, the XComs page shows a list of all XComs stored in the metadata database and allows you to easily delete them.
 
-### Connections
+SCREENSHOT
 
-Airflow needs to know how to connect to your environment. `Connections` is the place to store that information - anything from hostname, to port to logins to other systems. The pipeline code you will author will reference the `conn_id` of the Connection objects.
+Other pages in the Admin tab include:
 
-The Airflow `Variables` section can also hold that information, but storing them as `Connections` allows:
-
-- Encryption on passwords and extras.
-- Common JSON structure for connections below:
-
-**Note**: When you save a connection, expect the password field to be empty the next time you return to it. That's just Airflow encrypting the password - it does not need to be reset.
-
-![users](https://assets.astronomer.io/website/img/guides/airflow_connections.png)
-
-**Note**: Some connections will have different fields in the UI, but they can all be called from the [BaseHook](https://registry.astronomer.io/providers/apache-airflow/modules/basehook). For example, a Postgres connection may look like:
-
-![postgres](https://assets.astronomer.io/website/img/guides/postgres_connection.png)
-
-However, a Docker Registry will look like this:
-
-![docker](https://assets.astronomer.io/website/img/guides/docker_registry.png)
-
-However, they can both be called in the same manner:
-
-```python
-from airflow.hooks.base_hook import BaseHook
-...
-
-hook = BaseHook.get_connection('CONNECTION_NAME').extra_dejson
-# Hook now contains the information in the extras field as a JSON object
-# The Connection Name is the name of the connection.
-```
-
-For more on `Connections`, check out this guide: [Managing Your Connections in Airflow](https://www.astronomer.io/guides/connections/).
-
-### Variables
-
-`Variables` are a generic way to store and retrieve arbitrary content or settings as a simple key value store within Airflow. Any DAG running in your Airflow instance can access, reference, or edit a `Variable` as a part of the workflow.
-
-The data is stored in Airflow's underlying Postgres database, so while it's not a great spot to store large amounts of data it is a good fit for storing configuration information, lists of external tables, or constants.
-
-**Note**: Most of your constants and variables should be defined in code, but it's useful to have some variables or configuration items accessible and modifiable through the UI itself.
-
-For more information on `Variables`, visit the [Airflow documentation](https://airflow.apache.org/concepts.html#variables)
-
-![airflow_variables](https://assets.astronomer.io/website/img/guides/airflow_variables.png)
-
-> **PRO TIP**: If the key contains any of the following words (`password`, `secret`, `passwd`, `authorization`, `api_key`, `apikey`, `access_token`), that particular variable will be encrypted or hidden in the UI by default. If you want it to show in clear-text, you are indeed able to configure it.
-
-### XComs
-
-Similar to `Variables`, `XComs` can be used as places to store information on the fly.
-
-However, `Variables` are designed to be a place to store constants, whereas `XComs` are designed to communicate between tasks.
-
-For more information on `XComs`, visit the [Airflow documentation](https://airflow.apache.org/concepts.html#xcoms)
-
-![ui_xcom](https://assets.astronomer.io/website/img/guides/ui_xcom.png)
-_Various bits of metadata that have been passed back and forth between DAGs_.
-
-**Note**: Just like `Variables`, only small amounts of data are meant to live in `XComs`.
-Things can get tricky when putting data here, so Astronomer recommends staying away from them unless absolutely needed.
-
-## Browsing Tasks
-
-
-
-
-
-
-
-## Manipulating Tasks and DAGs in Aggregate
-
-Tasks and DAGs can also be manipulated in aggregate.
-All metadata regarding DAGs is stored in the underlying database. So, instead of having to directly query and update the metadata database, Airflow provides a UI to make changes of that nature - both at a task and DAG level.
-
-### Tasks
-
-The "Task Instances" panel is where you can clear out, re-run, or delete any particular tasks within a DAG or across all DAG runs.
-
-**If you want to re-run tasks:**
-
-Tasks will _NOT_ automatically re-run if the DAG has failed (which you'll notice by a red circle at the top of Tree View). Let's say one of your DAGs stopped because of a database shutdown, and a task within a DAG fails. Assuming you'd want to re-run the DAG from where it left off, you can do either of the following:
-
-1. _Browse > Task Instances_, filter for and select the failed task(s), and select "Delete" (this is essentially the same as clearing individual tasks in the DAG Graph or Tree View).
-
-1. _Browse > DAG Runs_, filter for and select the failed DAG(s), and set state to 'running.'
-
-This will automatically trigger a DAG re-run start|ing with the first unsuccessful task(s).
-
-**If you want to delete task records:**
-
-If you're running a DAG but intentionally stopped it (turned it "off") during execution, and want to permanently clear remaining tasks, you can delete all the records relevant to the DAG id in the 'Task Instances' panel as well.
-
-**Note**: The task and DAG status field on your main dashboard may take a bit to reflect these changes.
-
-![delete_task_instances](https://assets.astronomer.io/website/img/guides/delete_task_instances.png)
+ - **Variables:** View and manage [Airflow variables](https://airflow.apache.org/docs/apache-airflow/stable/howto/variable.html).
+ - **Configuration:** View the contents of your `airflow.cfg` file. Note that this can be disabled by your Airflow admin for security reasons.
+ - **Plugins:**: View any [Airflow plugins](https://airflow.apache.org/docs/apache-airflow/stable/plugins.html) defined in your environment.
+ - **Pools:** View and manage [Airflow pools](https://airflow.apache.org/docs/apache-airflow/stable/concepts/pools.html).
 
 
 ## Docs
 
+The Docs tab provides links out to external Airflow resources including:
+
+ - [Airflow documentation](http://apache-airflow-docs.s3-website.eu-central-1.amazonaws.com/docs/apache-airflow/latest/)
+ - [The Airflow website](https://airflow.apache.org/)
+ - [The Airflow GitHub repo](https://github.com/apache/airflow)
+ - The REST API Swagger and and Redoc documentation
+
+
+## Conclusion
+
+This guide provided a basic overview of some of the most commonly used features of the Airflow UI. It is not meant to be comprehensive, and we highly recommend diving in yourself to discover everything the Airflow UI can offer. 
+
+The Airflow community is consistently working on improvements to the UI to provide a better user experience and additional functionality. Make sure you upgrade your Airflow environment frequently to ensure you are taking advantage of new Airflow functionality as it is released. 
