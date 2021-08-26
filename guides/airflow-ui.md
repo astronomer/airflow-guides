@@ -9,11 +9,11 @@ tags: ["DAGs", "Airflow UI", "Basics", "XCom", "Tasks", "Connections"]
 
 ## Overview
 
-A notable feature of Apache Airflow is the [UI](https://airflow.apache.org/docs/apache-airflow/stable/ui.html#), which provides insights into your DAGs and DAG Runs. The UI a useful tool for understanding, monitoring, and troubleshooting your pipelines.
+A notable feature of Apache Airflow is the [UI](https://airflow.apache.org/docs/apache-airflow/stable/ui.html#), which provides insights into your DAGs and DAG Runs. The UI is a useful tool for understanding, monitoring, and troubleshooting your pipelines.
 
-In this guide, we'll walk through an overview of some of the most useful features and visualizations in the Airflow UI. In general, sections in the guide correspond to the tab at the top of the Airflow UI. If you're not already using Airflow and want to get it up and running to follow along, check out the [Astronomer CLI](https://www.astronomer.io/docs/enterprise/v0.25/develop/cli-quickstart) to quickly run Airflow on your local machine. 
+In this guide, we'll walk through an overview of some of the most useful features and visualizations in the Airflow UI. Each section of the guide corresponds to one of the tabs at the top of the Airflow UI. If you're not already using Airflow and want to get it up and running to follow along, check out the [Astronomer CLI](https://www.astronomer.io/docs/enterprise/v0.25/develop/cli-quickstart) to quickly run Airflow on your local machine. 
 
-> Note: This guide focuses on the Airflow 2 UI, which got a significant refresh over previous Airflow versions. If you haven't upgraded yet, check out this guide on [getting started with Airflow 2.0](https://www.astronomer.io/guides/get-started-airflow-2).
+> Note: This guide focuses on the Airflow 2 UI, which was significantly redesigned compared to previous Airflow versions. If you haven't upgraded yet, check out this guide on [getting started with Airflow 2.0](https://www.astronomer.io/guides/get-started-airflow-2).
 
 ## DAGs
 
@@ -26,11 +26,11 @@ The DAGs view is the landing page when you sign in to Airflow. It shows a list o
 From the DAGs view you can:
 
 - Pause/unpause a DAG with the toggle to the left of the DAG name
-- Filter the list of DAGs shown to active, paused, or all DAGs
+- Filter the list of DAGs to show active, paused, or all DAGs
 - Trigger, refresh, or delete a DAG with the buttons in the Actions section
 - Navigate quickly to other DAG-specific pages from the Links section
 
-To drill down on a specific DAG, you can click on its name or use one of the Links. This will give you access to the views described in the following sections.
+To drill down on a specific DAG, you can click on its name or use one of the links. This will give you access to the views described in the following sections.
 
 ### Graph View
 
@@ -53,7 +53,7 @@ Specifically, the additional views available are:
 The actions available for the task instance are:
 
 - **Run**: Manually runs a specific task in the DAG. You have the ability to ignore dependencies and the current task state when you do this.
-- **Clear**: Removes that task instance from the metadata database. This is one way of manually re-running a task (and any downstream tasks, if you choose). You can choose to also clear upstream or downstream tasks in the same DAG, or past or future task instances of that task.
+- **Clear:** Removes that task instance from the metadata database. This is one way of manually re-running a task (and any downstream tasks, if you choose). You can choose to also clear upstream or downstream tasks in the same DAG, or past or future task instances of that task.
 - **Mark Failed:** Changes the task's status to failed. This will update the metadata database and stop downstream tasks from running if that is how you have defined dependencies in your DAG. You have additional capabilities for marking past and future task instances as failed and for marking upstream or downstream tasks as failed at the same time.
 - **Mark Success:** Changes the task's status to success. This will update the metadata database and allow downstream tasks to run if that is how you have defined dependencies in your DAG. You have additional capabilities for marking past and future task instances as successful and for marking upstream or downstream tasks as successful at the same time.
 
@@ -77,7 +77,7 @@ The Code View shows the code that is used to generate the DAG. While your code s
 
 ![Code View](https://assets2.astronomer.io/main/guides/airflow-ui/ui_code.png)
 
-Also note, this view only shows code from the file that generated the DAG; it does not show any code that may be imported in the DAG, such as custom hooks or operators or code in your `/include` directory.
+Also of note: This view shows code only from the file that generated the DAG. It does not show any code that may be imported in the DAG, such as custom hooks or operators or code in your `/include` directory.
 
 ### Additional DAG Views
 
@@ -90,7 +90,7 @@ There are a couple of additional DAG views that we won't cover in depth here, bu
 
 ## Security
 
-The Security tab links to multiple pages, including List Users and List Roles, that can be used to review and manage Airflow RBAC. For more information on working with RBAC in Airflow, check out the [documentation](https://airflow.apache.org/docs/apache-airflow/1.10.12/security.html?highlight=ldap).
+The Security tab links to multiple pages, including List Users and List Roles, that can be used to review and manage Airflow RBAC. For more information on working with RBAC, check out the [Airflow documentation](https://airflow.apache.org/docs/apache-airflow/1.10.12/security.html?highlight=ldap).
 
 ![Security](https://assets2.astronomer.io/main/guides/airflow-ui/ui_security_menu.png)
 
@@ -121,7 +121,7 @@ The Admin tab links to pages for content related to Airflow administration (i.e.
 
 ![Admin](https://assets2.astronomer.io/main/guides/airflow-ui/ui_admin_menu.png)
 
-For example, the Connections page shows all Airflow connections stored in your environment. You can click on the `+` to add a new connection. For more on working with connections, check out [this guide](https://www.astronomer.io/guides/connections/).
+For example, the Connections page shows all Airflow connections stored in your environment. You can click on the `+` to add a new connection. For more information, check out our [guide on connections](https://www.astronomer.io/guides/connections/).
 
 ![Connections](https://assets2.astronomer.io/main/guides/airflow-ui/ui_connections.png)
 
