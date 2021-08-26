@@ -20,7 +20,7 @@ Typically, using Great Expectations is a two-step process:
 1. Expectation Suite creation
 2. Validation
 
-First, a user creates test suites, or “Expectation Suites”, using [Great Expectations methods](https://docs.greatexpectations.io/en/0.12.0/reference/core_concepts/expectations/expectations.html?highlight=methods#methods-for-creating-and-editing-expectations). These suites are usually stored in JSON and can be checked into version control, just like regular tests. The suites are then loaded by the Great Expectations framework at test runtime, e.g. when processing a new batch of data in a pipeline. If you are using the [demo repository](https://github.com/astronomer/airflow-data-quality-demo/great-expectations) with this guide, then the example suite can be found under `include/great_expectations/expectations/taxi/demo.json`.
+First, a user creates test suites, or “Expectation Suites”, using [Great Expectations methods](https://docs.greatexpectations.io/docs/guides/expectations/how_to_create_and_edit_expectations_based_on_domain_knowledge_without_inspecting_data_directly). These suites are usually stored in JSON and can be checked into version control, just like regular tests. The suites are then loaded by the Great Expectations framework at test runtime, e.g. when processing a new batch of data in a pipeline. If you are using the [demo repository](https://github.com/astronomer/airflow-data-quality-demo/great-expectations) with this guide, then the example suite can be found under `include/great_expectations/expectations/taxi/demo.json`.
 
 > For a step-by-step guide on how to configure a simple Great Expectations project, please see the [“Getting started” tutorial](https://docs.greatexpectations.io/en/latest/guides/tutorials.html).
 
@@ -156,8 +156,7 @@ To set up a BigQuery connection with Airflow, and to make sure the `example_grea
 
 1. Under `Admin -> Connections` in the Airflow UI, add a new connection with `Conn ID` as `google_cloud_default`.
 2. Set the connection type to `Google Cloud`; this connection comes with the Astronomer Airflow distribution.
-3. A GCP key associated with a service account that has access to BigQuery is needed. For more information generating a key, [follow the instructions in this guide](https://cloud.google.com/iam/docs/creating-managing-service-account-keys). The key can either be added as a path via the `Keyfile Path` field, or the JSON can be directly copied and pasted into the `Keyfile JSON` field.
-  * In the case of the `Keyfile Path`, a relative path is allowed, and if using Astronomer, the recommended path is under the `include/` directory, as Docker will mount all files and directories under it. Make sure the file name is included in the path.
+3. A GCP key associated with a service account that has access to BigQuery is needed. For more information generating a key, [follow the instructions in this guide](https://cloud.google.com/iam/docs/creating-managing-service-account-keys). The key can either be added as a path via the `Keyfile Path` field, or the JSON can be directly copied and pasted into the `Keyfile JSON` field. In the case of the `Keyfile Path`, a relative path is allowed, and if using Astronomer, the recommended path is under the `include/` directory, as Docker will mount all files and directories under it. Make sure the file name is included in the path.
 4. Add the project ID to the `Project ID` field.
 5. Scopes should be left blank, and filling the field in can result in token errors with Google Auth.
 6. Add an environment variable to the project Dockerfile that points to a GCP key with permissions to read and write from GCS and BigQuery.
