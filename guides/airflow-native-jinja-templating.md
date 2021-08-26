@@ -18,7 +18,7 @@ BashOperator(
 
 Which will print for example "Today is Wednesday".
 
-# Default Jinja templating
+## Default Jinja templating
 
 Rendering Python expressions at runtime using
 [Jinja templating](https://jinja.palletsprojects.com/en/3.0.x/) allows you to construct tasks with different behaviour,
@@ -35,7 +35,7 @@ print(result)  # "3"
 print(type(result))  # <class 'str'>
 ```
 
-# Rendering Jinja templates to native Python code
+## Rendering Jinja templates to native Python code
 
 Rendering Jinja templates to strings is fine in almost all situations in Airflow, but in a few cases it's desirable to
 render templates to native Python code. If the code you're calling doesn't work with strings, you're in trouble. Let's
@@ -107,7 +107,7 @@ with DAG(
 Passing the same JSON configuration `{"numbers": [1,2,3]}` now renders a list of integers which the `sum_numbers`
 function processes correctly:
 
-```
+```text
 [2021-08-26 11:53:12,872] {python.py:151} INFO - Done. Returned value was: 6
 ```
 

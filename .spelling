@@ -1650,3 +1650,5 @@ ExternalTaskSensor
  - guides/airflow-sagemaker.md
 SageMakerBaseOperator
 XGBoost
+ - guides/airflow-native-jinja-templating.md
+NativeEnvironment
