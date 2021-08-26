@@ -7,197 +7,149 @@ heroImagePath: null
 tags: ["DAGs", "Airflow UI", "Basics", "XCom", "Tasks", "Connections"]
 ---
 
-A notable part of Apache Airflow is its built-in UI, which allows you to see the status of your jobs, their underlying code, and even some meta-data on their execution time. It'll help you both monitor and troubleshoot your workflows and, if used correctly, can make your use of Airflow that more effective.
+## Overview
 
-Since the UI isn't always the most intuitive, here's a guide that'll walk you through it.
+A notable feature of Apache Airflow is the [UI](https://airflow.apache.org/docs/apache-airflow/stable/ui.html#), which provides insights into your DAGs and DAG Runs. The UI is a useful tool for understanding, monitoring, and troubleshooting your pipelines.
 
-## Getting Started
+In this guide, we'll walk through an overview of some of the most useful features and visualizations in the Airflow UI. Each section of the guide corresponds to one of the tabs at the top of the Airflow UI. If you're not already using Airflow and want to get it up and running to follow along, check out the [Astronomer CLI](https://www.astronomer.io/docs/enterprise/v0.25/develop/cli-quickstart) to quickly run Airflow on your local machine. 
 
-Upon signing into the UI, you'll immediately land on the DAGs dashboard.
+> Note: This guide focuses on the Airflow 2 UI, which was significantly redesigned compared to previous Airflow versions. If you haven't upgraded yet, check out this guide on [getting started with Airflow 2.0](https://www.astronomer.io/guides/get-started-airflow-2).
 
-![dashboard](https://assets.astronomer.io/website/img/guides/dags_dashboard.png)
+## DAGs
 
-Your initial options:
+The DAGs view is the landing page when you sign in to Airflow. It shows a list of all your DAGs, the status of recent DAG Runs and tasks, the time of the last DAG Run, and basic metadata about the DAG like the owner and the schedule.
 
-- **On/Off Toggle** To the left of the DAG name, look for an on/off toggle that allows you to pause any DAG at any time. By default, DAGs are instantiated as off.
+![DAGs View](https://assets2.astronomer.io/main/guides/airflow-ui/ui_dags.png)
 
-- **Recent Tasks** shows a summary of the last scheduled DAG run.
+> Note: All screenshots in this guide were taken from an [Astronomer Certified](https://www.astronomer.io/docs/enterprise/v0.25/astronomer-certified/image-architecture) Airflow image. Other than the additional `Astronomer` tab and some modified colors, the UI is the same as that of OSS Airflow. 
 
-- **Show Paused DAGs** at the bottom of the page can be used to hide/show DAGs that are currently turned off.
+From the DAGs view you can:
 
-- **Links** on the right-hand side will allow you to toggle between views for that DAG (tree, gantt, etc.)
+- Pause/unpause a DAG with the toggle to the left of the DAG name
+- Filter the list of DAGs to show active, paused, or all DAGs
+- Trigger, refresh, or delete a DAG with the buttons in the Actions section
+- Navigate quickly to other DAG-specific pages from the Links section
 
-- **DAG Runs** are a history of how that DAG has run in the past.
-
-**Note**: If a DAG has a small _i_ next to it, it means that a DAG with that name was once there, but is no longer found in the database. We'll expand on this later.
-
-Paused DAGs can be toggled to be hidden from the UI - but we would advise against this. There's usually a reason why something is paused.
-
-![paused_dags](https://assets.astronomer.io/website/img/guides/paused_dags.png)
-
-## Admin Panel
-
-The Admin panel will have information regarding things that are ancillary to DAGs. Note that for now, Astronomer handles the _Pools_ and _Configuration_ views as environment variables, so they cannot be changed from the UI.
-
-![admin](https://assets.astronomer.io/website/img/guides/admin_views.png)
-
-### Users
-
-Here, you'll be able to see the users that have access to your instance, and their corresponding username (email address used for login).
-
-This view won't be helpful for much at the moment, but it will be roped into the Role Based Authentication system on Airflow's roadmap.
-
-![users](https://assets.astronomer.io/website/img/guides/airflow_users.png)
-
-### Connections
-
-Airflow needs to know how to connect to your environment. `Connections` is the place to store that information - anything from hostname, to port to logins to other systems. The pipeline code you will author will reference the `conn_id` of the Connection objects.
-
-The Airflow `Variables` section can also hold that information, but storing them as `Connections` allows:
-
-- Encryption on passwords and extras.
-- Common JSON structure for connections below:
-
-**Note**: When you save a connection, expect the password field to be empty the next time you return to it. That's just Airflow encrypting the password - it does not need to be reset.
-
-![users](https://assets.astronomer.io/website/img/guides/airflow_connections.png)
-
-**Note**: Some connections will have different fields in the UI, but they can all be called from the [BaseHook](https://registry.astronomer.io/providers/apache-airflow/modules/basehook). For example, a Postgres connection may look like:
-
-![postgres](https://assets.astronomer.io/website/img/guides/postgres_connection.png)
-
-However, a Docker Registry will look like this:
-
-![docker](https://assets.astronomer.io/website/img/guides/docker_registry.png)
-
-However, they can both be called in the same manner:
-
-```python
-from airflow.hooks.base_hook import BaseHook
-...
-
-hook = BaseHook.get_connection('CONNECTION_NAME').extra_dejson
-# Hook now contains the information in the extras field as a JSON object
-# The Connection Name is the name of the connection.
-```
-
-For more on `Connections`, check out this guide: [Managing Your Connections in Airflow](https://www.astronomer.io/guides/connections/).
-
-### Variables
-
-`Variables` are a generic way to store and retrieve arbitrary content or settings as a simple key value store within Airflow. Any DAG running in your Airflow instance can access, reference, or edit a `Variable` as a part of the workflow.
-
-The data is stored in Airflow's underlying Postgres database, so while it's not a great spot to store large amounts of data it is a good fit for storing configuration information, lists of external tables, or constants.
-
-**Note**: Most of your constants and variables should be defined in code, but it's useful to have some variables or configuration items accessible and modifiable through the UI itself.
-
-For more information on `Variables`, visit the [Airflow documentation](https://airflow.apache.org/concepts.html#variables)
-
-![airflow_variables](https://assets.astronomer.io/website/img/guides/airflow_variables.png)
-
-> **PRO TIP**: If the key contains any of the following words (`password`, `secret`, `passwd`, `authorization`, `api_key`, `apikey`, `access_token`), that particular variable will be encrypted or hidden in the UI by default. If you want it to show in clear-text, you are indeed able to configure it.
-
-### XComs
-
-Similar to `Variables`, `XComs` can be used as places to store information on the fly.
-
-However, `Variables` are designed to be a place to store constants, whereas `XComs` are designed to communicate between tasks.
-
-For more information on `XComs`, visit the [Airflow documentation](https://airflow.apache.org/concepts.html#xcoms)
-
-![ui_xcom](https://assets.astronomer.io/website/img/guides/ui_xcom.png)
-_Various bits of metadata that have been passed back and forth between DAGs_.
-
-**Note**: Just like `Variables`, only small amounts of data are meant to live in `XComs`.
-Things can get tricky when putting data here, so Astronomer recommends staying away from them unless absolutely needed.
-
-## Browsing Tasks
-
-### Tree View
-
-Clicking on an individual DAG brings out the Tree View by default. This shows a summary of the past few DAG runs, indicating its status from left to right. If any workflows are late or running behind, you'll be able to see on what exact task something failed and troubleshoot from there.
-
-![tree_view](https://assets.astronomer.io/website/img/guides/tree_view.png)
-_In the example above, this DAG has succeeded for 23 of the last 25 runs._
+To drill down on a specific DAG, you can click on its name or use one of the links. This will give you access to the views described in the following sections.
 
 ### Graph View
 
-The Graph View shows the actual DAG down to the task level.
-![graph_view](https://assets.astronomer.io/website/img/guides/graph_view.png)
+The Graph View shows a visualization of the tasks and dependencies in your DAG and their current status for a specific DAG Run. This view is particularly useful when reviewing and developing a DAG. When running the DAG, you can toggle the Auto-refresh button to `on` to see the status of the tasks update in real time.
 
-Double-clicking on an individual task offers a few options:
+![Graph View](https://assets2.astronomer.io/main/guides/airflow-ui/ui_graph.png)
 
-![task_options](https://assets.astronomer.io/website/img/guides/task_options.png)
+Clicking on a specific task in the graph will give you links to additional views and actions you can take on that task instance.
 
-- **Task Instance Details:**  Shows the fully rendered task - an exact summary of what the task does (attributes, values, templates, etc.)
-- **Rendered:** Shows the task's metadata after it's been templated
-- **Task Instances:** A historical view of that particular task - times it ran successfully, failed, was skipped, etc.
-- **View Log:** Brings you to Logs of that particular `TaskInstance`.
-- **Clear**: Removes that task runs existence from Airflow's metadata. This clears all downstream tasks and runs that task and all downstream tasks again. (_This is the recommended way to re-run a task_).
-- **Mark Success:** Sets a task to success. This will update the task's status in the metadata and allow downstream tasks to run.
+![Graph Actions](https://assets2.astronomer.io/main/guides/airflow-ui/ui_graph_actions.png)
+
+Specifically, the additional views available are:
+
+- **Instance Details:**  Shows the fully rendered task - an exact summary of what the task does (attributes, values, templates, etc.).
+- **Rendered:** Shows the task's metadata after it has been templated.
+- **Log:** Shows the logs of that particular `TaskInstance`.
+- **All Instances:** Shows a historical view of task instances and statuses for that particular task.
+- **Filter Upstream:** Updates the Graph View to show only the task selected and any upstream tasks.
+
+The actions available for the task instance are:
+
+- **Run**: Manually runs a specific task in the DAG. You have the ability to ignore dependencies and the current task state when you do this.
+- **Clear:** Removes that task instance from the metadata database. This is one way of manually re-running a task (and any downstream tasks, if you choose). You can choose to also clear upstream or downstream tasks in the same DAG, or past or future task instances of that task.
+- **Mark Failed:** Changes the task's status to failed. This will update the metadata database and stop downstream tasks from running if that is how you have defined dependencies in your DAG. You have additional capabilities for marking past and future task instances as failed and for marking upstream or downstream tasks as failed at the same time.
+- **Mark Success:** Changes the task's status to success. This will update the metadata database and allow downstream tasks to run if that is how you have defined dependencies in your DAG. You have additional capabilities for marking past and future task instances as successful and for marking upstream or downstream tasks as successful at the same time.
+
+### Tree View
+
+The Tree View shows a tree representation of the DAG and its tasks across time. Each column represents a DAG Run and each square is a task instance in that DAG Run. Task instances are color-coded according to their status. DAG Runs with a black border represent scheduled runs, whereas DAG Runs with no border are manually triggered.
+
+![Tree View](https://assets2.astronomer.io/main/guides/airflow-ui/ui_tree.png)
+
+Clicking on a specific task instance in the tree will give you links to the same additional views and actions described in the Graph View section above.
+
+### Calendar View
+
+The Calendar View is new as of Airflow 2.1. It shows the state of DAG Runs overlaid on a calendar. States are represented by color. If there were multiple DAG Runs on the same day that had different states (e.g. one failed, one succeeded), the color will be a gradient between green (success) and red (failed).
+
+![Calendar View](https://assets2.astronomer.io/main/guides/airflow-ui/ui_calendar.png)
 
 ### Code View
 
-While the code for your pipeline is in source control, this is a quick way to get to the code that generates the DAG.
+The Code View shows the code that is used to generate the DAG. While your code should live in source control, the Code View can be a useful way of gaining quick insight into what is going on in the DAG. Note that code for the DAG cannot be edited directly in the UI.
 
-![dag_details](https://assets.astronomer.io/website/img/guides/code_view.png)
+![Code View](https://assets2.astronomer.io/main/guides/airflow-ui/ui_code.png)
 
-**Note:** This only covers the DAG file itself, not the underlying code in the operators and plugins.
+Also of note: This view shows code only from the file that generated the DAG. It does not show any code that may be imported in the DAG, such as custom hooks or operators or code in your `/include` directory.
 
-### Details
+### Additional DAG Views
 
-This shows a summary for the past run of the DAG. There's no information that is unique to this view, but it offers a good summary.
+There are a couple of additional DAG views that we won't cover in depth here, but are still good to be aware of:
 
-![dag_details](https://assets.astronomer.io/website/img/guides/dag_details.png)
+- **Task Duration:** Shows a line graph of the duration of each task over time.
+- **Task Tries:** Shows a line graph of the number of tries for each task in a DAG Run over time.
+- **Landing Times:** Shows a line graph of the time of day each task started over time.
+- **Gantt:** Shows a Gantt chart with the duration of each task for the chosen DAG Run.
 
-## Data Profiling
+## Security
 
-### Visualizing Metadata
+The Security tab links to multiple pages, including List Users and List Roles, that can be used to review and manage Airflow RBAC. For more information on working with RBAC, check out the [Airflow documentation](https://airflow.apache.org/docs/apache-airflow/1.10.12/security.html?highlight=ldap).
 
-Airflow offers a slew of metadata on individual DAG runs along with a few visualizations.
+![Security](https://assets2.astronomer.io/main/guides/airflow-ui/ui_security_menu.png)
 
-**Gantt View** is helpful for breaking down run times of individual tasks:
-![gantt_view](https://assets.astronomer.io/website/img/guides/gantt_view.png)
+Note that if you are running Airflow on Astronomer, the Astronomer RBAC will extend into Airflow and take precedence (i.e. there is no need for you to use Airflow RBAC in addition to Astronomer RBAC). Astronomer RBAC can be managed from the Astronomer UI, so the Security tab may be less relevant for Astronomer users.
 
-**Landing Times** allows you to compare how tasks have performed over time:
+## Browse
 
-![landing_times](https://assets.astronomer.io/website/img/guides/landing_times.png)
+The Browse tab links to multiple pages that provide additional insight into and control over your DAG Runs and Task Instances for all DAGs in one place. 
 
-## Manipulating Tasks and DAGs in Aggregate
+![Browse](https://assets2.astronomer.io/main/guides/airflow-ui/ui_browse_menu.png)
 
-Tasks and DAGs can also be manipulated in aggregate.
-All metadata regarding DAGs is stored in the underlying database. So, instead of having to directly query and update the metadata database, Airflow provides a UI to make changes of that nature - both at a task and DAG level.
+The DAG Runs and Task Instances (shown in the screenshot below) pages are the easiest way to view and manipulate these objects in aggregate. If you need to re-run tasks in multiple DAG Runs, you can do so from this page by selecting all relevant tasks and clearing their status. 
 
-### Tasks
+![Task Instance](https://assets2.astronomer.io/main/guides/airflow-ui/ui_task_instance.png)
 
-The "Task Instances" panel is where you can clear out, re-run, or delete any particular tasks within a DAG or across all DAG runs.
+Other views in the Browse tab include: 
 
-**If you want to re-run tasks:**
+- **Jobs:** Shows a list of all jobs that have been completed. This includes executed tasks as well as scheduler jobs.
+- **Audit Logs:** Shows a list of events that have occurred in your Airflow environment that can be used for auditing purposes.
+- **Task Reschedules:** Shows a list of all tasks that have been rescheduled.
+- **SLA Misses:** Shows any task instances that have missed their SLAs.
+- **DAG Dependencies:** Shows a graphical representation of any cross-DAG dependencies in your Airflow environment. 
 
-Tasks will _NOT_ automatically re-run if the DAG has failed (which you'll notice by a red circle at the top of Tree View). Let's say one of your DAGs stopped because of a database shutdown, and a task within a DAG fails. Assuming you'd want to re-run the DAG from where it left off, you can do either of the following:
 
-1. _Browse > Task Instances_, filter for and select the failed task(s), and select "Delete" (this is essentially the same as clearing individual tasks in the DAG Graph or Tree View).
+## Admin
 
-1. _Browse > DAG Runs_, filter for and select the failed DAG(s), and set state to 'running.'
+The Admin tab links to pages for content related to Airflow administration (i.e. not specific to any particular DAG). Many of these pages can be used to both view and modify parts of your Airflow environment.
 
-This will automatically trigger a DAG re-run start|ing with the first unsuccessful task(s).
+![Admin](https://assets2.astronomer.io/main/guides/airflow-ui/ui_admin_menu.png)
 
-**If you want to delete task records:**
+For example, the Connections page shows all Airflow connections stored in your environment. You can click on the `+` to add a new connection. For more information, check out our [guide on connections](https://www.astronomer.io/guides/connections/).
 
-If you're running a DAG but intentionally stopped it (turned it "off") during execution, and want to permanently clear remaining tasks, you can delete all the records relevant to the DAG id in the 'Task Instances' panel as well.
+![Connections](https://assets2.astronomer.io/main/guides/airflow-ui/ui_connections.png)
 
-**Note**: The task and DAG status field on your main dashboard may take a bit to reflect these changes.
+Similarly, the XComs page shows a list of all XComs stored in the metadata database and allows you to easily delete them.
 
-![delete_task_instances](https://assets.astronomer.io/website/img/guides/delete_task_instances.png)
+![XCom](https://assets2.astronomer.io/main/guides/airflow-ui/ui_xcoms.png)
 
-### DAGs
+Other pages in the Admin tab include:
 
-The same can be done for DAGs from _Browse > DAG Runs_. This can be particularly helpful when migrating databases or re-running all history for a job with just a small change.
+- **Variables:** View and manage [Airflow variables](https://airflow.apache.org/docs/apache-airflow/stable/howto/variable.html).
+- **Configuration:** View the contents of your `airflow.cfg` file. Note that this can be disabled by your Airflow admin for security reasons.
+- **Plugins:** View any [Airflow plugins](https://airflow.apache.org/docs/apache-airflow/stable/plugins.html) defined in your environment.
+- **Pools:** View and manage [Airflow pools](https://airflow.apache.org/docs/apache-airflow/stable/concepts/pools.html).
 
-![browse_dag_runs](https://assets.astronomer.io/website/img/guides/browse_dag_runs.png)
 
-### SLA Misses
+## Docs
 
-SLA misses can also be viewed at a task level.
+The Docs tab provides links out to external Airflow resources including:
 
-![delete_task_instances](https://assets.astronomer.io/website/img/guides/sla_misses.png)
+- [Airflow documentation](http://apache-airflow-docs.s3-website.eu-central-1.amazonaws.com/docs/apache-airflow/latest/)
+- [The Airflow website](https://airflow.apache.org/)
+- [The Airflow GitHub repo](https://github.com/apache/airflow)
+- The REST API Swagger and and Redoc documentation
+
+![Docs](https://assets2.astronomer.io/main/guides/airflow-ui/ui_docs_menu.png)
+
+## Conclusion
+
+This guide provided a basic overview of some of the most commonly used features of the Airflow UI. It is not meant to be comprehensive, and we highly recommend diving in yourself to discover everything the Airflow UI can offer. 
+
+The Airflow community is consistently working on improvements to the UI to provide a better user experience and additional functionality. Make sure you upgrade your Airflow environment frequently to ensure you are taking advantage of Airflow UI updates as they are released. 
