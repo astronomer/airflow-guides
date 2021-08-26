@@ -152,10 +152,153 @@ For more information about possible parameters and examples, see the [README in 
 
 ## Use Case: Great Expectations BigQuery Operator
 
-To set up a BigQuery connection with Airflow, and to make sure the `example_great_expectations_bigquery_dag` runs with an Astronomer deployment, a Google Application Credentials and an Airflow GCP connection are needed.
+To set up a BigQuery connection with Airflow, and to make sure the `example_great_expectations_bigquery_dag` runs with an Astronomer deployment, a Google Application Credentials and an Airflow GCP connection are needed. The Google Application Credentials should be a json file that is associated with a service account with permissions to read and write from BigQuery and GCS. Assuming you already have Airflow running in an Astronomer deployment in this directory, follow these steps to get the DAG working:
 
-Under `Admin -> Connections` in the Airflow UI, add a new connection with Conn ID as `google_cloud_default`. The connection type is `Google Cloud`; this connection comes with the Astronomer Airflow distribution. A GCP key associated with a service account that has access to BigQuery is needed. For more information generating a key, [follow the instructions in this guide](https://cloud.google.com/iam/docs/creating-managing-service-account-keys). The key can either be added via a path via the Keyfile Path field, or the JSON can be directly copied and pasted into the Keyfile JSON field. In the case of the Keyfile Path, a relative path is allowed, and if using Astronomer, the recommended path is under the `include/` directory, as Docker will mount all files and directories under it. Make sure the file name is included in the path. Finally, add the project ID to the Project ID field. No scopes should be needed.
+1. Under `Admin -> Connections` in the Airflow UI, add a new connection with `Conn ID` as `google_cloud_default`.
+2. Set the connection type to `Google Cloud`; this connection comes with the Astronomer Airflow distribution.
+3. A GCP key associated with a service account that has access to BigQuery is needed. For more information generating a key, [follow the instructions in this guide](https://cloud.google.com/iam/docs/creating-managing-service-account-keys). The key can either be added as a path via the `Keyfile Path` field, or the JSON can be directly copied and pasted into the `Keyfile JSON` field.
+  * In the case of the `Keyfile Path`, a relative path is allowed, and if using Astronomer, the recommended path is under the `include/` directory, as Docker will mount all files and directories under it. Make sure the file name is included in the path.
+4. Add the project ID to the `Project ID` field.
+5. Scopes should be left blank, and filling the field in can result in token errors with Google Auth.
+6. Add an environment variable to the project Dockerfile that points to a GCP key with permissions to read and write from GCS and BigQuery.
+    `ENV GOOGLE_APPLICATION_CREDENTIALS=/usr/local/airflow/include/keys/your-google-cloud-key.json`
+
+The connection should look like this:
+![GCP Connection](https://assets2.astronomer.io/main/guides/great-expectations/gcp_connection.png)
 
 For more on configuring environment variables for any credentials required for external data connections, see the [Great Expectations documentation](https://docs.greatexpectations.io/en/latest/guides/how_to_guides/configuring_data_contexts/how_to_use_a_yaml_file_or_environment_variables_to_populate_credentials.html?highlight=environment%20variables), which provides an explanation on using environment variables for Datasource credentials in your `great_expectations.yml` configuration.
 
-3. Finally, you will need to add the environment variables to your local `.env` file and as [secret environment variables in the Astronomer Cloud settings](https://www.astronomer.io/docs/cloud/stable/deploy/environment-variables/).
+With the connection to GCP set, the next step is creating and running the DAG. In the example below, the DAG performs all of the following:
+
+1. Creates a BigQuery dataset for the sample table.
+2. Creates a BigQuery table and inserts the sample data.
+3. Uploads the test suite to GCS.
+4. Runs the Expectation suite on the table.
+5. Tears down the table and dataset.
+
+The example DAG below can be seen in full in Astronomer's [data quality repository](https://github.com/astronomer/airflow-data-quality-demo/tree/main/dags/great_expectations/)
+
+```python
+with DAG("great_expectations_bigquery_example",
+         description="Example DAG showcasing loading and data quality checking with BigQuery and Great Expectations.",
+         schedule_interval=None,
+         start_date=datetime(2021, 1, 1),
+         catchup=False) as dag:
+    """
+    ### Simple EL Pipeline with Data Quality Checks Using BigQuery and Great Expectations
+    """
+
+    """
+    #### BigQuery dataset creation
+    Create the dataset to store the sample data tables.
+    """
+    create_dataset = BigQueryCreateEmptyDatasetOperator(
+        task_id="create_dataset",
+        dataset_id=BQ_DATASET
+    )
+
+    """
+    #### Upload taxi data to GCS
+    Upload the test data to GCS so it can be transferred to BigQuery.
+    """
+    upload_taxi_data = LocalFilesystemToGCSOperator(
+        task_id="upload_taxi_data",
+        src=DATA_FILE,
+        dst=GCP_DATA_DEST,
+        bucket=GCP_BUCKET,
+    )
+
+    """
+    #### Transfer data from GCS to BigQuery
+    Moves the data uploaded to GCS in the previous step to BigQuery, where
+    Great Expectations can run a test suite against it.
+    """
+    transfer_taxi_data = GoogleCloudStorageToBigQueryOperator(
+        task_id="taxi_data_gcs_to_bigquery",
+        bucket=GCP_BUCKET,
+        source_objects=[GCP_DATA_DEST],
+        skip_leading_rows=1,
+        destination_project_dataset_table="{}.{}.{}".format(Variable.get("gcp_project_id"), BQ_DATASET, BQ_TABLE),
+        schema_fields=[
+            {"name": "vendor_id", "type": "INTEGER", "mode": "REQUIRED"},
+            {"name": "pickup_datetime", "type": "DATETIME", "mode": "NULLABLE"},
+            {"name": "dropoff_datetime", "type": "DATETIME", "mode": "NULLABLE"},
+            {"name": "passenger_count", "type": "INTEGER", "mode": "NULLABLE"},
+            {"name": "trip_distance", "type": "FLOAT", "mode": "NULLABLE"},
+            {"name": "rate_code_id", "type": "INTEGER", "mode": "NULLABLE"},
+            {"name": "store_and_fwd_flag", "type": "STRING", "mode": "NULLABLE"},
+            {"name": "pickup_location_id", "type": "INTEGER", "mode": "NULLABLE"},
+            {"name": "dropoff_location_id", "type": "INTEGER", "mode": "NULLABLE"},
+            {"name": "payment_type", "type": "INTEGER", "mode": "NULLABLE"},
+            {"name": "fare_amount", "type": "FLOAT", "mode": "NULLABLE"},
+            {"name": "extra", "type": "FLOAT", "mode": "NULLABLE"},
+            {"name": "mta_tax", "type": "FLOAT", "mode": "NULLABLE"},
+            {"name": "tip_amount", "type": "FLOAT", "mode": "NULLABLE"},
+            {"name": "tolls_amount", "type": "FLOAT", "mode": "NULLABLE"},
+            {"name": "improvement_surcharge", "type": "FLOAT", "mode": "NULLABLE"},
+            {"name": "total_amount", "type": "FLOAT", "mode": "NULLABLE"},
+            {"name": "congestion_surcharge", "type": "FLOAT", "mode": "NULLABLE"}
+        ],
+        source_format="CSV",
+        create_disposition="CREATE_IF_NEEDED",
+        write_disposition="WRITE_TRUNCATE",
+        allow_jagged_rows=True
+    )
+
+    """
+    #### Upload test suite to GCS
+    The GreatExpectationsBigQueryOperator expects the test suite to reside in
+    GCS, so the local file gets uploaded to GCS here.
+    """
+    upload_expectations_suite = LocalFilesystemToGCSOperator(
+        task_id="upload_test_suite",
+        src=EXPECTATION_FILE,
+        dst=GCP_SUITE_DEST,
+        bucket=GCP_BUCKET,
+    )
+
+    """
+    #### Great Expectations suite
+    Run the Great Expectations suite on the table.
+    """
+    ge_bigquery_validation = GreatExpectationsBigQueryOperator(
+        task_id="ge_bigquery_validation",
+        gcp_project=Variable.get("gcp_project_id"),
+        gcs_bucket=GCP_BUCKET,
+        gcs_expectations_prefix="expectations",
+        gcs_validations_prefix="validations",
+        gcs_datadocs_prefix="data_docs",
+        expectation_suite_name="taxi.demo",
+        table=BQ_TABLE,
+        bq_dataset_name=BQ_DATASET,
+        bigquery_conn_id="google_cloud_default",
+        email_to=""
+    )
+
+    """
+    #### Delete test dataset and table
+    Clean up the dataset and table created for the example.
+    """
+    delete_dataset = BigQueryDeleteDatasetOperator(
+        task_id="delete_dataset",
+        project_id=Variable.get("gcp_project_id"),
+        dataset_id=BQ_DATASET,
+        delete_contents=True
+    )
+
+    begin = DummyOperator(task_id="begin")
+    end = DummyOperator(task_id="end")
+
+    (
+        begin
+        >> create_dataset
+        >> upload_taxi_data
+        >> transfer_taxi_data
+        >> upload_expectations_suite
+        >> ge_bigquery_validation
+        >> delete_dataset
+        >> end
+    )
+```
+
+The above example DAG shows how Airflow can be used to orchestrate in-depth data quality checks with Great Expectations as part of a full ELT pipeline. A next step is to configure the Great Expectations suite for your own use case, and let Airflow ensure your data quality checks run smoothly on any schedule.
