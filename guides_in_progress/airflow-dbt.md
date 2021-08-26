@@ -37,19 +37,10 @@ from airflow.operators.bash_operator import BashOperator
 from airflow.utils.dates import datetime
 from airflow.utils.dates import timedelta
 
-default_args = {
-    'owner': 'astronomer',
-    'depends_on_past': False,
-    'start_date': datetime(2020, 12, 23),
-    'email': ['noreply@astronomer.io'],
-    'email_on_failure': False,
-    'email_on_retry': False,
-    'retries': 1,
-    'retry_delay': timedelta(minutes=5)
-}
+
 dag = DAG(
     'dbt_dag',
-    default_args=default_args,
+    start_date=datetime(2021, 12, 23),
     description='An Airflow DAG to invoke simple dbt commands',
     schedule_interval=timedelta(days=1),
 )
@@ -90,20 +81,10 @@ from airflow.operators.bash_operator import BashOperator
 from airflow.utils.dates import datetime
 from airflow.utils.dates import timedelta
 
-default_args = {
-    'owner': 'astronomer',
-    'depends_on_past': False,
-    'start_date': datetime(2020, 12, 23),
-    'email': ['noreply@astronomer.io'],
-    'email_on_failure': False,
-    'email_on_retry': False,
-    'retries': 1,
-    'retry_delay': timedelta(minutes=5)
-}
 
 dag = DAG(
     'dbt_dag',
-    default_args=default_args,
+    start_date=datetime(2020, 12, 23),
     description='A dbt wrapper for airflow',
     schedule_interval=timedelta(days=1),
 )
@@ -311,30 +292,23 @@ run()
 3. Finally, we create an Airflow DAG file for each group of models that reads the associated pickle file, creates the required dbt model run/test tasks, and then sets dependencies between them as specified in the pickle file.
 
 ```python
-default_dag_args = {
-"start_date": datetime.datetime(2020, 11, 24),
-"retry_delay": datetime.timedelta(minutes=10),
-"on_failure_callback": notify_all_of_failure,
-"depends_on_past": True,
-"wait_for_downstream": True,
-"retries": 0,
-}
 
-DAG_NAME = "standard_schedule"
+with DAG(
+   f"dbt_dag",
+   schedule_interval="@daily",
+   max_active_runs=1,
+   catchup=False,
+   start_date=datetime(2021, 1, 1)
+) as dag:
+    # Load dependencies from configuration file
+    dag_def = load_dag_def_pickle(f"{DAG_NAME}.pickle")
 
-dag = DAG(
-   f"dbt_{DAG_NAME}", schedule_interval="@daily", max_active_runs=1, catchup=False, default_args=default_dag_args,
-)
+    # Returns a dictionary of bash operators corresponding to dbt models/tests
+    dbt_tasks = create_task_dict(dag_def)
 
-# Load dependencies from configuration file
-dag_def = load_dag_def_pickle(f"{DAG_NAME}.pickle")
-
-# Returns a dictionary of bash operators corresponding to dbt models/tests
-dbt_tasks = create_task_dict(dag_def, dag)
-
-# Set dependencies between tasks according to config file
-for edge in dag_def:
-   dbt_tasks[edge[0]] >> dbt_tasks[edge[1]]
+    # Set dependencies between tasks according to config file
+    for edge in dag_def:
+       dbt_tasks[edge[0]] >> dbt_tasks[edge[1]]
 ```
 
 Note that the functions in the DAG file above have been split out for simplicity, but the logic can be found in the [dbt_advanced.py DAG](https://github.com/astronomer/airflow-dbt-demo/blob/master/dags/dbt_advanced.py).
@@ -388,4 +362,4 @@ There are two small differences between the previous examples in dbt_advanced.py
 Which pattern you choose for your tests most likely depends on the kind of alerting or DAG run termination you add to your test tasks; we’re just suggesting one possible option here.
 
 ## Conclusion
-To recap, in this guide we have learned about dbt, how to create dbt tasks in Airflow, and how to productionize those tasks to automatically create tasks based on a manifest. For a more detailed discussion on trade-offs, limitations, and adding dbt to a full ELT pipeline, see our blog posts.
+To recap, in this guide we have learned about dbt, how to create dbt tasks in Airflow, and how to productionize those tasks to automatically create tasks based on a manifest. For a more detailed discussion on trade-offs, limitations, and adding dbt to a full ELT pipeline, see our blog posts. To see more examples of how to use dbt and Airflow to build pipelines, check out our [dbt DAGs on the Registry](https://registry.astronomer.io/dags/?query=dbt&badges=certified).
