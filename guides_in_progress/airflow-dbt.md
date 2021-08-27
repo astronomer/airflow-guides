@@ -62,6 +62,7 @@ with DAG(
 ```
 
 Using the `BashOperator` to run `dbt run` and `dbt test` is a working solution for simple use cases or when you would rather have dbt manage dependencies between models. If you need something quick to develop and deploy that has the full power of dbt behind it, then this is the solution for you. However, running dbt at the project-level has several issues:
+
   - Low observability into what execution state the project is in.
   - Failures are absolute and require the whole `dbt` group of models to be run again, which can be costly.
 
@@ -238,9 +239,9 @@ To add this functionality, we can take a group of models defined by some selecto
        return dependency_list
 
     def clean_selected_task_nodes(selected_models):
-       """Clean up the naming of the "selected" nodes so they match the structure what
-       is coming out generate_all_model_dependencies function. This function doesn't create
-       a list of dependencies between selected nodes (that happens in generate_dag_dependencies)
+       """Clean up the naming of the "selected" nodes so they match the structure of what
+       is coming out of the generate_all_model_dependencies function. This function doesn't create
+       a list of dependencies between selected nodes (that happens in generate_dag_dependencies), rather
        it's just cleaning up the naming of the nodes and outputting them as a list"""
        selected_nodes = []
        for node in selected_models:
@@ -268,9 +269,9 @@ To add this functionality, we can take a group of models defined by some selecto
        return selected_dependencies
 
     def run():
-       """Get list of all models in project and create dependencies.
+       """Gets a list of all models in the project and creates dependencies.
        We want to load all the models first because the logic to properly set
-       dependencies between subsets of models is basically the process of
+       dependencies between subsets of models is basically
        removing nodes from the complete DAG. This logic can be found in the
        generate_dag_dependencies function. The networkx graph object is smart
        enough that if you remove nodes with remove_node method that the dependencies
@@ -318,6 +319,7 @@ To add this functionality, we can take a group of models defined by some selecto
     > **Note:** The functions in the DAG file above have been split out for simplicity, but the logic can be found in the [dbt_advanced.py DAG](https://github.com/astronomer/airflow-dbt-demo/blob/master/dags/dbt_advanced.py).
 
 Putting all of this together, we end up with multiple Airflow DAGs, each running on its own defined schedule, with a specified group of interdependent dbt models running as individual tasks. With this system, running a production dbt model in Airflow is simple: all we need to do is tag a model with the appropriate schedule interval, and it will automatically get picked up and executed by the corresponding Airflow DAG.
+
 Ultimately, this gives us a robust, end-to-end solution that captures the ideal scheduling, execution, and observability experience for running dbt models with Airflow.
 
 With that said, this implementation still has some limitations. For a more in-depth consideration of the benefits and downsides of each implementation, see [Part 2](https://www.astronomer.io/blog/airflow-dbt-2) of our Airflow/dbt blog series.
@@ -361,9 +363,9 @@ Using the jaffleshop demo dbt project, the parser creates the following DAG incl
 One important fact to note here is that the `DbtDagParser` does not include a `dbt compile` step that updates the `manifest.json` file. Since the Airflow Scheduler parses the DAG file periodically, having a compile step as part of the DAG creation could incur some unnecessary load for the scheduler. We recommend adding a `dbt compile` step either as part of a CI/CD pipeline, or as part of a pipeline run in production before the Airflow DAG is run.
 
 With regards to the `dbt test` runs:
-1. The test runs are optional. You can simply skip the tests by not using `getdbttest_group()`.
-2. The `dbt test` task group depends entirely on the `dbt run` group. In this example, the DAG will run all models first, then all tests.
 
+- The test runs are optional. You can simply skip the tests by not using `getdbttest_group()`.
+- The `dbt test` task group depends entirely on the `dbt run` group. In this example, the DAG will run all models first, then all tests.
 
 ## Conclusion
 To recap, in this guide we have learned about dbt, how to create dbt tasks in Airflow, and how to productionize those tasks to automatically create tasks based on a manifest. For a more detailed discussion on trade-offs, limitations, and adding dbt to a full ELT pipeline, see our blog posts. To see more examples of how to use dbt and Airflow to build pipelines, check out our [dbt DAGs on the Registry](https://registry.astronomer.io/dags/?query=dbt&badges=certified).
