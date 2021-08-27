@@ -144,8 +144,6 @@ with DAG(
     )
 ```
 
-> Note: If your `great_expectations` directory is not located in the same directory as your DAG file, you will need to provide the `data_context_root_dir` parameter.
-
 By default, a Great Expectations task will run validation and raise an `AirflowException` if any of the tests fail. To override this behavior and continue running even if tests fail, set the `fail_task_on_validation_failure` flag to `false`.
 
 For more information about possible parameters and examples, see the [README in the repository](https://github.com/great-expectations/airflow-provider-great-expectations), and the [example DAG in the provider package](https://registry.astronomer.io/dags/example-great-expectations-dag).
@@ -159,7 +157,7 @@ To set up a BigQuery connection with Airflow, and to make sure the `example_grea
 3. A GCP key associated with a service account that has access to BigQuery is needed. For more information generating a key, [follow the instructions in this guide](https://cloud.google.com/iam/docs/creating-managing-service-account-keys). The key can either be added as a path via the `Keyfile Path` field, or the JSON can be directly copied and pasted into the `Keyfile JSON` field. In the case of the `Keyfile Path`, a relative path is allowed, and if using Astronomer, the recommended path is under the `include/` directory, as Docker will mount all files and directories under it. Make sure the file name is included in the path.
 4. Add the project ID to the `Project ID` field.
 5. Scopes should be left blank, and filling the field in can result in token errors with Google Auth.
-6. Add an environment variable to the project Dockerfile that points to a GCP key with permissions to read and write from GCS and BigQuery.
+6. Add an environment variable to the project Dockerfile or `.env` file that points to a GCP key with permissions to read and write from GCS and BigQuery.
     `ENV GOOGLE_APPLICATION_CREDENTIALS=/usr/local/airflow/include/keys/your-google-cloud-key.json`
 
 The connection should look like this:
