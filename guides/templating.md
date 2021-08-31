@@ -7,6 +7,8 @@ heroImagePath: null
 tags: ["Templating", "Best Practices", "Basics"]
 ---
 
+## Overview
+
 Templating is a powerful concept in Airflow to give tasks different behaviour depending on the context they're running
 in. For example, say you want to print the day of the week every time you run a task:
 
@@ -22,6 +24,14 @@ piece of code to be evaluated at runtime. This is useful in many situations, for
 as the date (e.g. `/data/path/20210824`) to store daily data, or to select a certain partition (e.g.
 `/data/path/yyyy=2021/mm=08/dd=24`) every day so that you don't have to scan all data. Airflow leverages
 [Jinja](https://jinja.palletsprojects.com), a templating framework in Python, for templating in Airflow.
+
+In this guide we'll cover all the options Airflow give you for applying templates in your code:
+
+- Which variables and functions are available when templating
+- Which operator fields can be templated and which cannot
+- How to validate templates
+- Applying custom variables and functions when templating
+- Rendering templates to strings and native Python code
 
 ## Runtime variables in Airflow
 
