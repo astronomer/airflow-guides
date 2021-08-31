@@ -39,7 +39,7 @@ be used for templating. Some of the most used variables are:
 
 Besides these four variables, there are many more available (counting 31 in Airflow 2.1.3). For a complete and always
 up-to-date list of all available variables, refer to the documentation:
-https://airflow.apache.org/docs/apache-airflow/stable/macros-ref.html#default-variables.
+<https://airflow.apache.org/docs/apache-airflow/stable/macros-ref.html#default-variables>.
 
 ## Templateable fields and scripts
 
@@ -182,7 +182,7 @@ BashOperator(
 ```
 
 For the full list of all available macros, refer to the documentation:
-https://airflow.apache.org/docs/apache-airflow/stable/macros-ref.html#id1.
+<https://airflow.apache.org/docs/apache-airflow/stable/macros-ref.html#id1>.
 
 Besides pre-injected functions, you can also use self-defined variables and functions in your templates. Airflow
 provides a convenient way to inject these into the Jinja environment. Say we wanted to print the number of days since
