@@ -25,7 +25,7 @@ as the date (e.g. `/data/path/20210824`) to store daily data, or to select a cer
 `/data/path/yyyy=2021/mm=08/dd=24`) every day so that you don't have to scan all data. Airflow leverages
 [Jinja](https://jinja.palletsprojects.com), a templating framework in Python, for templating in Airflow.
 
-In this guide we'll cover all the options Airflow give you for applying templates in your code:
+In this guide we'll cover all the options Airflow gives you for applying templates in your code:
 
 - Which variables and functions are available when templating
 - Which operator fields can be templated and which cannot
