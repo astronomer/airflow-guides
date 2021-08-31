@@ -22,7 +22,7 @@ There are three ways you can create and manage a pool in Airflow.
 
 1. Create a pool through the Airflow UI. Go to `Admin` → `Pools` and add a new record. You can define a name, the number of slots, and a description.
 
-    ![Untitled](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/12b3beef-280b-4030-a59b-39ecfdba55b8/Untitled.png)
+    ![Pools UI](https://assets2.astronomer.io/main/guides/airflow-pools/pools_ui.png)
 
 2. Create a pool using the Airflow CLI with the `airflow pools` command. The `set` subcommand can be used to create a new pool. Check out the [Airflow CLI documentation](https://airflow.apache.org/docs/apache-airflow/stable/cli-and-env-variables-ref.html#pools) for the full list of pool commands. With the CLI, you can also import pools from a JSON file with the `import` subcommand. This can be useful if you have a large number of pools to define and doing so programmatically would be more efficient.
 3. Create a pool is using the Airflow REST API. Note that this is only available if you are using Airflow 2. To create a pool, simply submit a POST request with the name and number of slots as the payload. For more information on working with pools from the API, check out the [API documentation](https://airflow.apache.org/docs/apache-airflow/stable/stable-rest-api-ref.html#operation/post_pool).
