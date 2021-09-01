@@ -42,13 +42,17 @@ The `GreatExpectationsOperator` provides a convenient method for loading an exis
 
 1. The `great_expectations` directory is accessible by your DAG, as it is loaded into Docker as part of the `include` directory. Ideally the `great_expectations` directory should be located in the same project as your DAG, but you can point the environment variable at any location.
 2. The Great Expectations provider is installed when you run `astro dev start`, as it is part of `requirements.txt`. Otherwise, install Great Expectations and the Great Expectations provider in your environment manually:
+
     ```bash
     pip install great_expectations airflow-provider-great-expectations
     ```
+
 3. Import the operator in your DAG file.
+
     ```python
     from great_expectations_provider.operators.great_expectations import GreatExpectationsOperator
     ```
+
 4. Create a task using the [`GreatExpectationsOperator`](https://registry.astronomer.io/providers/great-expectations/modules/greatexpectationsoperator).
 5. When deploying with Astronomer, it's important to note that Great Expectations needs to know where to find the Data Context by setting the `data_context_root_dir`, which you can then access in the DAG. We recommend adding this variable to your Dockerfile, but you can use [any of the methods described in our docs](https://www.astronomer.io/docs/cloud/stable/deploy/environment-variables/) to set environment variables for your deployment. If you are using the demo repository, then this variable has already been set in the Dockerfile to the location described in step 1.
 
