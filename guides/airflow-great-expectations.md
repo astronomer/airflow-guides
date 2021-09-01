@@ -11,18 +11,18 @@ tags: ["DAGs", "Integrations"]
 
 ## Overview
 
-[Great Expectations](https://greatexpectations.io) is an open source Python-based data validation framework. It allows you to test your data by expressing what you “expect” from it as simple declarative statements in Python, then run validation using those “expectations” against datasets. The [Great Expectations team maintains an Airflow provider](https://registry.astronomer.io/providers/great-expectations) that gives users a convenient method for running validation directly from their DAGs. This guide will walk you through the usage of the [official GreatExpectationsOperator](https://registry.astronomer.io/providers/great-expectations/modules/greatexpectationsoperator), usage of the [official GreatExpectationsBigQueryOperator](https://registry.astronomer.io/providers/great-expectations/modules/greatexpectationsbigqueryoperator), and provide some guidance on how to configure an Airflow DAG containing Great Expectations tasks to work with Airflow.
+[Great Expectations](https://greatexpectations.io) is an open source Python-based data validation framework. It allows you to test your data by expressing what you “expect” from it as simple declarative statements in Python, then run validation using those “expectations” against datasets. The [Great Expectations team maintains an Airflow provider](https://registry.astronomer.io/providers/great-expectations) that gives users a convenient method for running validation directly from their DAGs. This guide will walk you through the usage of the [official `GreatExpectationsOperato`r](https://registry.astronomer.io/providers/great-expectations/modules/greatexpectationsoperator), usage of the [official `GreatExpectationsBigQueryOperator`](https://registry.astronomer.io/providers/great-expectations/modules/greatexpectationsbigqueryoperator), and provide some guidance on how to configure an Airflow DAG containing Great Expectations tasks to work with Airflow.
 
 Typically, using Great Expectations is a two-step process:
 
 1. Expectation Suite creation
 2. Validation
 
-First, a user creates test suites, or “Expectation Suites”, using [Great Expectations methods](https://docs.greatexpectations.io/docs/reference/expectations/expectations/). These suites are usually stored in JSON and can be checked into version control, just like regular tests. The suites are then loaded by the Great Expectations framework at test runtime, e.g. when processing a new batch of data in a pipeline. If you are using the [demo repository](https://github.com/astronomer/airflow-data-quality-demo/great-expectations) with this guide, then the example suite can be found under `include/great_expectations/expectations/taxi/demo.json`.
+First, a user creates test suites, or “Expectation Suites”, using [Great Expectations methods](https://docs.greatexpectations.io/docs/reference/expectations/expectations/). These suites are usually stored in JSON and can be checked into version control, just like regular tests. The suites are then loaded by the Great Expectations framework at test runtime, e.g. when processing a new batch of data in a pipeline. If you are using the [demo repository](https://github.com/astronomer/airflow-data-quality-demo/) with this guide, then the example suite can be found under `include/great_expectations/expectations/taxi/demo.json`.
 
 > For a step-by-step guide on how to configure a simple Great Expectations project, please see the [“Getting started” tutorial](https://docs.greatexpectations.io/en/latest/guides/tutorials.html).
 
-This walkthrough assumes that you have either that you have downloaded the code from the [demo repository](https://github.com/astronomer/airflow-data-quality-demo/great-expectations), which contains a sample Great Expectations project already.
+This walkthrough assumes that you have either that you have downloaded the code from the [demo repository](https://github.com/astronomer/airflow-data-quality-demo/), which contains a sample Great Expectations project already.
 
 If you wish to use your own Great Expectations project along with this guide, ensure you have completed the following steps:
 
@@ -38,24 +38,18 @@ If you set up a project manually, you will see a `great_expectations` directory 
 
 ## Use Case: Great Expectations Operator
 
-The `GreatExpectationsOperator` provides a convenient method for loading an existing Expectation Suite and using it to validate a batch of data. You can point the operator to any location by setting the `data_context_root_dir` parameter-- more on that below. This guide assumes you are using the [demo repository](https://github.com/astronomer/airflow-data-quality-demo/great-expectations), which has the following configuration:
+The `GreatExpectationsOperator` provides a convenient method for loading an existing Expectation Suite and using it to validate a batch of data. You can point the operator to any location by setting the `data_context_root_dir` parameter-- more on that below. This guide assumes you are using the [demo repository](https://github.com/astronomer/airflow-data-quality-demo/), which has the following configuration:
 
 1. The `great_expectations` directory is accessible by your DAG, as it is loaded into Docker as part of the `include` directory. Ideally the `great_expectations` directory should be located in the same project as your DAG, but you can point the environment variable at any location.
-
 2. The Great Expectations provider is installed when you run `astro dev start`, as it is part of `requirements.txt`. Otherwise, install Great Expectations and the Great Expectations provider in your environment manually:
-
     ```bash
     pip install great_expectations airflow-provider-great-expectations
     ```
-
 3. Import the operator in your DAG file.
-
     ```python
     from great_expectations_provider.operators.great_expectations import GreatExpectationsOperator
     ```
-
 4. Create a task using the [`GreatExpectationsOperator`](https://registry.astronomer.io/providers/great-expectations/modules/greatexpectationsoperator).
-
 5. When deploying with Astronomer, it's important to note that Great Expectations needs to know where to find the Data Context by setting the `data_context_root_dir`, which you can then access in the DAG. We recommend adding this variable to your Dockerfile, but you can use [any of the methods described in our docs](https://www.astronomer.io/docs/cloud/stable/deploy/environment-variables/) to set environment variables for your deployment. If you are using the demo repository, then this variable has already been set in the Dockerfile to the location described in step 1.
 
   ```shell
@@ -74,18 +68,17 @@ This means that the parameters you pass to the operator depend on how you would 
 with DAG(
     dag_id="example_great_expectations_dag",
     schedule_interval=None,
-    default_args=default_args
+    start_date=datetime(2021, 1, 1),
+    default_args={"data_context_root_dir": ge_root_dir}
 ) as dag:
 
-    # This runs an expectation suite against a sample data asset.
-    base_path = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-    data_file = os.path.join(
-        base_path, "include", "data/yellow_tripdata_sample_2019-01.csv"
-    )
+    """
+    ### Simple Great Expectations Example
+    """
 
-    ge_root_dir = os.getenv("GE_DATA_CONTEXT_ROOT_DIR")
-
-    # This runs an expectation suite as a list against a data asset that passes the tests.
+    """
+    #### This runs an expectation suite against a data asset that passes the tests
+    """
     ge_batch_kwargs_list_pass = GreatExpectationsOperator(
         task_id="ge_batch_kwargs_list_pass",
         assets_to_validate=[
@@ -93,52 +86,61 @@ with DAG(
                 "batch_kwargs": {"path": data_file, "datasource": "data__dir"},
                 "expectation_suite_name": "taxi.demo",
             }
-        ],
+        ]
     )
 
-    # This runs a checkpoint and passes in a root dir.
+    """
+    #### This runs a checkpoint and passes in a root dir
+    """
     ge_checkpoint_pass_root_dir = GreatExpectationsOperator(
         task_id="ge_checkpoint_pass_root_dir",
         run_name="ge_airflow_run",
-        checkpoint_name="taxi.pass.chk",
+        checkpoint_name="taxi.pass.chk"
     )
 
-    # This runs an expectation suite against a data asset that passes the tests.
+    """
+    #### This runs an expectation suite using the batch_kwargs parameter
+    """
     ge_batch_kwargs_pass = GreatExpectationsOperator(
         task_id="ge_batch_kwargs_pass",
         expectation_suite_name="taxi.demo",
-        batch_kwargs={"path": data_file, "datasource": "data__dir"},
+        batch_kwargs={"path": data_file, "datasource": "data__dir"}
     )
 
-    # This runs a checkpoint that will fail, but we set a flag to exit the task successfully.
+    """
+    #### This runs a checkpoint that will fail, but we set a flag to exit the
+         task successfully.
+    """
     ge_checkpoint_fail_but_continue = GreatExpectationsOperator(
         task_id="ge_checkpoint_fail_but_continue",
         run_name="ge_airflow_run",
         checkpoint_name="taxi.fail.chk",
-        fail_task_on_validation_failure=False,
+        fail_task_on_validation_failure=False
     )
 
-    # This runs a checkpoint that will pass.
+    """
+    #### This runs a checkpoint that will pass. Make sure the checkpoint yml file
+         has the correct path to the data file
+    """
     ge_checkpoint_pass = GreatExpectationsOperator(
         task_id="ge_checkpoint_pass",
         run_name="ge_airflow_run",
-        checkpoint_name="taxi.pass.chk",
+        checkpoint_name="taxi.pass.chk"
     )
 
-    # This runs a checkpoint that will fail.
+    """
+    #### This runs a checkpoint that will fail. Make sure the checkpoint yml file
+         has the correct path to the data file
+    """
     ge_checkpoint_fail = GreatExpectationsOperator(
         task_id="ge_checkpoint_fail",
         run_name="ge_airflow_run",
-        checkpoint_name="taxi.fail.chk",
+        checkpoint_name="taxi.fail.chk"
     )
 
-    (
-        ge_batch_kwargs_list_pass
-        >> ge_checkpoint_pass_root_dir
-        >> ge_batch_kwargs_pass
-        >> ge_checkpoint_fail_but_continue
-        >> ge_checkpoint_pass
-        >> ge_checkpoint_fail
+    chain(
+        ge_batch_kwargs_list_pass, ge_checkpoint_pass_root_dir, ge_batch_kwargs_pass,
+        ge_checkpoint_fail_but_continue, ge_checkpoint_pass, ge_checkpoint_fail
     )
 ```
 
@@ -212,12 +214,12 @@ with DAG("great_expectations_bigquery_example",
     Moves the data uploaded to GCS in the previous step to BigQuery, where
     Great Expectations can run a test suite against it.
     """
-    transfer_taxi_data = GoogleCloudStorageToBigQueryOperator(
+    transfer_taxi_data = GCSToBigQueryOperator(
         task_id="taxi_data_gcs_to_bigquery",
         bucket=GCP_BUCKET,
         source_objects=[GCP_DATA_DEST],
         skip_leading_rows=1,
-        destination_project_dataset_table="{}.{}.{}".format(Variable.get("gcp_project_id"), BQ_DATASET, BQ_TABLE),
+        destination_project_dataset_table="{}.{}".format(BQ_DATASET, BQ_TABLE),
         schema_fields=[
             {"name": "vendor_id", "type": "INTEGER", "mode": "REQUIRED"},
             {"name": "pickup_datetime", "type": "DATETIME", "mode": "NULLABLE"},
@@ -262,16 +264,19 @@ with DAG("great_expectations_bigquery_example",
     """
     ge_bigquery_validation = GreatExpectationsBigQueryOperator(
         task_id="ge_bigquery_validation",
-        gcp_project=Variable.get("gcp_project_id"),
+        gcp_project="{{ var.value.gcp_project_id }}",
         gcs_bucket=GCP_BUCKET,
+        # GE will use a folder "$my_bucket/expectations"
         gcs_expectations_prefix="expectations",
+        # GE will use a folder "$my_bucket/validations"
         gcs_validations_prefix="validations",
+        # GE will use a folder "$my_bucket/data_docs"
         gcs_datadocs_prefix="data_docs",
+        # GE will look for a file $my_bucket/expectations/taxi/demo.json
         expectation_suite_name="taxi.demo",
         table=BQ_TABLE,
         bq_dataset_name=BQ_DATASET,
-        bigquery_conn_id="google_cloud_default",
-        email_to=""
+        bigquery_conn_id="google_cloud_default"
     )
 
     """
@@ -280,7 +285,7 @@ with DAG("great_expectations_bigquery_example",
     """
     delete_dataset = BigQueryDeleteDatasetOperator(
         task_id="delete_dataset",
-        project_id=Variable.get("gcp_project_id"),
+        project_id="{{ var.value.gcp_project_id }}",
         dataset_id=BQ_DATASET,
         delete_contents=True
     )
@@ -288,16 +293,8 @@ with DAG("great_expectations_bigquery_example",
     begin = DummyOperator(task_id="begin")
     end = DummyOperator(task_id="end")
 
-    (
-        begin
-        >> create_dataset
-        >> upload_taxi_data
-        >> transfer_taxi_data
-        >> upload_expectations_suite
-        >> ge_bigquery_validation
-        >> delete_dataset
-        >> end
-    )
+    chain(begin, create_dataset, upload_taxi_data, transfer_taxi_data,
+          upload_expectations_suite, ge_bigquery_validation, delete_dataset, end)
 ```
 
 The above example DAG shows how Airflow can be used to orchestrate in-depth data quality checks with Great Expectations as part of a full ELT pipeline. A next step is to configure the Great Expectations suite for your own use case, and let Airflow ensure your data quality checks run smoothly on any schedule.
