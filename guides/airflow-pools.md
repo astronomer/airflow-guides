@@ -8,15 +8,13 @@ tags: ["Parallelism", "Tasks"]
 
 ## Overview
 
-One of the great benefits to Apache Airflow is that it is built to scale. With the right supporting infrastructure, you can run many tasks in parallel seamlessly. But sometimes that horizontal scalability also necessitates some guardrails. For example, you might have many tasks that interact with the same source system, like an API or database, that you don't want to be overwhelmed with requests. Fortunately, Airflow's [pools](https://airflow.apache.org/docs/apache-airflow/stable/concepts/pools.html) are designed for exactly this use case. Pools limit parallelism for a chosen set of tasks, giving you fine grained control over when your tasks are run.
+One of the great benefits to Apache Airflow is that it is built to scale. With the right supporting infrastructure, you can run many tasks in parallel seamlessly. But sometimes that horizontal scalability also necessitates some guardrails. For example, you might have many tasks that interact with the same source system, like an API or database, that you don't want to be overwhelmed with requests. Fortunately, Airflow's [pools](https://airflow.apache.org/docs/apache-airflow/stable/concepts/pools.html) are designed for exactly this use case.
+
+Pools allow you to limit parallelism for an arbitrary set of tasks, giving you fine grained control over when your tasks are run. They are often used in cases where you want to limit the number of parallel tasks that *do a certain thing.* For example, tasks that make requests to the same API or database, or tasks that will run on a GPU node of a Kubernetes cluster.
 
 In this guide, we will cover the basic concepts of Airflow pools including how to create them, how to assign them, and what you can and can't do with them. We will also walk through some sample DAGs that use pools to fulfill a simple use case. 
 
-## Airflow Pool Concepts
-
-Airflow pools allow you to limit parallelism for an arbitrary set of tasks. They are often used in cases where you want to limit the number of parallel tasks that *do a certain thing.* For example, tasks that make requests to the same API or database, or tasks that will run on a GPU node of a kubernetes cluster. Below we cover how to create and assign tasks to a pool, and some limitations to be aware of when working with them.
-
-### Creating a Pool
+## Creating a Pool
 
 There are three ways you can create and manage a pool in Airflow.
 
@@ -29,7 +27,7 @@ There are three ways you can create and manage a pool in Airflow.
 
 Note that you can also update the number of slots in the `default_pool` using any of the above methods (more on this below).
 
-### Assigning Tasks to a Pool
+## Assigning Tasks to a Pool
 
 By default, all tasks in Airflow get assigned to the `default_pool` which has 128 slots. You can modify this value, but you can't remove the default pool. Tasks can be assigned to any other pool by updating the `pool` parameter. This parameter is part of the `BaseOperator`, so it can be used with any operator.
 
@@ -69,7 +67,7 @@ with DAG('pool_dag',
 
 Additionally, you can configure the number of slots occupied by a task by updating the `pool_slots` parameter (the default is 1). Modifying this value could be useful in cases where you are using pools to manage resource utilization. 
 
-### Limitations of Pools
+## Limitations of Pools
 
 When working with pools, there are a couple of limitations to keep in mind:
 
