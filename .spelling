@@ -1651,3 +1651,5 @@ ExternalTaskSensor
  - guides/airflow-sagemaker.md
 SageMakerBaseOperator
 XGBoost
+ - guides/airflow-pools.md
+subcommand
