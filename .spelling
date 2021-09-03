@@ -1651,6 +1651,8 @@ ExternalTaskSensor
  - guides/airflow-sagemaker.md
 SageMakerBaseOperator
 XGBoost
+ - guides/airflow-pools.md
+subcommand
  - guides/templating.md
 ds
 ds_nodash
