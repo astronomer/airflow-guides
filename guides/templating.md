@@ -30,7 +30,9 @@ Airflow leverages [Jinja](https://jinja.palletsprojects.com), a templating frame
 
 ## Runtime Variables in Airflow
 
-Templating in Airflow works exactly the same as templating with Jinja in Python: define your to-be-evaluated code between double curly braces, and the expression will be evaluated at runtime. As we saw in the previous code snippet, `execution_date` is a variable available at runtime. Airflow includes many variables which can be used for templating. Some of the most used variables are:
+Templating in Airflow works exactly the same as templating with Jinja in Python: define your to-be-evaluated code between double curly braces, and the expression will be evaluated at runtime. As we saw in the previous code snippet, `execution_date` is a variable available at runtime.
+
+Airflow includes many variables which can be used for templating. Some of the most used variables are:
 
 | Variable name  | Description                                                |
 |----------------|------------------------------------------------------------|
@@ -93,7 +95,7 @@ Templating from files makes it easier to develop (especially when your scripts g
 
 By default, Airflow searches for `script.sh` relative to the directory the DAG file is defined in. So if your DAG is stored in `/path/to/dag.py` and your script is stored in `/path/to/scripts/script.sh`, you would set the value of `bash_command` to `scripts/script.sh`.
 
-If desired, additional "search paths" can be controlled at the DAG-level with the argument `template_searchpath`:
+If desired, additional "search paths" can be controlled at the DAG-level with the `template_searchpath` argument:
 
 ```python
 with DAG(..., template_searchpath="/tmp") as dag:
@@ -132,7 +134,7 @@ airflow db init  # generates airflow.db, airflow.cfg, and webserver_config.py in
 # airflow tasks render [dag_id] [task_id] [execution_date]
 ```
 
-For most templating, this will suffice. However, if any external systems (e.g. variable in production Airflow metastore) are reached in the templating logic, you must have connectivity to those systems.
+For most templating, this will suffice. However, if any external systems (e.g. a variable in your production Airflow metastore) are reached in the templating logic, you must have connectivity to those systems.
 
 In the Airflow UI, you can view the result of templated attributes after running a task. Click on a task instance --> **Rendered** button to see the result:
 
@@ -258,7 +260,9 @@ The rendered value would be a string. Since the `sum_numbers` function unpacks t
 ('[', '1', ',', ' ', '2', ',', ' ', '3', ']')
 ```
 
-This is not going to work, so we must tell Jinja to return a native Python list instead of a string. Jinja supports this via _Environments_. The [default Jinja environment](https://jinja.palletsprojects.com/en/3.0.x/api/#jinja2.Environment) outputs strings, but we can configure a [NativeEnvironment](https://jinja.palletsprojects.com/en/3.0.x/nativetypes/#jinja2.nativetypes.NativeEnvironment) which renders templates as native Python code. Support for Jinja's NativeEnvironment was added in [Airflow 2.1.0](https://github.com/apache/airflow/pull/14603) via the `render_template_as_native_obj` argument on the DAG class. This argument takes a boolean value which determines whether to render templates with Jinja's default Environment or NativeEnvironment. An example:
+This is not going to work, so we must tell Jinja to return a native Python list instead of a string. Jinja supports this via _Environments_. The [default Jinja environment](https://jinja.palletsprojects.com/en/3.0.x/api/#jinja2.Environment) outputs strings, but we can configure a [NativeEnvironment](https://jinja.palletsprojects.com/en/3.0.x/nativetypes/#jinja2.nativetypes.NativeEnvironment) which renders templates as native Python code.
+
+Support for Jinja's NativeEnvironment was added in [Airflow 2.1.0](https://github.com/apache/airflow/pull/14603) via the `render_template_as_native_obj` argument on the DAG class. This argument takes a boolean value which determines whether to render templates with Jinja's default Environment or NativeEnvironment. An example:
 
 ```python
 def sum_numbers(*args):
