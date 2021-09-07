@@ -11,7 +11,7 @@ tags: ["DAGs", "Integrations"]
 
 ## Overview
 
-[Great Expectations](https://greatexpectations.io) is an open source Python-based data validation framework. It allows you to test your data by expressing what you “expect” from it as simple declarative statements in Python, then run validation using those “expectations” against datasets. The [Great Expectations team maintains an Airflow provider](https://registry.astronomer.io/providers/great-expectations) that gives users a convenient method for running validation directly from their DAGs. 
+[Great Expectations](https://greatexpectations.io) is an open source Python-based data validation framework. It allows you to test your data by expressing what you “expect” from it as simple declarative statements in Python, then run validation using those “expectations” against datasets. The [Great Expectations team maintains an Airflow provider](https://registry.astronomer.io/providers/great-expectations) that gives users a convenient method for running validation directly from their DAGs.
 
 This guide will walk through how to use the [official `GreatExpectationsOperato`r](https://registry.astronomer.io/providers/great-expectations/modules/greatexpectationsoperator), how to use the [official `GreatExpectationsBigQueryOperator`](https://registry.astronomer.io/providers/great-expectations/modules/greatexpectationsbigqueryoperator), and how to configure an Airflow DAG containing Great Expectations tasks to work with Airflow.
 
@@ -44,27 +44,35 @@ If you set up a project manually, you will see a `great_expectations` directory 
 
 ## Use Case: Great Expectations Operator
 
+### Configuration
+
 The `GreatExpectationsOperator` provides a convenient method for loading an existing Expectation Suite and using it to validate a batch of data. You can point the operator to any location by setting the `data_context_root_dir` parameter (more on that to follow). Our [demo repository](https://github.com/astronomer/airflow-data-quality-demo/) uses the following configuration:
 
-- The `great_expectations` directory is accessible by your DAG, as it is loaded into Docker as part of the `include` directory. Ideally, the `great_expectations` directory should be located in the same project as your DAG, but you can point the environment variable at any location.
+- The `great_expectations` directory is accessible by your DAG, as it is loaded into Docker as part of the `include` directory. Ideally the `great_expectations` directory should be located in the same project as your DAG, but you can point the environment variable at any location.
 - The Great Expectations provider is installed when you run `astro dev start`, as it is part of `requirements.txt`. Otherwise, install Great Expectations and the Great Expectations provider in your environment manually:
 
     ```bash
     pip install great_expectations airflow-provider-great-expectations
     ```
 
-3. Import the operator in your DAG file.
+- When deploying with Astronomer, it's important to note that Great Expectations needs to know where to find the Data Context by setting the `data_context_root_dir`, which you can then access in the DAG. We recommend adding this variable to your Dockerfile, but you can use [any of the methods described in our docs](https://www.astronomer.io/docs/cloud/stable/deploy/environment-variables/) to set environment variables for your deployment:
+
+  ```shell
+  ENV GE_DATA_CONTEXT_ROOT_DIR=/usr/local/airflow/include/great_expectations
+  ```
+
+   If you are using the demo repository, then this variable has already been set in the Dockerfile to this location.
+
+### Using the Operator
+
+1. Import the operator in your DAG file.
 
     ```python
     from great_expectations_provider.operators.great_expectations import GreatExpectationsOperator
     ```
 
-4. Create a task using the [`GreatExpectationsOperator`](https://registry.astronomer.io/providers/great-expectations/modules/greatexpectationsoperator).
-5. When deploying with Astronomer, it's important to note that Great Expectations needs to know where to find the Data Context by setting the `data_context_root_dir`, which you can then access in the DAG. We recommend adding this variable to your Dockerfile, but you can use [any of the methods described in our docs](https://www.astronomer.io/docs/cloud/stable/deploy/environment-variables/) to set environment variables for your deployment. If you are using the demo repository, then this variable has already been set in the Dockerfile to the location described in step 1.
+2. Create a task using the [`GreatExpectationsOperator`](https://registry.astronomer.io/providers/great-expectations/modules/greatexpectationsoperator).
 
-  ```shell
-  ENV GE_DATA_CONTEXT_ROOT_DIR=/usr/local/airflow/include/great_expectations
-  ```
 
 The `GreatExpectationsOperator` supports multiple ways of invoking validation with Great Expectations:
 
@@ -160,22 +168,34 @@ For more information about possible parameters and examples, see the [README in 
 
 ## Use Case: Great Expectations BigQuery Operator
 
-The [`GreatExpectationsBigQueryOperator`](https://registry.astronomer.io/providers/great-expectations/modules/greatexpectationsbigqueryoperator) allows you to run Great Expectation suites directly on tables in BigQuery or on a subset of data chosen by an SQL query. The test suites are stored in Google Cloud Storage, so the entire process can run in the cloud.
+### Prerequisites
 
-Assuming you already have Airflow running in an Astronomer deployment, follow these steps to run the example DAG:
+#### Astronomer Core Airflow Distribution
+
+The `GreatExpectationsBigQueryOperator` requires the Google Provider Package, which comes with the Astronomer Core Airflow Distribution. To run the Astronomer Core Airflow Distribution:
+- Ensure you have the [Astronomer CLI](https://www.astronomer.io/docs/cloud/stable/develop/cli-quickstart) installed.
+- If you are using the demo repository, simply run `astro dev start`. Otherwise, run `astro dev init` first.  
+
+#### GCP Key
+
+A GCP key associated with a service account that has access to BigQuery and Google Cloud Storage is needed. For more information generating a key, [follow the instructions in this guide](https://cloud.google.com/iam/docs/creating-managing-service-account-keys).
+
+### Using the Operator
+
+The [`GreatExpectationsBigQueryOperator`](https://registry.astronomer.io/providers/great-expectations/modules/greatexpectationsbigqueryoperator) allows you to run Great Expectation suites directly on tables in BigQuery or on a subset of data chosen by an SQL query. The test suites are stored in Google Cloud Storage, so the entire process can run in the cloud.
 
 1. In the Airflow UI, go to **Admin** > **Connections** and add a new connection with `Conn ID` set to `google_cloud_default`.
 2. Set the connection type to `Google Cloud`. This connection type comes with the Astronomer Airflow distribution.
-3. A GCP key associated with a service account that has access to BigQuery and Google Cloud Storage is needed. For more information generating a key, [follow the instructions in this guide](https://cloud.google.com/iam/docs/creating-managing-service-account-keys). The key can either be added as a path via the `Keyfile Path` field, or the JSON contents can be directly copied and pasted into the `Keyfile JSON` field. In the case of the `Keyfile Path`, a relative path is allowed, and if using Astronomer, the recommended path is under the `include/` directory, as Docker will mount all files and directories under it. Make sure the file name is included in the path.
+3. The GCP key can either be added as a path via the `Keyfile Path` field, or the JSON contents can be directly copied and pasted into the `Keyfile JSON` field. In the case of the `Keyfile Path`, a relative path is allowed, and if using Astronomer, the recommended path is under the `include/` directory, as Docker will mount all files and directories under it. Make sure the file name is included in the path.
 4. Add the project ID to the `Project ID` field.
-5. Scopes should be left blank, and filling the field in can result in token errors with Google Auth.
-6. Add an environment variable to the project Dockerfile or `.env` file that points to your GCP key with permissions to read and write from Google Cloud Storage and BigQuery. The entry in the Dockerfile will look like:
 
-  `ENV GOOGLE_APPLICATION_CREDENTIALS=/usr/local/airflow/include/keys/your-google-cloud-key.json`
-
-The connection should look like this:
+  The connection should look like this:
 
 ![GCP Connection](https://assets2.astronomer.io/main/guides/great-expectations/gcp_connection.png)
+
+5. Add an environment variable to the project Dockerfile or `.env` file that points to your GCP key with permissions to read and write from Google Cloud Storage and BigQuery. The entry in the Dockerfile will look like:
+
+  `ENV GOOGLE_APPLICATION_CREDENTIALS=/usr/local/airflow/include/keys/your-google-cloud-key.json`
 
 > Note: For more on configuring environment variables for any credentials required for external data connections, see the [Great Expectations documentation](https://docs.greatexpectations.io/en/latest/guides/how_to_guides/configuring_data_contexts/how_to_use_a_yaml_file_or_environment_variables_to_populate_credentials.html?highlight=environment%20variables), which provides an explanation on using environment variables for Datasource credentials in your `great_expectations.yml` configuration.
 
@@ -307,4 +327,4 @@ with DAG("great_expectations_bigquery_example",
           upload_expectations_suite, ge_bigquery_validation, delete_dataset, end)
 ```
 
-The above example DAG shows how Airflow can be used to orchestrate in-depth data quality checks with Great Expectations as part of a full ELT pipeline. A next step is to configure the Great Expectations suite for your own use case, and let Airflow ensure your data quality checks run smoothly on any schedule.
+The above example DAG shows how Airflow can be used to orchestrate in-depth data quality checks with Great Expectations as part of a full ELT pipeline. When we run this DAG, we see how data can be loaded and checked with BigQuery and Great Expectations in a single pipeline. A next step is to configure the Great Expectations suite for your own use case, and let Airflow ensure your data quality checks run smoothly on any schedule.
