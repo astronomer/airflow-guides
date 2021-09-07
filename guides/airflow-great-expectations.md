@@ -181,7 +181,7 @@ The `GreatExpectationsBigQueryOperator` requires the Google Provider Package, wh
 
 A GCP key associated with a service account that has access to BigQuery and Google Cloud Storage is needed. For more information generating a key, [follow the instructions in this guide](https://cloud.google.com/iam/docs/creating-managing-service-account-keys).
 
-### Using the GreatExepctationsBigQueryOperator
+### Using the GreatExpectationsBigQueryOperator
 
 The [`GreatExpectationsBigQueryOperator`](https://registry.astronomer.io/providers/great-expectations/modules/greatexpectationsbigqueryoperator) allows you to run Great Expectation suites directly on tables in BigQuery or on a subset of data chosen by an SQL query. The test suites are stored in Google Cloud Storage, so the entire process can run in the cloud.
 
