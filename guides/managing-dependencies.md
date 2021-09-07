@@ -6,16 +6,22 @@ slug: "managing-dependencies"
 heroImagePath: "https://assets.astronomer.io/website/img/guides/dependencies.png"
 tags: ["Best Practices", "Dependencies", "Basics"]
 ---
-<!-- markdownlint-disable-file -->
-## Managing Dependencies
 
-_The logic between tasks_
+## Overview
 
-Each DAG object contains a set of tasks that are related by dependencies - the "directed" in directed acyclic graph.
+Dependencies are one of Airflow's most powerful and popular features - they define the [relationships between tasks](https://airflow.apache.org/docs/apache-airflow/stable/concepts/tasks.html#relationships). In Airflow, your pipeline is a directed, acyclic graph (DAG) where your tasks are the nodes in that graph and dependencies are the edges. Dependencies allow you to define flexible pipelines in Airflow that follow data engineering best practices by keeping your tasks atomic. 
 
-Dependencies are one of Airflow's most powerful and popular features - they allow for previously long, brittle jobs to be broken down into granular parts that are safer, more modular, and reusable.
+In this guide we'll cover the many ways you can implement dependencies in Airflow, including:
 
-### Simple Dependencies
+- Basic task dependencies
+- Dynamically setting dependencies
+- Dependencies with Task Groups
+- Dependencies with the TaskFlow API
+- Trigger rules
+
+Note that this guide focuses on within-DAG dependencies (i.e. dependencies between tasks in the same DAG). If you are looking to implement dependencies _between DAGs_, check out our guide on [cross-DAG dependencies](https://www.astronomer.io/guides/cross-dag-dependencies).
+
+## Basic Dependencies
 
 Dependencies can be set syntactically or through bitshift operators.
 
@@ -44,7 +50,7 @@ All three are in line with best practice as long as it is written consistently -
 - `d1.set_downstream(d2)`<br> `d2 >>d3` <br> `d4.set_upstream(d3)`<br>
 
 
-### Dynamically Setting Dependencies
+## Dynamically Setting Dependencies
 
 For a large number of tasks, dependencies can be set in loops:
 
@@ -67,11 +73,12 @@ with dag:
             d1 >> d2 >> final_task
 ```
 
-_What happens here?_
 
-### Trigger Rules
+## Dependencies with Task Groups
 
-_Complex Dependencies_
+## Dependencies with the TaskFlow API
+
+## Trigger Rules
 
 By default, workflows are triggered when upstream tasks have succeeded. However, more complex trigger rules can be implemented.
 
