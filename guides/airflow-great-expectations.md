@@ -63,7 +63,7 @@ The `GreatExpectationsOperator` provides a convenient method for loading an exis
 
    If you are using the demo repository, then this variable has already been set in the Dockerfile to this location.
 
-### Using the Operator
+### Using the GreatExpectationsOperator
 
 1. Import the operator in your DAG file.
 
@@ -173,6 +173,7 @@ For more information about possible parameters and examples, see the [README in 
 #### Astronomer Core Airflow Distribution
 
 The `GreatExpectationsBigQueryOperator` requires the Google Provider Package, which comes with the Astronomer Core Airflow Distribution. To run the Astronomer Core Airflow Distribution:
+
 - Ensure you have the [Astronomer CLI](https://www.astronomer.io/docs/cloud/stable/develop/cli-quickstart) installed.
 - If you are using the demo repository, simply run `astro dev start`. Otherwise, run `astro dev init` first.  
 
@@ -180,7 +181,7 @@ The `GreatExpectationsBigQueryOperator` requires the Google Provider Package, wh
 
 A GCP key associated with a service account that has access to BigQuery and Google Cloud Storage is needed. For more information generating a key, [follow the instructions in this guide](https://cloud.google.com/iam/docs/creating-managing-service-account-keys).
 
-### Using the Operator
+### Using the GreatExepctationsBigQueryOperator
 
 The [`GreatExpectationsBigQueryOperator`](https://registry.astronomer.io/providers/great-expectations/modules/greatexpectationsbigqueryoperator) allows you to run Great Expectation suites directly on tables in BigQuery or on a subset of data chosen by an SQL query. The test suites are stored in Google Cloud Storage, so the entire process can run in the cloud.
 
@@ -188,11 +189,8 @@ The [`GreatExpectationsBigQueryOperator`](https://registry.astronomer.io/provide
 2. Set the connection type to `Google Cloud`. This connection type comes with the Astronomer Airflow distribution.
 3. The GCP key can either be added as a path via the `Keyfile Path` field, or the JSON contents can be directly copied and pasted into the `Keyfile JSON` field. In the case of the `Keyfile Path`, a relative path is allowed, and if using Astronomer, the recommended path is under the `include/` directory, as Docker will mount all files and directories under it. Make sure the file name is included in the path.
 4. Add the project ID to the `Project ID` field.
-
   The connection should look like this:
-
 ![GCP Connection](https://assets2.astronomer.io/main/guides/great-expectations/gcp_connection.png)
-
 5. Add an environment variable to the project Dockerfile or `.env` file that points to your GCP key with permissions to read and write from Google Cloud Storage and BigQuery. The entry in the Dockerfile will look like:
 
   `ENV GOOGLE_APPLICATION_CREDENTIALS=/usr/local/airflow/include/keys/your-google-cloud-key.json`
