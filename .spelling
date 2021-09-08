@@ -1653,3 +1653,14 @@ SageMakerBaseOperator
 XGBoost
  - guides/airflow-pools.md
 subcommand
+ - guides/templating.md
+ds
+ds_nodash
+metastore
+NativeEnvironment
+next_ds
+pre-injected
+template_fields
+templateable
+Templateable
+useable
