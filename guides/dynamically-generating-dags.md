@@ -364,3 +364,6 @@ Dynamically generating DAGs can cause performance issues when used at scale. Whe
 - To help with potential performance issues, you can increase the `min_file_processing_interval` to a much higher value. Consider this option if you know that your DAGs are not changing frequently and if you can tolerate some delay in the dynamic DAGs changing in response to the external source that generates them.
 
 Upgrading to Airflow 2.0 to make use of the [HA Scheduler](https://www.astronomer.io/blog/airflow-2-scheduler) should help with these performance issues. But it can still take some additional optimization work depending on the scale you're working at. There is no single right way to implement or scale dynamically generated DAGs, but the flexibility of Airflow means there are many ways to arrive at a solution that works for a particular use case.
+
+
+<iframe src="https://fast.wistia.net/embed/iframe/1fkd7hcqfu" title="dynamic_dags_part_1 Video" allow="autoplay; fullscreen" allowtransparency="true" frameborder="0" scrolling="no" class="wistia_embed" name="wistia_embed" allowfullscreen msallowfullscreen width="100%" height="450"></iframe>
