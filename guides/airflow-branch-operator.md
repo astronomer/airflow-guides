@@ -139,3 +139,4 @@ For more guidance and best practices on common use cases like the ones above, tr
 [Academy Course on Branching](https://academy.astronomer.io/branching-course) for free today.
 
 See you there! ❤️ 
+
