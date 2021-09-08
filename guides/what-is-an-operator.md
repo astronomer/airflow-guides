@@ -28,7 +28,7 @@ t1 = BashOperator(
 
 This [BashOperator](https://registry.astronomer.io/providers/apache-airflow/modules/bashoperator) simply runs a bash command and echos `"Hello World"`
 
-[BashOperator Code](https://github.com/apache/airflow/blob/master/airflow/operators/bash_operator.py)
+[BashOperator Code](https://github.com/apache/airflow/blob/main/airflow/operators/bash.py)
 
 ### Python Operator
 
@@ -46,7 +46,7 @@ t2 = PythonOperator(
 
 The [PythonOperator](https://registry.astronomer.io/providers/apache-airflow/modules/pythonoperator) will call a python function defined earlier in our code. You can pass parameters to the function via the `op_kwargs` parameter. This task will print "Hello from Airflow" when it runs.
 
-[PythonOperator Code](https://github.com/apache/airflow/blob/master/airflow/operators/python_operator.py)
+[PythonOperator Code](https://github.com/apache/airflow/blob/main/airflow/operators/python.py)
 
 ### Postgres Operator
 
@@ -61,7 +61,7 @@ t3 = PostgresOperator(
 
 This operator will issue a sql statement against a postgres database. Credentials for the database are stored in an airflow connection called `my_postgres_connection`. If you look at the code for the [PostgresOperator](https://registry.astronomer.io/providers/postgres/modules/postgresoperator), it uses a [PostgresHook](https://registry.astronomer.io/providers/postgres/modules/postgreshook) to actually interact with the database.
 
-[PostgresOperator](https://github.com/apache/airflow/blob/master/airflow/operators/postgres_operator.py)
+[PostgresOperator](https://github.com/apache/airflow/blob/main/airflow/providers/postgres/operators/postgres.py)
 
 ### SSH Operator
 
@@ -77,7 +77,7 @@ Like the `BashOperator`, the [SSHOperator](https://registry.astronomer.io/provid
 
 The private key to authenticate to the remote server is stored in Airflow Connections as `my_ssh_conenction`. This key can be referred to in all DAGs, so the operator itself only needs the command you want to run. This operator uses an [SSHHook](https://registry.astronomer.io/providers/ssh/modules/sshhook) to establish the ssh connection and run the command.
 
-[SSHOperator Code](https://github.com/apache/airflow/blob/master/airflow/contrib/operators/ssh_operator.py)
+[SSHOperator Code](https://github.com/apache/airflow/blob/main/airflow/providers/ssh/operators/ssh.py)
 
 ### S3 To Redshift Operator
 
@@ -99,4 +99,4 @@ This also uses another concept - [macros and templates](https://www.astronomer.i
 
  Templates can be used to determine runtime parameters (e.g. the range of data for an API call) and also make your code idempotent (each intermediary file is named for the data range it contains).
 
-[S3ToRedshiftOperator Code](https://github.com/apache/airflow/blob/master/airflow/providers/amazon/aws/transfers/s3_to_redshift.py)
+[S3ToRedshiftOperator Code](https://github.com/apache/airflow/blob/main/airflow/providers/amazon/aws/transfers/s3_to_redshift.py)

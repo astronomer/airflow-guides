@@ -52,7 +52,7 @@ As long as the Docker Image contains all the necessary logic to execute a job, t
 
 
 #### PythonVirtualEnvOperator
-A solution that involves fewer moving parts - the [PythonVirtualEnvOperator](https://github.com/apache/incubator-airflow/blob/master/airflow/operators/python_operator.py) allows to run an arbitrary python function (with some caveats).
+A solution that involves fewer moving parts - the [PythonVirtualEnvOperator](https://github.com/apache/airflow/blob/main/airflow/operators/python.py) allows to run an arbitrary python function (with some caveats).
 
 Define a python callable:
 ```python
