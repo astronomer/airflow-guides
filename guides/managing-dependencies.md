@@ -32,7 +32,7 @@ Basic dependencies between Airflow tasks can be set in two ways:
 
 For example, if we have a DAG with four sequential tasks like the screenshot below, the dependencies can be set in four ways:
 
-![title](https://assets.astronomer.io/website/img/guides/simple_scheduling.png)
+![Basic Dependencies](https://assets2.astronomer.io/main/guides/managing-dependencies/basic_dependencies.png)
 
 - `t0.set_downstream(t1)`<br> `t1.set_downstream(t2)` <br> `t2.set_downstream(t3)`<br> <br>
 - `t3.set_upstream(t2)` <br> `t2.set_upstream(t1)` <br> `t1.set_upstream(t0)`<br> <br>
@@ -48,7 +48,7 @@ You can also use lists or tuples to set parallel dependencies. For example:
 
 Both of these are equivalent, and set `t2` and `t3` downstream of t1. 
 
-![title](https://assets.astronomer.io/website/img/guides/simple_scheduling.png)
+![List Dependencies](https://assets2.astronomer.io/main/guides/managing-dependencies/list_dependencies.png)
 
 Note that you cannot set dependencies between lists (e.g. `[t0, t1] >> [t2, t3]` will throw an error). If you need to set parallel cross-dependencies in this manner, you can use Airflow's [`chain` function](https://github.com/apache/airflow/blob/main/airflow/models/baseoperator.py#L1650). To use the `chain` function, you can do something like this:
 
@@ -73,6 +73,7 @@ with DAG('dependencies',
 
 Which results in the following DAG:
 
+![Chain Dependencies](https://assets2.astronomer.io/main/guides/managing-dependencies/chain.png)
 
 Note that with the `chain` function any lists or tuples included must be the same length.
 
@@ -107,6 +108,8 @@ with DAG('covid_data_to_s3') as dag:
 
 The resulting DAG looks like this:
 
+![Dynamic Dependencies](https://assets2.astronomer.io/main/guides/managing-dependencies/dynamic_tasks.png)
+
 
 ## Dependencies with Task Groups
 
@@ -133,7 +136,7 @@ t0 >> tg1 >> t3
 
 This code results in a DAG that looks like this:
 
-
+![Task Group Dependencies](https://assets2.astronomer.io/main/guides/managing-dependencies/task_group.png)
 
 For more examples of setting dependencies within different types of task groups, check out the guide linked above.
 
@@ -184,6 +187,7 @@ dag = taskflow()
 
 The resulting DAG looks like this:
 
+![TaskFlow Dependencies](https://assets2.astronomer.io/main/guides/managing-dependencies/taskflow.png)
 
 If your DAG has a mix of Python function tasks defined with decorators and tasks defined with traditional operators, you can set the dependencies by assigning the decorated task invocation to a variable and then defining the dependencies as you would normally. For example, in the DAG below the `upload_data_to_s3` task is defined by the `@task` decorator and invoked with `upload_data = upload_data_to_s3(s3_bucket, test_s3_key)`. That `upload_data` variable is then used in the last line to define dependencies.
 
@@ -283,3 +287,4 @@ with DAG(dag_id='branch',
         branching >> d >> end
 ```
 
+![Branch Dependencies](https://assets2.astronomer.io/main/guides/managing-dependencies/branch.png)
