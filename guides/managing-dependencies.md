@@ -30,27 +30,57 @@ Basic dependencies between Airflow tasks can be set in two ways:
 - Using bitshift operators `<<` and `>>`
 - Using the `set_upstream` and `set_downstream` methods
 
-For example, if we have a DAG with four sequential tasks like the screenshot below, the dependencies can be set in four ways:
+For example, if we have a DAG with four sequential tasks, the dependencies can be set in four ways:
+
+- Using `set_downstream()`
+
+    ```python
+    t0.set_downstream(t1)
+    t1.set_downstream(t2)
+    t2.set_downstream(t3)
+    ```
+
+- Using `set_upstream()`
+
+    ```python
+    t3.set_upstream(t2)
+    t2.set_upstream(t1)
+    t1.set_upstream(t0)
+    ```
+
+- Using `>>`
+
+    ```python
+    t0 >> t1 >> t2 >> t3
+    ```
+
+- Using `<<`
+
+    ```python
+    t3 << t2 << t1 << t0
+    ```
+
+All of these methods are equivalent, and result in the following DAG. 
 
 ![Basic Dependencies](https://assets2.astronomer.io/main/guides/managing-dependencies/basic_dependencies.png)
 
-- `t0.set_downstream(t1)`<br> `t1.set_downstream(t2)` <br> `t2.set_downstream(t3)`<br> <br>
-- `t3.set_upstream(t2)` <br> `t2.set_upstream(t1)` <br> `t1.set_upstream(t0)`<br> <br>
-- `t0 >> t1 >> t2 >> t3` <br> <br>
-- `t3 << t2 << t1 << t0`
-
-All of these methods are equivalent, and which you choose is a matter of personal preference. Best practice is to use one method consistently (i.e. don't mix bitshift operators and `set_upstream`/`set_downstream`).
+Which method you choose is a matter of personal preference. Best practice is to use one method consistently (i.e. don't mix bitshift operators and `set_upstream`/`set_downstream`).
 
 You can also use lists or tuples to set parallel dependencies. For example: 
 
-- `t0 >> t1 >> (t2, t3)`
-- `t0 >> t1 >> [t2, t3]`
+- ```python
+    t0 >> t1 >> (t2, t3)
+    ```
 
-Both of these are equivalent, and set `t2` and `t3` downstream of t1. 
+- ```python
+    t0 >> t1 >> [t2, t3]
+    ```
+
+Both of these are equivalent, and set `t2` and `t3` downstream of `t1`. 
 
 ![List Dependencies](https://assets2.astronomer.io/main/guides/managing-dependencies/list_dependencies.png)
 
-Note that you cannot set dependencies between lists (e.g. `[t0, t1] >> [t2, t3]` will throw an error). If you need to set parallel cross-dependencies in this manner, you can use Airflow's [`chain` function](https://github.com/apache/airflow/blob/main/airflow/models/baseoperator.py#L1650). To use the `chain` function, you can do something like this:
+Note that you cannot set dependencies between two lists (e.g. `[t0, t1] >> [t2, t3]` will throw an error). If you need to set parallel cross-dependencies in this manner, you can use Airflow's [`chain` function](https://github.com/apache/airflow/blob/main/airflow/models/baseoperator.py#L1650). To use the `chain` function, you can do something like this:
 
 ```python
 from airflow import DAG
@@ -113,9 +143,9 @@ The resulting DAG looks like this:
 
 ## Dependencies with Task Groups
 
-[Task groups](https://airflow.apache.org/docs/apache-airflow/stable/concepts/dags.html#taskgroups) are a UI grouping concept released with Airflow 2 that can visually group tasks in the Airflow UI. For more on task groups in general, including how to create them and when to use them, check out our [task groups guide](https://www.astronomer.io/guides/task-groups).
+[Task groups](https://airflow.apache.org/docs/apache-airflow/stable/concepts/dags.html#taskgroups) are a UI grouping concept available in Airflow 2+ that can visually group tasks in the Airflow UI. For more on task groups in general, including how to create them and when to use them, check out our [task groups guide](https://www.astronomer.io/guides/task-groups).
 
-When working with dependencies within task groups, it is important to note that dependencies can be set both inside and outside the group. For example, in the DAG code below we have a start task, a task group with two dependent tasks, and an end task that need to happen sequentially. The dependencies between the two tasks in the task group are set within the task group's context (`t1 >> t2`). The dependencies between the task group and the start/end tasks are set within the DAG's context (`t0 >> tg1 >> t3`).
+When working with task groups, it is important to note that dependencies can be set both inside and outside the group. For example, in the DAG code below we have a start task, a task group with two dependent tasks, and an end task that need to happen sequentially. The dependencies between the two tasks in the task group are set within the task group's context (`t1 >> t2`). The dependencies between the task group and the start/end tasks are set within the DAG's context (`t0 >> tg1 >> t3`).
 
 ```python
 t0 = DummyOperator(task_id='start')
