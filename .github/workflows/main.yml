@@ -32,7 +32,7 @@ jobs:
       - uses: actions/checkout@v1
       - uses: actions/setup-node@main
       - name: markdown-link-check
-        uses: gaurav-nelson/github-action-markdown-link-check@1.0.8
+        uses: gaurav-nelson/github-action-markdown-link-check@1.0.13
         with:
           config-file: './mlc_config.json'
           check-modified-files-only: 'yes'
