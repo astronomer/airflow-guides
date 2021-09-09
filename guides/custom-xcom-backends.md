@@ -16,7 +16,7 @@ One of the features of the TaskFlow API that increases the flexibility of XComs 
 
 This guide discusses the benefits of using an XCom backend, shows an example of implementing an XCom backend with S3, and describes how to set this up if you're running Airflow on the Astronomer platform.
 
-If you're new to working with XComs or the TaskFlow API and want some background before diving into custom XCom Backends, check out the [Airflow documentation on XComs](https://airflow.apache.org/docs/apache-airflow/stable/concepts.html?highlight=xcom#xcoms) and our [webinar on using the TaskFlow API](https://www.astronomer.io/blog/taskflow-api-in-airflow-2-0).
+If you're new to working with XComs or the TaskFlow API and want some background before diving into custom XCom Backends, check out the [Airflow documentation on XComs](https://airflow.apache.org/docs/apache-airflow/stable/concepts.html?highlight=xcom#xcoms) and our [webinar on using the TaskFlow API](https://www.astronomer.io/events/webinars/taskflow-api-airflow-2.0/).
 
 ## When to Use Custom XCom Backends
 
