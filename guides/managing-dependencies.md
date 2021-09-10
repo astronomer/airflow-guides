@@ -27,12 +27,12 @@ Note that this guide focuses on within-DAG dependencies (i.e. dependencies betwe
 
 Basic dependencies between Airflow tasks can be set in two ways:
 
-- Using bitshift operators `<<` and `>>`
+- Using bitshift operators (`<<` and `>>`)
 - Using the `set_upstream` and `set_downstream` methods
 
 For example, if we have a DAG with four sequential tasks, the dependencies can be set in four ways:
 
-- Using `set_downstream()`
+- Using `set_downstream()`:
 
     ```python
     t0.set_downstream(t1)
@@ -40,7 +40,7 @@ For example, if we have a DAG with four sequential tasks, the dependencies can b
     t2.set_downstream(t3)
     ```
 
-- Using `set_upstream()`
+- Using `set_upstream()`:
 
     ```python
     t3.set_upstream(t2)
@@ -60,13 +60,13 @@ For example, if we have a DAG with four sequential tasks, the dependencies can b
     t3 << t2 << t1 << t0
     ```
 
-All of these methods are equivalent, and result in the following DAG. 
+All of these methods are equivalent, resulting in the following DAG:
 
 ![Basic Dependencies](https://assets2.astronomer.io/main/guides/managing-dependencies/basic_dependencies.png)
 
-Which method you choose is a matter of personal preference. Best practice is to use one method consistently (i.e. don't mix bitshift operators and `set_upstream`/`set_downstream`).
+Which method you choose is a matter of personal preference, but we recommend using a single method consistently. For example, using both bitshift operators and `set_upstream`/`set_downstream` in your DAGs can overly-complicate your code. 
 
-You can also use lists or tuples to set parallel dependencies. For example: 
+What if we want to set a parallel dependency where two downstream tasks are dependent on the same upstream task? For this use case, we can use lists or tuples:
 
 - ```python
     t0 >> t1 >> (t2, t3)
@@ -76,11 +76,11 @@ You can also use lists or tuples to set parallel dependencies. For example:
     t0 >> t1 >> [t2, t3]
     ```
 
-Both of these are equivalent, and set `t2` and `t3` downstream of `t1`. 
+These statements are equivalent and result in the following DAG: 
 
 ![List Dependencies](https://assets2.astronomer.io/main/guides/managing-dependencies/list_dependencies.png)
 
-Note that you cannot set dependencies between two lists (e.g. `[t0, t1] >> [t2, t3]` will throw an error). If you need to set parallel cross-dependencies in this manner, you can use Airflow's [`chain` function](https://github.com/apache/airflow/blob/main/airflow/models/baseoperator.py#L1650). To use the `chain` function, you can do something like this:
+What if we want to set multiple parallel cross-dependencies? Unfortunately, Airflow can't parse dependencies between two lists (e.g. `[t0, t1] >> [t2, t3]` throws an error). If you need to set dependencies in this manner, you can use Airflow's [`chain` function](https://github.com/apache/airflow/blob/main/airflow/models/baseoperator.py#L1650):
 
 ```python
 from airflow import DAG
@@ -101,17 +101,17 @@ with DAG('dependencies',
     chain(t0, t1, [t2, t3], [t4, t5], t6)
 ```
 
-Which results in the following DAG:
+This code results in the following DAG:
 
 ![Chain Dependencies](https://assets2.astronomer.io/main/guides/managing-dependencies/chain.png)
 
-Note that with the `chain` function any lists or tuples included must be the same length.
+Note that with the `chain` function, any lists or tuples included must be of the same length.
 
 ## Dynamic Dependencies
 
 If you generate tasks dynamically in your DAG, you should also set dependencies dynamically to ensure they reflect any changes in the tasks. This is easy to accomplish: simply define the dependencies within the context of the code used to dynamically create the tasks.
 
-For example, below we generate a set of parallel dynamic tasks by looping through a list of endpoints. We define the dependencies within the loop, which means every `generate_file` task will be downstream of `start` and upstream of `send_email`.
+For example, below we generate a set of parallel dynamic tasks by looping through a list of endpoints. We define the dependencies within the loop, which means every `generate_file` task is downstream of `start` and upstream of `send_email`.
 
 
 ```python
@@ -143,9 +143,9 @@ The resulting DAG looks like this:
 
 ## Dependencies with Task Groups
 
-[Task groups](https://airflow.apache.org/docs/apache-airflow/stable/concepts/dags.html#taskgroups) are a UI grouping concept available in Airflow 2+ that can visually group tasks in the Airflow UI. For more on task groups in general, including how to create them and when to use them, check out our [task groups guide](https://www.astronomer.io/guides/task-groups).
+[Task groups](https://airflow.apache.org/docs/apache-airflow/stable/concepts/dags.html#taskgroups) are a UI-based grouping concept available in Airflow 2.0+. For more information on task groups in general, including how to create them and when to use them, check out our [task groups guide](https://www.astronomer.io/guides/task-groups).
 
-When working with task groups, it is important to note that dependencies can be set both inside and outside the group. For example, in the DAG code below we have a start task, a task group with two dependent tasks, and an end task that need to happen sequentially. The dependencies between the two tasks in the task group are set within the task group's context (`t1 >> t2`). The dependencies between the task group and the start/end tasks are set within the DAG's context (`t0 >> tg1 >> t3`).
+When working with task groups, it is important to note that dependencies can be set both inside and outside of the group. For example, in the DAG code below we have a start task, a task group with two dependent tasks, and an end task that need to happen sequentially. The dependencies between the two tasks in the task group are set within the task group's context (`t1 >> t2`). The dependencies between the task group and the start/end tasks are set within the DAG's context (`t0 >> tg1 >> t3`).
 
 ```python
 t0 = DummyOperator(task_id='start')
@@ -164,7 +164,7 @@ t3 = DummyOperator(task_id='end')
 t0 >> tg1 >> t3
 ```
 
-This code results in a DAG that looks like this:
+This code results in the following DAG:
 
 ![Task Group Dependencies](https://assets2.astronomer.io/main/guides/managing-dependencies/task_group.png)
 
@@ -172,9 +172,9 @@ For more examples of setting dependencies within different types of task groups,
 
 ## Dependencies with the TaskFlow API
 
-The [TaskFlow API](https://airflow.apache.org/docs/apache-airflow/stable/concepts/taskflow.html), available in Airflow 2+, provides an easy way to turn Python functions into Airflow tasks using the `@task` decorator. 
+The [TaskFlow API](https://airflow.apache.org/docs/apache-airflow/stable/concepts/taskflow.html), available in Airflow 2.0+, provides an easy way to turn Python functions into Airflow tasks using the `@task` decorator. 
 
-If your DAG has only Python functions that are all defined with the decorator, setting dependencies is as easy as invoking the Python functions. For example, in the DAG below we have two dependent tasks, `get_testing_increases` and `analyze_testing_increases`. To set the dependencies, we invoke the functions: `analyze_testing_increases(get_testing_increase(state))`. 
+If your DAG has only Python functions that are all defined with the decorator, setting dependencies is as easy as invoking the Python functions. For example, in the DAG below we have two dependent tasks, `get_testing_increases` and `analyze_testing_increases`. To set the dependencies, we invoke the function `analyze_testing_increases(get_testing_increase(state))`:
 
 ```python
 from airflow.decorators import dag, task
@@ -261,16 +261,16 @@ with DAG('sagemaker_model',
 
 ## Trigger Rules
 
-In Airflow, when you set dependencies between tasks the default behavior is for a task to be run only when all upstream tasks have succeeded. However, you have many other options for when a task gets run that you can control using [trigger rules](https://airflow.apache.org/docs/apache-airflow/stable/concepts/dags.html#concepts-trigger-rules).
+When you set dependencies between tasks, Airflow's default behavior is to run a task only when all upstream tasks have succeeded. However, you can change this default behavior using [trigger rules](https://airflow.apache.org/docs/apache-airflow/stable/concepts/dags.html#concepts-trigger-rules).
 
 The options available are:
 
-- **all_success:** (default) all upstream tasks have succeeded
-- **all_failed:** all upstream tasks are in a failed or upstream\_failed state
-- **all_done:** all upstream tasks are done with their execution
-- **one_failed:** runs as soon as at least one upstream task has failed, it does not wait for all upstream tasks to be completed
-- **one_success:** runs as soon as at least one upstream task has succeeded, it does not wait for all upstream tasks to be completed
-- **dummy:** dependencies are just for show, trigger at will
+- **all_success:** (default) The task runs only when all upstream tasks have succeeded.
+- **all_failed:** The task runs only when all upstream tasks are in a failed or upstream\_failed state.
+- **all_done:** The task runs once all upstream tasks are done with their execution.
+- **one_failed:** The task runs as soon as at least one upstream task has failed. 
+- **one_success:** The task runs as soon as at least one upstream task has succeeded.
+- **dummy:** Dependencies are just for show, trigger at will.
 
 ### Branching and Trigger Rules
 
@@ -316,5 +316,7 @@ with DAG(dag_id='branch',
         d = DummyOperator(task_id='branch_{0}'.format(i))
         branching >> d >> end
 ```
+
+This code results in the following DAG:
 
 ![Branch Dependencies](https://assets2.astronomer.io/main/guides/managing-dependencies/branch.png)
