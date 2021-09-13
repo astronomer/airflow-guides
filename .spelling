@@ -1636,14 +1636,6 @@ parsing_processes
 deserialization
 returned_value
 dbt
-dbt's
-airflow-dbt
-dbt_advanced.py
-dbt_tag
-Pre-existing
-productionize
-jaffleshop
-serializable
 versioning
 deserializing
 AwsLambdaHook
@@ -1671,3 +1663,13 @@ template_fields
 templateable
 Templateable
 useable
+  - guides/airflow-dbt.md
+dbt
+dbt's
+airflow-dbt
+dbt_advanced.py
+dbt_tag
+Pre-existing
+productionize
+jaffleshop
+serializable
