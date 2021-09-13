@@ -9,7 +9,7 @@ tags: ["Best Practices", "Dependencies", "Basics"]
 
 ## Overview
 
-[Dependencies]((https://airflow.apache.org/docs/apache-airflow/stable/concepts/tasks.html#relationships)) are one of Airflow's most powerful and popular features. Remember that in Airflow your pipelines are defined as Directed, Acyclic Graphs (DAGs). Each task is a node in that graph, and dependencies make up the edges that determine the conditions that must be met before tasks get run. Dependencies allow you to define flexible pipelines in Airflow that follow data engineering best practices by keeping your tasks atomic.
+[Dependencies]((https://airflow.apache.org/docs/apache-airflow/stable/concepts/tasks.html#relationships)) are one of Airflow's most powerful and popular features. In Airflow, your pipelines are defined as Directed, Acyclic Graphs (DAGs). If each task is a node in that graph, then dependencies are the directed edges that determine how you can move through the graph. Because of this, dependencies are key to following data engineering best practices because they help you define flexible pipelines with atomic tasks.
 
 Throughout this guide, we'll use the following terms to describe task dependencies:
 
@@ -173,7 +173,6 @@ This code results in the following DAG:
 
 ![Task Group Dependencies](https://assets2.astronomer.io/main/guides/managing-dependencies/task_group.png)
 
-For more examples of setting dependencies within different types of task groups, check out the guide linked above.
 
 ## Dependencies with the TaskFlow API
 
@@ -279,7 +278,7 @@ The options available are:
 
 ### Branching and Trigger Rules
 
-One common scenario where you might need to implement trigger rules is if your DAG contains conditional logic like branching. In these cases `one_success` might be a more appropriate rule for tasks directly downstream of branches than the default `all_success`.
+One common scenario where you might need to implement trigger rules is if your DAG contains conditional logic like branching. In these cases, `one_success` might be a more appropriate rule than `all_success`.
 
 For example, in the following DAG we have a simple branch with a downstream task that needs to run if either of the branches are followed. With the `all_success` rule, the `end` task would never run because all but one of the `branch` tasks will always be skipped and therefore will not have a state of 'success'. If we change the trigger rule to `one_success`, then the `end` task can run so long as one of the branches successfully completes.
 
