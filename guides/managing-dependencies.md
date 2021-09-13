@@ -9,7 +9,12 @@ tags: ["Best Practices", "Dependencies", "Basics"]
 
 ## Overview
 
-Dependencies are one of Airflow's most powerful and popular features - they define the [relationships between tasks](https://airflow.apache.org/docs/apache-airflow/stable/concepts/tasks.html#relationships).  Dependencies allow you to define flexible pipelines in Airflow that follow data engineering best practices by keeping your tasks atomic. 
+[Dependencies]((https://airflow.apache.org/docs/apache-airflow/stable/concepts/tasks.html#relationships)) are one of Airflow's most powerful and popular features. Remember that in Airflow your pipelines are defined as Directed, Acyclic Graphs (DAGs). Each task is a node in that graph, and dependencies make up the edges that determine the conditions that must be met before tasks get run. Dependencies allow you to define flexible pipelines in Airflow that follow data engineering best practices by keeping your tasks atomic.
+
+Throughout this guide, we'll use the following terms to describe task dependencies:
+
+- Upstream task: A task that must reach a specified state before a dependent task can run
+- Downstream task: A dependent task that cannot run until an upstream task reaches a specified state
 
 In this guide we'll cover the many ways you can implement dependencies in Airflow, including:
 
