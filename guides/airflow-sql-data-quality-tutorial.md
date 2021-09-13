@@ -99,7 +99,7 @@ The `SQLIntervalCheckOperator` is a little more complex than the previous operat
 
 This operator works great for use cases where you know certain metrics should be close in value, or have close statistics, to the same metrics on previous days, weeks, or other time scales.
 
-The code snippet below shows how to use this operator to check that the average distance of a taxi ride today is within 1.5x the average distance of yesterday's rides:
+The code snippet below shows how to use this operator to check that the average distance of a taxi ride today is within 1.5 times the average distance of yesterday's rides:
 
 ```python
 SQLIntervalCheckOperator(
