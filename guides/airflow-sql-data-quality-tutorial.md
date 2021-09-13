@@ -57,6 +57,7 @@ WHERE vendor_id = {{ params.vendor_id }}
 ```
 
 By using `CASE` statements in the SQL query, we can check very specific cases of data quality that we, as the data stewards, know should always be true:
+
 - Drop-offs always occur after pickups
 - A trip is only valid if there is at least one passenger
 - A trip needs to be in a range allowed by the taxi company (in this case, we pretend there is a maximum trip of 100 miles)
