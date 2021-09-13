@@ -73,13 +73,13 @@ Which method you choose is a matter of personal preference, but we recommend usi
 
 What if we want to set a parallel dependency where two downstream tasks are dependent on the same upstream task? For this use case, we can use lists or tuples:
 
-- ```python
-    t0 >> t1 >> (t2, t3)
-    ```
+```python
+# Dependencies with lists
+t0 >> t1 >> [t2, t3]
 
-- ```python
-    t0 >> t1 >> [t2, t3]
-    ```
+# Dependencies with tuples
+t0 >> t1 >> (t2, t3)
+```
 
 These statements are equivalent and result in the following DAG: 
 
