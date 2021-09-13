@@ -367,6 +367,7 @@ Upgrading to Airflow 2.0 to make use of the [HA Scheduler](https://www.astronome
 
 <!-- markdownlint-disable MD033 -->
 ### Dynamic DAGs in Action!
+
 <iframe src="https://fast.wistia.net/embed/iframe/1fkd7hcqfu" title="dynamic_dags_part_1 Video" allow="autoplay; fullscreen" allowtransparency="true" frameborder="0" scrolling="no" class="wistia_embed" name="wistia_embed" allowfullscreen msallowfullscreen width="100%" height="450"></iframe>
 
 That was the easiest and fastest way for creating DAGs.
