@@ -1664,6 +1664,7 @@ template_fields
 templateable
 Templateable
 useable
+  - guides/airflow-sql-data-quality-tutorial.md
 SQLCheckOperator
 SQLValueCheckOperator
 SQLIntervalCheckOperator
