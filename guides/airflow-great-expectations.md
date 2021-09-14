@@ -44,6 +44,8 @@ If you set up a project manually, you will see a `great_expectations` directory 
 
 ## Use Case: Great Expectations Operator
 
+Now that we've set up our system to work with Great Expectations, we can start exploring how to use it in our DAGs. In this first use case, we'll use the `GreatExpectationsOperator` to run an Expectation Suite.
+
 ### Configuration
 
 The `GreatExpectationsOperator` provides a convenient method for loading an existing Expectation Suite and using it to validate a batch of data. You can point the operator to any location by setting the `data_context_root_dir` parameter (more on that to follow). Our [demo repository](https://github.com/astronomer/airflow-data-quality-demo/) uses the following configuration:
@@ -168,18 +170,16 @@ For more information about possible parameters and examples, see the [README in 
 
 ## Use Case: Great Expectations BigQuery Operator
 
-### Prerequisites
+In the second use case, we'll use the `GreatExpectationsBigQueryOperator` to run an Expectation Suite on data that is already loaded into BigQuery.
 
-#### Astronomer Core Airflow Distribution
+### Prerequisites
 
 The `GreatExpectationsBigQueryOperator` requires the Google Provider Package, which comes with the Astronomer Core Airflow Distribution. To run the Astronomer Core Airflow Distribution:
 
 - Ensure you have the [Astronomer CLI](https://www.astronomer.io/docs/cloud/stable/develop/cli-quickstart) installed.
 - If you are using the demo repository, simply run `astro dev start`. Otherwise, run `astro dev init` first.  
 
-#### GCP Key
-
-A GCP key associated with a service account that has access to BigQuery and Google Cloud Storage is needed. For more information generating a key, [follow the instructions in this guide](https://cloud.google.com/iam/docs/creating-managing-service-account-keys).
+Additionally, a GCP key associated with a service account that has access to BigQuery and Google Cloud Storage is needed. For more information generating a key, [follow the instructions in this guide](https://cloud.google.com/iam/docs/creating-managing-service-account-keys).
 
 ### Using the Great Expectations BigQuery Operator
 
