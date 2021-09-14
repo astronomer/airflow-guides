@@ -434,6 +434,7 @@ Once that's complete, we can see our new DAG in the Airflow UI:
 
 ![DAG Factory Graph](https://assets2.astronomer.io/main/guides/sql-tutorial/dag_factory_graph_view.png)
 
+<!-- markdownlint-disable MD033 -->
 <iframe src="https://fast.wistia.net/embed/iframe/4qne4y6pph" title="Airflow SQL Tutorial DAG Factory" allow="autoplay; fullscreen" allowtransparency="true" frameborder="0" scrolling="no" class="wistia_embed" name="wistia_embed" allowfullscreen msallowfullscreen width="100%" height="450"></iframe>
 
 Now you know how to interact with your SQL database and what are the most important best practices, there are still some questions to answer:
