@@ -434,15 +434,17 @@ Once that's complete, we can see our new DAG in the Airflow UI:
 
 ![DAG Factory Graph](https://assets2.astronomer.io/main/guides/sql-tutorial/dag_factory_graph_view.png)
 
+## Additional Resources
+
 <!-- markdownlint-disable MD033 -->
 <iframe src="https://fast.wistia.net/embed/iframe/4qne4y6pph" title="Airflow SQL Tutorial DAG Factory" allow="autoplay; fullscreen" allowtransparency="true" frameborder="0" scrolling="no" class="wistia_embed" name="wistia_embed" allowfullscreen msallowfullscreen width="100%" height="450"></iframe>
 
-Now you know how to interact with your SQL database and what are the most important best practices, there are still some questions to answer:
+In this guide we covered how to interact with your SQL database from Airflow and important best practices when doing so. But there are still some outstanding questions:
 
-- How does it work behind the scene?
-- What if you want to get data with the PostgresOperator?
-- Does it scale?
+- How does it work behind the scenes?
+- What if you want to retrieve data with the PostgresOperator?
+- Is it scalable?
 
-Find out on the Astronomer's ![Academy Course on Airflow SQL](https://academy.astronomer.io/airflow-sql) for free today.
+Find out more on Astronomer's ![Academy Course on Airflow SQL](https://academy.astronomer.io/airflow-sql) for free today.
 
 See you there! ❤️
