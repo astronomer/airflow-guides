@@ -63,8 +63,8 @@ with DAG(
 
 Using the `BashOperator` to run `dbt run` and `dbt test` is a working solution for simple use cases or when you would rather have dbt manage dependencies between models. If you need something quick to develop and deploy that has the full power of dbt behind it, then this is the solution for you. However, running dbt at the project-level has several issues:
 
-  - Low observability into what execution state the project is in.
-  - Failures are absolute and require the whole `dbt` group of models to be run again, which can be costly.
+- Low observability into what execution state the project is in.
+- Failures are absolute and require the whole `dbt` group of models to be run again, which can be costly.
 
 ## Use Case 2: dbt + Airflow at the Model Level
 
@@ -167,18 +167,18 @@ Running our dbt models on a single DAG has some limitations. Specifically, this 
 To add this functionality, we can take a group of models defined by some selector, such as `dbt run --models tag:hourly`, and deploy that set of models as their own Airflow DAG with its own defined schedule. We can then use our `manifest.json` file to set dependencies between these groups of models and build out a robust CI process. To do this, we can:
 
 1. Use the `selectors.yml` file ([introduced in dbt 0.18](https://docs.getdbt.com/reference/node-selection/yaml-selectors/)) to define a set of model selectors for each Airflow DAG schedule we want to create. We can then use dbt's [tagging feature](https://docs.getdbt.com/reference/resource-configs/tags) to tag every model with a desired schedule interval.
+
 2. Use a CI/CD provider to run a Python script that:
+   1. Runs `dbt compile` to create a fresh copy of `manifest.json`
+   2. Reads the model selectors defined in the YAML file
+   3. Uses the `dbt ls` command to list all of the models associated with each model selector in the YAML file
+   4. Turns the dbt DAG from `manifest.json` into a `Graph` object via the `networkx` library
+   5. Uses the methods available on the `Graph` object to figure out the correct set of dependencies for each group of models defined in the YAML file
+   6. Writes the dependencies for each group of models (stored as a list of tuples) as a pickle file to local storage
 
-  1. Runs `dbt compile` to create a fresh copy of `manifest.json`
-  2. Reads the model selectors defined in the YAML file
-  3. Uses the `dbt ls` command to list all of the models associated with each model selector in the YAML file
-  4. Turns the dbt DAG from `manifest.json` into a `Graph` object via the `networkx` library
-  5. Uses the methods available on the `Graph` object to figure out the correct set of dependencies for each group of models defined in the YAML file
-  6. Writes the dependencies for each group of models (stored as a list of tuples) as a pickle file to local storage
+    Here is what that Python script looks like in practice:
 
-  Here is what that Python script looks like in practice:
-
-  ```python
+    ```python
     import yaml
     import os
     import json
@@ -292,12 +292,11 @@ To add this functionality, we can take a group of models defined by some selecto
     # RUN IT
     DBT_DIR = "./dags/dbt"
     run()
-```
+    ```
 
 3. Create an Airflow DAG file for each group of models. Each DAG reads the associated pickle file, creates the required dbt model run/test tasks, and sets dependencies between them as specified in the pickle file. One of those DAGs might look something like this:
 
-    ```python
-
+  ```python
     with DAG(
        f"dbt_dag",
        schedule_interval="@daily",
@@ -314,9 +313,9 @@ To add this functionality, we can take a group of models defined by some selecto
         # Set dependencies between tasks according to config file
         for edge in dag_def:
            dbt_tasks[edge[0]] >> dbt_tasks[edge[1]]
-    ```
+  ```
 
-    > **Note:** The functions in the DAG file above have been split out for simplicity, but the logic can be found in the [dbt_advanced.py DAG](https://github.com/astronomer/airflow-dbt-demo/blob/master/dags/dbt_advanced.py).
+  > **Note:** The functions in the DAG file above have been split out for simplicity, but the logic can be found in the [dbt_advanced.py DAG](https://github.com/astronomer/airflow-dbt-demo/blob/master/dags/dbt_advanced.py).
 
 Putting all of this together, we end up with multiple Airflow DAGs, each running on its own defined schedule, with a specified group of interdependent dbt models running as individual tasks. With this system, running a production dbt model in Airflow is simple: all we need to do is tag a model with the appropriate schedule interval, and it will automatically get picked up and executed by the corresponding Airflow DAG.
 
@@ -368,4 +367,5 @@ With regards to the `dbt test` runs:
 - The `dbt test` task group depends entirely on the `dbt run` group. In this example, the DAG will run all models first, then all tests.
 
 ## Conclusion
+
 To recap, in this guide we have learned about dbt, how to create dbt tasks in Airflow, and how to productionize those tasks to automatically create tasks based on a manifest. For a more detailed discussion on trade-offs, limitations, and adding dbt to a full ELT pipeline, see our blog posts. To see more examples of how to use dbt and Airflow to build pipelines, check out our [dbt DAGs on the Registry](https://registry.astronomer.io/dags/?query=dbt&badges=certified).
