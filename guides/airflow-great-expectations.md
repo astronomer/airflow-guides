@@ -13,7 +13,7 @@ tags: ["DAGs", "Integrations"]
 
 [Great Expectations](https://greatexpectations.io) is an open source Python-based data validation framework. It allows you to test your data by expressing what you “expect” from it as simple declarative statements in Python, then run validation using those “expectations” against datasets. The [Great Expectations team maintains an Airflow provider](https://registry.astronomer.io/providers/great-expectations) that gives users a convenient method for running validation directly from their DAGs.
 
-This guide will walk through how to use the [official `GreatExpectationsOperato`r](https://registry.astronomer.io/providers/great-expectations/modules/greatexpectationsoperator), how to use the [official `GreatExpectationsBigQueryOperator`](https://registry.astronomer.io/providers/great-expectations/modules/greatexpectationsbigqueryoperator), and how to configure an Airflow DAG containing Great Expectations tasks to work with Airflow.
+This guide will walk through how to use the [official `GreatExpectationsOperator`](https://registry.astronomer.io/providers/great-expectations/modules/greatexpectationsoperator), how to use the [official `GreatExpectationsBigQueryOperator`](https://registry.astronomer.io/providers/great-expectations/modules/greatexpectationsbigqueryoperator), and how to configure an Airflow DAG containing Great Expectations tasks to work with Airflow.
 
 ## Great Expectations Concepts
 
