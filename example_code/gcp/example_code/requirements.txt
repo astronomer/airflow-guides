@@ -1,7 +1,0 @@
-httplib2
-google-api-python-client>=1.5.0, <1.6.0
-oauth2client>=2.0.2, <2.1.0
-PyOpenSSL
-pandas-gbq
-google-cloud-storage==1.6.0
-google-cloud-monitoring>=0.29.0
