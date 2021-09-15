@@ -24,7 +24,7 @@ In this guide, we'll walk through key values in each category in the context of 
 
 ## Environment-level Airflow Settings
 
-Environment-level settings are typically set in the `airflow.cfg` file, which is required in all Airflow projects. All settings in this file have a default value that can be overridden by modifying the file directly. Default values are taken from the [default_airflow.cfg file](https://github.com/apache/airflow/blob/master/airflow/config_templates/default_airflow.cfg) in Airflow project source code.
+Environment-level settings are typically set in the `airflow.cfg` file, which is required in all Airflow projects. All settings in this file have a default value that can be overridden by modifying the file directly. Default values are taken from the [default_airflow.cfg file](https://github.com/apache/airflow/blob/main/airflow/config_templates/default_airflow.cfg) in Airflow project source code.
 
 To check current values for an existing Airflow environment, go to **Admin** > **Configurations** in the Airflow UI. For more information, read [Setting Configuration Options](https://airflow.apache.org/docs/apache-airflow/stable/howto/set-config.html) or [Configuration Reference](https://airflow.apache.org/docs/apache-airflow/stable/configurations-ref.html) in Airflow documentation.
 
