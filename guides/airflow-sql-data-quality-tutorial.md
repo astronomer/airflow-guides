@@ -3,7 +3,7 @@ title: "Using Airflow to Execute SQL for Data Quality Use Cases"
 description: "Executing queries, parameterizing queries, and embedding SQL-driven ETL in Apache Airflow DAGs to ensure data quality."
 date: 2021-09-09T00:00:00.000Z
 slug: "airflow-sql-data-quality-tutorial"
-tags: ["Database", "SQL", "DAGs"]
+tags: ["Database", "SQL", "DAGs", "Data Quality"]
 ---
 
 > Note: All code in this guide can be found in [this Github repo](https://github.com/astronomer/airflow-data-quality-demo/).
