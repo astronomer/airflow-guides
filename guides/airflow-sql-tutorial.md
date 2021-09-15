@@ -445,6 +445,6 @@ In this guide we covered how to interact with your SQL database from Airflow and
 - What if you want to retrieve data with the PostgresOperator?
 - Is it scalable?
 
-Find out more on Astronomer's ![Academy Course on Airflow SQL](https://academy.astronomer.io/airflow-sql) for free today.
+Find out more on Astronomer's [Academy Course on Airflow SQL](https://academy.astronomer.io/airflow-sql) for free today.
 
 See you there! ❤️
