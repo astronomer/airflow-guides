@@ -23,13 +23,13 @@ The SQL Check Operators are specific versions of the `SQLOperator` that streamli
 Airflow currently supports the following SQL Check Operators:
 
 - [SQLCheckOperator](https://airflow.apache.org/docs/apache-airflow/stable/_api/airflow/operators/sql/index.html#airflow.operators.sql.SQLCheckOperator)
-  - A flexible operator that takes any SQL query, useful when many values in a row must be checked against different metrics, or when your organization already has SQL queries performing quality checks
+    - A flexible operator that takes any SQL query, useful when many values in a row must be checked against different metrics, or when your organization already has SQL queries performing quality checks
 - [SQLValueCheckOperator](https://airflow.apache.org/docs/apache-airflow/stable/_api/airflow/operators/sql/index.html#airflow.operators.sql.SQLValueCheckOperator)
-  - A simpler operator that is useful when a specific, known value is being checked either as an exact value or within a percentage threshold
+    - A simpler operator that is useful when a specific, known value is being checked either as an exact value or within a percentage threshold
 - [SQLIntervalCheckOperator](https://airflow.apache.org/docs/apache-airflow/stable/_api/airflow/operators/sql/index.html#airflow.operators.sql.SQLIntervalCheckOperator)
-  - A time-based operator, useful for checking current data against historical data
+    - A time-based operator, useful for checking current data against historical data
 - [SQLThresholdCheckOperator](https://airflow.apache.org/docs/apache-airflow/stable/_api/airflow/operators/sql/index.html#airflow.operators.sql.SQLThresholdCheckOperator)
-  - An operator with flexible upper and lower thresholds, where the threshold bounds may also be described as SQL queries that return a numeric value
+    - An operator with flexible upper and lower thresholds, where the threshold bounds may also be described as SQL queries that return a numeric value
 
 ## Examples
 
@@ -81,7 +81,7 @@ By using `CASE` statements in the SQL query, we can check very specific cases of
 
 Using a for loop, tasks can be generated to run this check on every row of the data or on any desired subset of the data for spot-checks. In the example DAG below, we can see how the loop results in `TaskGroups` that can be collapsed or expanded in the Airflow UI.
 
-!(An example DAG showing data quality checks as part of a pipeline.)[https://assets2.astronomer.io/main/guides/sql-data-quality/example_dq_dag.png]
+![An example DAG showing data quality checks as part of a pipeline.](https://assets2.astronomer.io/main/guides/sql-data-quality/example_dq_dag.png)
 
 In the example DAG above, we see exactly where the data quality aspect fits into a pipeline. By loading the data into Redshift then performing checks as queries, we are offloading compute resources from Airflow to Redshift, allowing Airflow to act only as an orchestrator. For a production pipeline, data could first be loaded from S3 to a temporary staging table, quality checks performed, and then another `SQLOperator` can load the data from staging to a production table. This way, if the data quality checks fail, the pipeline can be stopped, and the staging table can either be used to help diagnose the data issue or scrapped to save resources. To see the complete example DAG and run it for yourself, check out the [data quality demo repository](https://github.com/astronomer/airflow-data-quality-demo/).
 
