@@ -49,13 +49,13 @@ The following code snippet shows you how to use the operator in a DAG.
 
 ```python
 SQLCheckOperator(
-    task_id=f"forestfire_row_quality_check",
-    sql="sql/row_quality_yellow_tripdata_check.sql",
+    task_id="yellow_tripdata_row_quality_check",
+    sql="row_quality_yellow_tripdata_check.sql",
     params=values,
 )
 ```
 
-The `sql` argument can be either the complete SQL query as a string or, as in this example, a reference to a query in a local file. The `params` argument allows you to pass a dictionary of values to the SQL query, which can be accessed through the `params` keyword in the query, as shown in the SQL code snippet below. The `database` and `conn_id` arguments are left out of the example, so the default values will be used. The full code can be found in the [data quality demo repository](https://github.com/astronomer/airflow-data-quality-demo/).
+The `sql` argument can be either the complete SQL query as a string or, as in this example, a reference to a query in a local file (for Astronomer projects, this is in the `include/` directory). The `params` argument allows you to pass a dictionary of values to the SQL query, which can be accessed through the `params` keyword in the query, as shown in the SQL code snippet below. The `database` and `conn_id` arguments are left out of the example, so the default values will be used. The full code can be found in the [data quality demo repository](https://github.com/astronomer/airflow-data-quality-demo/).
 
 While the `SQLCheckOperator` allows for a wide range of queries, and thus many different use cases, the operator's generality makes it important that the right SQL query is used. The following query was crafted for the specific use case of analyzing daily taxicab data, so the values checked in each case's equation come from domain knowledge. Even the `WHERE` clause needs the domain knowledge of a data steward to know that to return a unique row, both the `vendor_id` and `pickup_datetime` are needed.
 
