@@ -81,7 +81,7 @@ By using `CASE` statements in the SQL query, we can check very specific cases of
 
 Using a for loop, tasks can be generated to run this check on every row of the data or on any desired subset of the data for spot-checks. In the example DAG below, we can see how the loop results in `TaskGroups` that can be collapsed or expanded in the Airflow UI.
 
-![An example DAG showing data quality checks as part of a pipeline.](https://assets2.astronomer.io/main/guides/sql-data-quality/example_dq_dag.png)
+![An example DAG showing data quality checks as part of a pipeline.](https://assets2.astronomer.io/main/guides/sql-data-quality-tutorial/example_dq_dag.png)
 
 In the example DAG above, we see exactly where the data quality aspect fits into a pipeline. By loading the data into Redshift then performing checks as queries, we are offloading compute resources from Airflow to Redshift, allowing Airflow to act only as an orchestrator. For a production pipeline, data could first be loaded from S3 to a temporary staging table, quality checks performed, and then another `SQLOperator` can load the data from staging to a production table. This way, if the data quality checks fail, the pipeline can be stopped, and the staging table can either be used to help diagnose the data issue or scrapped to save resources. To see the complete example DAG and run it for yourself, check out the [data quality demo repository](https://github.com/astronomer/airflow-data-quality-demo/).
 
