@@ -62,14 +62,14 @@ While the `SQLCheckOperator` allows for a wide range of queries, and thus many d
 The query used in the `sql` argument is:
 
 ```sql
-SELECT vendor_id,
+SELECT vendor_id, pickup_datetime,
   CASE WHEN dropoff_datetime > pickup_datetime THEN 1 ELSE 0 END AS date_check,
-  CASE WHEN passenger_count > 0 THEN 1 ELSE 0 END AS passenger_count_check,
-  CASE WHEN trip_distance > 0 AND trip_distance <= 100 THEN 1 ELSE 0 END AS trip_distance_check,
-  CASE WHEN (fare_amount + extra, mta_tax + tip_amount + improvement_surcharge + COALESCE(congestion_surcharge, 0)) = total_amount THEN 1 ELSE 0 END AS fare_check
-FROM {{ params.table }}
-WHERE vendor_id = {{ params.vendor_id }}
-  AND pickup_datetime = {{ params.pickup_datetime }}
+  CASE WHEN passenger_count >= 0 THEN 1 ELSE 0 END AS passenger_count_check,
+  CASE WHEN trip_distance >= 0 AND trip_distance <= 100 THEN 1 ELSE 0 END AS trip_distance_check,
+  CASE WHEN ROUND((fare_amount + extra + mta_tax + tip_amount + improvement_surcharge + COALESCE(congestion_surcharge, 0)), 1) = ROUND(total_amount, 1) THEN 1
+       WHEN ROUND(fare_amount + extra + mta_tax + tip_amount + improvement_surcharge, 1) = ROUND(total_amount, 1) THEN 1 ELSE 0 END AS fare_check
+FROM yellow_tripdata
+WHERE pickup_datetime IN (SELECT pickup_datetime FROM yellow_tripdata ORDER BY RANDOM() LIMIT 1)
 ```
 
 By using `CASE` statements in the SQL query, we can check very specific cases of data quality that we, as the data stewards, know should always be true:
@@ -79,7 +79,7 @@ By using `CASE` statements in the SQL query, we can check very specific cases of
 - A trip needs to be in a range allowed by the taxi company (in this case, we assume there is a maximum allowed trip distance of 100 miles)
 - Each of the components of the total fare should add up to the total fare
 
-Using a for loop, tasks can be generated to run this check on every row of the data or on any desired subset of the data for spot-checks. In the example DAG below, we can see how the loop results in `TaskGroups` that can be collapsed or expanded in the Airflow UI.
+Using a for loop, tasks are generated to run this check on every row of the data or on any desired subset of the data for spot-checks. In the SQL above, a `pickup_datetime` is chosen randomly, and the corresponding code uses a loop to spot-check ten rows. In the example DAG below, we can see how the loop results in `TaskGroups` that can be collapsed or expanded in the Airflow UI.
 
 ![An example DAG showing data quality checks as part of a pipeline.](https://assets2.astronomer.io/main/guides/sql-data-quality-tutorial/example_dq_dag.png)
 
