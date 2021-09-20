@@ -7,17 +7,17 @@ heroImagePath: "https://assets.astronomer.io/website/img/guides/SchedulingTasksi
 tags: ["DAGs", "Best Practices", "Basics"]
 ---
 
-One of the tenets of Apache Airflow is that your pipelines are defined as code. This allows you to treat your pipelines as you would any other piece of software and make use of best practices like version control and CI/CD. Especially as you scale the use of Airflow within your organization, it becomes incredibly important to manage your Airflow code in a way that is organized and sustainable.
+One of the tenets of Apache Airflow is pipelines defined as code. This allows you to treat your pipelines as you would any other piece of software and make use of best practices like version control and CI/CD. Especially as you scale the use of Airflow within your organization, it becomes incredibly important to manage your Airflow code in a way that is organized and sustainable.
 
 In this guide, we'll cover a recommended project structure to keep your Airflow projects organized, when to separate out your DAGs into multiple projects, how to manage code that is used across different projects, and what a typical development flow might look like.
 
-Note that throughout this guide, we use the term "project" to denote any set of DAGs and supporting files that will be deployed to the same Airflow instance. For example, your organization might have a finance team and a data science team each with their own separate Airflow deployment, and they would each have a separate Airflow project that contained all of their code.
+Note that throughout this guide, we use the term "project" to denote any set of DAGs and supporting files that will be deployed to the same Airflow "deployment" (an instance of Airflow). For example, your organization might have a finance team and a data science team each with their own separate Airflow deployment, and they would each have a separate Airflow project that contained all of their code.
 
 ## Project Structure
 
-When working with Airflow it is helpful to have a consistent project structure. This keeps all DAGs and supporting code organized and easy to understand, and makes it easier to scale Airflow horizontally within your organization. 
+When working with Airflow, it is helpful to have a consistent project structure. This keeps all DAGs and supporting code organized and easy to understand, and makes it easier to scale Airflow horizontally within your organization. 
 
-Ideally you keep one directory and repository per project, and your version control tool (e.g. Github, Bitbucket) packages everything needed to run a set of DAGs together. Note that this example assumes you are running Airflow using Docker.
+The ideal setup is to keep one directory and repository per project, and your version control tool (e.g. Github, Bitbucket) packages everything needed to run a set of DAGs together. Note that this example assumes you are running Airflow using Docker.
 
 At Astronomer, we use the following project structure:
 
@@ -40,41 +40,24 @@ To create a project with this structure automatically, you can install the [Astr
 
 If you are not running Airflow with Docker or have different requirements for your organization, your project structure may look slightly different. The most important part is choosing a structure that works for your team and keeping it consistent so that anyone working with Airflow can easily transition between projects without having to re-learn a new structure.
 
-
 ## When to Separate Projects
 
-If a certain set of DAGs can't live in the same directory, they should live in separate directories.
+The most common setup for Airflow projects is to have all Airflow DAGs that are deployed to the same Airflow deployment live in the same repository. There are multiple cases where it might make sense to separate DAGs into multiple projects that get deployed to _different_ Airflow deployments:
 
-```bash
-└── customer_workflows
-    ├── customer_one
-    │   ├── dags
-    │   │   └── aws_workflows.py
-    │   ├── Dockerfile
-    │   ├── include
-    │   ├── packages.txt
-    │   ├── plugins
-    │   │   └── example-plugin.py
-    │   └── requirements.txt
-    └── customer_two
-        ├── dags
-        │   └── snowflake_workflows.py
-        ├── Dockerfile
-        ├── include
-        ├── packages.txt
-        ├── plugins
-        │   └── example-plugin.py
-        └── requirements.txt
-```
+- Controlling access: RBAC should be managed at the Airflow deployment level rather than at the DAG level. So if Team A and Team B should only have access to their own team's DAGs, it probably makes sense to split them up into two projects and deployments.
+- Infrastructure considerations: For example, if you have a set of DAGs that are well suited to the Kubernetes executor and another set that are well suited to the Celery executor, you may wish to break them up into two different projects that feed Airflow deployments with different infrastructure (note the [Astronomer platform](https://www.astronomer.io/product) makes this trivial to set up).
+- Dependency management: If DAGs have conflicting Python or OS dependencies, one way of managing this can be breaking them up into separate projects so they are isolated from one another.
 
-In this structure, `astro airflow start` can be called from either the `customer_one` or `customer_two` repository, with both of them spinning up a different local environment. Code from both of these repositories should also be deployed to separate Airflow deployments, each of which will store credentials and DAG history separately (each Airflow instance gets a separate Postgresdb on Astronomer).
-
-If different user groups are required both of these projects, it may make sense to put each one in a different workspace.
+Occasionally, some use cases require DAGs from multiple projects to be deployed to the _same_ Airflow deployment. This is a less common pattern and is not recommended for project organization unless it is specifically required. In this case, deploying the files from different repositories together into one Airflow deployment should be managed by your CI/CD tool. Note that if you are implementing this use case on Astronomer, you will need to use the [NFS deployment method](https://www.astronomer.io/docs/enterprise/v0.25/deploy/deploy-nfs).  
 
 ## Reusing Code
 
-All code that is re-used between projects (e.g. plugins, DAG templates, etc) should live in separate directories in your version control tool (e.g. Astronomer houses all airflow plugins in [our airflow plugins repo](https://github.com/airflow-plugins/) ). This way, changes made outside of the project can be easily roped in, while changes specific to the project (e.g. changes to a plugin, or a specific dag template) are always housed with the project.
+Any code that is re-used between projects (e.g. custom hooks or operators, DAG templates, etc.) should live in separate respositories in your version control tool. This ensures that any changes to the code (e.g. updates to a custom operator) only need to be made in one place and will be reflected across all projects where that code is used.
+
+You can then pull in code from that separate repository into your Airflow project. If you are working with Astronomer, check out our documentation on [building from a private repository](https://www.astronomer.io/docs/enterprise/v0.25/develop/customize-image#build-from-a-private-repository). Depending on your repository setup, it may also be possible to manage this with your CI/CD tool.
 
 ## Development Flow
 
+You can extend the project structure described above to work for developing DAGs and promoting code through `dev`, `QA`, and `production` environments. The most common method for managing code promotion with this project structure is to use branching. You still maintain one project/repository, and create `dev` and `qa` branches for any code in development or testing. Your `main` branch should correspond to code that is deployed to production. You then use your CI/CD tool to manage promotion between these three branches. For more on this, checkout out our docs on [implementing CI/CD](https://www.astronomer.io/docs/enterprise/v0.25/deploy/ci-cd).
 
+Note that there are many ways of implementing a development flow for your Airflow code. For example, you may work with feature branches instead of a specific `dev` branch. How you choose to implement this will depend on the needs of your team, but the method described here is a good place to start if you aren't currently using CI/CD with Airflow.
