@@ -10,30 +10,29 @@ tags: ["Database", "SQL", "DAGs", "Data Quality"]
 
 ## Overview
 
-Data quality is a key part of the success of an organization's data systems, and with Airflow, implementing data quality checks in DAGs is both easy and robust. With in-DAG quality checks, halting pipelines and alerting stakeholders happens before bad data makes its way to a production lake or warehouse.
+Data quality is key to the success of an organization's data systems. In Airflow, implementing data quality checks in DAGs is both easy and robust. With in-DAG quality checks, you can halt pipelines and alert stakeholders before bad data makes its way to a production lake or warehouse.
 
-Executing SQL queries is one of the most common use cases for data pipelines and a simple and effective way to implement data quality checks. Using Airflow, you can quickly put together a pipeline specifically for checking data quality or add quality checks to existing ETL/ELT with just a few lines of boilerplate code.
+Executing SQL queries is one of the most common use cases for data pipelines, and it's a simple and effective way to implement data quality checks. Using Airflow, you can quickly put together a pipeline specifically for checking data quality, or you can add quality checks to existing ETL/ELT with just a few lines of boilerplate code.
 
 In this guide, we'll introduce the different SQL Check Operators and show examples of how each one can be used to build a robust data quality suite for your DAGs. If you aren't familiar with SQL Operators in general, check out Astronomer's [SQL tutorial](https://www.astronomer.io/guides/airflow-sql-tutorial) first.
 
 ## SQL Check Operators
 
-The SQL Check Operators are specific versions of the `SQLOperator` that streamline different checks against queries. One main difference between the Check Operators and the standard [`BaseSQLOperator`](https://airflow.apache.org/docs/apache-airflow/stable/_api/airflow/operators/sql/index.html#airflow.operators.sql.BaseSQLOperator) is that the Check Operators ultimately respond with a boolean, meaning the task will fail if the resulting query fails. This is extremely helpful in stopping a data pipeline before bad data makes it to the destination. With Airflow's logging capabilities, knowing exactly which line (and even which value in that line) failed the check becomes highly observable.
+The SQL Check Operators are versions of the `SQLOperator` that streamline different checks against queries. One main difference between the SQL Check Operators and the standard [`BaseSQLOperator`](https://airflow.apache.org/docs/apache-airflow/stable/_api/airflow/operators/sql/index.html#airflow.operators.sql.BaseSQLOperator) is that the Check Operators ultimately respond with a boolean, meaning the task will fail if the resulting query fails. This is particularly helpful in stopping a data pipeline before bad data makes it to a given destination. With Airflow's logging capabilities, the lines of code (and even specific values in lines) which fail the check are highly observable.
 
 Airflow currently supports the following SQL Check Operators:
 
-- [SQLCheckOperator](https://airflow.apache.org/docs/apache-airflow/stable/_api/airflow/operators/sql/index.html#airflow.operators.sql.SQLCheckOperator)
-    - A flexible operator that takes any SQL query, useful when many values in a row must be checked against different metrics, or when your organization already has SQL queries performing quality checks
+- **[SQLCheckOperator](https://airflow.apache.org/docs/apache-airflow/stable/_api/airflow/operators/sql/index.html#airflow.operators.sql.SQLCheckOperator)**: A flexible operator that takes any SQL query. Useful when many values in a row must be checked against different metrics, or when your organization already has SQL queries performing quality checks
 - [SQLValueCheckOperator](https://airflow.apache.org/docs/apache-airflow/stable/_api/airflow/operators/sql/index.html#airflow.operators.sql.SQLValueCheckOperator)
     - A simpler operator that is useful when a specific, known value is being checked either as an exact value or within a percentage threshold
 - [SQLIntervalCheckOperator](https://airflow.apache.org/docs/apache-airflow/stable/_api/airflow/operators/sql/index.html#airflow.operators.sql.SQLIntervalCheckOperator)
-    - A time-based operator, useful for checking current data against historical data
+    - A time-based operator. Useful for checking current data against historical data
 - [SQLThresholdCheckOperator](https://airflow.apache.org/docs/apache-airflow/stable/_api/airflow/operators/sql/index.html#airflow.operators.sql.SQLThresholdCheckOperator)
     - An operator with flexible upper and lower thresholds, where the threshold bounds may also be described as SQL queries that return a numeric value
 
 ## Examples
 
-The following examples show you how to use each of the aforementioned operators and give some background on when each one will be most useful.
+The following examples show you when and how to use each of the SQL Check Operators. 
 
 ### Example 1 - `SQLCheckOperator`
 
@@ -57,7 +56,7 @@ SQLCheckOperator(
 
 The `sql` argument can be either the complete SQL query as a string or, as in this example, a reference to a query in a local file (for Astronomer projects, this is in the `include/` directory). The `params` argument allows you to pass a dictionary of values to the SQL query, which can be accessed through the `params` keyword in the query, as shown in the SQL code snippet below. The `database` and `conn_id` arguments are left out of the example, so the default values will be used. The full code can be found in the [data quality demo repository](https://github.com/astronomer/airflow-data-quality-demo/).
 
-While the `SQLCheckOperator` allows for a wide range of queries, and thus many different use cases, the operator's generality makes it important that the right SQL query is used. The following query was crafted for the specific use case of analyzing daily taxicab data, so the values checked in each case's equation come from domain knowledge. Even the `WHERE` clause needs the domain knowledge of a data steward to know that to return a unique row, both the `vendor_id` and `pickup_datetime` are needed.
+Because the `SQLCheckOperator` can process a wide variety of queries, it's important to use the right SQL query for the job at hand. The following query (which we pass into the `sql` argument) was crafted for the specific use case of analyzing daily taxicab data, so the values checked in each case's equation come from domain knowledge. Even the `WHERE` clause needs a data steward to know that to return a unique row, both the `vendor_id` and `pickup_datetime` are needed.
 
 The query used in the `sql` argument is:
 
@@ -72,25 +71,27 @@ FROM yellow_tripdata
 WHERE pickup_datetime IN (SELECT pickup_datetime FROM yellow_tripdata ORDER BY RANDOM() LIMIT 1)
 ```
 
-By using `CASE` statements in the SQL query, we can check very specific cases of data quality that we, as the data stewards, know should always be true:
+By using `CASE` statements in the SQL query, we can check very specific cases of data quality that should always be true for this use case:
 
-- Drop-offs always occur after pickups
+- Drop-offs always occur after pickups.
 - A trip is only valid if there is at least one passenger
 - A trip needs to be in a range allowed by the taxi company (in this case, we assume there is a maximum allowed trip distance of 100 miles)
 - Each of the components of the total fare should add up to the total fare
 
-Using a for loop, tasks are generated to run this check on every row of the data or on any desired subset of the data for spot-checks. In the SQL above, a `pickup_datetime` is chosen randomly, and the corresponding code uses a loop to spot-check ten rows. In the example DAG below, we can see how the loop results in `TaskGroups` that can be collapsed or expanded in the Airflow UI.
+Using a for loop, tasks are generated to run this check on every row or other subset of the data. In the SQL above, a `pickup_datetime` is chosen randomly, and the corresponding code uses a loop to spot-check ten rows. In the example DAG below, we can see how the loop results in `TaskGroups` that can be collapsed or expanded in the Airflow UI:
 
 ![An example DAG showing data quality checks as part of a pipeline.](https://assets2.astronomer.io/main/guides/sql-data-quality-tutorial/example_dq_dag.png)
 
-In the example DAG above, we see exactly where the data quality aspect fits into a pipeline. By loading the data into Redshift then performing checks as queries, we are offloading compute resources from Airflow to Redshift, allowing Airflow to act only as an orchestrator. For a production pipeline, data could first be loaded from S3 to a temporary staging table, quality checks performed, and then another `SQLOperator` can load the data from staging to a production table. This way, if the data quality checks fail, the pipeline can be stopped, and the staging table can either be used to help diagnose the data issue or scrapped to save resources. To see the complete example DAG and run it for yourself, check out the [data quality demo repository](https://github.com/astronomer/airflow-data-quality-demo/).
+In the example DAG above, we see exactly how our data quality checks fit into a pipeline. By loading the data into Redshift then performing checks as queries, we are offloading compute resources from Airflow to Redshift, which frees up Airflow to act only as an orchestrator. 
+
+For a production pipeline, data could first be loaded from S3 to a temporary staging table, then have its quality checks completed. If the quality checks succeed, another `SQLOperator` can load the data from staging to a production table. If the data quality checks fail, the pipeline can be stopped, and the staging table can be either used to help diagnose the data issue or scrapped to save resources. To see the complete example DAG and run it for yourself, check out the [data quality demo repository](https://github.com/astronomer/airflow-data-quality-demo/).
 
 ### Example 2 - `SQLValueCheckOperator`
 
-The `SQLValueCheckOperator` is simpler than the `SQLCheckOperator` but still incredibly useful. It checks the results of a query against a specific pass value, and, if given, ensures the value is within a percentage threshold. The pass value can be any type, but the threshold can only be used with numeric types. This check is useful for:
+The `SQLValueCheckOperator` is simpler than the `SQLCheckOperator` but equally useful. It checks the results of a query against a specific pass value, and ensures the checked value is within a percentage threshold of the pass value. The pass value can be any type, but the threshold can only be used with numeric types. This check is useful for:
 
-- Checking the row count of a table
-- Ensuring all text values in a record or set of records are correct (say, checking text country codes against numeric ones)
+- Checking the row count of a table.
+- Ensuring all text values in a record or set of records are correct (for example, checking text country codes against numeric ones).
 
 The task below shows how to use this operator to check the row count of a table within a tolerance threshold:
 
@@ -107,14 +108,14 @@ The `sql` argument is a query that ensures the actual table row count is our kno
 
 ### Example 3 - `SQLIntervalCheckOperator`
 
-The `SQLIntervalCheckOperator` is a little more complex than the previous operators. It operates on a time-based interval, which defaults to choosing a reference day seven days prior to the run date (using Airflow's `{{ ds }}` macro). A set of metric thresholds are given as a dictionary for each metric that is being checked, with the keys of the dictionary each being a SQL expression that returns data for the current day and the reference day, and the values of the dictionary each being the ratio used as a threshold. The current day's data are compared against the reference day's data using a ratio formula, and if the ratio formula produces a result outside of the threshold, the task fails. The two formulas are:
+The `SQLIntervalCheckOperator` is a little more complex than the previous operators. By default, it checks data against reference data from seven days prior to the run date (using Airflow's `{{ ds }}` macro). You provide a set of metric thresholds as a dictionary for each metric that is being checked. The keys of the dictionary are SQL expressions that return data for the current day and the reference day, and the values of the dictionary are the ratios used as a threshold. The current day's data is compared against the reference day's data using a ratio formula, and if the ratio formula produces a result outside of the threshold, the task fails. The two formulas are:
 
 - Max-over-min (default), which calculates the maximum of the current day's and reference day's data divided by the minimum of the two: `max(cur, ref) / min(cur, ref)`
 - Relative difference, which calculates the absolute value of the difference between the current and reference days, divided by the reference day: `abs(cur-ref) / ref`
 
-This operator works great for use cases where you know certain metrics should be close in value, or have close statistics, to the same metrics on previous days, weeks, or other time scales.
+This operator works well for use cases where you know certain metrics should be close in value, or have close statistics, to the same metrics on previous days, weeks, or other time scales.
 
-The code snippet below shows how to use this operator to check that the average distance of a taxi ride today is within 1.5 times the average distance of yesterday's rides:
+The code snippet checks to see whether the average distance of a taxi ride today is within 1.5 times the average distance of yesterday's rides:
 
 ```python
 SQLIntervalCheckOperator(
@@ -125,11 +126,11 @@ SQLIntervalCheckOperator(
 )
 ```
 
-In the task above, we are only looking one day back in the `days_back` argument, comparing the current day's data to yesterday's. We overwrite the `date_filter_column` to `upload_date`, which defaults to `ds`. The `metrics_threshold` is set to a dictionary of one key-value pair, where the key is a SQL expression that returns a result used in the default ratio formula, and the value of the dictionary is the threshold that the calculated ratio must not exceed.
+In the task above, we are looking only one day back using the `days_back` argument. We set the `date_filter_column` argument  to `upload_date`, which defaults to `ds`. We set the `metrics_threshold` argument to a dictionary of one key-value pair, where the key is a SQL expression that returns results for both dates and the value is the threshold that the calculated ratio of the results must not exceed.
 
 ### Example 4 - `SQLThresholdCheckOperator`
 
-The `SQLThresholdCheckOperator` works similarly to the `SQLValueCheckOperator`, except instead of a single threshold, there is a min and max given, making this operator more dynamic in the type and scale of thresholding. The min and max thresholds can be numeric types or SQL expressions that result in a numeric type. Like the other SQL Check Operators, only the first row returned by the given SQL queries will be used in the boolean evaluation. This is true for all of the parameters that can take a SQL query: `sql`, `min_threshold`, and `max_threshold`. This operator is great for use cases where a metric like a minimum, maximum, sum, or aggregate, is known to have to be between certain values.
+The `SQLThresholdCheckOperator` works similarly to the `SQLValueCheckOperator`. Instead of a single threshold, there is a min and max given, making this operator more dynamic in the type and scale of thresholding. The min and max thresholds can be numeric types or SQL expressions that result in a numeric type. Like the other SQL Check Operators, only the first row returned by the given SQL queries is used in the boolean evaluation. This is true for all of the parameters that can take a SQL query (`sql`, `min_threshold`, and `max_threshold`). This operator is great for use cases where a metric like a minimum, maximum, sum, or aggregate, has to be between certain values.
 
 ```python
 SQLThresholdCheckOperator(
