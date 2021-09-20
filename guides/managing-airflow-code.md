@@ -52,7 +52,7 @@ Occasionally, some use cases require DAGs from multiple projects to be deployed 
 
 ## Reusing Code
 
-Any code that is re-used between projects (e.g. custom hooks or operators, DAG templates, etc.) should live in separate respositories in your version control tool. This ensures that any changes to the code (e.g. updates to a custom operator) only need to be made in one place and will be reflected across all projects where that code is used.
+Any code that is re-used between projects (e.g. custom hooks or operators, DAG templates, etc.) should live in separate repositories in your version control tool. This ensures that any changes to the code (e.g. updates to a custom operator) only need to be made in one place and will be reflected across all projects where that code is used.
 
 You can then pull in code from that separate repository into your Airflow project. If you are working with Astronomer, check out our documentation on [building from a private repository](https://www.astronomer.io/docs/enterprise/v0.25/develop/customize-image#build-from-a-private-repository). Depending on your repository setup, it may also be possible to manage this with your CI/CD tool.
 
