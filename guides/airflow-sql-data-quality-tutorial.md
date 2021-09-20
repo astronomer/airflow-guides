@@ -23,38 +23,35 @@ The SQL Check Operators are versions of the `SQLOperator` that streamline differ
 Airflow currently supports the following SQL Check Operators:
 
 - **[SQLCheckOperator](https://airflow.apache.org/docs/apache-airflow/stable/_api/airflow/operators/sql/index.html#airflow.operators.sql.SQLCheckOperator)**: A flexible operator that takes any SQL query. Useful when many values in a row must be checked against different metrics, or when your organization already has SQL queries performing quality checks
-- [SQLValueCheckOperator](https://airflow.apache.org/docs/apache-airflow/stable/_api/airflow/operators/sql/index.html#airflow.operators.sql.SQLValueCheckOperator)
-    - A simpler operator that is useful when a specific, known value is being checked either as an exact value or within a percentage threshold
-- [SQLIntervalCheckOperator](https://airflow.apache.org/docs/apache-airflow/stable/_api/airflow/operators/sql/index.html#airflow.operators.sql.SQLIntervalCheckOperator)
-    - A time-based operator. Useful for checking current data against historical data
-- [SQLThresholdCheckOperator](https://airflow.apache.org/docs/apache-airflow/stable/_api/airflow/operators/sql/index.html#airflow.operators.sql.SQLThresholdCheckOperator)
-    - An operator with flexible upper and lower thresholds, where the threshold bounds may also be described as SQL queries that return a numeric value
+- **[SQLValueCheckOperator](https://airflow.apache.org/docs/apache-airflow/stable/_api/airflow/operators/sql/index.html#airflow.operators.sql.SQLValueCheckOperator)**: A simpler operator that is useful when a specific, known value is being checked either as an exact value or within a percentage threshold
+- **[SQLIntervalCheckOperator](https://airflow.apache.org/docs/apache-airflow/stable/_api/airflow/operators/sql/index.html#airflow.operators.sql.SQLIntervalCheckOperator)**: A time-based operator. Useful for checking current data against historical data
+- **[SQLThresholdCheckOperator](https://airflow.apache.org/docs/apache-airflow/stable/_api/airflow/operators/sql/index.html#airflow.operators.sql.SQLThresholdCheckOperator)**: An operator with flexible upper and lower thresholds, where the threshold bounds may also be described as SQL queries that return a numeric value
 
 ## Examples
 
-The following examples show you when and how to use each of the SQL Check Operators. 
+The following examples show you when and how to use each of the SQL Check Operators.
 
 ### Example 1 - `SQLCheckOperator`
 
-The `SQLCheckOperator` returns a single row from a provided SQL query and checks to see if any of the returned values in that row are `False`. If any values are `False`, the task fails. This operator allows a great deal of flexibility in what is being checked:
+The `SQLCheckOperator` returns a single row from a provided SQL query and checks to see if any of the returned values in that row are `False`. If any values are `False`, the task fails. This operator allows a great deal of flexibility in checking:
 
-- A specific single value
-- NULL-checking and other type-checking
-- Values of an entire row compared to a known set of values
+- A specific, single column value
+- Part of or an entire row compared to a known set of values
+- NULLs and types
 - Specific calculations like `SUM`s or `AGG`s
-- Any other function that can be written as a SQL query
+- The results of any other function that can be written as a SQL query
 
-The following code snippet shows you how to use the operator in a DAG.
+The following code snippet shows you how to use the operator in a DAG:
 
 ```python
 SQLCheckOperator(
     task_id="yellow_tripdata_row_quality_check",
     sql="row_quality_yellow_tripdata_check.sql",
-    params=values,
+    params={"pickup_datetime": "2021-01-01"},
 )
 ```
 
-The `sql` argument can be either the complete SQL query as a string or, as in this example, a reference to a query in a local file (for Astronomer projects, this is in the `include/` directory). The `params` argument allows you to pass a dictionary of values to the SQL query, which can be accessed through the `params` keyword in the query, as shown in the SQL code snippet below. The `database` and `conn_id` arguments are left out of the example, so the default values will be used. The full code can be found in the [data quality demo repository](https://github.com/astronomer/airflow-data-quality-demo/).
+The `sql` argument can be either the complete SQL query as a string or, as in this example, a reference to a query in a local file (for Astronomer projects, this is in the `include/` directory). The `params` argument allows you to pass a dictionary of values to the SQL query, which can be accessed through the `params` keyword in the query. The `database` and `conn_id` arguments are left out of the example, so the default values will be used. The full code can be found in the [data quality demo repository](https://github.com/astronomer/airflow-data-quality-demo/).
 
 Because the `SQLCheckOperator` can process a wide variety of queries, it's important to use the right SQL query for the job at hand. The following query (which we pass into the `sql` argument) was crafted for the specific use case of analyzing daily taxicab data, so the values checked in each case's equation come from domain knowledge. Even the `WHERE` clause needs a data steward to know that to return a unique row, both the `vendor_id` and `pickup_datetime` are needed.
 
@@ -71,18 +68,24 @@ FROM yellow_tripdata
 WHERE pickup_datetime IN (SELECT pickup_datetime FROM yellow_tripdata ORDER BY RANDOM() LIMIT 1)
 ```
 
+If instead of using a random `pickup_datetime`, we want to use a specific date to quality check a row, we can use the `params` passed into the operator like so:
+
+```sql
+WHERE pickup_datetime = '{{ params.pickup_datetime }}'
+```
+
 By using `CASE` statements in the SQL query, we can check very specific cases of data quality that should always be true for this use case:
 
 - Drop-offs always occur after pickups.
-- A trip is only valid if there is at least one passenger
-- A trip needs to be in a range allowed by the taxi company (in this case, we assume there is a maximum allowed trip distance of 100 miles)
-- Each of the components of the total fare should add up to the total fare
+- A trip is only valid if there is at least one passenger.
+- A trip needs to be in a range allowed by the taxi company (in this case, we assume there is a maximum allowed trip distance of 100 miles).
+- Each of the components of the total fare should add up to the total fare.
 
 Using a for loop, tasks are generated to run this check on every row or other subset of the data. In the SQL above, a `pickup_datetime` is chosen randomly, and the corresponding code uses a loop to spot-check ten rows. In the example DAG below, we can see how the loop results in `TaskGroups` that can be collapsed or expanded in the Airflow UI:
 
 ![An example DAG showing data quality checks as part of a pipeline.](https://assets2.astronomer.io/main/guides/sql-data-quality-tutorial/example_dq_dag.png)
 
-In the example DAG above, we see exactly how our data quality checks fit into a pipeline. By loading the data into Redshift then performing checks as queries, we are offloading compute resources from Airflow to Redshift, which frees up Airflow to act only as an orchestrator. 
+In the example DAG above, we see exactly how our data quality checks fit into a pipeline. By loading the data into Redshift then performing checks as queries, we are offloading compute resources from Airflow to Redshift, which frees up Airflow to act only as an orchestrator.
 
 For a production pipeline, data could first be loaded from S3 to a temporary staging table, then have its quality checks completed. If the quality checks succeed, another `SQLOperator` can load the data from staging to a production table. If the data quality checks fail, the pipeline can be stopped, and the staging table can be either used to help diagnose the data issue or scrapped to save resources. To see the complete example DAG and run it for yourself, check out the [data quality demo repository](https://github.com/astronomer/airflow-data-quality-demo/).
 
@@ -98,7 +101,7 @@ The task below shows how to use this operator to check the row count of a table 
 ```python
 SQLValueCheckOperator(
     task_id="check_row_count",
-    sql=f"SELECT COUNT(*) FROM yellow_tripdata",
+    sql="SELECT COUNT(*) FROM yellow_tripdata",
     pass_value=20000,
     threshold=0.01
 )
@@ -132,6 +135,8 @@ In the task above, we are looking only one day back using the `days_back` argume
 
 The `SQLThresholdCheckOperator` works similarly to the `SQLValueCheckOperator`. Instead of a single threshold, there is a min and max given, making this operator more dynamic in the type and scale of thresholding. The min and max thresholds can be numeric types or SQL expressions that result in a numeric type. Like the other SQL Check Operators, only the first row returned by the given SQL queries is used in the boolean evaluation. This is true for all of the parameters that can take a SQL query (`sql`, `min_threshold`, and `max_threshold`). This operator is great for use cases where a metric like a minimum, maximum, sum, or aggregate, has to be between certain values.
 
+The example below ensures that the maximum passenger count for all rides is between 1 and 8 passengers, our assumed minimum and maximum number of potential riders for any type of taxicab:
+
 ```python
 SQLThresholdCheckOperator(
     task_id="check_threshold",
@@ -140,8 +145,6 @@ SQLThresholdCheckOperator(
     max_threshold=8
 )
 ```
-
-The above example ensures that the maximum passenger count for all rides is between 1 and 8 passengers, our assumed minimum and maximum number of potential riders for any type of taxicab.
 
 ## Conclusion
 
