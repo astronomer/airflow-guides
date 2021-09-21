@@ -22,7 +22,7 @@ If you are newer to test-driven development, or CI/CD in general, we'd recommend
 - [The Challenge of Testing Data Pipelines](https://medium.com/slalom-build/the-challenge-of-testing-data-pipelines-4450744a84f1)
 - [Deploying to Astronomer via CI/CD](https://www.astronomer.io/docs/enterprise/v0.25/deploy/ci-cd)
 
-We also recommend checking out [Airflow's documentation on testing DAGs](https://airflow.apache.org/docs/apache-airflow/stable/best-practices.html#testing-a-dag) and [testing guidelines for contributors](https://github.com/apache/airflow/blob/master/TESTING.rst); we'll walk through some of the concepts covered in those docs in more detail below.
+We also recommend checking out [Airflow's documentation on testing DAGs](https://airflow.apache.org/docs/apache-airflow/stable/best-practices.html#testing-a-dag) and [testing guidelines for contributors](https://github.com/apache/airflow/blob/main/TESTING.rst); we'll walk through some of the concepts covered in those docs in more detail below.
 
 ### Note on test runners
 
@@ -75,7 +75,7 @@ def test_function_returns_5():
 	assert my_function(input) == 5
 ```
 
-In the context of Airflow, you can write unit tests for any part of your DAG, but they are most frequently applied to hooks and operators. All official Airflow hooks, operators, and provider packages have unit tests that must pass before merging the code into the project. For an example, check out the [AWS `S3Hook`](https://registry.astronomer.io/providers/amazon/modules/s3hook), which has many accompanying [unit tests](https://github.com/apache/airflow/blob/master/tests/providers/amazon/aws/hooks/test_s3.py). 
+In the context of Airflow, you can write unit tests for any part of your DAG, but they are most frequently applied to hooks and operators. All official Airflow hooks, operators, and provider packages have unit tests that must pass before merging the code into the project. For an example, check out the [AWS `S3Hook`](https://registry.astronomer.io/providers/amazon/modules/s3hook), which has many accompanying [unit tests](https://github.com/apache/airflow/blob/main/tests/providers/amazon/aws/hooks/test_s3.py). 
 
 If you have your own custom hooks or operators, we highly recommend using unit tests to check logic and functionality. For example, say we have a custom operator that checks if a number is even:
 

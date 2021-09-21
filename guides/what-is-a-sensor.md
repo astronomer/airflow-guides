@@ -27,7 +27,7 @@ s1 = S3KeySensor(
 
 The [S3KeySensor](https://registry.astronomer.io/providers/amazon/modules/s3keysensor) will check for the existence of a specified key in S3 every few seconds until it finds it or times out. If it finds the key, it will be marked as success and allow downstream tasks to run. If it times out, it will fail and prevent downstream tasks from running.
 
-[S3KeySensor Code](https://github.com/apache/airflow/blob/master/airflow/sensors/s3_key_sensor.py)
+[S3KeySensor Code](https://github.com/apache/airflow/blob/main/airflow/providers/amazon/aws/sensors/s3_key.py)
 
 ### Sensors Params
 

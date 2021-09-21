@@ -16,7 +16,7 @@ One of the features of the TaskFlow API that increases the flexibility of XComs 
 
 This guide discusses the benefits of using an XCom backend, shows an example of implementing an XCom backend with S3, and describes how to set this up if you're running Airflow on the Astronomer platform.
 
-If you're new to working with XComs or the TaskFlow API and want some background before diving into custom XCom Backends, check out the [Airflow documentation on XComs](https://airflow.apache.org/docs/apache-airflow/stable/concepts.html?highlight=xcom#xcoms) and our [webinar on using the TaskFlow API](https://www.astronomer.io/blog/taskflow-api-in-airflow-2-0).
+If you're new to working with XComs or the TaskFlow API and want some background before diving into custom XCom Backends, check out the [Airflow documentation on XComs](https://airflow.apache.org/docs/apache-airflow/stable/concepts.html?highlight=xcom#xcoms) and our [webinar on using the TaskFlow API](https://www.astronomer.io/events/webinars/taskflow-api-airflow-2.0/).
 
 ## When to Use Custom XCom Backends
 
@@ -78,7 +78,7 @@ For this example, we set up the connection in the UI. Using the access credentia
 
 The final step to setting up your custom XCom backend is configuring your serialization/deserialization methods and applying them to your Airflow environment. Serialization and deserialization define how your XComs are programmatically handled when passing them between Airflow and your custom backend. 
 
-The main benefit to implementing a custom method here is that unlike regular XComs, which only allow for JSON serializable messages, you can handle any datatype in whatever way suits your use case. Your custom XCom backend class will inherit from Airflow's `BaseXCom` class, so you may want to start by reviewing [that code](https://github.com/apache/airflow/blob/master/airflow/models/xcom.py) to see how it works.
+The main benefit to implementing a custom method here is that unlike regular XComs, which only allow for JSON serializable messages, you can handle any datatype in whatever way suits your use case. Your custom XCom backend class will inherit from Airflow's `BaseXCom` class, so you may want to start by reviewing [that code](https://github.com/apache/airflow/blob/main/airflow/models/xcom.py) to see how it works.
 
 For this example, we'll define a Python file with serialization/deserialization methods that works with pandas dataframes. When a task pushes an XCom value of a pandas dataframe type to your backend, the data will be converted to a CSV and saved to S3. When pulling the XCom (deserializing) from the backend, the method will convert the CSV back into a pandas dataframe. Note that the name of your XCom backend bucket must be specified in the class.
 

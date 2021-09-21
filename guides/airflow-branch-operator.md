@@ -87,7 +87,7 @@ class BranchPythonOperator(PythonOperator, SkipMixin):
 
 ```
 
-`https://github.com/apache/airflow/blob/master/airflow/operators/python_operator.py#L133`
+`https://github.com/apache/airflow/blob/main/airflow/operators/python.py#L165`
 
 ## ShortCircuitOperator
 

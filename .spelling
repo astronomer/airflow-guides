@@ -1595,6 +1595,7 @@ Utils
 safetycheck
 moore
 LatestOnlyOperator
+UI-based
 - guides/salesforce-to-redshift.md
 CampaignMember
 OpportunityContactRole
@@ -1636,7 +1637,6 @@ parsing_processes
 deserialization
 returned_value
 dbt
-serializable
 versioning
 deserializing
 AwsLambdaHook
@@ -1670,3 +1670,13 @@ SQLValueCheckOperator
 SQLIntervalCheckOperator
 SQLThresholdCheckOperator
 thresholding
+  - guides/airflow-dbt.md
+dbt
+dbt's
+airflow-dbt
+dbt_advanced.py
+dbt_tag
+Pre-existing
+productionize
+jaffleshop
+serializable

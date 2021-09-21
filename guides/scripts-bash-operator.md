@@ -35,7 +35,7 @@ If we try to `chmod +x test.sh` inside of the container's bash terminal, we get:
 chmod: test.sh: Read-only file system.
 ```
 
-Looking at a snippet of the `execute` function for the `BashOperator`, we see that operator searches for the script in a temporary directory. That exact line in the source code is [here](https://github.com/apache/incubator-airflow/blob/27309b13f17402eaa61d4e4fede8785effa8bbb7/airflow/operators/bash_operator.py#L90). The `cwd` argument of the `Popen` function allows the child process to change its working directory. In Airflow, this parameter is set to `None` by default. To work around this, we need to specify the full file path within the `Dockerfile`, which we'll come back to below.
+Looking at a snippet of the `execute` function for the `BashOperator`, we see that operator searches for the script in a temporary directory. That exact line in the source code is [here](https://github.com/apache/airflow/blob/b658a4243fb5b22b81677ac0f30c767dfc3a1b4b/airflow/hooks/subprocess.py#L62). The `cwd` argument of the `Popen` function allows the child process to change its working directory. In Airflow, this parameter is set to `None` by default. To work around this, we need to specify the full file path within the `Dockerfile`, which we'll come back to below.
 
 [Access the full `BashOperator` source code](https://airflow.apache.org/docs/apache-airflow/1.10.3/_modules/airflow/operators/bash_operator.html)
 
