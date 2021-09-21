@@ -105,8 +105,6 @@ with DAG('sample_dag',
 
 When working with retries, you should configure a `retry_delay`. This is the amount of time between a task failure and when the next try will begin. You can also turn on `retry_exponential_backoff`, which progressively increases the wait time between retries. This can be useful if you expect that extraneous factors might cause failures periodically.
 
-Finally, you can also set any task to email on success by setting the `email_on_success` parameter to `True`. This is useful when your pipelines have conditional branching, and you want to be notified if a certain path is taken (i.e. certain tasks get run).
-
 ### Custom Notifications
 
 The email notification parameters shown in the sections above are an example of built-in Airflow alerting mechanisms. These simply have to be turned on and don't require any configuration from the user.
@@ -152,7 +150,21 @@ with DAG('sample_dag',
 	)
 ```
 
-Note that custom notification functions can be used in addition to email notifications.
+Note that custom notification functions can also be used to send email notifications. For example, if you want to send emails for successful task runs, you can define an email function in your `on_success_callback`, which may look something like this:
+
+```python
+from airflow.utils.email import send_email
+
+def success_email_function(context):
+    dag_run = context.get('dag_run')
+
+    msg = "DAG ran successfully"
+    subject = f"DAG {dag_run} has completed"
+    send_email(to=your_emails, subject=subject, html_content=msg)
+
+```
+
+This functionality may also be useful when your pipelines have conditional branching, and you want to be notified if a certain path is taken (i.e. certain tasks get run).
 
 ## Email Notifications
 
