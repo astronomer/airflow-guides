@@ -51,7 +51,7 @@ SQLCheckOperator(
 )
 ```
 
-The `sql` argument can be either the complete SQL query as a string or, as in this example, a reference to a query in a local file (for Astronomer projects, this is in the `include/` directory). The `params` argument allows you to pass a dictionary of values to the SQL query, which can be accessed through the `params` keyword in the query. The `database` and `conn_id` arguments are left out of the example, so the default values will be used. The full code can be found in the [data quality demo repository](https://github.com/astronomer/airflow-data-quality-demo/).
+The `sql` argument can be either a complete SQL query as a string or, as in this example, a reference to a query in a local file (for Astronomer projects, this is in the `include/` directory). The `params` argument allows you to pass a dictionary of values to the SQL query, which can be accessed through the `params` keyword in the query. The `database` and `conn_id` arguments are left out of the example, so the default values will be used. The full code can be found in the [data quality demo repository](https://github.com/astronomer/airflow-data-quality-demo/).
 
 Because the `SQLCheckOperator` can process a wide variety of queries, it's important to use the right SQL query for the job at hand. The following query (which we pass into the `sql` argument) was crafted for the specific use case of analyzing daily taxicab data, so the values checked in each case's equation come from domain knowledge. Even the `WHERE` clause needs a data steward to know that to return a unique row, both the `vendor_id` and `pickup_datetime` are needed.
 
@@ -68,7 +68,7 @@ FROM yellow_tripdata
 WHERE pickup_datetime IN (SELECT pickup_datetime FROM yellow_tripdata ORDER BY RANDOM() LIMIT 1)
 ```
 
-If instead of using a random `pickup_datetime`, we want to use a specific date to quality check a row, we can use the `params` passed into the operator like so:
+If we want to use a specific date to quality check a row instead of using a random `pickup_datetime`, we can use the `params` passed into the operator like so:
 
 ```sql
 WHERE pickup_datetime = '{{ params.pickup_datetime }}'
