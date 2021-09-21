@@ -1664,6 +1664,12 @@ template_fields
 templateable
 Templateable
 useable
+  - guides/airflow-sql-data-quality-tutorial.md
+SQLCheckOperator
+SQLValueCheckOperator
+SQLIntervalCheckOperator
+SQLThresholdCheckOperator
+thresholding
   - guides/airflow-dbt.md
 dbt
 dbt's
