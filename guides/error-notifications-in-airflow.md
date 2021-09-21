@@ -150,7 +150,7 @@ with DAG('sample_dag',
 	)
 ```
 
-Note that custom notification functions can be used in addition to email notifications. If you want to send emails for successful task runs, you can define an email function in your `on_success_callback`, which may look something like this:
+Note that custom notification functions can also be used to send email notifications. For example, if you want to send emails for successful task runs, you can define an email function in your `on_success_callback`, which may look something like this:
 
 ```python
 from airflow.utils.email import send_email
@@ -164,7 +164,7 @@ def success_email_function(context):
 
 ```
 
-This may be useful when your pipelines have conditional branching, and you want to be notified if a certain path is taken (i.e. certain tasks get run).
+This functionality may also be useful when your pipelines have conditional branching, and you want to be notified if a certain path is taken (i.e. certain tasks get run).
 
 ## Email Notifications
 
