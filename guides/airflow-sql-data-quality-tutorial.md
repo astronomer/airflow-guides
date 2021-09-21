@@ -35,11 +35,11 @@ The following examples show you when and how to use each of the SQL Check Operat
 
 The `SQLCheckOperator` returns a single row from a provided SQL query and checks to see if any of the returned values in that row are `False`. If any values are `False`, the task fails. This operator allows a great deal of flexibility in checking:
 
-- A specific, single column value
-- Part of or an entire row compared to a known set of values
-- NULLs and types
-- Specific calculations like `SUM`s or `AGG`s
-- The results of any other function that can be written as a SQL query
+- A specific, single column value.
+- Part of or an entire row compared to a known set of values.
+- NULLs and types.
+- Specific calculations like `SUM`s or `AGG`s.
+- The results of any other function that can be written as a SQL query.
 
 The following code snippet shows you how to use the operator in a DAG:
 
