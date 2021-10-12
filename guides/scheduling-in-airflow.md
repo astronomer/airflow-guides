@@ -76,7 +76,7 @@ The scheduling options detailed in the section above cover many common use cases
 - Schedule a DAG daily except for holidays.
 - Schedule a DAG at multiple times daily with uneven intervals (e.g. 1pm and 4:30pm).
 
-Timetables, introduced in Airflow 2.2, address these limitations by allowing users to define their own schedules in Python code. All DAG schedules are determined by their internal timetable. You can still define a `schedule_interval`, which Airflow converts to a timetable behind the scenes. Or, if you have a use case like one of the ones listed above where a cron expression or timedelta is not sufficient, you can define your own timetable.
+[Timetables](https://airflow.apache.org/docs/apache-airflow/stable/concepts/timetable.html), introduced in Airflow 2.2, address these limitations by allowing users to define their own schedules in Python code. All DAG schedules are determined by their internal timetable. You can still define a `schedule_interval`, which Airflow converts to a timetable behind the scenes. Or, if you have a use case like one of the ones listed above where a cron expression or timedelta is not sufficient, you can define your own timetable.
 
 Custom timetables can be registered as part of an Airflow plugin. They must be a subclass of `Timetable`, and should contain the following methods, both of which need to return a `DataInterval` with start and end:
 
