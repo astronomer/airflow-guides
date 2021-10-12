@@ -32,11 +32,11 @@ Note: in this guide we do not cover the `execution_date` concept, which has been
 
 As a simple example of how these concepts fit together, say we have a DAG that is scheduled to run every 5 minutes. Taking the most recent DAG Run, the logical date is `2021-10-08 19:12:36`, which is the same as the data interval start shown in the screenshot below. The data interval end is 5 minutes later.
 
-![Untitled](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/45ebb7c5-b3f8-45bd-b474-b407d1f5b036/Untitled.png)
+![5 Minute Example DAG](https://assets2.astronomer.io/main/guides/scheduling-in-airflow/5_min_example.png)
 
 If we looks at the next run in the UI, which represents the *next* logical date, it shows `2021-10-08 19:17:36`. This is 5 minutes after the previous logical date, and the same as the data interval end of the last DAG Run since there are no "holes" in the schedule. The data interval of the next DAG run is also shown, and Run After, which is the date and time the DAG Run will be scheduled, is the same as the end of the data interval `2021-10-08 19:22:36`.
 
-![Untitled](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/0285081b-05c1-4452-896d-34e5818bc693/Untitled.png)
+![5 Minute Next Run](https://assets2.astronomer.io/main/guides/scheduling-in-airflow/5_min_next_run.png)
 
 In the sections below, we'll walk through how to use the `schedule_interval` or timetables to schedule your DAG.
 
@@ -247,15 +247,15 @@ with DAG(
 
 Looking at the Tree View in the UI, we can see that this DAG has run twice per day at 6:00 and 16:30 since the start date of 10/9/2021. 
 
-![Untitled](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/b109394c-6c56-40d3-8092-29ce75900283/Untitled.png)
+![Timetable DAG Runs](https://assets2.astronomer.io/main/guides/scheduling-in-airflow/timetable_catchup_runs.png)
 
 The next scheduled run is for the interval starting on 10/12/2021 at 16:30 and ending the following day at 6:00. This run will be triggered at the end of the data interval, so after 10/13/2021 6:00.
 
-![Untitled](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/33addec0-98ee-4f0a-a612-048d8a46abfb/Untitled.png)
+![Timetable Next Run](https://assets2.astronomer.io/main/guides/scheduling-in-airflow/timetable_next_run.png)
 
 If we run the DAG manually after 16:30 but before midnight, we can see the data interval for the triggered run was between 6:00 and 16:30 that day as expected.
 
-![Untitled](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/747ef58a-6bf7-44fc-b8af-2e5f50b864bd/Untitled.png)
+![Timetable Manual Run](https://assets2.astronomer.io/main/guides/scheduling-in-airflow/timetable_manual_run.png)
 
 This is a simple timetable that could easily be adjusted or built off of to suit other use cases. In general, timetables are completely customizable as long as the methods above are implemented.
 
