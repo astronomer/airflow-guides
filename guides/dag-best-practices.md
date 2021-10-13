@@ -118,29 +118,29 @@ with DAG('bad_practices_dag_1',
     query_1 = PostgresOperator(
         task_id='covid_query_wa',
         postgres_conn_id='postgres_default',
-        sql='''with yesterday_covid_data as (
+        sql='''WITH yesterday_covid_data AS (
                 SELECT *
                 FROM covid_state_data
                 WHERE date = {{ params.today }}
                 AND state = 'WA'
             ),
-            today_covid_data as (
+            today_covid_data AS (
                 SELECT *
                 FROM covid_state_data
                 WHERE date = {{ params.yesterday }}
                 AND state = 'WA'
             ),
-            two_day_rolling_avg as (
-                SELECT AVG(a.state, b.state) as two_day_avg
-                FROM yesterday_covid_data a
-                JOIN yesterday_covid_data b 
+            two_day_rolling_avg AS (
+                SELECT AVG(a.state, b.state) AS two_day_avg
+                FROM yesterday_covid_data AS a
+                JOIN yesterday_covid_data AS b 
                 ON a.state = b.state
             )
             SELECT a.state, b.state, c.two_day_avg
-            FROM yesterday_covid_data a
-            JOIN today_covid_data b
+            FROM yesterday_covid_data AS a
+            JOIN today_covid_data AS b
             ON a.state=b.state
-            JOIN two_day_rolling_avg c
+            JOIN two_day_rolling_avg AS c
             ON a.state=b.two_day_avg;''',
             params={'today': today, 'yesterday':yesterday}
     )
