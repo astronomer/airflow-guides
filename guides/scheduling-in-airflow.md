@@ -94,7 +94,7 @@ To start, we need to define our `next_dagrun_info` and `infer_manual_data_interv
 - Run at 6:00: interval is from 16:30 *the previous day* to 6:00 the current day
 - Run at 16:30: interval is from 6:00 to 16:30 the current day
 
-With that in mind, first we'll define `next_dagrun_info`. This method provides Airflow with the logic to calculate the data interval for scheduled runs. It also contains logic to handle the DAG's `start_date`, `end_date`, and `catchup` parameters. The method looks like this:
+With that in mind, first we'll define `next_dagrun_info`. This method provides Airflow with the logic to calculate the data interval for scheduled runs. It also contains logic to handle the DAG's `start_date`, `end_date`, and `catchup` parameters. To implement the logic in this method, we use the [Pendulum package](https://pendulum.eustace.io/docs/), which makes dealing with dates and times simple. The method looks like this:
 
 ```python
 def next_dagrun_info(
