@@ -88,7 +88,7 @@ The scheduling options detailed in the sections above cover many common use case
 - Schedule a DAG daily except for holidays.
 - Schedule a DAG at multiple times daily with uneven intervals (e.g. 1pm and 4:30pm).
 
-In the next section, we'll describe how these limitations were addressed in Airflow 2.2.
+In the next section, we'll describe how these limitations were addressed in Airflow 2.2 with the introduction of timetables.
 
 ## Timetables
 
