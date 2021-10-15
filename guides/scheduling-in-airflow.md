@@ -35,8 +35,8 @@ There are a couple of terms and parameters in Airflow that are important to unde
 
 The following parameters are derived from the concepts described above and are important for ensuring your DAG runs at the correct time.
 
-- **`data_interval_start`**: A datetime object defining the start date and time of the data interval. A DAG's timetable will return this parameter for each DAG Run.
-- **`data_interval_end`**: A datetime object defining the end date and time of the data interval. A DAG's timetable will return this parameter for each DAG Run. 
+- **`data_interval_start`**: A datetime object defining the start date and time of the data interval. A DAG's timetable will return this parameter for each DAG Run. This parameter is either created automatically by Airflow, or can be specified by the user when implementing a custom timetable.
+- **`data_interval_end`**: A datetime object defining the end date and time of the data interval. A DAG's timetable will return this parameter for each DAG Run. This parameter is either created automatically by Airflow, or can be specified by the user when implementing a custom timetable.
 - **`schedule_interval`**: A parameter that can be set at the DAG level to define when that DAG will be run. This argument accepts cron expressions or timedelta objects (see the next section for more on this). The `schedule_interval` can still be defined in Airflow 2.2+, and that schedule will be automatically converted to a timetable by Airflow.
 - **`timetable`**: A parameter that can be set at the DAG level to define its timetable (either custom or built-in). Timetables can be defined explicitly within the DAG (more on this below), or will be determined automatically by Airflow in cases where a `schedule_interval` is provided. Either a `timetable` or a `schedule_interval` should be defined for each DAG, not both.
 - **`start_date`**: The first date your DAG will be executed. This parameter is required for your DAG to be scheduled by Airflow.
