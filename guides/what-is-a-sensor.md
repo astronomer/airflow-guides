@@ -4,36 +4,22 @@ description: "An introduction to Sensors in Apache Airflow."
 date: 2018-05-21T00:00:00.000Z
 slug: "what-is-a-sensor"
 heroImagePath: "https://assets.astronomer.io/website/img/guides/IntroToDAG_preview.png"
-tags: ["Hooks", "Operators", "Tasks", "Basics"]
+tags: ["Hooks", "Operators", "Tasks", "Basics", "Sensors"]
 ---
 
-## Sensors
+## Overview
 
-Sensors are a special kind of operator. When they run, they will check to see if a certain criteria is met before they complete and let their downstream tasks execute. This is a great way to have portions of your DAG wait on some external system.
+[Apache Airflow Sensors](https://airflow.apache.org/docs/apache-airflow/stable/concepts/sensors.html) are a special kind of operator that are designed to wait for something to happen. When they run, they will check to see if a certain criteria is met before they complete and let their downstream tasks execute. 
+
+
+## Sensor Basics
 
 > To browse and search all of the available Sensors in Airflow, visit the [Astronomer Registry](https://registry.astronomer.io/modules?types=sensors), the discovery and distribution hub for Apache Airflow integrations created to aggregate and curate the best bits of the ecosystem.
 
+## Sensor Best Practices
+When (And When Not) to Use Sensors
 
-### S3 Key Sensor
+## Smart Sensors
 
-```python
-s1 = S3KeySensor(
-        task_id='s3_key_sensor',
-        bucket_key='{{ ds_nodash }}/my_file.csv',
-        bucket_name='my_s3_bucket',
-        aws_conn_id='my_aws_connection',
-    )
-```
+## Async Operators
 
-The [S3KeySensor](https://registry.astronomer.io/providers/amazon/modules/s3keysensor) will check for the existence of a specified key in S3 every few seconds until it finds it or times out. If it finds the key, it will be marked as success and allow downstream tasks to run. If it times out, it will fail and prevent downstream tasks from running.
-
-[S3KeySensor Code](https://github.com/apache/airflow/blob/main/airflow/providers/amazon/aws/sensors/s3_key.py)
-
-### Sensors Params
-
-There are plenty of other sensors out there that due things such as check a database for a certain row, wait for a certain time of day or sleep for a certain amount of time. All sensors inherit from the [BaseSensorOperator](https://registry.astronomer.io/providers/apache-airflow/modules/basesensoroperator) and have 4 parameters you can set on any sensor.
-
-- **soft_fail:** Set to true to mark the task as SKIPPED on failure
-- **poke_interval:** Time in seconds that the job should wait in between each try. The poke interval should be more than one minute to prevent too much load on the scheduler.
-- **timeout:** Time, in seconds before the task times out and fails.
-- **mode:** How the sensor operates. Options are: `{ poke | reschedule }`, default is `poke`. When set to `poke` the sensor will take up a worker slot for its whole execution time (even between pokes). Use this mode if the expected runtime of the sensor is short or if a short poke interval is required. When set to `reschedule` the sensor task frees the worker slot when the criteria is not met and it's rescheduled at a later time.
