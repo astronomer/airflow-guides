@@ -88,3 +88,18 @@ The `SubDagOperator` kicks off an entire DAG when it is put on a worker slot. Ea
 In mathematical terms, each SubDAG is behaving like a _vertex_ (a single point in a graph) instead of a _graph_.
 
 Depending on the scale and infrastructure, a specialized queue can be added just for SubDAGs (assuming a `CeleryExecutor`), but a cleaner workaround is to avoid SubDAGs entirely.
+
+## Grouping
+
+<!-- markdownlint-disable MD033 -->
+<iframe src="https://fast.wistia.net/embed/iframe/nb88lb9jza" title="branchpythonoperator Video" allow="autoplay; fullscreen" allowtransparency="true" frameborder="0" scrolling="no" class="wistia_embed" name="wistia_embed" allowfullscreen msallowfullscreen width="100%" height="100%" style="aspect-ratio:16/9"></iframe>
+
+It's not uncommon to find yourself with hundreds of tasks in a DAG. Chances are, that's what you have right now. The problem is, the more tasks you have, the more difficult it becomes to maintain your DAG. This is where the concept of "grouping" comes in.
+
+- What are the limitations of the SubDAGs?
+- Should I still use them?
+- Is there another way of grouping tasks in Airflow?
+
+Find out on the [Astronomer's Grouping Course](https://academy.astronomer.io/airflow-grouping) for FREE today!
+
+See you there!
