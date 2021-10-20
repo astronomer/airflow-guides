@@ -142,11 +142,12 @@ To use smart sensors, you must be using Airflow 2+. You can then enable smart se
             )
             return result
     ```
+    
     The class should inherit from the sensor class you are updating (e.g. `FileSensor`). It must include `poke_context_fields`, which specifies the arguments needed by your sensor, and the `is_smart_sensor_compatible` method, which tells Airflow this type of sensor is a smart sensor. Note when using smart sensors you cannot use soft fail or any callbacks.
 
     Implementation of this class will vary depending on which sensor you are using, and some are more complex than others. For an example with the more complicated `ExternalTaskSensor`, see the [supporting repo](https://github.com/marclamberti/webinar-sensors).
 
-3. Run Airlfow or deploy the changes above to your Airflow deployment. Then turn on the `smart_sensor_group_shard_0` DAG to run your smart sensors. Note you may have more than one smart sensor DAG if you set your `SHARDS` parameter to greater than 1. 
+3. Run Airflow or deploy the changes above to your Airflow deployment. Then turn on the `smart_sensor_group_shard_0` DAG to run your smart sensors. Note you may have more than one smart sensor DAG if you set your `SHARDS` parameter to greater than 1. 
 
 ## Deferrable Operators
 
