@@ -17,7 +17,7 @@ In this guide, we'll cover the basics of using sensors in Airflow, best practice
 
 Sensors are conceptually simple: they are operators that check if a condition is satisfied on a particular interval. If the condition has been met, the task is marked successful and the DAG can move on to downstream tasks. If the condition hasn't been met, the sensor waits for another interval before checking again. 
 
-All sensors inherit from the [`BaseSensorOperator`](https://github.com/apache/airflow/blob/main/airflow/sensors/base.py.) and have the following parameters:
+All sensors inherit from the [`BaseSensorOperator`](https://github.com/apache/airflow/blob/main/airflow/sensors/base.py). and have the following parameters:
 
 - `mode`: How the sensor operates. There are two options:
     - `poke`: This is the default mode. When using `poke`, the sensor occupies a worker slot for the entire execution time and sleeps between pokes. This mode is best if you expect a short runtime for the sensor.
@@ -142,7 +142,7 @@ To use smart sensors, you must be using Airflow 2+. You can then enable smart se
             )
             return result
     ```
-    
+
     The class should inherit from the sensor class you are updating (e.g. `FileSensor`). It must include `poke_context_fields`, which specifies the arguments needed by your sensor, and the `is_smart_sensor_compatible` method, which tells Airflow this type of sensor is a smart sensor. Note when using smart sensors you cannot use soft fail or any callbacks.
 
     Implementation of this class will vary depending on which sensor you are using, and some are more complex than others. For an example with the more complicated `ExternalTaskSensor`, see the [supporting repo](https://github.com/marclamberti/webinar-sensors).
