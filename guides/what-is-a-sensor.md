@@ -11,7 +11,7 @@ tags: ["Operators", "Tasks", "Basics", "Sensors"]
 
 [Apache Airflow Sensors](https://airflow.apache.org/docs/apache-airflow/stable/concepts/sensors.html) are a special kind of operator that are designed to wait for something to happen. When they run, they will check to see if a certain criteria is met before they are marked successful and let their downstream tasks execute. When used properly, they can be a great way of making your DAGs more event driven.
 
-In this guide, we'll cover the basics of using sensors in Airflow, best practices for implementing sensors in production, and new sensor-related features in Airflow 2 like smart sensors and asynchronous operators. For more in-depth guidance on these topics, check out our [mastering sensors webinar](https://www.astronomer.io/events/webinars/creating-data-pipelines-using-master-sensors/).
+In this guide, we'll cover the basics of using sensors in Airflow, best practices for implementing sensors in production, and new sensor-related features in Airflow 2 like smart sensors and deferrable operators. For more in-depth guidance on these topics, check out our [mastering sensors webinar](https://www.astronomer.io/events/webinars/creating-data-pipelines-using-master-sensors/).
 
 ## Sensor Basics
 
@@ -97,12 +97,18 @@ This DAG is waiting for data to be available in a Postgres database before runni
 
 Sensors are easy to implement, but there are a few things to keep in mind when using them to ensure you are getting the best possible Airflow experience. The following tips will help you avoid any performance issues when using sensors:
 
-- **Always** define the `timeout` parameter for your sensor. The default for this parameter is one week, which is a long time for your sensor to be running! When you implement a sensor, take care to know your use case and how long you expect your sensor to be waiting and define your timeout accordingly.
+- **Always** define a meaningful `timeout` parameter for your sensor. The default for this parameter is 7 days, which is a long time for your sensor to be running! When you implement a sensor, take care to know your use case and how long you expect your sensor to be waiting and define your timeout accordingly.
 - Whenever possible and especially for long-running sensors, use the `reschedule` mode so your sensor is not constantly occupying a worker slot. This will help avoid deadlocks in Airflow from sensors taking all the available worker slots. The exception to this rule is the following point:
 - If your `poke_interval` is very short (less than about 5 minutes), use the `poke` mode. Using `reschedule` mode in this case can overload your scheduler.
 - Define a meaningful `poke_interval` based on your use case. There is no need for the task to check the condition every 30 seconds (the default) if you know the total amount of waiting time is likely to be 30 minutes.
 
 ## Smart Sensors
 
-## Async Operators
+[Smart sensors](https://airflow.apache.org/docs/apache-airflow/stable/concepts/smart-sensors.html) are a relatively new feature released with Airflow 2.0, where sensors are executed in batches using a centralized process. This eliminates a major drawback of classic sensors, which use one process per sensor and therefore can consume considerable resources at scale for longer running tasks.
+
+## Deferrable Operators
+
+[Deferrable operators](https://airflow.apache.org/docs/apache-airflow/stable/concepts/deferring.html) (sometimes referred to as asynchronous operators) were released with Airflow 2.2 and were designed to eliminate the problem of *any* operator or sensor taking up a full worker slot for the entire time they are running. In other words, they solve the same problems as smart sensors, but for a much wider range of use cases. 
+
+For DAG authors, using deferrable operators is no different from using regular operators (i.e. using them is much simpler than implementing smart sensors). For more on writing your own deferrable operators, check out the [Apache Airflow documentation](https://airflow.apache.org/docs/apache-airflow/stable/concepts/deferring.html#smart-sensors).
 
