@@ -106,6 +106,8 @@ Sensors are easy to implement, but there are a few things to keep in mind when u
 
 [Smart sensors](https://airflow.apache.org/docs/apache-airflow/stable/concepts/smart-sensors.html) are a relatively new feature released with Airflow 2.0, where sensors are executed in batches using a centralized process. This eliminates a major drawback of classic sensors, which use one process per sensor and therefore can consume considerable resources at scale for longer running tasks. With smart sensors, sensors in your DAGs are registered to the metadata database, and then a separate DAG fetches those sensors and manages processing them. 
 
+![Smart Sensors](https://assets2.astronomer.io/main/guides/sensors-101/smart_sensors_architecture.png)
+
 Note that smart sensors are considered a beta feature, and may be changed in future versions of Airflow. They are somewhat complex to implement, and not very widely used to-date. They are also generally less preferable to deferrable operators (more on these in the section below), which are more flexible. For these reasons, we recommend using smart sensors only to advanced Airflow users who are running many sensors.
 
 To use smart sensors, you must be using Airflow 2+. You can then enable smart sensors using the following steps. 
