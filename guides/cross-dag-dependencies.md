@@ -3,7 +3,7 @@ title: "Cross-DAG Dependencies"
 description: "How to implement dependencies between your Airflow DAGs."
 date: 2021-06-07T00:00:00.000Z
 slug: "cross-dag-dependencies"
-tags: ["DAGs", "Subdags", "Dependencies"]
+tags: ["DAGs", "Subdags", "Dependencies", "Sensors"]
 ---
 
 ## Overview
