@@ -89,7 +89,7 @@ In mathematical terms, each SubDAG is behaving like a _vertex_ (a single point i
 
 Depending on the scale and infrastructure, a specialized queue can be added just for SubDAGs (assuming a `CeleryExecutor`), but a cleaner workaround is to avoid SubDAGs entirely.
 
-## Grouping
+## Additional Resources: Grouping
 
 <!-- markdownlint-disable MD033 -->
 <iframe src="https://fast.wistia.net/embed/iframe/nb88lb9jza" title="branchpythonoperator Video" allow="autoplay; fullscreen" allowtransparency="true" frameborder="0" scrolling="no" class="wistia_embed" name="wistia_embed" allowfullscreen msallowfullscreen width="100%" height="100%" style="aspect-ratio:16/9"></iframe>
@@ -100,6 +100,6 @@ It's not uncommon to find yourself with hundreds of tasks in a DAG. Chances are,
 - Should I still use them?
 - Is there another way of grouping tasks in Airflow?
 
-Find out on the [Astronomer's Grouping Course](https://academy.astronomer.io/airflow-grouping) for FREE today!
+Find out by taking [Astronomer's Grouping Course](https://academy.astronomer.io/airflow-grouping) for FREE today!
 
 See you there!

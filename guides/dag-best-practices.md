@@ -293,12 +293,12 @@ Even if your code is perfect, failures happen. In a distributed environment wher
 
 Issues like this can be resolved by using task retries. Best practice is to set retries as a `default_arg` so they are applied at the DAG level and get more granular for specific tasks only where necessary. A good range to try is ~2–4 retries.
 
-## Best Practices
+## Additional Resources
 
 <!-- markdownlint-disable MD033 -->
 <iframe src="https://fast.wistia.net/embed/iframe/hfrzvkb3lk" title="branchpythonoperator Video" allow="autoplay; fullscreen" allowtransparency="true" frameborder="0" scrolling="no" class="wistia_embed" name="wistia_embed" allowfullscreen msallowfullscreen width="100%" height="100%" style="aspect-ratio:16/9"></iframe>
 
-Are you looking for the untold way of creating better and more reliable data pipelines? What you should know and do to sleep quiet while your tasks run? Well, you've come at the right place! In this course you will learn
+Are you looking for more ways of creating better and more reliable data pipelines? What you should know and do to sleep easily while your tasks run? Well, you've come at the right place! In this course you will learn more about:
 
 - The best practices around DAG authoring
 - How to make better tasks
