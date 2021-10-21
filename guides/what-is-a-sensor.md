@@ -91,7 +91,7 @@ def partner():
 dag = partner()
 ```
 
-This DAG is waiting for data to be available in a Postgres database before running validation and storing tasks. The `SqlSensor` task (`waiting_for_partner`) runs the `CHECK_PARTNER.sql` script every 20 seconds (the `poke_interval`) until the criteria is met. The `mode` is set to `reschedule`, meaning between each 20 second interval the task will not take a worker slot. The `timeout` is set to 5 minutes, so if the data hasn't arrived by that time, the task fails. Once the `SqlSensor` criteria is met, the DAG moves on to the downstream tasks. You can find the full code for this example in [this repo](https://github.com/marclamberti/webinar-sensors).
+This DAG is waiting for data to be available in a Postgres database before running validation and storing tasks. In general, the `SqlSensor` runs a SQL query and is marked successful when that query returns data: specifically, when the result is not in the set (0, '0', '', None). The `SqlSensor` task in this example (`waiting_for_partner`) runs the `CHECK_PARTNER.sql` script every 20 seconds (the `poke_interval`) until the data is returned. The `mode` is set to `reschedule`, meaning between each 20 second interval the task will not take a worker slot. The `timeout` is set to 5 minutes, so if the data hasn't arrived by that time, the task fails. Once the `SqlSensor` criteria is met, the DAG moves on to the downstream tasks. You can find the full code for this example in [this repo](https://github.com/marclamberti/webinar-sensors).
 
 ## Sensor Best Practices
 
