@@ -292,3 +292,18 @@ Changing the name of a DAG also creates a new entry in the database, which power
 Even if your code is perfect, failures happen. In a distributed environment where task containers are executed on shared hosts, it's possible for tasks to be killed off unexpectedly. When this happens, you might see Airflow's logs mention a [zombie process](https://en.wikipedia.org/wiki/Zombie_process).
 
 Issues like this can be resolved by using task retries. Best practice is to set retries as a `default_arg` so they are applied at the DAG level and get more granular for specific tasks only where necessary. A good range to try is ~2–4 retries.
+
+## Additional Resources
+
+<!-- markdownlint-disable MD033 -->
+<iframe src="https://fast.wistia.net/embed/iframe/hfrzvkb3lk" title="branchpythonoperator Video" allow="autoplay; fullscreen" allowtransparency="true" frameborder="0" scrolling="no" class="wistia_embed" name="wistia_embed" allowfullscreen msallowfullscreen width="100%" height="100%" style="aspect-ratio:16/9"></iframe>
+
+Are you looking for more ways of creating better and more reliable data pipelines? What you should know and do to sleep easily while your tasks run? Well, you've come at the right place! In this course you will learn more about:
+
+- The best practices around DAG authoring
+- How to make better tasks
+- What configuration settings make a difference
+
+Find out on the [Astronomer's Best Practice Course](https://academy.astronomer.io/airflow-best-practices) for FREE today!
+
+See you there!
