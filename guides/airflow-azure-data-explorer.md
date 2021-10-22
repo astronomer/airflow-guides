@@ -6,8 +6,6 @@ slug: "airflow-azure-data-explorer"
 tags: ["Integrations", "Azure", "DAGs"]
 ---
 
-> Note: All code in this guide can be found in [this Github repo](https://github.com/astronomer/azure-operator-tutorials).
-
 ## Overview
 
 [Azure Data Explorer](https://azure.microsoft.com/en-us/services/data-explorer/) (ADX) is a managed data analytics service used for performing real-time analysis of large volumes of streaming data. It's particularly useful for IoT applications, big data logging platforms, and SaaS applications.
@@ -15,6 +13,8 @@ tags: ["Integrations", "Azure", "DAGs"]
 Using Airflow's built-in Azure Data Explorer [Hook](https://registry.astronomer.io/providers/microsoft-azure/modules/azuredataexplorerhook) and [Operator](https://registry.astronomer.io/providers/microsoft-azure/modules/azuredataexplorerqueryoperator), you can easily integrate ADX queries into your DAGs. In this guide, we'll describe how to make your ADX cluster to work with Airflow and walk through an example DAG that runs a query against a database in that cluster.
 
 If you don't already have an ADX cluster running and want to follow along with this example, you can find instructions for creating a cluster and loading it with some demo data in [Microsoft's documentation](https://docs.microsoft.com/en-us/azure/data-explorer/create-cluster-database-portal).
+
+> Note: All code in this guide can be found on [the Astronomer Registry](https://registry.astronomer.io/dags/azure-data-explorer-tutorial).
 
 ## Configuring ADX to Work with Airflow
 

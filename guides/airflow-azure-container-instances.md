@@ -6,11 +6,11 @@ slug: "airflow-azure-container-instances"
 tags: ["Integrations", "Azure", "DAGs"]
 ---
 
-> Note: All code in this guide can be found in [this Github repo](https://github.com/astronomer/azure-operator-tutorials).
-
 ## Overview
 
 [Azure Container Instances](https://azure.microsoft.com/en-us/services/container-instances/) (ACI) is one service that Azure users can leverage for working with containers. In this guide, we'll outline how to orchestrate ACI using Airflow and walk through an example DAG.
+
+> Note: All code in this guide can be found on [the Astronomer Registry](https://registry.astronomer.io/dags/azure-container-instance).
 
 ## Orchestrating ACI with Airflow
 

@@ -7,7 +7,6 @@ heroImagePath: "https://assets2.astronomer.io/main/guides/talend/talend_airflow_
 tags: ["Integrations"]
 ---
 <!-- markdownlint-disable-file -->
-> Note: All code shown in this guide can be found in [this Github repo](https://github.com/astronomer/airflow-talend-tutorial).
 
 ## Why use Talend and Airflow
 
@@ -48,6 +47,8 @@ Below we will show how to configure your Talend Cloud account to work with the A
 - [Talend Public API Docs](https://community.talend.com/s/article/Using-the-Talend-Cloud-Management-Console-Public-API-O2Ndn)
 
 - [Talend UI Docs](https://api.us-west.cloud.talend.com/tmc/swagger/swagger-ui.html#!/)
+
+> Note: The code shown in this example can be found on [the Astronomer Registry](https://registry.astronomer.io/dags/talend-api).
 
 ### Getting Started with the Talend Cloud API
 
@@ -126,6 +127,8 @@ Finally, note that because the API call will simply trigger the job, the Airflow
 The second way to execute Talend jobs with Airflow is to containerize them and execute them from Airflow using the `KubernetesPodOperator`. This is a good option if you are using Talend studio, and if you have tasks that are dependent on your Talend jobs completing first.
 
 Here we'll show how to containerize an existing Talend job, and then execute some containerized jobs with dependencies using the `KubernetesPodOperator` in Airflow.
+
+> Note: The code shown in this example can be found on [the Astronomer Registry](https://registry.astronomer.io/dags/talend-containers).
 
 ### Containerizing Talend Jobs
 
