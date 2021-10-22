@@ -11,9 +11,9 @@ tags: ["DAGs"]
 
 One of the most fundamental features of Apache Airflow is the ability to schedule jobs. Historically, Airflow users could schedule their DAGs by specifying a `schedule_interval` with a cron expression, a timedelta, or a preset Airflow schedule. 
 
-Timetables, released in Airflow 2.2, brought new flexibility to scheduling. Timetables allow users to create their own custom schedules using Python, effectively eliminating the limitations of cron. With Timetables, you can now schedule DAGs to run at any time for any use case.
+Timetables, released in Airflow 2.2, brought new flexibility to scheduling. Timetables allow users to create their own custom schedules using Python, effectively eliminating the limitations of cron. With timetables, you can now schedule DAGs to run at any time for any use case.
 
-In this guide, we'll walk through Airflow scheduling concepts and the different ways you can schedule a DAG with a focus on Timetables.  
+In this guide, we'll walk through Airflow scheduling concepts and the different ways you can schedule a DAG with a focus on timetables. For additional instruction on these concepts, check out our [Scheduling in Airflow webinar](https://www.astronomer.io/events/webinars/trigger-dags-any-schedule).  
 
 > Note: All code in this guide can be found in [this repo](https://github.com/astronomer/airflow-scheduling-tutorial).
 
