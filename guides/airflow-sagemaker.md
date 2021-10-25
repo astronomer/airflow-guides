@@ -36,7 +36,7 @@ The following two use cases demonstrate how to use some of these operators, but 
 
 ## Use Case 1: Orchestrate Existing SageMaker Model
 
-> Note: The code shown in this example can be found on [the Astronomer Registry](https://registry.astronomer.io/dags/sagemaker-run-model).
+> **Note:** The code shown in this example can be found on [the Astronomer Registry](https://registry.astronomer.io/dags/sagemaker-run-model).
 
 Our first use case is using Airflow to orchestrate an existing SageMaker model. We will use a DAG to acquire the data, make predictions on that data with a SageMaker model, and store the results in our data warehouse. This use case is relevant if you need to use your model to make predictions (run inferences) on a scheduled or ad-hoc basis. You can run the DAG on a schedule if you know new data is going to be available consistently, or use a sensor to trigger the DAG whenever new data becomes available.
 
@@ -180,7 +180,7 @@ The output of the transform job will then be uploaded to Redshift, where we can 
 
 ## Use Case 2: Orchestrate a Full ML Pipeline
 
-> Note: The code shown in this example can be found on [the Astronomer Registry](https://registry.astronomer.io/dags/sagemaker-pipeline).
+> **Note:** The code shown in this example can be found on [the Astronomer Registry](https://registry.astronomer.io/dags/sagemaker-pipeline).
 
 Our second use case is using Airflow to orchestrate an end-to-end ML pipeline in SageMaker. We use Airflow to acquire and pre-process the data, train a model, create a model from the training results, and evaluate the model on test data using a batch transform job. This use case is relevant if you want to automate the model training, testing, and deployment parts of your ML pipeline.
 

@@ -48,7 +48,7 @@ Below we will show how to configure your Talend Cloud account to work with the A
 
 - [Talend UI Docs](https://api.us-west.cloud.talend.com/tmc/swagger/swagger-ui.html#!/)
 
-> Note: The code shown in this example can be found on [the Astronomer Registry](https://registry.astronomer.io/dags/talend-api).
+> **Note:** The code shown in this example can be found on [the Astronomer Registry](https://registry.astronomer.io/dags/talend-api).
 
 ### Getting Started with the Talend Cloud API
 
@@ -128,7 +128,7 @@ The second way to execute Talend jobs with Airflow is to containerize them and e
 
 Here we'll show how to containerize an existing Talend job, and then execute some containerized jobs with dependencies using the `KubernetesPodOperator` in Airflow.
 
-> Note: The code shown in this example can be found on [the Astronomer Registry](https://registry.astronomer.io/dags/talend-containers).
+> **Note:** The code shown in this example can be found on [the Astronomer Registry](https://registry.astronomer.io/dags/talend-containers).
 
 ### Containerizing Talend Jobs
 

@@ -12,7 +12,7 @@ tags: ["Integrations", "DAGs"]
 
 Astronomer has many customers who use Databricks to run jobs as part of complex pipelines. This can easily be accomplished by leveraging the [Databricks provider](https://registry.astronomer.io/providers/databricks), which includes Airflow hooks and operators that are actively maintained by the Databricks and Airflow communities. In this guide, we'll discuss the hooks and operators available for interacting with Databricks clusters and run jobs, and we'll show an example of how to use both available operators in an Airflow DAG.
 
-> Note: All code in this guide can be found on [the Astronomer Registry](https://registry.astronomer.io/dags/databricks-tutorial).
+> **Note**: All code in this guide can be found on [the Astronomer Registry](https://registry.astronomer.io/dags/databricks-tutorial).
 
 ## Databricks Hooks and Operators
 

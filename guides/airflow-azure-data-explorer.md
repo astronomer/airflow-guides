@@ -14,7 +14,7 @@ Using Airflow's built-in Azure Data Explorer [Hook](https://registry.astronomer.
 
 If you don't already have an ADX cluster running and want to follow along with this example, you can find instructions for creating a cluster and loading it with some demo data in [Microsoft's documentation](https://docs.microsoft.com/en-us/azure/data-explorer/create-cluster-database-portal).
 
-> Note: All code in this guide can be found on [the Astronomer Registry](https://registry.astronomer.io/dags/azure-data-explorer-tutorial).
+> **Note:** All code in this guide can be found on [the Astronomer Registry](https://registry.astronomer.io/dags/azure-data-explorer-tutorial).
 
 ## Configuring ADX to Work with Airflow
 
