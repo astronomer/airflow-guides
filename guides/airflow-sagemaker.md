@@ -14,8 +14,6 @@ Airflow is the perfect orchestrator to pair with SageMaker. With Airflow, you ca
 
 In this guide, we'll review the SageMaker modules available as part of the [AWS Airflow provider](https://registry.astronomer.io/providers/amazon). We'll also provide two example implementations for using SageMaker with Airflow: one for using Airflow to get inferences from an existing SageMaker model, and one for using Airflow to orchestrate a full ML pipeline including creating, training, and testing a new SageMaker model. 
 
-> Note: All of the code in this guide can be found in [this GitHub repo](https://github.com/astronomer/airflow-sagemaker-tutorial).
-
 ## SageMaker Modules
 
 There are multiple SageMaker operators and sensors available within the [AWS provider](https://registry.astronomer.io/providers/amazon) that cover a wide range of SageMaker features. All of these are built off of the [SageMakerBaseOperator](https://registry.astronomer.io/providers/amazon/modules/sagemakerbaseoperator), which uses the SageMaker API under the hood. If you're new to working with SageMaker, it can be helpful to review the [API documentation](https://docs.aws.amazon.com/sagemaker/latest/APIReference/API_Operations_Amazon_SageMaker_Service.html) when configuring any of the available operators and sensors.
@@ -37,6 +35,8 @@ In general, each operator will initiate a particular SageMaker job and each sens
 The following two use cases demonstrate how to use some of these operators, but they generally all have similar requirements, such as an input configuration for the job being executed. Documentation on what should be included in each configuration can be found in the Actions section of the [API documentation](https://docs.aws.amazon.com/sagemaker/latest/APIReference/API_Operations.html).
 
 ## Use Case 1: Orchestrate Existing SageMaker Model
+
+> **Note:** The code shown in this example can be found on [the Astronomer Registry](https://registry.astronomer.io/dags/sagemaker-run-model).
 
 Our first use case is using Airflow to orchestrate an existing SageMaker model. We will use a DAG to acquire the data, make predictions on that data with a SageMaker model, and store the results in our data warehouse. This use case is relevant if you need to use your model to make predictions (run inferences) on a scheduled or ad-hoc basis. You can run the DAG on a schedule if you know new data is going to be available consistently, or use a sensor to trigger the DAG whenever new data becomes available.
 
@@ -179,6 +179,8 @@ Now if we run this DAG and go to our SageMaker dashboard, we should see the job 
 The output of the transform job will then be uploaded to Redshift, where we can easily access results. This is a simple form of this use case, but you can easily extend this DAG to acquire data from an external system, clean or pre-process the data if needed, and complete any other tasks necessary to publish the results after saving them to Redshift.
 
 ## Use Case 2: Orchestrate a Full ML Pipeline
+
+> **Note:** The code shown in this example can be found on [the Astronomer Registry](https://registry.astronomer.io/dags/sagemaker-pipeline).
 
 Our second use case is using Airflow to orchestrate an end-to-end ML pipeline in SageMaker. We use Airflow to acquire and pre-process the data, train a model, create a model from the training results, and evaluate the model on test data using a batch transform job. This use case is relevant if you want to automate the model training, testing, and deployment parts of your ML pipeline.
 

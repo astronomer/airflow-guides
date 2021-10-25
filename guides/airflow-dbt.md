@@ -17,9 +17,6 @@ Teams can use Airflow to orchestrate and execute dbt models as DAGs. Running dbt
 
 In this guide, we'll walk through two common use cases for orchestrating dbt with Airflow via the `BashOperator`: one at the [project](https://docs.getdbt.com/docs/building-a-dbt-project/projects) level, and another at the [model](https://docs.getdbt.com/docs/building-a-dbt-project/building-models) level. We'll also walk through how to extend the model-level use case by automating changes to a dbt model.
 
-
-> Note: All of the code used in this guide can be found in [this GitHub repo](https://github.com/astronomer/airflow-dbt-demo).
-
 ## Use Case 1: dbt + Airflow at the Project Level
 
 When orchestrating dbt, we have a few options for our DAGs. We can use:
@@ -29,6 +26,8 @@ When orchestrating dbt, we have a few options for our DAGs. We can use:
 - dbt commands directly through the [`BashOperator`](https://airflow.apache.org/docs/apache-airflow/stable/howto/operator/bash.html)
 
 For this example we'll use the `BashOperator`, which simply executes a shell command, because it lets us run specific dbt commands. The primary dbt interface is the command line, so the `BashOperator` is one of the best tools for managing dbt. You can execute `dbt run` or `dbt test` directly in Airflow as you would with any other shell.
+
+> **Note:** The code for this example can be found on [the Astronomer Registry](https://registry.astronomer.io/dags/dbt-basic).
 
 The DAG below uses the `BashOperator` to run a dbt project and the models' associated tests, each in a single Task:
 
@@ -151,6 +150,8 @@ for node in data["nodes"].keys():
             if upstream_node_type == "model":
                 dbt_tasks[upstream_node] >> dbt_tasks[node]
 ```
+
+> **Note:** The code for this example can be found on [the Astronomer Registry](https://registry.astronomer.io/dags/dbt-advanced).
 
 Now we have a solution that orchestrates a dbt project in detail, giving data engineers visibility into each dbt model without affecting each model's dependencies. In the next section, we will see how to make this DAG resilient to change.
 

@@ -6,11 +6,11 @@ slug: "airflow-azure-container-instances"
 tags: ["Integrations", "Azure", "DAGs"]
 ---
 
-> Note: All code in this guide can be found in [this Github repo](https://github.com/astronomer/azure-operator-tutorials).
-
 ## Overview
 
 [Azure Container Instances](https://azure.microsoft.com/en-us/services/container-instances/) (ACI) is one service that Azure users can leverage for working with containers. In this guide, we'll outline how to orchestrate ACI using Airflow and walk through an example DAG.
+
+> **Note:** All code in this guide can be found on [the Astronomer Registry](https://registry.astronomer.io/dags/azure-container-instance).
 
 ## Orchestrating ACI with Airflow
 
@@ -43,7 +43,7 @@ With these points in mind, we recommend using ACI with the `AzureContainerInstan
 
 Using Airflow to create and run an Azure Container Instance is straightforward: You first identify the Azure resource group you want to create the Azure Container Instance in (or create a new one), then ensure your Azure instance has a service principle with write access over that resource group. For more information on setting this up, refer to the [Azure documentation](https://docs.microsoft.com/en-us/azure/active-directory/develop/howto-create-service-principal-portal).
 
-> Note: In Airflow 2.0, provider packages are separate from the core of Airflow. If you are running 2.0 with Astronomer, the [Microsoft Provider](https://registry.astronomer.io/providers/microsoft-azure) package is already included in our Astronomer Certified Image; if you are not using Astronomer you may need to install this package separately to use the hooks, operators, and connections described here. To learn more, read [Airflow Docs on Provider Packages](https://airflow.apache.org/docs/apache-airflow-providers/index.html).
+> **Note**: In Airflow 2.0, provider packages are separate from the core of Airflow. If you are running 2.0 with Astronomer, the [Microsoft Provider](https://registry.astronomer.io/providers/microsoft-azure) package is already included in our Astronomer Certified Image; if you are not using Astronomer you may need to install this package separately to use the hooks, operators, and connections described here. To learn more, read [Airflow Docs on Provider Packages](https://airflow.apache.org/docs/apache-airflow-providers/index.html).
 
 Next, create an Airflow connection with the type Azure Container Instance. Specify your Client ID in the Login field, Client Secret in the Password field, and Tenant and Subscription IDs in the Extras field as json. It should look something like this:
 

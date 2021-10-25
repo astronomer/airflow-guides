@@ -6,13 +6,13 @@ slug: "airflow-databricks"
 tags: ["Integrations", "DAGs"]
 ---
 
-> Note: All code in this guide can be found in [this Github repo](https://github.com/astronomer/airflow-databricks-tutorial).
-
 ## Overview
 
 [Databricks](https://databricks.com/) is a popular unified data and analytics platform built around [Apache Spark](https://spark.apache.org/) that provides users with fully managed Apache Spark clusters and interactive workspaces. At Astronomer we believe that best practice is to use Airflow primarily as an orchestrator, and to use an execution framework like Apache Spark to do the heavy lifting of data processing. It follows that using Airflow to orchestrate Databricks jobs is a natural solution for many common use cases.
 
 Astronomer has many customers who use Databricks to run jobs as part of complex pipelines. This can easily be accomplished by leveraging the [Databricks provider](https://registry.astronomer.io/providers/databricks), which includes Airflow hooks and operators that are actively maintained by the Databricks and Airflow communities. In this guide, we'll discuss the hooks and operators available for interacting with Databricks clusters and run jobs, and we'll show an example of how to use both available operators in an Airflow DAG.
+
+> **Note**: All code in this guide can be found on [the Astronomer Registry](https://registry.astronomer.io/dags/databricks-tutorial).
 
 ## Databricks Hooks and Operators
 
