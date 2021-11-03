@@ -24,20 +24,20 @@ The easiest way to re-run a task in Airflow is to clear the task status. Doing s
 
 To clear the task status, go to the Graph View or Tree View in the UI and click on the task instance you want to re-run. Then under Task Actions, select Clear, as shown in the screenshot below. 
 
-SCREENSHOT HERE
+![Clear Task Status](https://assets2.astronomer.io/main/guides/re-running-dags/clear_tasks_ui.png)
 
 There are multiple selections you can make when clearing the task instance that allow you to clear more than the task selected:
 
-- Past: Will also clear any instances of that task in DAG runs with a data interval before the run being cleared.
-- Future: Will also clear any instances of that task in DAG runs with a data interval after the run being cleared.
-- Upstream: Will also clear any upstream tasks in the current DAG run.
-- Downstream: Will also clear any downstream tasks in the current DAG run.
-- Recursive: Will clear all tasks instances in the child DAG and any parent DAGs (if you have cross-DAG dependencies).
-- Failed: Of the task instances chosen based on other selections, only failed instances will be cleared.
+- **Past:** Will also clear any instances of that task in DAG runs with a data interval before the run being cleared.
+- **Future:** Will also clear any instances of that task in DAG runs with a data interval after the run being cleared.
+- **Upstream:** Will also clear any upstream tasks in the current DAG run.
+- **Downstream:** Will also clear any downstream tasks in the current DAG run.
+- **Recursive:** Will clear all tasks instances in the child DAG and any parent DAGs (if you have cross-DAG dependencies).
+- **Failed:** Of the task instances chosen based on other selections, only failed instances will be cleared.
 
 Once you make your selections and click 'Clear', the Airflow UI will show a summary of the task instances that will be cleared and ask you to confirm. Use this to ensure your selections will be applied as you intended.
 
-SCREENSHOT HERE
+![Task Instance Summary](https://assets2.astronomer.io/main/guides/re-running-dags/task_instance_confirmation.png)
 
 You can also use the Airflow CLI to clear task statuses:
 
@@ -53,17 +53,17 @@ For more info on the positional arguments for the `clear` command, check out the
 
 Finally, if you want to clear a full DAG run (all tasks in that DAG), go to the Tree View in the UI, click on the DAG circle and select 'Clear'. 
 
-SCREENSHOT HERE
+![Clear DAG Status](https://assets2.astronomer.io/main/guides/re-running-dags/clear_dag_ui.png)
 
 ### Clearing Tasks in Bulk
 
 Sometimes you may need to re-run many tasks or DAGs at the same time. Rather than manually clicking on every task you need to re-run, you can clear task statuses in bulk. In the Airflow UI, go to the Browse tab and click on the Task Instances view. Then select any tasks you want to re-run, click on the Actions drop down, and select Clear.
 
-SCREENSHOT HERE
+![Clear Task Bulk](https://assets2.astronomer.io/main/guides/re-running-dags/bulk_clear_tasks.png)
 
 To re-run entire DAGs in bulk, you can follow a similar process by going to the DAG Runs view (under the Browse tab), selecting the DAG runs you want to re-run, and selecting Clear the State under the Actions drop down.
 
-SCREENSHOT HERE
+![Clear DAGs Bulk](https://assets2.astronomer.io/main/guides/re-running-dags/bulk_clear_dags.png)
 
 ## Catchup
 
@@ -121,4 +121,5 @@ If you don't have access to the Airflow CLI (for example, if you are running Air
 
 - Deploy a copy of the DAG with a new name and a start date that is the date you want to backfill to. Airflow will consider this a separate DAG so you won't see all the DAG runs/task instances in the same place, but it would accomplish running the DAG for data in the desired time period.
 - If you have a small number of DAG runs to backfill, you can trigger them manually from the Airflow UI and choose the desired logical date.
-SCREENSHOT HERE
+
+    ![Trigger Execution Date](https://assets2.astronomer.io/main/guides/re-running-dags/trigger_execution_date.png)
