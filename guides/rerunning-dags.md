@@ -94,14 +94,31 @@ Catchup is a powerful feature, but it can also be dangerous, especially since it
 - **`wait_for_downstream`**: This parameter is set at the DAG level, and is kind of like `depends_on_past` but extended to a DAG level instead of a task level. The entire DAG will need to run successfully for the next DAG run to start.
 - **`catchup_by_default`**: This parameter is set at the Airflow level (in your `airflow.cfg` or as an environment variable). If you set this parameter to `False` all DAGs in your Airflow environment will not catchup unless you explicitly turn it on.
 
-
-
+Additionally, if you want to deploy your DAG with catchup enabled but there are some tasks you don't want to run during the catchup (e.g. notification tasks), you can use the [`LatestOnlyOperator`](https://registry.astronomer.io/providers/apache-airflow/modules/latestonlyoperator) in your DAG. This operator will only run during the DAG's most recent schedule interval. In every other DAG run it will be skipped, along with any tasks downstream of it.
 
 ## Backfill
 
-There are a few additional best practices to consider when using backfill:
+Backfilling in Airflow addresses the final use case we presented in the Overview section: we have a DAG already deployed and running, and realize we want to use that DAG to process data prior to the DAG's start date. [Backfilling](https://airflow.apache.org/docs/apache-airflow/stable/dag-run.html#backfill) is the concept of running a DAG for a specified historical period.
 
-- Consider your available resources
+Backfilling can be accomplished in Airflow using the CLI. You simply specify the DAG ID, and the start date and end date for the backfill period. This command will run the DAG for all intervals between the start date and end date; if some of those intervals already have DAG runs, they will be re-run.
 
+```bash
+airflow dags backfill [-h] [-c CONF] [--delay-on-limit DELAY_ON_LIMIT] [-x]
+                      [-n] [-e END_DATE] [-i] [-I] [-l] [-m] [--pool POOL]
+                      [--rerun-failed-tasks] [--reset-dagruns] [-B]
+                      [-s START_DATE] [-S SUBDIR] [-t TASK_REGEX] [-v] [-y]
+                      dag_id
+```
 
-### LatestOnlyOperator - where does this fit in??
+For example, `airflow dags backfill -s 2021-11-01 -e 2021-11-02 example_dag` would backfill my `example_dag` from November 1st-2nd 2021. For more on other available parameters for this command, check out the [Airflow documentation](https://airflow.apache.org/docs/apache-airflow/stable/cli-and-env-variables-ref.html#backfill). 
+
+There are a couple of things to keep in mind when using backfill:
+
+- Consider your available resources. If your backfill will trigger many DAG runs, you may want to use some of the parameters described in the Catchup section above in your DAG.
+- Clearing the task or DAG status of a backfilled DAG run **will not** trigger the task/DAG to be re-run as described in the section above on re-running tasks for scheduled or manually triggered DAG runs.
+
+If you don't have access to the Airflow CLI (for example, if you are running Airflow with Astronomer Cloud), there are a couple of workarounds you could use to achieve the same functionality as backfilling:
+
+- Deploy a copy of the DAG with a new name and a start date that is the date you want to backfill to. Airflow will consider this a separate DAG so you won't see all the DAG runs/task instances in the same place, but it would accomplish running the DAG for data in the desired time period.
+- If you have a small number of DAG runs to backfill, you can trigger them manually from the Airflow UI and choose the desired logical date.
+SCREENSHOT HERE
