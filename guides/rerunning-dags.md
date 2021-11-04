@@ -1,7 +1,7 @@
 ---
 title: "Rerunning Airflow DAGs"
 description: "How to use catchup, backfill, and cleared task instances in Airflow."
-date: 2021-11-05T00:00:00.000Z
+date: 2021-11-04T00:00:00.000Z
 slug: "rerunning-dags"
 tags: ["DAGs"]
 ---
@@ -10,25 +10,25 @@ tags: ["DAGs"]
 
 Running DAGs whenever you want is one of the most powerful and flexible features of Airflow. Scheduling DAGs can ensure future DAG runs happen at the right time, but you also have options for running DAGs in the past. For example, you might need to run a DAG in the past if:
 
-- You need to rerun a failed task for a particular DAG run, either singular or in bulk.
+- You need to rerun a failed task for one or multiple DAG runs.
 - You want to deploy a DAG with a start date of one year ago and trigger all DAG runs that would have been scheduled in the past year.
 - You have a running DAG and realize you need it to process data for two months prior to the DAG's start date.
 
 All of this is possible in Airflow! In this guide, we'll cover the best ways for accomplishing use cases like rerunning tasks or DAGs and triggering historical DAG runs, including the Airflow concepts of catchup and backfill. If you're looking for additional info on basic DAG scheduling, check out the complementary [Scheduling in Airflow](https://www.astronomer.io/guides/scheduling-in-airflow) guide.
 
-## Re-running Tasks
+## Rerunning Tasks
 
 [Rerunning tasks](https://airflow.apache.org/docs/apache-airflow/stable/dag-run.html#re-run-tasks) or full DAGs in Airflow is a common workflow. Maybe one of your tasks failed due to an issue in an external system, and after fixing the problem you want to rerun that particular task instance.
 
 The easiest way to rerun a task in Airflow is to clear the task status. Doing so updates two values in the metastore, causing the task to rerun: `max_tries` updates to `0`, and the current task instance state updates to `None`.
 
-To clear the task status, go to the Graph View or Tree View in the UI and click on the task instance you want to re-run. Then under **Task Actions**, select **Clear** as shown in the screenshot below. 
+To clear the task status, go to the Graph View or Tree View in the UI and click on the task instance you want to rerun. Then under **Task Actions**, select **Clear** as shown in the screenshot below. 
 
 ![Clear Task Status](https://assets2.astronomer.io/main/guides/re-running-dags/clear_tasks_ui.png)
 
 When clearing a task instance, you can select from the following options to clear and rerun additional related task instances:
 
-  - **Past:** Clears any instances of the task in DAG runs with a data interval before the selected task instance
+- **Past:** Clears any instances of the task in DAG runs with a data interval before the selected task instance
 - **Future:** Clears any instances of the task in DAG runs with a data interval after the selected task instance
 - **Upstream:** Clears any tasks in the current DAG run which are upstream from the selected task instance
 - **Downstream:** Clears any tasks in the current DAG run which are downstream from the selected task instance
@@ -57,15 +57,15 @@ Finally, if you want to clear a full DAG run (all tasks in that DAG), go to the 
 
 ### Clearing Tasks in Bulk
 
-Sometimes you may need to re-run many tasks or DAGs at the same time. Rather than manually clicking on every task you need to re-run, you can clear task statuses in bulk. To do so:
+Sometimes you may need to rerun many tasks or DAGs at the same time. Rather than manually clicking on every task you need to rerun, you can clear task statuses in bulk. To do so:
 
 1. In the Airflow UI, go to the **Browse** tab and click on the **Task Instances** view. 
-2. Select any tasks that you want to re-run
+2. Select any tasks that you want to rerun
 3. Click on the Actions drop down and select **Clear**.
 
 ![Clear Task Bulk](https://assets2.astronomer.io/main/guides/re-running-dags/bulk_clear_tasks.png)
 
-To re-run entire DAGs in bulk, you can follow a similar process by going to the **DAG Runs** view (under the **Browse** tab), selecting the DAG runs you want to re-run, and selecting **Clear the State** under the Actions drop down.
+To rerun entire DAGs in bulk, you can follow a similar process by going to the **DAG Runs** view (under the **Browse** tab), selecting the DAG runs you want to rerun, and selecting **Clear the State** under the Actions drop down.
 
 ![Clear DAGs Bulk](https://assets2.astronomer.io/main/guides/re-running-dags/bulk_clear_dags.png)
 
@@ -93,18 +93,18 @@ with DAG(
 
 Catchup is a powerful feature, but it can also be dangerous, especially since it defaults to `True`. For example, if you deploy a DAG that runs every 5 minutes with a start date of 1 year ago and don't set catchup to `False`, Airflow will schedule **many** DAG runs all at once. When using catchup, it is important to keep in mind what resources Airflow has available and how many DAG runs you can support at one time. Additionally, there are a few other parameters to consider using in conjunction with catchup that can help you to not overload your scheduler or external systems: 
 
-- **`max_active_runs`:** This parameter is set at the DAG level and limits the number of DAG runs that Airflow will execute for that particular DAG at any given time. For example, if you set this value to 3 and the DAG had 15 catchup runs to complete, they would be executed in 5 chunks of 3 runs.
-- **`depends_on_past`**: This parameter is set at the task level (or as a `default_arg` for all tasks at the DAG level). When set to `True`, the task instance must wait for the same task in the most recent DAG run to be successful. This ensures sequential data loads and effectively allows only one DAG run to be executed at a time in most cases.
-- **`wait_for_downstream`**: This parameter is set at the DAG level, and it's like a DAG-level implementation of `depends_on_past`: The entire DAG needs to run successfully for the next DAG run to start.
-- **`catchup_by_default`**: This parameter is set at the Airflow level (in your `airflow.cfg` or as an environment variable). If you set this parameter to `False` all DAGs in your Airflow environment will not catchup unless you explicitly turn it on.
+- `max_active_runs`: This parameter is set at the DAG level and limits the number of DAG runs that Airflow will execute for that particular DAG at any given time. For example, if you set this value to 3 and the DAG had 15 catchup runs to complete, they would be executed in 5 chunks of 3 runs.
+- `depends_on_past`: This parameter is set at the task level (or as a `default_arg` for all tasks at the DAG level). When set to `True`, the task instance must wait for the same task in the most recent DAG run to be successful. This ensures sequential data loads and effectively allows only one DAG run to be executed at a time in most cases.
+- `wait_for_downstream`: This parameter is set at the DAG level, and it's like a DAG-level implementation of `depends_on_past`: The entire DAG needs to run successfully for the next DAG run to start.
+- `catchup_by_default`: This parameter is set at the Airflow level (in your `airflow.cfg` or as an environment variable). If you set this parameter to `False` all DAGs in your Airflow environment will not catchup unless you explicitly turn it on.
 
 Additionally, if you want to deploy your DAG with catchup enabled but there are some tasks you don't want to run during the catchup (e.g. notification tasks), you can use the [`LatestOnlyOperator`](https://registry.astronomer.io/providers/apache-airflow/modules/latestonlyoperator) in your DAG. This operator only runs during the DAG's most recent schedule interval. In every other DAG run it is skipped, along with any tasks downstream of it.
 
 ## Backfill
 
-Backfilling in Airflow addresses the final use case we presented in the Overview section: we have a DAG already deployed and running, and realize we want to use that DAG to process data prior to the DAG's start date. [Backfilling](https://airflow.apache.org/docs/apache-airflow/stable/dag-run.html#backfill) is the concept of running a DAG for a specified historical period.
+Backfilling in Airflow addresses the final use case we presented in the Overview section: we have a DAG already deployed and running, and realize we want to use that DAG to process data prior to the DAG's start date. [Backfilling](https://airflow.apache.org/docs/apache-airflow/stable/dag-run.html#backfill) is the concept of running a DAG for a specified historical period. Unlike with catchup, which will trigger missed DAG runs from the DAG's `start_date` through the current data interval, backfill periods can be specified explicitly and can include periods prior to the DAG's `start_date`. 
 
-Backfilling can be accomplished in Airflow using the CLI. You simply specify the DAG ID, as well as the start date and end date for the backfill period. This command runs the DAG for all intervals between the start date and end date. Unlike with catchups, DAGs in your backfill interval are still re-run even if they already have DAG runs.
+Backfilling can be accomplished in Airflow using the CLI. You simply specify the DAG ID, as well as the start date and end date for the backfill period. This command runs the DAG for all intervals between the start date and end date. DAGs in your backfill interval are still rerun even if they already have DAG runs.
 
 ```bash
 airflow dags backfill [-h] [-c CONF] [--delay-on-limit DELAY_ON_LIMIT] [-x]
