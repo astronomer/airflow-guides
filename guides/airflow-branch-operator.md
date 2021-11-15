@@ -7,87 +7,73 @@ heroImagePath: null
 tags: ["DAGs", "Operators", "Basics", "Tasks"]
 ---
 
+## Overview
+
+When designing your data pipelines, you may encounter use cases that require more complex task dependencies than "Task A preceeds Task B which preceeds Task C." For example, you may have a use case where you need to decide between multiple tasks to execute based on the results of an upstream task. Or you may have a case where *part* of your pipeline should only run under certain conditions. Fortunately, Airflow has multiple options for building conditional logic and/or branching into your DAGs.
+
+In this guide, we'll cover examples using the `BranchPythonOperator` and `ShortCircuitOperator`, other available branching operators, and additional resources for implementing conditional logic in your Airflow DAGs.
+
 ## BranchPythonOperator
 
 A powerful tool in Airflow is branching via the [BranchPythonOperator](https://registry.astronomer.io/providers/apache-airflow/modules/branchpythonoperator). The `BranchPythonOperator` is similar to the [PythonOperator](https://registry.astronomer.io/providers/apache-airflow/modules/pythonoperator) in that it takes a Python function as an input, but it returns a task id (or list of task_ids) to decide which part of the graph to go down. This can be used to iterate down certain paths in a DAG based off the result of a function.
 
-```python
-def return_branch(**kwargs):
+> Note: The full example code in this section, as well as other examples using the `BranchPythonOperator`, can be found on the [Astronomer Registry](https://registry.astronomer.io/dags/example-branch-operator).
 
-    branches = ['branch_0,''branch_1', 'branch_2', 'branch_3', 'branch_4']
-
-    return random.choice(branches)
-```
 
 In a DAG, the `BranchPythonOperator` will take this function as an argument:
 
 ```python
-from airflow.operators.python_operator import BranchPythonOperator
-from airflow.operators.dummy_operator import DummyOperator
-from datetime import datetime, timedelta
-from airflow.models import DAG
+"""Example DAG demonstrating the usage of the BranchPythonOperator."""
+
 import random
+from datetime import datetime
 
-default_args = {
-    'owner': 'airflow',
-    'depends_on_past': False,
-    'start_date': datetime(2018, 5, 26),
-    'email_on_failure': False,
-    'email_on_retry': False,
-    'retries': 1,
-    'retry_delay': timedelta(minutes=5),
-}
+from airflow import DAG
+from airflow.operators.dummy import DummyOperator
+from airflow.operators.python import BranchPythonOperator
+from airflow.utils.edgemodifier import Label
+from airflow.utils.trigger_rule import TriggerRule
 
-def return_branch(**kwargs):
-    branches = ['branch_0,''branch_1', 'branch_2', 'branch_3', 'branch_4']
-    return random.choice(branches)
+with DAG(
+    dag_id='example_branch_operator',
+    start_date=datetime(2021, 1, 1),
+    catchup=False,
+    schedule_interval="@daily",
+    tags=['example', 'example2'],
+) as dag:
+    run_this_first = DummyOperator(
+        task_id='run_this_first',
+    )
 
-with DAG("branch_operator_guide", default_args=default_args, schedule_interval=None) as dag:
-    kick_off_dag = DummyOperator(task_id='run_this_first')
+    options = ['branch_a', 'branch_b', 'branch_c', 'branch_d']
 
     branching = BranchPythonOperator(
         task_id='branching',
-        python_callable=return_branch,
-        provide_context=True)
+        python_callable=lambda: random.choice(options),
+    )
+    run_this_first >> branching
 
-    kick_off_dag >> branching
+    join = DummyOperator(
+        task_id='join',
+        trigger_rule=TriggerRule.NONE_FAILED_MIN_ONE_SUCCESS,
+    )
 
-    for i in range(0, 5):
-        d = DummyOperator(task_id='branch_{0}'.format(i))
-        for j in range(0, 3):
-            m = DummyOperator(task_id='branch_{0}_{1}'.format(i, j))
-            d >> m
-        branching >> d
+    for option in options:
+        t = DummyOperator(
+            task_id=option,
+        )
+
+        dummy_follow = DummyOperator(
+            task_id='follow_' + option,
+        )
+
+        # Label is optional here, but it can help identify more complex branches
+        branching >> Label(option) >> t >> dummy_follow >> join
 ```
 
 ![skipped](https://assets2.astronomer.io/main/guides/branching.png)
 
 The DAG will proceed based on the output of the function passed in.
-
-> Note: You can't have an empty path when skipping tasks - the `skipped` state will apply to all tasks immediately downstream of whatever task is skipped. Depending on your use case, it may make sense to add a `DummyOperator` downstream of a task that can be skipped before the branches from the `BranchPythonOperator` meet.
-
-Under the hood, the `BranchPythonOperator` simply inherits the `PythonOperator`:
-
-```python
-class BranchPythonOperator(PythonOperator, SkipMixin):
-    """
-    Allows a workflow to "branch" or follow a path following the execution
-    of this task.
-    It derives the PythonOperator and expects a Python function that returns
-    a single task_id or list of task_ids to follow. The task_id(s) returned
-    should point to a task directly downstream from {self}. All other "branches"
-    or directly downstream tasks are marked with a state of ``skipped`` so that
-    these paths can't move forward. The ``skipped`` states are propagated
-    downstream to allow for the DAG state to fill up and the DAG run's state
-    to be inferred.
-    """
-    def execute(self, context):
-        branch = super().execute(context)
-        self.skip_all_except(context['ti'], branch)
-
-```
-
-`https://github.com/apache/airflow/blob/main/airflow/operators/python.py#L165`
 
 ## ShortCircuitOperator
 
@@ -125,7 +111,11 @@ class ShortCircuitOperator(PythonOperator, SkipMixin):
 
 Notice that given the base `PythonOperator`, children operators can be easily written to incorporate more specific logic.
 
-## Beyond the BranchPythonOperator
+## Other Branch Operators
+
+SQL branch operator
+
+## Additional Branching Resources
 
 <!-- markdownlint-disable MD033 -->
 <iframe src="https://fast.wistia.net/embed/iframe/9c4267f3e4" title="branchpythonoperator Video" allow="autoplay; fullscreen" allowtransparency="true" frameborder="0" scrolling="no" class="wistia_embed" name="wistia_embed" allowfullscreen msallowfullscreen width="100%" height="450"></iframe>
@@ -139,4 +129,3 @@ For more guidance and best practices on common use cases like the ones above, tr
 [Academy Course on Branching](https://academy.astronomer.io/branching-course) for free today.
 
 See you there! ❤️ 
-
