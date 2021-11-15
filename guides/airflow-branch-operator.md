@@ -80,40 +80,50 @@ The DAG will proceed based on the output of the function passed in.
 The `BranchPythonOperator` is great for any sort of _conditional_ logic to determine which dependency to respect. Other use cases may call for the [ShortCircuitOperator](https://registry.astronomer.io/providers/apache-airflow/modules/shortcircuitoperator):
 
 ```python
-class ShortCircuitOperator(PythonOperator, SkipMixin):
-    """
-    Allows a workflow to continue only if a condition is met. Otherwise, the
-    workflow "short-circuits" and downstream tasks are skipped.
-    The ShortCircuitOperator is derived from the PythonOperator. It evaluates a
-    condition and short-circuits the workflow if the condition is False. Any
-    downstream tasks are marked with a state of "skipped". If the condition is
-    True, downstream tasks proceed as normal.
-    The condition is determined by the result of `python_callable`.
-    """
-    def execute(self, context):
-        condition = super().execute(context)
-        self.log.info("Condition result is %s", condition)
+"""Example DAG demonstrating the usage of the ShortCircuitOperator."""
+from datetime import datetime
 
-        if condition:
-            self.log.info('Proceeding with downstream tasks...')
-            return
+from airflow import DAG
+from airflow.models.baseoperator import chain
+from airflow.operators.dummy import DummyOperator
+from airflow.operators.python import ShortCircuitOperator
 
-        self.log.info('Skipping downstream tasks...')
+with DAG(
+    dag_id='example_short_circuit_operator',
+    start_date=datetime(2021, 1, 1),
+    catchup=False,
+    tags=['example'],
+) as dag:
+    cond_true = ShortCircuitOperator(
+        task_id='condition_is_True',
+        python_callable=lambda: True,
+    )
 
-        downstream_tasks = context['task'].get_flat_relatives(upstream=False)
-        self.log.debug("Downstream task_ids %s", downstream_tasks)
+    cond_false = ShortCircuitOperator(
+        task_id='condition_is_False',
+        python_callable=lambda: False,
+    )
 
-        if downstream_tasks:
-            self.skip(context['dag_run'], context['ti'].execution_date, downstream_tasks)
+    ds_true = [DummyOperator(task_id='true_' + str(i)) for i in [1, 2]]
+    ds_false = [DummyOperator(task_id='false_' + str(i)) for i in [1, 2]]
 
-        self.log.info("Done.")
+    chain(cond_true, *ds_true)
+    chain(cond_false, *ds_false)
+
 ```
 
-Notice that given the base `PythonOperator`, children operators can be easily written to incorporate more specific logic.
+> Note: The full example code in this section, as well as other examples using the `BranchPythonOperator`, can be found on the [Astronomer Registry](https://registry.astronomer.io/dags/example-short-circuit-operator).
+
 
 ## Other Branch Operators
 
-SQL branch operator
+Airflow has a couple of other branching operators that work similarly to the `BranchPythonOperator` but implement more specific use cases: 
+
+- [`BranchSQLOperator`](https://registry.astronomer.io/providers/apache-airflow/modules/branchsqloperator): Branches based on whether a given SQL query returns `true` or `false`.
+- [`BranchDayOfWeekOperator`](https://registry.astronomer.io/providers/apache-airflow/modules/branchdayofweekoperator): Branches based on whether the current day of week is equal to a given `week_day` parameter or not.
+- [`BranchDateTimeOperator`](https://registry.astronomer.io/providers/apache-airflow/modules/branchdatetimeoperator): Branches based on whether the current time is between `target_lower` and `target_upper` times or not.
+
+All of these operators take `follow_task_ids_if_true` and `follow_task_ids_if_false` parameters which should provide the list of task(s) to include in the branch based on the logic returned by the operator.
 
 ## Additional Branching Resources
 
