@@ -9,7 +9,7 @@ tags: ["DAGs", "Operators", "Basics", "Tasks"]
 
 ## Overview
 
-When designing your data pipelines, you may encounter use cases that require more complex task flows than "Task A preceeds Task B which preceeds Task C." For example, you may have a use case where you need to decide between multiple tasks to execute based on the results of an upstream task. Or you may have a case where *part* of your pipeline should only run under certain conditions. Fortunately, Airflow has multiple options for building conditional logic and/or branching into your DAGs.
+When designing your data pipelines, you may encounter use cases that require more complex task flows than "Task A precedes Task B which precedes Task C." For example, you may have a use case where you need to decide between multiple tasks to execute based on the results of an upstream task. Or you may have a case where *part* of your pipeline should only run under certain conditions. Fortunately, Airflow has multiple options for building conditional logic and/or branching into your DAGs.
 
 In this guide, we'll cover examples using the `BranchPythonOperator` and `ShortCircuitOperator`, other available branching operators, and additional resources for implementing conditional logic in your Airflow DAGs.
 
@@ -81,7 +81,7 @@ with DAG(
         branching >> Label(option) >> t >> dummy_follow >> join
 ```
 
-In this DAG, we have a simple `lambda` function that randomly chooses between four branches. In the DAG run screenshot below, `branch_b` was randomly chosen, and we see the two tasks in `branch_b` were succesfully run, while the others were skipped.
+In this DAG, we have a simple `lambda` function that randomly chooses between four branches. In the DAG run screenshot below, `branch_b` was randomly chosen, and we see the two tasks in `branch_b` were successfully run, while the others were skipped.
 
 ![Branching](https://assets2.astronomer.io/main/guides/airflow-branching/branching.png)
 
