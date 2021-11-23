@@ -25,7 +25,7 @@ The Astronomer website uses the `/guides` directory in this repo as a CMS for it
 
     `![Image title](<https://assets2.astronomer.io/main/guides/your-guide-folder/your_image.png>)`
 
-7. Ensure that all supporting code for your guide is hosted in a public GitHub repo, and link to that repo from the guide.
+7. Ensure that all supporting code for your guide is hosted on the [Astronomer Registry](https://registry.astronomer.io/) or in a public GitHub repo, and link to it from the guide.
 8. Optional: run the markdown lint and spellcheck locally. This will save you time if there are any issues that will be caught by the CI/CD pipeline. For more instructions on this, see the CI/CD Pipeline section below.
 9. Push your branch to the repo and create a pull request and add reviewers. If you aren't sure who to add, add @kentdanas. It is a good idea to have someone from the docs team review for grammar and readability in addition to a content review.
 10. Once your PR has been approved, merge it into the `main` branch.
