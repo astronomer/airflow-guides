@@ -82,7 +82,7 @@ When a last modified date is not available, a sequence or incrementing ID can be
 
 In the context of Airflow, we use "top-level code" to mean any code that isn't part of your DAG or operator instantiations. 
 
-Airflow executes all code in the `DAGS_Folder` on every `min_file_process_interval`, which defaults to 30 seconds (you can read more about this parameter in the [Airflow docs](https://airflow.apache.org/docs/apache-airflow/stable/configurations-ref.html#min-file-process-interval)). Because of this, top-level code that makes requests to external systems, like an API or a database, or makes function calls outside of your tasks can cause performance issues. Additionally, including code that isn't part of your DAG or operator instantiations in your DAG file makes the DAG harder to read, maintain, and update.
+Airflow executes all code in the `dags_folder` on every `min_file_process_interval`, which defaults to 30 seconds (you can read more about this parameter in the [Airflow docs](https://airflow.apache.org/docs/apache-airflow/stable/configurations-ref.html#min-file-process-interval)). Because of this, top-level code that makes requests to external systems, like an API or a database, or makes function calls outside of your tasks can cause performance issues. Additionally, including code that isn't part of your DAG or operator instantiations in your DAG file makes the DAG harder to read, maintain, and update.
 
 Treat your DAG file like a config file and leave all of the heavy lifting to the hooks and operators that you instantiate within the file. If your DAGs need to access additional code such as a SQL script or a Python function, keep that code in a separate file that can be read into a DAG Run.
 
