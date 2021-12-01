@@ -962,6 +962,7 @@ unintuitive
 sagemaker
 papermill
 pre-process
+unpaused
  - posts/4-pillars-to-becoming-data-driven.md
 astronomer.io
  - posts/why-we-built-our-data-platform-on-aws-and-why-we-rebuilt-it-with-open-source.md
@@ -1695,3 +1696,7 @@ timedeltas
 metastore
 backfills
 backfilled
+ - guides/debugging-dags.md
+metastore
+exec'ing
+backfills

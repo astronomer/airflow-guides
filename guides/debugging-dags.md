@@ -11,7 +11,7 @@ tags: ["DAGs", "Basics"]
 
 Getting started with Airflow is easy if you know a bit of Python; you create your DAG file, import your operators, define your tasks, and you're off and running. But what happens when you run your DAG and something goes wrong? Maybe your tasks are failing unexpectedly, or are stuck in a scheduled state, or your DAGs aren't showing up in the Airflow UI at all. 
 
-For these common situations (and a few more), we've got you covered! In this guide, we'll cover some frequently encountered issues with Airflow DAGs, and how to debug them. If you're brand new to Airflow, we recommend also checking out one of our I[ntroduction to Airflow Webinars](https://www.astronomer.io/events/webinars/intro-to-data-orchestration-with-airflow) to get started.
+For these common situations (and a few more), we've got you covered! In this guide, we'll cover some frequently encountered issues with Airflow DAGs, and how to debug them. If you're brand new to Airflow, we recommend also checking out one of our [Introduction to Airflow Webinars](https://www.astronomer.io/events/webinars/intro-to-data-orchestration-with-airflow) to get started.
 
 > Note: This guide focuses on Airflow 2.0+. For older Airflow versions, some debugging steps may be slightly different. 
 
