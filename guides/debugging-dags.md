@@ -21,7 +21,7 @@ One of the first issues an Airflow user can encounter when developing DAGs is th
 
 Typically, if your DAG file has any error that causes Airflow to be unable to parse the DAG, you'll see an `Import Error` in the Airflow UI. 
 
-SCREENSHOT
+![Import Error](https://assets2.astronomer.io/main/guides/debugging-dags/import_error.png)
 
 In these cases, the error message in the UI should tell you what you need to fix. Most frequently these will be syntax or package import errors. 
 
@@ -31,9 +31,9 @@ If you *don't* see an import error message, here are some debugging steps to try
 - Ensure your user has permission to see the DAGs, and that the permissions on the DAG file are correct.
 - Run `airflow dags list` with the [Airflow CLI](https://airflow.apache.org/docs/apache-airflow/stable/usage-cli.html) to make sure Airflow has registered the DAG in the metastore. If the DAG shows in the list, try restarting the webserver.
 - Try restarting the scheduler (if you are using the [Astronomer CLI](https://www.astronomer.io/docs/cloud/stable/develop/cli-quickstart), run `astro dev stop && astro dev start`)
-- If you see an error that the scheduler is not heart beating like below, check the scheduler logs to see if something in the DAG file is causing the scheduler to crash (if you are using the Astronomer CLI, run `astro dev logs --scheduler`). Then try restarting.
+- If you see an error that the scheduler is not running like below, check the scheduler logs to see if something in the DAG file is causing the scheduler to crash (if you are using the Astronomer CLI, run `astro dev logs --scheduler`). Then try restarting.
 
-    SCREENSHOT
+    ![No Scheduler](https://assets2.astronomer.io/main/guides/debugging-dags/scheduler_not_running.png)
 
 If you have this issue when working from an Astronomer Airflow deployment, there are a few additional things you can check:
 
@@ -57,7 +57,7 @@ Your DAGs are deployed and visible in your Airflow UI, and you manually trigger 
 
 - Make sure your DAG is toggled to `Unpaused`. If your DAG is paused when you trigger it, the tasks will not be run. 
 
-    SCREENSHOT
+    ![Paused DAG](https://assets2.astronomer.io/main/guides/debugging-dags/paused_dag.png)
 
     DAGs are deployed paused by default, but you can change this behavior by updating `dags_are_paused_at_creation` to False in your Airflow config (be aware of the catchup parameter in your DAGs if you do this).
 
@@ -71,15 +71,15 @@ Your DAGs are deployed and visible in your Airflow UI, and you manually trigger 
 
 Your tasks are now running, but what if some of your tasks have failed? You'll be able to see any failures in the Airflow UI by looking at the Tree View or the Graph View, where tasks will be shown as red.
 
-SCREENSHOT
+![Tree View Task Failure](https://assets2.astronomer.io/main/guides/debugging-dags/tree_view_task_failure.png)
 
 To figure out what's going on, task logs are your best resource. To access logs, click on the failed task in either the Tree View or Graph View and click the log button. 
 
-SCREENSHOT
+![Get Logs](https://assets2.astronomer.io/main/guides/debugging-dags/access_logs.png)
 
 This will take you to the logs for that task, which will have information about the error that caused the failure. 
 
-SCREENSHOT
+![Error Log](https://assets2.astronomer.io/main/guides/debugging-dags/error_log.png)
 
 For ease of debugging, it is also helpful to set up error notifications so you don't have to look at the UI to identify when failures happen. Check out [this guide](https://www.astronomer.io/guides/error-notifications-in-airflow) for details on setting up email, Slack, and custom notifications in Airflow.
 
@@ -98,4 +98,19 @@ Generally, logs fail to show up when a process dies in your scheduler or worker 
 
 ## Addressing Failures
 
+Once you have identified the cause of any failures in your tasks, you can begin to address them. If you've made any changes to your code, make sure to redeploy (if applicable), and check the Code View in the Airflow UI to make sure your changes have been picked up by Airflow.
+
+If you want to rerun your full DAG or certain tasks after making changes, you can easily do so with Airflow. Check out [this guide](https://www.astronomer.io/guides/rerunning-dags#rerunning-tasks) for details on how to rerun and apply backfills or catchups. 
+
+How to address specific failures will depend heavily on the hook/operator/sensor used, and the use case. However, Airflow connections are an area that consistently cause issues in early DAG development, so we talk about those in more depth below.
+
 ### Connections
+
+Typically, Airflow connections are needed for Airflow to talk to any external system. Most hooks and operators will expect a connection parameter to be defined. Improperly defined connections are one of the most common issues Airflow users have to debug when first working with their DAGs. Below are some tips and tricks for getting them to work:
+
+- Check out the Airflow [managing connections documentation](https://airflow.apache.org/docs/apache-airflow/stable/howto/connection.html) to get familiar with how connections work.
+- Most hooks and operators will use the `default` connection of the correct type. You can change the `default` connection to use your connection details, or define a new connection with a different name and pass that to the hook/operator.
+- Consider upgrading to Airflow 2.2 so you can use the test connections feature in the UI or API. This will save you having to run your full DAG to make sure the connection works.
+    ![Test Connections](https://assets2.astronomer.io/main/guides/debugging-dags/test_connections.png)
+- Every hook/operator will have its own way of using a connection, and it can sometimes be tricky to figure out what parameters are needed. The [Astronomer Registry](https://registry.astronomer.io/) can be a great resource for this: many hooks and operators have documentation there on what is required for a connection.
+- You can define connections using Airflow environment variables instead of adding them in the UI. Take care to not end up with the same connection defined in multiple places. If you do, the environment variable will take precedence.
