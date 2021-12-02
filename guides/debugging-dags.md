@@ -17,7 +17,7 @@ For these common situations (and a few more), we've got you covered! In this gui
 
 ## DAGs Aren't Showing Up in the Airflow UI
 
-One of the first issues you can encounter when developing DAGs is that your DAGs do not show up in the Airflow UI. You might define a DAG in a Python file and added it to your `dags_folder`, but when you check the Airflow UI, nothing shows up. 
+One of the first issues you can encounter when developing DAGs is that your DAGs do not show up in the Airflow UI. You might define a DAG in a Python file and add it to your `dags_folder`, but when you check the Airflow UI, nothing shows up. 
 
 If a DAG isn't appearing in the Airflow UI, it's typically because Airflow is unable to parse the DAG. In this case, you'll see an `Import Error` in the Airflow UI. 
 
@@ -96,17 +96,13 @@ Generally, logs fail to show up when a process dies in your scheduler or worker 
 - If you're looking at historical task failures, ensure that your logs are retained long enough. For example, the default log retention period on Astronomer is 15 days, so any logs prior to that will not be stored.
 - If none of the above works, try checking your scheduler and webserver logs for any errors that might indicate why your task logs aren't showing up.
 
-## Recovering from Failures
+## Connection Troubleshooting
 
-Once you have identified the cause of any failures in your tasks, you can begin to address them. If you've made any changes to your code, make sure to redeploy (if applicable) and check the Code View in the Airflow UI to make sure that your changes have been picked up by Airflow.
+Typically, Airflow connections are needed for Airflow to talk to any external system. Most hooks and operators will expect a connection parameter to be defined. Improperly defined connections are one of the most common issues Airflow users have to debug when first working with their DAGs. 
 
-If you want to rerun your whole DAG or specific tasks after making changes, you can easily do so with Airflow. Check out [this guide](https://www.astronomer.io/guides/rerunning-dags#rerunning-tasks) for details on how to rerun and apply backfills or catchups. 
+While the specific error associated with a poorly defined connection can vary widely, you will typically see a message with "connection" in the task logs. If you haven't defined a connection, you'll see a message like `'connection_abc' is not defined`. 
 
-How to address specific failures will depend heavily on the hook/operator/sensor used, as well as the use case. However, Airflow connections are an area that consistently cause issues in early DAG development, so we talk about those in more depth below.
-
-### Connections
-
-Typically, Airflow connections are needed for Airflow to talk to any external system. Most hooks and operators will expect a connection parameter to be defined. Improperly defined connections are one of the most common issues Airflow users have to debug when first working with their DAGs. Below are some tips and tricks for getting them to work:
+Below are some general tips and tricks for getting them connections work:
 
 - Check out the Airflow [managing connections documentation](https://airflow.apache.org/docs/apache-airflow/stable/howto/connection.html) to get familiar with how connections work.
 - Most hooks and operators will use the `default` connection of the correct type. You can change the `default` connection to use your connection details or define a new connection with a different name and pass that to the hook/operator.
@@ -114,3 +110,11 @@ Typically, Airflow connections are needed for Airflow to talk to any external sy
     ![Test Connections](https://assets2.astronomer.io/main/guides/debugging-dags/test_connections.png)
 - Every hook/operator will have its own way of using a connection, and it can sometimes be tricky to figure out what parameters are needed. The [Astronomer Registry](https://registry.astronomer.io/) can be a great resource for this: many hooks and operators have documentation there on what is required for a connection.
 - You can define connections using Airflow environment variables instead of adding them in the UI. Take care to not end up with the same connection defined in multiple places. If you do, the environment variable will take precedence.
+
+## Recovering from Failures
+
+Once you have identified the cause of any failures in your tasks, you can begin to address them. If you've made any changes to your code, make sure to redeploy (if applicable) and check the Code View in the Airflow UI to make sure that your changes have been picked up by Airflow.
+
+If you want to rerun your whole DAG or specific tasks after making changes, you can easily do so with Airflow. Check out [this guide](https://www.astronomer.io/guides/rerunning-dags#rerunning-tasks) for details on how to rerun and apply backfills or catchups. 
+
+How to address specific failures will depend heavily on the hook/operator/sensor used, as well as the use case. The sections above should help you through the most commonly encountered pitfalls that beginners face. For help with more complex issues, consider joining the [Apache Airflow Slack](https://airflow.apache.org/community/), or [reach out to Astronomer](https://www.astronomer.io/get-astronomer/).
