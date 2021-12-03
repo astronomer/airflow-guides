@@ -49,7 +49,7 @@ How you install supporting Python or OS packages will depend on your Airflow set
 
 One thing to watch out for, especially with Python packages, is dependency conflicts. If you are running Airflow using Docker, these conflicts can cause errors when you build your image. With the Astronomer CLI, errors and warnings will be printed in your terminal when you run `astro dev start`, and you might see import errors for your DAGs in the Airflow UI if packages failed to install. In general, all packages you install should be available in your scheduler pod. You can double check they were installed successfully by exec'ing into your scheduler pod as described in [Astronomer documentation](https://www.astronomer.io/docs/cloud/stable/develop/customize-image#add-python-and-os-level-packages).
 
-If you do have package conflicts that can't be resolved, consider splitting your DAGs into multiple Airflow deployments.
+If you do have package conflicts that can't be resolved, consider breaking up your DAGs into multiple projects that are run on separate Airflow deployments so that DAGs requiring conflicting packages are not in the same environment. For example, you might have a set of DAGs that require package X that run on Airflow Deployment A, and another set of DAGs that require package Y (which conflicts with package X) that run on Airflow Deployment B. Alternatively, you can use the [Kubernetes Pod Operator](https://registry.astronomer.io/providers/kubernetes/modules/kubernetespodoperator) to isolate package dependencies to a specific task and avoid conflicts in your broader Airflow environment.
 
 ## Tasks Aren't Running
 
@@ -107,7 +107,9 @@ Below are some general tips and tricks for getting them connections work:
 - Check out the Airflow [managing connections documentation](https://airflow.apache.org/docs/apache-airflow/stable/howto/connection.html) to get familiar with how connections work.
 - Most hooks and operators will use the `default` connection of the correct type. You can change the `default` connection to use your connection details or define a new connection with a different name and pass that to the hook/operator.
 - Consider upgrading to Airflow 2.2 so you can use the test connections feature in the UI or API. This will save you having to run your full DAG to make sure the connection works.
+
     ![Test Connections](https://assets2.astronomer.io/main/guides/debugging-dags/test_connections.png)
+
 - Every hook/operator will have its own way of using a connection, and it can sometimes be tricky to figure out what parameters are needed. The [Astronomer Registry](https://registry.astronomer.io/) can be a great resource for this: many hooks and operators have documentation there on what is required for a connection.
 - You can define connections using Airflow environment variables instead of adding them in the UI. Take care to not end up with the same connection defined in multiple places. If you do, the environment variable will take precedence.
 
