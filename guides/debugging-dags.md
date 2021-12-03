@@ -64,8 +64,10 @@ In this scenario, your DAG is visible in the Airflow UI, but your tasks don't ru
     > Note: As of Airflow 2.2, paused DAGs will be unpaused automatically if you manually trigger them.
 
 - Ensure your DAG has a start date that is in the past. If your start date is in the future, triggering the DAG results a "successful" DAG run even though no tasks ran.
+- Note that a DAG run will only be automatically triggered when you unpause the DAG if the start date *and* end of the data interval are both in the past, and `catchup=True`. For more details on data intervals and DAG scheduling, check out our [Scheduling and Timetables guide](https://www.astronomer.io/guides/scheduling-in-airflow).
 - If you are using a [custom timetable](https://www.astronomer.io/guides/scheduling-in-airflow), ensure that the data interval for your DAG run does not precede the DAG's start date.
 - If your tasks are getting stuck in a `scheduled` or `queued` state, ensure your scheduler is running properly. If needed, restart the scheduler or increase scheduler resources in your Airflow infrastructure.
+- If you added tasks to an existing DAG that has `depends_on_past=True`, those newly added tasks won't run until their state is set for prior task runs.
 
 ## Tasks Have a Failure Status
 
@@ -82,6 +84,8 @@ This will take you to the logs for that task, which will have information about 
 ![Error Log](https://assets2.astronomer.io/main/guides/debugging-dags/error_log.png)
 
 To make catching and debugging task failures easier, you can set up error notifications. Check out [this guide](https://www.astronomer.io/guides/error-notifications-in-airflow) for details on setting up email, Slack, and custom notifications in Airflow.
+
+One thing to watch out for with task failures in newly developed DAGs is an error message like `Task exited with return code Negsignal.SIGKILL` or that contains a `-9` error code. These usually indicate that the task ran out of memory. Try increasing the resources for your scheduler, webserver, or pod, depending on whether you're running the Local, Celery, or Kubernetes executors respectively.
 
 ## Logs Aren't Showing Up
 
