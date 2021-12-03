@@ -41,7 +41,7 @@ If DAGs don't appear in the Airflow UI when working from an Astronomer Airflow D
 - For Astronomer Certified images, ensure that you are using the `onbuild` image (e.g. `FROM quay.io/astronomer/ap-airflow:2.2.2-buster-onbuild`). Images without `onbuild` will not bundle files in the `dags/` folder when deployed.
 - Ensure that the permissions on your local files aren't too [locked down](https://forum.astronomer.io/t/dags-arent-showing-up-in-my-astronomer-deployment-but-i-see-them-locally/146). 
 
-### Installing Supporting Packages
+### Dependency Conflicts
 
 As noted above, one frequent cause of DAG import errors is not having supporting packages installed in your Airflow environment. For example, any [provider packages](https://registry.astronomer.io/providers?page=1) that your DAGs use for hooks and operators must be installed separately.
 
@@ -93,12 +93,12 @@ Generally, logs fail to show up when a process dies in your scheduler or worker 
 - Increase your `log_fetch_timeout_sec` parameter to greater than the 5 second default. This parameter controls how long the webserver will wait for the initial handshake when fetching logs from the worker machines, and having extra time here can sometimes resolve issues.
 - Increase the resources available to your workers (if using the Celery executor) or scheduler (if using the local executor).
 - If you're using the Kubernetes executor and a task fails very quickly (e.g. in less than 15 or so seconds), the pod running the task spins down before the webserver has a chance to collect the logs from the pod. If possible, you can try building in some wait time to your task depending on which operator you're using. If that isn't possible, try to diagnose what could be causing a near-immediate failure in your task. This is often related to either lack of resources (try increasing CPU/memory for the task) or an error in the task configuration.
-- If you're looking at historical task failures, ensure that your logs are retained long enough. For example, the default log retention period on Astronomer is 15 days, so any logs prior to that will not be stored.
+- If you're looking at historical task failures, ensure that your logs are retained until you need to access them. For example, the default log retention period on Astronomer is 15 days, so any logs prior to that will not be stored.
 - If none of the above works, try checking your scheduler and webserver logs for any errors that might indicate why your task logs aren't showing up.
 
 ## Connection Troubleshooting
 
-Typically, Airflow connections are needed for Airflow to talk to any external system. Most hooks and operators will expect a connection parameter to be defined. Improperly defined connections are one of the most common issues Airflow users have to debug when first working with their DAGs. 
+Typically, Airflow connections are needed for Airflow to talk to any external system. Most hooks and operators expect a defined connection parameter. Because of this, improperly defined connections are one of the most common issues Airflow users have to debug when first working with their DAGs. 
 
 While the specific error associated with a poorly defined connection can vary widely, you will typically see a message with "connection" in the task logs. If you haven't defined a connection, you'll see a message like `'connection_abc' is not defined`. 
 
@@ -117,4 +117,4 @@ Once you have identified the cause of any failures in your tasks, you can begin 
 
 If you want to rerun your whole DAG or specific tasks after making changes, you can easily do so with Airflow. Check out [this guide](https://www.astronomer.io/guides/rerunning-dags#rerunning-tasks) for details on how to rerun and apply backfills or catchups. 
 
-How to address specific failures will depend heavily on the hook/operator/sensor used, as well as the use case. The sections above should help you through the most commonly encountered pitfalls that beginners face. For help with more complex issues, consider joining the [Apache Airflow Slack](https://airflow.apache.org/community/), or [reach out to Astronomer](https://www.astronomer.io/get-astronomer/).
+How to address specific failures will depend heavily on the hook/operator/sensor used, as well as the use case. The sections above should help you through the most commonly encountered pitfalls that beginners face. For help with more complex issues, consider joining the [Apache Airflow Slack](https://airflow.apache.org/community/) or [reach out to Astronomer](https://www.astronomer.io/get-astronomer/).
