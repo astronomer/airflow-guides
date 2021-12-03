@@ -44,7 +44,7 @@ If your custom operator is modifying functionality of an existing operator, your
 
 Once you have your custom operator defined, you need to make it available to your DAGs. Some legacy Airflow documentation or forums may reference registering your custom operator as an Airflow plugin, but this is not necessary. In general, the file containing your custom operator needs to be in a directory that is present in your `PYTHONPATH` for you to import it into your DAG file.
 
-Airflow by default will add the `dags/` and `plugins/` directories in a project to the `PYTHONPATH`, so those are the most natural choices for storing custom operator files. Your project structure may vary depending on your team and your use case. At Astronomer, we use the structure shown below, and recommend putting custom operator files in the `plugins/` directory with sub-folders for readability.
+Airflow by default will add the `dags/` and `plugins/` directories in a project to the `PYTHONPATH`, so those are the most natural choices for storing custom operator files (check out the [Airflow Module Management](https://airflow.apache.org/docs/apache-airflow/stable/modules_management.html) docs for more info). Your project structure may vary depending on your team and your use case. At Astronomer, we use the structure shown below, and recommend putting custom operator files in the `plugins/` directory with sub-folders for readability.
 
 ```bash
 .
