@@ -100,7 +100,7 @@ Generally, logs fail to show up when a process dies in your scheduler or worker 
 
 Typically, Airflow connections are needed for Airflow to talk to any external system. Most hooks and operators expect a defined connection parameter. Because of this, improperly defined connections are one of the most common issues Airflow users have to debug when first working with their DAGs. 
 
-While the specific error associated with a poorly defined connection can vary widely, you will typically see a message with "connection" in the task logs. If you haven't defined a connection, you'll see a message like `'connection_abc' is not defined`. 
+While the specific error associated with a poorly defined connection can vary widely, you will typically see a message with "connection" in your task logs. If you haven't defined a connection, you'll see a message like `'connection_abc' is not defined`. 
 
 Below are some general tips and tricks for getting them connections work:
 
