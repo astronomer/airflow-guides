@@ -1,6 +1,6 @@
 ---
 title: "Passing Data Between Airflow Tasks"
-description: "Methods for sharing metadata and information between tasks in your Apache Airflow DAGs."
+description: "Methods for sharing metadata and information between tasks in your Apache Airflow DAGs, including XCom."
 date: 2021-03-12T00:00:00.000Z
 slug: "airflow-passing-data-between-tasks"
 tags: ["DAGs", "XCom", "Tasks", "Dependencies"]
