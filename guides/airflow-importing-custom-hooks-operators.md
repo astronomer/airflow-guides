@@ -9,13 +9,13 @@ tags: ["Hooks", "Operators", "Plugins", "Basics"]
 
 ## Overview
 
-One of the great benefits of Airflow is its vast network of provider packages that provide hooks, operators, and sensors for many common use cases. But another great benefit of Airflow is that because everything is defined in Python code, it is highly customizable. If a hook, operator, or sensor you need doesn't exist in the open source, you can easily define your own. 
+One of the great benefits of Airflow is its vast network of provider packages that provide hooks, operators, and sensors for many common use cases. Another great benefit of Airflow is that because everything is defined in Python code, it is highly customizable. If a hook, operator, or sensor you need doesn't exist in the open source, you can easily define your own. 
 
-In this guide, we'll cover everything you need to know to make your custom code available to your DAGs. We'll touch briefly on defining custom operators, but will mostly focus on how to add them to your Airflow project. Throughout, we'll focus on custom operators to keep things simple, but the same concepts apply to custom hooks or sensors.
+In this guide, we'll briefly explain how to define your own custom code. Then, we'll cover everything you need to know to make custom code available to your DAGs. We'll use custom operators as our primary example, but these same concepts also apply to custom hooks and sensors.
 
 ## Defining a Custom Operator
 
-At a high level, creating a custom operator is straight forward. It should inherit from the `BaseOperator`, and define `Constructor` and `Execute` classes. This will look something like the code below:
+At a high level, creating a custom operator is straightforward. It should inherit from the `BaseOperator`, and define `Constructor` and `Execute` classes. This will look something like the code below:
 
 ```python
 from airflow.operators.bash_operator import BaseOperator
@@ -38,13 +38,13 @@ class MyOperator(BaseOperator):
         hook.my_method()
 ```
 
-If your custom operator is modifying functionality of an existing operator, your class may inherit from the operator you are building off of instead of the `BaseOperator`. For more detailed instructions on defining custom operators, check out the [Apache Airflow How-to Guide](https://airflow.apache.org/docs/apache-airflow/stable/howto/custom-operator.html).
+If your custom operator is modifying functionality of an existing operator, your class can inherit from the operator you are building off of instead of the `BaseOperator`. For more detailed instructions on defining custom operators, check out the [Apache Airflow How-to Guide](https://airflow.apache.org/docs/apache-airflow/stable/howto/custom-operator.html).
 
 ## Importing Custom Operators
 
-Once you have your custom operator defined, you need to make it available to your DAGs. Some legacy Airflow documentation or forums may reference registering your custom operator as an Airflow plugin, but this is not necessary. In general, the file containing your custom operator needs to be in a directory that is present in your `PYTHONPATH` for you to import it into your DAG file.
+Once you have your custom operator defined, you need to make it available to your DAGs. Some legacy Airflow documentation or forums may reference registering your custom operator as an Airflow plugin, but this is not necessary. To import  a custom operator into your DAGs, the file containing your custom operator needs to be in a directory that is present in your `PYTHONPATH`.
 
-Airflow by default will add the `dags/` and `plugins/` directories in a project to the `PYTHONPATH`, so those are the most natural choices for storing custom operator files (check out the [Airflow Module Management](https://airflow.apache.org/docs/apache-airflow/stable/modules_management.html) docs for more info). Your project structure may vary depending on your team and your use case. At Astronomer, we use the structure shown below, and recommend putting custom operator files in the `plugins/` directory with sub-folders for readability.
+Airflow by default will add the `dags/` and `plugins/` directories in a project to the `PYTHONPATH`, so those are the most natural choices for storing custom operator files (check out the Apache Airflow [Module Management docs](https://airflow.apache.org/docs/apache-airflow/stable/modules_management.html) for more info). Your project structure may vary depending on your team and your use case. At Astronomer we use the following structure, where custom operator files live in the `plugins/` directory with sub-folders for readability.
 
 ```bash
 .
@@ -63,7 +63,7 @@ Airflow by default will add the `dags/` and `plugins/` directories in a project 
 └── requirements.txt    
 ```
 
-For more details on why we recommend this project structure, check out our [Managing Airflow Code](https://www.astronomer.io/guides/managing-airflow-code) guide.
+For more details on why we recommend this project structure, check out our [Managing Airflow Code guide](https://www.astronomer.io/guides/managing-airflow-code).
 
 > Note: If you use an IDE and don't want to see import errors, add the `plugins` directory as a source root.
 
