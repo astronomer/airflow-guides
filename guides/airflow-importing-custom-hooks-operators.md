@@ -15,7 +15,12 @@ In this guide, we'll briefly explain how to define your own custom code. Then, w
 
 ## Defining a Custom Operator
 
-At a high level, creating a custom operator is straightforward. It should inherit from the `BaseOperator`, and define `Constructor` and `Execute` classes. This will look something like the code below:
+At a high level, creating a custom operator is straightforward. At a minimum, all custom operators must:
+
+- Inherit from the `BaseOperator`.
+- Define `Constructor` and `Execute` classes.
+
+This will look something like the code below:
 
 ```python
 from airflow.operators.bash_operator import BaseOperator
@@ -103,4 +108,4 @@ with DAG('example_dag',
 	sens >> op
 ```
 
-And that's it! There is no need to define an AirflowPlugin class in any of the files.
+And that's it! Your DAG will use `MyOperator` and `MySensor` when it runs, giving you full flexibility over what happens in your pipelines.
