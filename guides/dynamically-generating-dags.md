@@ -117,6 +117,14 @@ And if we look at the Airflow UI we can see the DAGs have been created:
 
 ![DAGs from Loop](https://assets2.astronomer.io/main/guides/dynamic-dags/dag_from_loop_zoom.png)
 
+<ul class="learn-more-list">
+    <p>Learn More</p>
+    <li data-icon="→"><a href="/blog/7-common-errors-to-check-when-debugging-airflow-dag?banner=learn-more-banner-click">7 Common Errors to Check when Debugging Airflow DAGs</a></li>
+    <li data-icon="→"><a href="/events/webinars/trigger-dags-any-schedule?banner=learn-more-banner-click">Scheduling In Airflow Webinar</a></li>
+    <li data-icon="→"><a href="/events/webinars/dynamic-dags?banner=learn-more-banner-click">Dynamic DAGs Webinar</a></li>
+    <li data-icon="→"><a href="/guides/dag-best-practices?banner=learn-more-banner-click">DAG Writing Best Practices in Apache Airflow</a></li>
+</ul>
+
 ### Example: Generate DAGs From Variables
 
 As mentioned above, the input parameters don't have to exist in the DAG file itself. Another common form of generating DAGs is by setting values in a Variable object.
