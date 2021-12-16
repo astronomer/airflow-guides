@@ -135,6 +135,16 @@ In the logs for the `analyze_data` task, we can see the value from the prior tas
 
 ![Example XCom Log](https://assets2.astronomer.io/main/guides/xcom/example_xcom_log.png)
 
+<!-- markdownlint-disable MD033 -->
+<ul class="learn-more-list">
+    <p>You might also like:</p>
+    <li data-icon="→"><a href="/events/webinars/taskflow-api-airflow-2.0?banner=learn-more-banner-click">TaskFlow API in Airflow 2.0 Webinar</a></li>
+    <li data-icon="→"><a href="https://registry.astronomer.io/dags/xcom-gcs-ds?banner=learn-more-banner-click">Data Science Modeling Using Google Cloud Storage XCom Backend</a></li>
+    <li data-icon="→"><a href="/events/webinars/manage-dependencies-between-airflow-deployments-dags-tasks?banner=learn-more-banner-click">Manage Dependencies Between Airflow Deployments, DAGs, and Tasks Webinar</a></li>
+    <li data-icon="→"><a href="/blog/build-an-etl-process?banner=learn-more-banner-click">How to Build an ETL Process?</a></li>
+    <li data-icon="→"><a href="/guides/custom-xcom-backends?banner=learn-more-banner-click">Custom XCom Backends</a></li>
+</ul>
+
 ## TaskFlow API
 
 Another way to implement this use case is to use the [TaskFlow API](https://airflow.apache.org/docs/apache-airflow/stable/tutorial_taskflow_api.html) that was released with Airflow 2.0. With the TaskFlow API, returned values are pushed to XCom as usual, but XCom values can be pulled simply by adding the key as an input to the function as shown in the following DAG:

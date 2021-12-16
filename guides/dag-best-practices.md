@@ -228,6 +228,14 @@ Try to be consistent with something like this:
 task_1 >> task_2 >> [task_3, task_4]
 ```
 
+<!-- markdownlint-disable MD033 -->
+<ul class="learn-more-list">
+    <p>You might also like:</p>
+    <li data-icon="→"><a href="/events/webinars/dynamic-dags?banner=learn-more-banner-click">Dynamic DAGs Webinar</a></li>
+    <li data-icon="→"><a href="/events/webinars/best-practices-writing-dags-airflow-2?banner=learn-more-banner-click">Best Practices for Writing DAGs in Airflow 2 Webinar</a></li>
+    <li data-icon="→"><a href="/blog/7-common-errors-to-check-when-debugging-airflow-dag?banner=learn-more-banner-click">7 Common Errors to Check when Debugging Airflow DAGs</a></li>
+    <li data-icon="→"><a href="/guides/dynamically-generating-dags?banner=learn-more-banner-click">Dynamically Generating DAGs in Airflow</a></li>
+</ul>
 
 ## Use Airflow as an Orchestrator
 

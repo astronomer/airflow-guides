@@ -76,6 +76,15 @@ This screenshot shows the expanded view of the Task Groups we generated above in
 
 What if your Task Groups can't be processed independently? Next, we'll show how to call Task Groups and define dependencies between them.
 
+<!-- markdownlint-disable MD033 -->
+<ul class="learn-more-list">
+    <p>You might also like:</p>
+    <li data-icon="→"><a href="/guides/airflow-passing-data-between-tasks?banner=learn-more-banner-click">Passing Data Between Airflow Tasks</a></li>
+    <li data-icon="→"><a href="/events/webinars/taskflow-api-airflow-2.0?banner=learn-more-banner-click">TaskFlow API in Airflow 2.0 Webinar</a></li>
+    <li data-icon="→"><a href="/blog/machine-learning-pipelines-everything-you-need-to-know?banner=learn-more-banner-click">Machine Learning Pipelines: Everything You Need to Know</a></li>
+    <li data-icon="→"><a href="/blog/big-data-architecture?banner=learn-more-banner-click">Big Data Architecture: Core Components, Use Cases and Limitations</a></li>
+</ul>
+
 ## Ordering Task Groups
 
 By default, using a loop to generate your Task Groups will put them in parallel. If your Task Groups are dependent on elements of another Task Group, you'll want to run them sequentially. For example, when loading tables with foreign keys, your primary table records need to exist before you can load your foreign table.
