@@ -148,7 +148,7 @@ Clicking this shows the Rendered Template view and the output of the templated a
 <ul class="learn-more-list">
     <p>You might also like:</p>
     <li data-icon="→"><a href="/events/webinars/dynamic-dags?banner=learn-more-banner-click">Dynamic DAGs Webinar</a></li>
-    <li data-icon="→"><a href="https://registry.astronomer.io/dags/example-eks-templated?banner=learn-more-banner-click">Eks_templated Example DAG</a></li>
+    <li data-icon="→"><a href="https://registry.astronomer.io/dags/example-eks-templated?banner=learn-more-banner-click">Astronomer Registry: Eks_templated Example DAG</a></li>
     <li data-icon="→"><a href="/blog/data-pipelines-in-ecommerce?banner=learn-more-banner-click">How Data Pipelines Drive Improved Sales in E-commerce</a></li>
 </ul>
 

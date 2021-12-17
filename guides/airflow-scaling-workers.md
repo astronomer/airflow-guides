@@ -93,7 +93,7 @@ If all of these tasks exist within a single DAG and `dag_concurrency=16`, howeve
     <p>You might also like:</p>
     <li data-icon="→"><a href="/blog/airflow-dbt-1?banner=learn-more-banner-click">Building a Scalable Analytics Architecture with Airflow and dbt</a></li>
     <li data-icon="→"><a href="/case-studies/datasembly?banner=learn-more-banner-click">Datasembly: From One Airflow Instance to Multiple Deployments with Astronomer</a></li>
-    <li data-icon="→"><a href="https://registry.astronomer.io/providers/google/modules/dataprocscaleclusteroperator?banner=learn-more-banner-click">DataprocScaleClusterOperator</a></li>
+    <li data-icon="→"><a href="https://registry.astronomer.io/providers/google/modules/dataprocscaleclusteroperator?banner=learn-more-banner-click">Astronomer Registry: DataprocScaleClusterOperator</a></li>
 </ul>
 
 ## DAG-level Airflow Settings
