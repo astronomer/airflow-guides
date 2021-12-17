@@ -166,6 +166,15 @@ def success_email_function(context):
 
 This functionality may also be useful when your pipelines have conditional branching, and you want to be notified if a certain path is taken (i.e. certain tasks get run).
 
+<!-- markdownlint-disable MD033 -->
+<ul class="learn-more-list">
+    <p>You might also like:</p>
+    <li data-icon="→"><a href="https://registry.astronomer.io/dags/slack-callback-partial-dag?banner=learn-more-banner-click">Astronomer Registry: Pipeline Alerts and Notifications for Multiple Slack Channels</a></li>
+    <li data-icon="→"><a href="https://registry.astronomer.io/dags/ms-teams-callback-partial-dag?banner=learn-more-banner-click">Astronomer Registry: Pipeline Alerts and Notifications for Multiple Microsoft Teams Channels</a></li>
+    <li data-icon="→"><a href="/events/webinars/dags-with-airflow-notifications?banner=learn-more-banner-click">Monitor Your DAGs with Airflow Notifications Webinar</a></li>
+    <li data-icon="→"><a href="/blog/airflow-business-workflow-hightouch?banner=learn-more-banner-click">Democratizing the Data Stack—Airflow for Business Workflows</a></li>
+</ul>
+
 ## Email Notifications
 
 Email notifications are a native feature in Airflow and are easy to set up. As shown above, the `email_on_failure` and `email_on_retry` parameters can be set to `True` either at the DAG level or task level to send emails when tasks fail or retry. The `email` parameter can be used to specify which email(s) you want to receive the notification. If you want to enable email alerts on all failures and retries in your DAG, you can define that in your default arguments like this:

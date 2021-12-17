@@ -140,6 +140,13 @@ Finally, we need to set up a connection to Snowflake. There are a few ways to ma
 
 With the connection established, we can now run the DAG to execute our SQL queries.
 
+<!-- markdownlint-disable MD033 -->
+<ul class="learn-more-list">
+    <p>You might also like:</p>
+    <li data-icon="→"><a href="/blog/best_airflow_etl_tools?banner=learn-more-banner-click">How to Select the Best ETL Tool to Integrate with Airflow?</a></li>
+    <li data-icon="→"><a href="/blog/data-pipeline?banner=learn-more-banner-click">Data Pipeline: Components, Types and Best Practices</a></li>
+    <li data-icon="→"><a href="/guides/airflow-sql-data-quality-tutorial?banner=learn-more-banner-click">Airflow Data Quality Checks with SQL Operators</a></li>
+</ul>
 
 ### Example 2 - Executing a Query with Parameters
 
