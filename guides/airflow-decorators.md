@@ -15,7 +15,7 @@ In this guide, we'll cover when and why to use decorators, the decorators availa
 
 ## When and Why To Use Decorators
 
-The goal of decorators in Airflow is to simplify the DAG authoring experience and allow the developer to focus on implementing execution logic without having to think about orchestration logic. The result can be cleaner DAG files that are easier to read and require less code.
+The goal of decorators in Airflow is to simplify the DAG authoring experience and allow the developer to focus on implementing execution logic without having to think about orchestration logic. The result can be cleaner DAG files that are easier to read and require less code. Currently, available decorators can be used for Python and SQL functions.
 
 Take the following DAG with a simple `PythonOperator` as an example. Using traditional operators, our DAG looks like this:
 
@@ -63,17 +63,177 @@ dag = decorator_dag()
 
 In general, whether to use decorators is a matter of developer preference and style. Generally, a decorator and the corresponding traditional operator will have the same functionality. One exception to this is Astro Project decorators (more on these below), which do not have equivalent traditional operators. You can also easily mix decorators and traditional operators within your DAG if needed to implement your use case.
 
-## Using Airflow Decorators
+## How to Use Airflow Decorators
 
-link to taskflow api webinar
-[Taskflow API tutorial](https://airflow.apache.org/docs/apache-airflow/stable/tutorial_taskflow_api.html#tutorial-on-the-taskflow-api)
+Airflow decorators were introduced as part of the TaskFlow API, which also handles passing data between tasks using XCom and inferring task dependencies automatically. To learn more about the TaskFlow API, check out [Astronomer's webinar](https://www.astronomer.io/events/webinars/taskflow-api-airflow-2.0) or the Apache Airflow [Taskflow API tutorial](https://airflow.apache.org/docs/apache-airflow/stable/tutorial_taskflow_api.html#tutorial-on-the-taskflow-api). 
 
-Marc's example with before/after
+Using decorators to define your Python functions as tasks is easy. Let's take a before and after example. In the "traditional" DAG below, we have a basic ETL flow where we have tasks to get data from an API, process the data, and store it.
 
-### List of Available Decorators
+```python
+from airflow import DAG
+from airflow.operators.python_operator import PythonOperator
+from airflow.utils.dates import days_ago
+
+import json
+from typing import Dict
+import requests
+import logging
+
+API = "https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=usd&include_market_cap=true&include_24hr_vol=true&include_24hr_change=true&include_last_updated_at=true"
+
+default_args = {
+    'start_date': days_ago(1),
+}
+
+def _extract_bitcoin_price():
+    return requests.get(API).json()['bitcoin']
+
+def _process_data(ti):
+    response = ti.xcom_pull(task_ids='extract_bitcoin_price')
+    logging.info(response)
+    processed_data = {'usd': response['usd'], 'change': response['usd_24h_change']}
+    ti.xcom_push(key='processed_data', value=processed_data)
+
+def _store_data(ti):
+    data = ti.xcom_pull(task_ids='process_data', key='processed_data')
+    logging.info(f"Store: {data['usd']} with change {data['change']}")
+
+with DAG('classic_dag', schedule_interval='@daily', default_args=default_args, catchup=False) as dag:
+    
+    extract_bitcoin_price = PythonOperator(
+        task_id='extract_bitcoin_price',
+        python_callable=_extract_bitcoin_price
+    )
+
+    process_data = PythonOperator(
+        task_id='process_data',
+        python_callable=_process_data
+    )
+
+    store_data = PythonOperator(
+        task_id='store_data',
+        python_callable=_store_data
+    )
+
+    extract_bitcoin_price >> process_data >> store_data
+```
+
+We can now rewrite this DAG using decorators, which will eliminate the need to explicitly instantiate `PythonOperators`. 
+
+```python
+from airflow.decorators import dag, task
+from airflow.utils.dates import days_ago
+
+from typing import Dict
+import requests
+import logging
+
+API = "https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=usd&include_market_cap=true&include_24hr_vol=true&include_24hr_change=true&include_last_updated_at=true"
+
+default_args = {
+    'start_date': days_ago(1),
+}
+
+@dag(schedule_interval='@daily', default_args=default_args, catchup=False)
+def taskflow():
+
+    @task(task_id='extract', retries=2)
+    def extract_bitcoin_price() -> Dict[str, float]:
+        return requests.get(API).json()['bitcoin']
+
+    @task(multiple_outputs=True)
+    def process_data(response: Dict[str, float]) -> Dict[str, float]:
+        logging.info(response)
+        return {'usd': response['usd'], 'change': response['usd_24h_change']}
+
+    @task
+    def store_data(data: Dict[str, float]):
+        logging.info(f"Store: {data['usd']} with change {data['change']}")
+
+    store_data(process_data(extract_bitcoin_price()))
+
+dag = taskflow()
+```
+
+The resulting DAG has much less code and is easier to read. Notice that it also doesn't require us to use `ti.xcom_pull` and `ti.xcom_push` to explicitly pass data between our tasks. This is all handled by the TaskFlow API when we define our task dependencies with `store_data(process_data(extract_bitcoin_price()))`. 
+
+Here are some other things to keep in mind when using decorators:
+
+- For any decorated object in your DAG file, you must call them for Airflow to register the task or DAG (e.g. `dag = taskflow()`).
+- When you define a task, the `task_id` will default to the name of the function you decorated. If you want to change that, you can simply pass a `task_id` to the decorator as we do in the `extract` task above.
+- Similarly, other task level parameters such as retries or pools can be defined within the decorator (see example with `retries` above).
+- You can decorate a function that is imported from another file with something like the following:
+    ```python
+    from include.my_file import my_function
+
+    @task
+    def taskflow_func():
+        my_function()
+    ```
+    This is recommended in cases where you have lengthy Python functions since it will keep your DAG file easier to read. 
 
 ### Mixing Decorators with Traditional Operators
+
+If you have a DAG that uses `PythonOperator` and other operators that don't have decorators, you can easily combine decorated functions and traditional operators in the same DAG. For example, we can add an `EmailOperator` to our DAG above like this:
+
+```python
+from airflow.decorators import dag, task
+from airflow.utils.dates import days_ago
+from airflow.operators.email_operator import EmailOperator
+
+from typing import Dict
+import requests
+import logging
+
+API = "https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=usd&include_market_cap=true&include_24hr_vol=true&include_24hr_change=true&include_last_updated_at=true"
+
+default_args = {
+    'start_date': days_ago(1),
+}
+
+@dag(schedule_interval='@daily', default_args=default_args, catchup=False)
+def taskflow():
+
+    @task(task_id='extract', retries=2)
+    def extract_bitcoin_price() -> Dict[str, float]:
+        return requests.get(API).json()['bitcoin']
+
+    @task(multiple_outputs=True)
+    def process_data(response: Dict[str, float]) -> Dict[str, float]:
+        logging.info(response)
+        return {'usd': response['usd'], 'change': response['usd_24h_change']}
+
+    @task
+    def store_data(data: Dict[str, float]):
+        logging.info(f"Store: {data['usd']} with change {data['change']}")
+
+    email_notification = EmailOperator(
+        task_id='email_notification',
+        to='noreply@astronomer.io',
+        subject='dag completed',
+        html_content='the dag has finished'
+    )
+
+    store_data(process_data(extract_bitcoin_price())) >> email_notification
+
+dag = taskflow()
+```
+
+Note that when adding traditional operators, dependencies are still defined using bitshift operators.
 
 ## Astro Project Decorators
 
 Animal adoptions example
+
+## List of Available Decorators
+
+There are a limited number of decorators available to use with Airflow, although more will be added in the future. This list provides a reference of what is currently available so you don't have to dig through source code.
+
+- `astro` project [SQL and dataframe decorators](https://github.com/astro-projects/astro)
+- DAG decorator (`@dag()`)
+- Task decorator (`@task()`), which creates a Python task
+- Python Virtual Env decorator (`@task.virtualenv()`), which runs your Python task in a virtual environment
+- Docker decorator (`@task.docker()`), which creates a `DockerOperator` task
+- TaskGroup decorator (`@task_group()`)
+
+As of Airflow 2.2, you can also [create your own custom task decorator](https://airflow.apache.org/docs/apache-airflow/stable/howto/create-custom-decorator.html).
