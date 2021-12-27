@@ -13,8 +13,6 @@ Prior to Airflow 2.2, all task execution occurred within your worker resource. F
 
 With the release of Airflow 2.2, Airflow has introduced a new way to run tasks in your environment: Deferrable Operators. These operators leverage Python's asynchronous library [asyncio](https://docs.python.org/3/library/asyncio.html), which provides functionality to efficiently run tasks waiting for an external resource to finish. This frees up your workers, allowing you to utilize those resources more effectively. In this guide, we'll walk through the concepts of deferrable operators, as well as the new components introduced to Airflow related to this feature.
 
-> Note: All code in this guide can be found in [this repo](https://github.com/astronomer/deferrable-operators).
-
 ## Deferrable Operator Concepts
 
 There are some terms and concepts that are important to understand when discussing Deferrable Operators:
