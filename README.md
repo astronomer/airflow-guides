@@ -73,7 +73,7 @@ Output should be similar too
 
 ```shell
 Spelling - <your-guide>.md
- shows you the context of the speling mistake and gives you options
+ shows you the context of the spelling mistake and gives you options
 ?   (Use arrow keys)
   Ignore
   Add to file ignores
@@ -92,7 +92,7 @@ You can also add words directly to dictionary by adding the word to the [.spelli
 
 ### Link Check
 
-The last check in the pipeline in the [Markdown Link Checker](https://github.com/tcort/markdown-link-check) which checks for broken links. This check may fail wether you have dead links or not because of "too many request" status code. If you believe this has happened just run the pipeline again.
+The last check in the pipeline in the [Markdown Link Checker](https://github.com/tcort/markdown-link-check) which checks for broken links. This check may fail whether you have dead links or not because of "too many request" status code. If you believe this has happened just run the pipeline again.
 
 If the check is failing use the `GitHub Actions` logs to see what links are dead. Links from old guides may have broke since that last time the pipeline has run. Please fix these links to keep our site up to date.
 
