@@ -9,7 +9,7 @@ tags: ["astro", "ETL", "SQL"]
 
 ## Overview
 
-The `[astro` library](https://github.com/astro-projects/astro) is an open source Python package maintained by Astronomer that provides tools to improve the DAG authoring experience for Airflow users. The available decorators and functions allow you to write DAGs based on how you want your data to move, while simplifying the transformation process between different environments.
+The [`astro` library](https://github.com/astro-projects/astro) is an open source Python package maintained by Astronomer that provides tools to improve the DAG authoring experience for Airflow users. The available decorators and functions allow you to write DAGs based on how you want your data to move, while simplifying the transformation process between different environments.
 
 In this guide, we’ll demonstrate how you can use `astro` functions for ETL use cases. The resulting DAGs will be easier to write and read, and require less code.
 
@@ -25,7 +25,7 @@ More specifically, `astro` has the following functions that are helpful when imp
 
 In the next section, we’ll show a practical example implementing these functions.
 
-## Example Implementation
+## Example ETL Implementation
 
 To show `astro` for ETL in action, we’ll take a pretty common use case: managing billing data. We need to extract customer subscription data by joining data from a CSV on S3 with the results of a query to our Snowflake database. Then we perform some transformations on the data before loading it into a results table. Below we’ll show what the original DAG looked like, and then how `astro` can make it easier.
 
@@ -180,7 +180,7 @@ def astro_billing_dag():
     extracted_data = extract_data(subscriptions=load_subscription_data,
                                     customer_data=Table('customer_data', conn_id=SNOWFLAKE_CONN_ID, schema='SANDBOX_KENTEND'))
 
-    transformed_data = transform_data(extracted_data, output_table=Table('aggregated_bills', conn_id=SNOWFLAKE_CONN_ID))
+    transformed_data = transform_data(extracted_data, output_table=Table('aggregated_bills'     conn_id=SNOWFLAKE_CONN_ID))
     
     # Append transformed data to billing table
     load_transformed_data = aql.append(
@@ -199,4 +199,8 @@ astro_billing_dag = astro_billing_dag()
 
 The key differences in this implementation are:
 
--
+- The `astro` functions `load_file` and `append` take care of loading our raw data from S3 and transformed data to our reporting table respectively. We didn't have to write any explicit code to get the data into Snowflake.
+- Using the `transform` function, we can easily execute SQL to combine our data from multiple tables. The results are automatically stored in a table in Snowflake. We didn't have to use the `SnowflakeHook` or write any of the code to execute the query.
+- We seamlessly transition to a transformation in Python with the `df` function, without needing to explicitly convert the results of our previous task to a Pandas dataframe. We then write the output of our transformation to our "aggregated_bills" table in Snowflake using the `output_table` parameter, so we don't have to worry about storing the data in XCom.
+
+Overall, our DAG with `astro` is shorter, simpler to implement, and easier to read. This allows us to implement even more complicated use cases easily while focusing on the movement of our data.
