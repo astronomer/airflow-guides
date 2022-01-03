@@ -375,9 +375,13 @@ Dynamically generating DAGs can cause performance issues when used at scale. Whe
 Upgrading to Airflow 2.0 to make use of the [HA Scheduler](https://www.astronomer.io/blog/airflow-2-scheduler) should help with these performance issues. But it can still take some additional optimization work depending on the scale you're working at. There is no single right way to implement or scale dynamically generated DAGs, but the flexibility of Airflow means there are many ways to arrive at a solution that works for a particular use case.
 
 <!-- markdownlint-disable MD033 -->
-### Dynamic DAGs in Action
+### Dynamic DAGs in Action: Part 1
 
 <iframe src="https://fast.wistia.net/embed/iframe/1fkd7hcqfu" title="dynamic_dags_part_1 Video" allow="autoplay; fullscreen" allowtransparency="true" frameborder="0" scrolling="no" class="wistia_embed" name="wistia_embed" allowfullscreen msallowfullscreen width="100%" height="450"></iframe>
+
+### Dynamic DAGs in Action: Part 2
+
+<iframe src="https://fast.wistia.net/embed/iframe/x82mrgp900" title="dynamic_dags_part_2 Video" allow="autoplay; fullscreen" allowtransparency="true" frameborder="0" scrolling="no" class="wistia_embed" name="wistia_embed" allowfullscreen msallowfullscreen width="100%" height="450"></iframe>
 
 That was the easiest and fastest way for creating DAGs.
 
