@@ -39,7 +39,7 @@ Currently, the following deferrable operators are available in Airflow:
 - [TimeSensorAsync](https://airflow.apache.org/docs/apache-airflow/stable/_api/airflow/sensors/time_sensor/index.html?highlight=timesensor#module-contents)
 - [DateTimeSensorAsync](https://airflow.apache.org/docs/apache-airflow/stable/_api/airflow/sensors/date_time/index.html#airflow.sensors.date_time.DateTimeSensorAsync)
 
-However, this list will grow quickly as the Airflow community makes more investments into these operators. In the meantime, you can also create your own (more on this in the last section). Additionally, Astronomer maintains some deferrable operators [available only on Astronomer Runtime](https://docs.astronomer.io/cloud/deferrable-operators/#astronomers-deferrable-operators).
+However, this list will grow quickly as the Airflow community makes more investments into these operators. In the meantime, you can also create your own (more on this in the last section of this guide). Additionally, Astronomer maintains some deferrable operators [available only on Astronomer Runtime](https://docs.astronomer.io/cloud/deferrable-operators/#astronomers-deferrable-operators).
 
 There are numerous benefits to using deferrable operators. Some of the most notable are:
 
