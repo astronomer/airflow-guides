@@ -9,7 +9,7 @@ tags: ["Operators", "Concurrency", "Resources", "Sensors", "Workers"]
 
 ## Overview
 
-Prior to Airflow 2.2, all task execution occurred within your worker resource. For tasks where the work was occurring outside of Airflow (e.g. a Spark Job), your tasks would sit idle waiting for a response for a success or failure signal. This idle task would hold a worker slot for its entire duration, potentially queuing other tasks and delaying their start times.
+Prior to Airflow 2.2, all task execution occurred within your worker resources. For tasks whose work was occurring outside of Airflow (e.g. a Spark Job), your tasks would sit idle waiting for a success or failure signal. These idle tasks would occupy worker slots for their entire duration, potentially queuing other tasks and delaying their start times.
 
 With the release of Airflow 2.2, Airflow has introduced a new way to run tasks in your environment: Deferrable Operators. These operators leverage Python's asynchronous library [asyncio](https://docs.python.org/3/library/asyncio.html), which provides functionality to efficiently run tasks waiting for an external resource to finish. This frees up your workers, allowing you to utilize those resources more effectively. In this guide, we'll walk through the concepts of deferrable operators, as well as the new components introduced to Airflow related to this feature.
 
