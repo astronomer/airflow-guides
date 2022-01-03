@@ -20,7 +20,7 @@ There are some terms and concepts that are important to understand when discussi
 - **asyncio:** This is the Python [library](https://docs.python.org/3/library/asyncio.html) that is used as a foundation for multiple asynchronous frameworks. This library is core to Deferrable Operators functionality, and is used when writing triggers.
 - **Triggers:** These are small, asynchronous pieces of Python code. Due to their asynchronous nature, they coexist efficiently in a single process known as the triggerer.
 - **Triggerer:** This is a new airflow service (like a scheduler or a worker) that runs an [asyncio event loop](https://docs.python.org/3/library/asyncio-eventloop.html#asyncio-event-loop) in your Airflow environment. Running a triggerer component is essential for using deferrable operators. Depending on the available resources and the workload of your triggers, you can run hundreds to thousands of triggers in a single triggerer process.
-- **Deferred:** This is a new Airflow task state (medium purple color) introduced to indicate that a task has paused its execution, released the worker slot, and has submitted a trigger to be picked up by the triggerer process to continue the task’s execution.
+- **Deferred:** This is a new Airflow task state (medium purple color) introduced to indicate that a task has paused its execution, released the worker slot, and submitted a trigger to be picked up by the triggerer process.
 
 With traditional operators, a task might poll an external system while waiting for a process to complete. Even though the task might not be doing significant work, it would still occupy a worker slot. This can prevent other tasks from running. Visually, that looks something like the diagram below:
 
