@@ -113,7 +113,7 @@ As tasks are raised into a deferred state, triggers will be registered in the tr
 
 ### High Availability
 
-Note that triggers are designed to be highly-available. You can implement this by starting multiple triggerer processes. Similar to the [HA scheduler](https://airflow.apache.org/docs/apache-airflow/stable/concepts/scheduler.html#running-more-than-one-scheduler) introduced in Airflow 2.0, Airflow will ensure they co-exist with correct locking and HA. You can reference the [Airflow docs](https://airflow.apache.org/docs/apache-airflow/stable/concepts/deferring.html#high-availability) for further reading on this topic.
+Note that triggers are designed to be highly-available. You can implement this by starting multiple triggerer processes. Similar to the [HA scheduler](https://airflow.apache.org/docs/apache-airflow/stable/concepts/scheduler.html#running-more-than-one-scheduler) introduced in Airflow 2.0, Airflow ensures that they co-exist with correct locking and HA. You can reference the [Airflow docs](https://airflow.apache.org/docs/apache-airflow/stable/concepts/deferring.html#high-availability) for further information on this topic.
 
 ### Creating Your Own Deferrable Operator
 
