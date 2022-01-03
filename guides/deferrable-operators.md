@@ -32,7 +32,7 @@ With deferrable operators, worker slots can be released while a task is waiting 
 
 ## When and Why To Use Deferrable Operators
 
-In general, deferrable operators should be used whenever you have long-running tasks that might occupy a worker slot for longer than is necessary and you want to reduce Airflow’s resource utilization. For example, if you have many sensor tasks using deferrable operators may reduce costs. In particular, if you are currently working with Smart Sensors to poll an external job or system, deferrable operators will be a preferable, more stable solution and better supported by Airflow in the long term.
+In general, deferrable operators should be used whenever you have long-running tasks that might occupy a worker slot for longer than is necessary and you want to reduce Airflow’s resource utilization. For example, using deferrable operators in sensor tasks might reduce your operational costs. In particular, if you are currently working with smart sensors to poll an external job or system, deferrable operators will be a preferable, more stable solution and better supported by Airflow in the long term.
 
 Currently, the following deferrable operators are available in Airflow:
 
