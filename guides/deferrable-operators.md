@@ -43,7 +43,7 @@ However, this list will grow quickly as the Airflow community makes more investm
 
 There are numerous benefits to using deferrable operators. Some of the most notable are:
 
-- **Reduced Resource Consumption:** Depending on the workload, one triggerer can run hundreds of deferred tasks concurrently. This can lead to a reduction in the number of workers needed to run tasks during periods of high concurrency. With less workers needed, you are able to scale down the underlying infrastructure of your Airflow environment.
+- **Reduced resource consumption:** Depending on the workload, one triggerer can run hundreds of deferred tasks concurrently. This can lead to a reduction in the number of workers needed to run tasks during periods of high concurrency. With less workers needed, you are able to scale down the underlying infrastructure of your Airflow environment.
 - **Resiliency against restarts:** Triggers are stateless by design. This means your deferred tasks will not be set to a failure state if a triggerer needs to be restarted due to a deployment or infrastructure issue. Once a triggerer is back up and running in your environment, your deferred tasks will resume.
 - **Paves the Way to Event-Based DAGs:** The presence of `asyncio` in core Airflow is seen as the basis for event-triggered DAGs.
 
