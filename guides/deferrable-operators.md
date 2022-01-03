@@ -49,7 +49,7 @@ There are numerous benefits to using deferrable operators. Some of the most nota
 
 ## Example Workflow Using Deferrable Operators
 
-Let's say we have a DAG that is scheduled to run a sensor every minute, and where each task can take up to 20 minutes. Using the default settings with 1 worker, we can see that after 20 minutes we have 16 tasks running, each holding a worker slot:
+Let's say we have a DAG that is scheduled to run a sensor every minute, where each task can take up to 20 minutes. Using the default settings with 1 worker, we can see that after 20 minutes we have 16 tasks running, each holding a worker slot:
 
 ![Classic Tree View](https://assets2.astronomer.io/main/guides/deferrable-operators/classic_tree_view.png)
 
