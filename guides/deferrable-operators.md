@@ -15,7 +15,7 @@ With the release of Airflow 2.2, Airflow has introduced a new way to run tasks i
 
 ## Deferrable Operator Concepts
 
-There are some terms and concepts that are important to understand when discussing Deferrable Operators:
+There are some terms and concepts that are important to understand when discussing deferrable operators:
 
 - **asyncio:** This is the Python [library](https://docs.python.org/3/library/asyncio.html) that is used as a foundation for multiple asynchronous frameworks. This library is core to Deferrable Operators functionality, and is used when writing triggers.
 - **Triggers:** These are small, asynchronous pieces of Python code. Due to their asynchronous nature, they coexist efficiently in a single process known as the triggerer.
