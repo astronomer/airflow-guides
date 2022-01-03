@@ -53,7 +53,7 @@ Let's say we have a DAG that is scheduled to run a sensor every minute, and wher
 
 ![Classic Tree View](https://assets2.astronomer.io/main/guides/deferrable-operators/classic_tree_view.png)
 
-As worker slots are held during task execution time, we would need at least 20 worker slots available for this DAG to ensure future runs are not delayed. In order to increase concurrency, we would need to add additional resources to our Airflow infrastructure (e.g. another worker pod). 
+Because worker slots are held during task execution time, we would need at least 20 worker slots available for this DAG to ensure that future runs are not delayed. To increase concurrency, we would need to add additional resources to our Airflow infrastructure (e.g. another worker pod). 
 
 With Airflow 2.2, we can leverage a deferrable operator to offload this idle work from the Workers. This will release the worker slot from sensing for job status, so it can complete other work across your Airflow environment. With our updated DAG below, we see that all 20 tasks have entered a state of deferred, indicating that the sensing jobs will now be run by triggers in the triggerer process. This process is designed to handle these types of jobs at scale, with the potential of 100's of sensing processes running concurrently on a single triggerer.
 
