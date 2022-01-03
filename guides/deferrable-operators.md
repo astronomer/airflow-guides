@@ -26,7 +26,7 @@ With traditional operators, a task might poll an external system while waiting f
 
 ![Classic Worker](https://assets2.astronomer.io/main/guides/deferrable-operators/classic_worker_process.png)
 
-With deferrable operators, worker slots can be released while a task is waiting for an external system. The task is then deferred (suspended), and polling is offloaded to the triggerer, which can run many asynchronous polling tasks concurrently in a single process. When the terminal status for the job is received, the task resumes, taking a worker slot while it finishes. Conceptually, that looks like this updated diagram:
+With deferrable operators, worker slots can be released while a task is waiting for an external system. The task is then deferred (suspended), and polling is offloaded to the triggerer, which can run many asynchronous polling tasks concurrently in a single process. When the terminal status for the job is received, the task resumes, taking a worker slot while it finishes. Visually, that looks like this updated diagram:
 
 ![Deferrable Worker](https://assets2.astronomer.io/main/guides/deferrable-operators/deferrable_operator_process.png)
 
