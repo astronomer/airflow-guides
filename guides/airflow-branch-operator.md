@@ -139,9 +139,9 @@ In this DAG we have two short circuits, one which will always return `True` and 
 <!-- markdownlint-disable MD033 -->
 <ul class="learn-more-list">
     <p>You might also like:</p>
-    <li data-icon="→"><a href="/events/webinars/best-practices-writing-dags-airflow-2?banner=learn-more-banner-click">Best Practices for Writing DAGs in Airflow 2 Webinar</a></li>
-    <li data-icon="→"><a href="/events/webinars/manage-dependencies-between-airflow-deployments-dags-tasks?banner=learn-more-banner-click">Manage Dependencies Between Airflow Deployments, DAGs, and Tasks Webinar</a></li>
-    <li data-icon="→"><a href="/blog/machine-learning-pipeline-orchestration?banner=learn-more-banner-click">Machine Learning Pipeline Orchestration</a></li>
+    <li data-icon="→"><a href="/events/webinars/best-practices-writing-dags-airflow-2" onclick="analytics.track('Clicked Learn More List Link', { page: location.href, buttonText: 'Best Practices for Writing DAGs in Airflow 2 Webinar', spottedCompany: window.spottedCompany })">Best Practices for Writing DAGs in Airflow 2 Webinar</a></li>
+    <li data-icon="→"><a href="/events/webinars/manage-dependencies-between-airflow-deployments-dags-tasks" onclick="analytics.track('Clicked Learn More List Link', { page: location.href, buttonText: 'Manage Dependencies Between Airflow Deployments, DAGs, and Tasks Webinar', spottedCompany: window.spottedCompany })">Manage Dependencies Between Airflow Deployments, DAGs, and Tasks Webinar</a></li>
+    <li data-icon="→"><a href="/blog/machine-learning-pipeline-orchestration" onclick="analytics.track('Clicked Learn More List Link', { page: location.href, buttonText: 'Machine Learning Pipeline Orchestration', spottedCompany: window.spottedCompany })">Machine Learning Pipeline Orchestration</a></li>
 </ul>
 
 ## Other Branch Operators

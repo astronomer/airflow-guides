@@ -147,9 +147,9 @@ Clicking this shows the Rendered Template view and the output of the templated a
 <!-- markdownlint-disable MD033 -->
 <ul class="learn-more-list">
     <p>You might also like:</p>
-    <li data-icon="→"><a href="/events/webinars/dynamic-dags?banner=learn-more-banner-click">Dynamic DAGs Webinar</a></li>
-    <li data-icon="→"><a href="https://registry.astronomer.io/dags/example-eks-templated?banner=learn-more-banner-click">Astronomer Registry: Eks_templated Example DAG</a></li>
-    <li data-icon="→"><a href="/blog/data-pipelines-in-ecommerce?banner=learn-more-banner-click">How Data Pipelines Drive Improved Sales in E-commerce</a></li>
+    <li data-icon="→"><a href="/events/webinars/dynamic-dags" onclick="analytics.track('Clicked Learn More List Link', { page: location.href, buttonText: 'Dynamic DAGs Webinar', spottedCompany: window.spottedCompany })">Dynamic DAGs Webinar</a></li>
+    <li data-icon="→"><a href="https://registry.astronomer.io/dags/example-eks-templated" onclick="analytics.track('Clicked Learn More List Link', { page: location.href, buttonText: 'Astronomer Registry: Eks_templated Example DAG', spottedCompany: window.spottedCompany })">Astronomer Registry: Eks_templated Example DAG</a></li>
+    <li data-icon="→"><a href="/blog/data-pipelines-in-ecommerce" onclick="analytics.track('Clicked Learn More List Link', { page: location.href, buttonText: 'How Data Pipelines Drive Improved Sales in E-commerce', spottedCompany: window.spottedCompany })">How Data Pipelines Drive Improved Sales in E-commerce</a></li>
 </ul>
 
 ## Using Custom Functions and Variables in Templates

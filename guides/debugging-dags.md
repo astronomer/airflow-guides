@@ -54,10 +54,10 @@ If you do have package conflicts that can't be resolved, consider breaking up yo
 <!-- markdownlint-disable MD033 -->
 <ul class="learn-more-list">
     <p>Listen to the webinar for more DAG tips:</p>
-    <li data-icon="→"><a href="/events/webinars/best-practices-writing-dags-airflow-2?banner=learn-more-banner-click">Best Practices for Writing  DAGs in Airflow 2</a></li>
-    <li data-icon="→"><a href="/events/webinars/trigger-dags-any-schedule?banner=learn-more-banner-click">Scheduling In Airflow</a></li>
-    <li data-icon="→"><a href="/events/webinars/dags-with-airflow-notifications?banner=learn-more-banner-click">Monitor Your DAGs with Airflow Notifications</a></li>
-    <li data-icon="→"><a href="/events/webinars/dynamic-dags?banner=learn-more-banner-click">Dynamic DAGs</a></li>
+    <li data-icon="→"><a href="/events/webinars/best-practices-writing-dags-airflow-2" onclick="analytics.track('Clicked Learn More List Link', { page: location.href, buttonText: 'Best Practices for Writing  DAGs in Airflow 2', spottedCompany: window.spottedCompany })">Best Practices for Writing  DAGs in Airflow 2</a></li>
+    <li data-icon="→"><a href="/events/webinars/trigger-dags-any-schedule" onclick="analytics.track('Clicked Learn More List Link', { page: location.href, buttonText: 'Scheduling In Airflow', spottedCompany: window.spottedCompany })">Scheduling In Airflow</a></li>
+    <li data-icon="→"><a href="/events/webinars/dags-with-airflow-notifications" onclick="analytics.track('Clicked Learn More List Link', { page: location.href, buttonText: 'Monitor Your DAGs with Airflow Notifications', spottedCompany: window.spottedCompany })">Monitor Your DAGs with Airflow Notifications</a></li>
+    <li data-icon="→"><a href="/events/webinars/dynamic-dags" onclick="analytics.track('Clicked Learn More List Link', { page: location.href, buttonText: 'Dynamic DAGs', spottedCompany: window.spottedCompany })">Dynamic DAGs</a></li>
 </ul>
 
 ## Tasks Aren't Running

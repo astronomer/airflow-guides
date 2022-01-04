@@ -231,10 +231,10 @@ task_1 >> task_2 >> [task_3, task_4]
 <!-- markdownlint-disable MD033 -->
 <ul class="learn-more-list">
     <p>You might also like:</p>
-    <li data-icon="→"><a href="/events/webinars/dynamic-dags?banner=learn-more-banner-click">Dynamic DAGs Webinar</a></li>
-    <li data-icon="→"><a href="/events/webinars/best-practices-writing-dags-airflow-2?banner=learn-more-banner-click">Best Practices for Writing DAGs in Airflow 2 Webinar</a></li>
-    <li data-icon="→"><a href="/blog/7-common-errors-to-check-when-debugging-airflow-dag?banner=learn-more-banner-click">7 Common Errors to Check when Debugging Airflow DAGs</a></li>
-    <li data-icon="→"><a href="/guides/dynamically-generating-dags?banner=learn-more-banner-click">Dynamically Generating DAGs in Airflow</a></li>
+    <li data-icon="→"><a href="/events/webinars/dynamic-dags" onclick="analytics.track('Clicked Learn More List Link', { page: location.href, buttonText: 'Dynamic DAGs Webinar', spottedCompany: window.spottedCompany })">Dynamic DAGs Webinar</a></li>
+    <li data-icon="→"><a href="/events/webinars/best-practices-writing-dags-airflow-2" onclick="analytics.track('Clicked Learn More List Link', { page: location.href, buttonText: 'Best Practices for Writing DAGs in Airflow 2 Webinar', spottedCompany: window.spottedCompany })">Best Practices for Writing DAGs in Airflow 2 Webinar</a></li>
+    <li data-icon="→"><a href="/blog/7-common-errors-to-check-when-debugging-airflow-dag" onclick="analytics.track('Clicked Learn More List Link', { page: location.href, buttonText: '7 Common Errors to Check when Debugging Airflow DAGs', spottedCompany: window.spottedCompany })">7 Common Errors to Check when Debugging Airflow DAGs</a></li>
+    <li data-icon="→"><a href="/guides/dynamically-generating-dags" onclick="analytics.track('Clicked Learn More List Link', { page: location.href, buttonText: 'Dynamically Generating DAGs in Airflow', spottedCompany: window.spottedCompany })">Dynamically Generating DAGs in Airflow</a></li>
 </ul>
 
 ## Use Airflow as an Orchestrator
