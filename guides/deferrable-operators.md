@@ -17,22 +17,22 @@ With the release of Airflow 2.2, Airflow has introduced a new way to run tasks i
 
 There are some terms and concepts that are important to understand when discussing deferrable operators:
 
-- **asyncio:** This is the Python [library](https://docs.python.org/3/library/asyncio.html) that is used as a foundation for multiple asynchronous frameworks. This library is core to Deferrable Operators functionality, and is used when writing triggers.
+- **[asyncio](https://docs.python.org/3/library/asyncio.html):** This Python library is used as a foundation for multiple asynchronous frameworks. This library is core to deferrable operator's functionality, and is used when writing triggers.
 - **Triggers:** These are small, asynchronous pieces of Python code. Due to their asynchronous nature, they coexist efficiently in a single process known as the triggerer.
-- **Triggerer:** This is a new airflow service (like a scheduler or a worker) that runs an [asyncio event loop](https://docs.python.org/3/library/asyncio-eventloop.html#asyncio-event-loop) in your Airflow environment. Running a triggerer component is essential for using deferrable operators. Depending on the available resources and the workload of your triggers, you can run hundreds to thousands of triggers in a single triggerer process.
+- **Triggerer:** This is a new airflow service (like a scheduler or a worker) that runs an [asyncio event loop](https://docs.python.org/3/library/asyncio-eventloop.html#asyncio-event-loop) in your Airflow environment. Running a triggerer is essential for using deferrable operators. Depending on the available resources and the workload of your triggers, you can run hundreds to thousands of triggers in a single triggerer process.
 - **Deferred:** This is a new Airflow task state (medium purple color) introduced to indicate that a task has paused its execution, released the worker slot, and submitted a trigger to be picked up by the triggerer process.
 
-With traditional operators, a task might poll an external system while waiting for a process to complete. Even though the task might not be doing significant work, it would still occupy a worker slot. This can prevent other tasks from running. Visually, that looks something like the diagram below:
+With traditional operators, a task might submit a job to an external system (e.g. a Spark Cluster), and then poll the status of that job until it completes. Even though the task might not be doing significant work, it would still occupy a worker slot during the polling process. As worker slots become occupied, tasks may be queued resulting in delayed start times. Visually, this is represented in the diagram below:
 
 ![Classic Worker](https://assets2.astronomer.io/main/guides/deferrable-operators/classic_worker_process.png)
 
-With deferrable operators, worker slots can be released while a task is waiting for an external system. The task is then deferred (suspended), and polling is offloaded to the triggerer, which can run many asynchronous polling tasks concurrently in a single process. When the terminal status for the job is received, the task resumes, taking a worker slot while it finishes. Visually, that looks like this updated diagram:
+With deferrable operators, worker slots can be released while polling for job status. When the task is deferred (suspended), the polling process is offloaded as a trigger to the triggerer, freeing up the worker slot. The triggerer has the potential to run many asynchronous polling tasks concurrently, preventing this work from occupying your worker resources. When the terminal status for the job is received, the task resumes, taking a worker slot while it finishes. Visually, this is represented in the diagram below:
 
 ![Deferrable Worker](https://assets2.astronomer.io/main/guides/deferrable-operators/deferrable_operator_process.png)
 
 ## When and Why To Use Deferrable Operators
 
-In general, deferrable operators should be used whenever you have long-running tasks that might occupy a worker slot for longer than is necessary and you want to reduce Airflow’s resource utilization. For example, using deferrable operators in sensor tasks might reduce your operational costs. In particular, if you are currently working with smart sensors to poll an external job or system, deferrable operators will be a preferable, more stable solution and better supported by Airflow in the long term.
+In general, deferrable operators should be used whenever you have tasks that occupy a worker slot while polling for a condition in an external system. For example, using deferrable operators for sensor tasks (e.g. poking for a file on an SFTP server) may result in efficiency gains and reduced operational costs. In particular, if you are currently working with [smart sensors](https://airflow.apache.org/docs/apache-airflow/stable/concepts/deferring.html#smart-sensors), you should consider using deferrable operators for these tasks. They will be a preferable and more flexible solution, better supported by Airflow in the long term.
 
 Currently, the following deferrable operators are available in Airflow:
 
@@ -55,7 +55,7 @@ Let's say we have a DAG that is scheduled to run a sensor every minute, where ea
 
 Because worker slots are held during task execution time, we would need at least 20 worker slots available for this DAG to ensure that future runs are not delayed. To increase concurrency, we would need to add additional resources to our Airflow infrastructure (e.g. another worker pod). 
 
-With Airflow 2.2, we can leverage a deferrable operator to offload this idle work from the Workers. This will release the worker slot from sensing for job status, so it can complete other work across your Airflow environment. With our updated DAG below, we see that all 20 tasks have entered a state of deferred, indicating that the sensing jobs will now be run by triggers in the triggerer process. This process is designed to handle these types of jobs at scale, with the potential of 100's of sensing processes running concurrently on a single triggerer.
+By leveraging a deferrable operator for this sensor, we are able to achieve full concurrency while allowing our worker to complete additional work across our Airflow environment. With our updated DAG below, we see that all 20 tasks have entered a state of deferred, indicating that these sensing jobs (triggers) have been registered to run in the triggerer process.
 
 ![Deferrable Tree View](https://assets2.astronomer.io/main/guides/deferrable-operators/deferrable_tree_view.png)
 
@@ -107,7 +107,7 @@ To start a triggerer process, run `airflow triggerer` in your Airflow environmen
 
 ![Triggerer Logs](https://assets2.astronomer.io/main/guides/deferrable-operators/triggerer_logs.png)
 
-Note that if you are using [Astronomer Cloud](https://docs.astronomer.io/cloud/deferrable-operators#prerequisites), the triggerer will be run for you automatically if you are on Astronomer Runtime 4.0+. If you are using Astronomer Enterprise, you can add a triggerer to your Airflow deployment from the deployment settings tab.
+Note that if you are using [Astronomer Cloud](https://docs.astronomer.io/cloud/deferrable-operators#prerequisites), the triggerer runs automatically if you are on Astronomer Runtime 4.0+. If you are using Astronomer Enterprise 0.26+, you can add a triggerer to an Airflow 2.2+ deployment in the **Deployment Settings** tab. This [guide](https://docs.astronomer.io/enterprise/configure-deployment#triggerer) details the steps for configuring this feature in the platform.
 
 As tasks are raised into a deferred state, triggers are registered in the triggerer. You are able to set the number of concurrent triggers that can be run in a single triggerer process with the [`default_capacity`](https://airflow.apache.org/docs/apache-airflow/stable/configurations-ref.html#triggerer) configuration setting in Airflow. This can also be set via the `AIRFLOW__TRIGGERER__DEFAULT_CAPACITY` environment variable. By default, this variable's value is `1,000`.
 
