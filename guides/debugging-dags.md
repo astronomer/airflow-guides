@@ -13,7 +13,7 @@ Getting started with Airflow is easy if you know a bit of Python; you create you
 
 For these common situations (and a few more), we've got you covered! In this guide, we'll cover some frequently encountered issues with Airflow DAGs, and how to debug them. If you're brand new to Airflow, we recommend also checking out one of our [Introduction to Airflow Webinars](https://www.astronomer.io/events/webinars/intro-to-data-orchestration-with-airflow) to get started.
 
-> Note: This guide focuses on Airflow 2.0+. For older Airflow versions, some debugging steps may be slightly different. 
+> Note: This guide focuses on [Airflow 2.0+](https://www.astronomer.io/events/webinars/intro-to-data-orchestration-with-airflow). For older Airflow versions, some debugging steps may be slightly different.
 
 ## DAGs Aren't Showing Up in the Airflow UI
 
