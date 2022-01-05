@@ -9,29 +9,29 @@ tags: ["astro", "ETL", "SQL"]
 
 ## Overview
 
-The [`astro` library](https://github.com/astro-projects/astro) is an open source Python package maintained by Astronomer that provides tools to improve the DAG authoring experience for Airflow users. The available decorators and functions allow you to write DAGs based on how you want your data to move, while simplifying the transformation process between different environments.
+The [`astro` library](https://github.com/astro-projects/astro) is an open source Python package maintained by Astronomer that provides tools to improve the DAG authoring experience for Airflow users. The available decorators and functions allow you to write DAGs based on how you want your data to move by simplifying the data transformation process between different environments.
 
 In this guide, we’ll demonstrate how you can use `astro` functions for ETL use cases. The resulting DAGs will be easier to write and read, and require less code.
 
 ## Astro ETL Functionality
 
-The `astro` library makes implementing ETL use cases easier by allowing you to seamlessly transition between Python and SQL for each step in your process. Steps like creating dataframes, storing intermediate results, passing context and data between tasks, and creating Airflow task dependencies are all taken care of for you. This allows you focus solely on writing execution logic in whichever language is most suited for each step, without having to worry about Airflow orchestration logic on top of it.
+The `astro` library makes implementing ETL use cases easier by allowing you to seamlessly transition between Python and SQL for each step in your process. Details like creating dataframes, storing intermediate results, passing context and data between tasks, and creating Airflow task dependencies are all managed automatically. This means that you can focus solely on writing execution logic in whichever language you need without having to worry about Airflow orchestration logic.
 
 More specifically, `astro` has the following functions that are helpful when implementing an ETL framework (for a full list of functions, check out the [Readme](https://github.com/astro-projects/astro)):
 
-- `load_file`: if the data you’re starting with is in CSV or parquet files (stored locally or on S3 or GCS), you can use this function to load it into your database.
-- `transform`: this function allows you to transform your data with a SQL query. You define the `SELECT` statement, and the results will automatically be stored in a new table. By default, the `output_table` will be placed in a `tmp_astro` schema and will be given a unique name each time the DAG runs, but you can overwrite this behavior by defining a specific `output_table` in your function. You can then pass the results of the `transform` downstream to the next task as if it were a native Python object.
-- `dataframe`: similar to `transform` for SQL, the `dataframe` function allows you to implement a transformation on your data using Python. You can easily store the results of the `dataframe` function in your database by specifying an `output_table`, which is useful if you want to switch back to SQL in the next step or load final results to your database.
+- `load_file`: If the data you’re starting with is in CSV or parquet files (stored locally or on S3 or GCS), you can use this function to load it into your database.
+- `transform`: This function allows you to transform your data with a SQL query.  It uses a `SELECT` statement that you define to automatically store your results in a new table. By default, the `output_table` is placed in a `tmp_astro` schema and is given a unique name each time the DAG runs, but you can overwrite this behavior by defining a specific `output_table` in your function. You can then pass the results of the `transform` downstream to the next task as if it were a native Python object.
+- `dataframe`: Similar to `transform` for SQL, the `dataframe` function allows you to implement a transformation on your data using Python. You can easily store the results of the `dataframe` function in your database by specifying an `output_table`, which is useful if you want to switch back to SQL in the next step or load your final results to your database.
 
 In the next section, we’ll show a practical example implementing these functions.
 
 ## Example ETL Implementation
 
-To show `astro` for ETL in action, we’ll take a pretty common use case: managing billing data. We need to extract customer subscription data by joining data from a CSV on S3 with the results of a query to our Snowflake database. Then we perform some transformations on the data before loading it into a results table. Below we’ll show what the original DAG looked like, and then how `astro` can make it easier.
+To show `astro` for ETL in action, we’ll start with a pretty common use case: managing billing data. In this first scenario, we need to extract customer subscription data by joining data from a CSV on S3 with the results of a query to our Snowflake database. Then, we need to perform some transformations on the data before loading it into a results table. First we'll show how to implement this without `astro`, and then we'll show how `astro` can make it easier.
 
 ### The DAG Before Astro
 
-Here is our billing subscription ETL DAG implemented with OSS Airflow operators and decorators and making use of the TaskFlow API:
+Here is our billing subscription ETL DAG implemented with OSS Airflow operators and decorators, as well as the TaskFlow API:
 
 ```python
 from datetime import datetime
@@ -126,12 +126,12 @@ classic_billing_dag = classic_billing_dag()
 
 ![Classic Graph](https://assets2.astronomer.io/main/guides/astro-etl/classic_billing_graph_view.png)
 
-While we achieved our ETL goal with the DAG above, there are a couple of limitations that make the implementation more complicated:
+While we achieved our ETL goal with the DAG above, there are a couple of limitations that made this implementation more complicated:
 
-- Since there is no way to pass results from `SnowflakeOperator` query to the next task, we have to write our query in a `_DecoratedPythonOperator` function using the `SnowflakeHook`, and do the conversion from SQL to a dataframe explicitly ourselves.
+- Since there is no way to pass results from `SnowflakeOperator` query to the next task, we had to write our query in a `_DecoratedPythonOperator` function using the `SnowflakeHook` and explicitly do the conversion from SQL to a dataframe ourselves.
 - Some of our transformations are better suited to SQL, and others are better suited to Python, but transitioning between the two requires extra boilerplate code to explicitly make those conversions.
-- While the TaskFlow API makes it easier to pass data between tasks here, it is storing the resulting dataframes in as XComs by default. This means we need to worry about the size of our data. We could implement a custom XCom backend, but that would be extra lift.
-- Loading data back to Snowflake after the transformation is complete requires storing an intermediate CSV in S3, and writing the code to do so ourselves.
+- While the TaskFlow API makes it easier to pass data between tasks here, it is storing the resulting dataframes as XComs by default. This means that we need to worry about the size of our data. We could implement a custom XCom backend, but that would be extra lift.
+- Loading data back to Snowflake after the transformation is complete requires writing extra code to store an intermediate CSV in S3.
 
 ### The DAG With Astro
 
@@ -199,8 +199,8 @@ astro_billing_dag = astro_billing_dag()
 
 The key differences in this implementation are:
 
-- The `astro` functions `load_file` and `append` take care of loading our raw data from S3 and transformed data to our reporting table respectively. We didn't have to write any explicit code to get the data into Snowflake.
-- Using the `transform` function, we can easily execute SQL to combine our data from multiple tables. The results are automatically stored in a table in Snowflake. We didn't have to use the `SnowflakeHook` or write any of the code to execute the query.
-- We seamlessly transition to a transformation in Python with the `df` function, without needing to explicitly convert the results of our previous task to a Pandas dataframe. We then write the output of our transformation to our "aggregated_bills" table in Snowflake using the `output_table` parameter, so we don't have to worry about storing the data in XCom.
+- The `load_file` and `append` functions take care of loading our raw data from S3 and transforming data to our reporting table respectively. We didn't have to write any extra code to get the data into Snowflake.
+- Using the `transform` function, we easily executed SQL to combine our data from multiple tables. The results are automatically stored in a table in Snowflake. We didn't have to use the `SnowflakeHook` or write any of the code to execute the query.
+- We seamlessly transitioned to a transformation in Python with the `df` function without needing to explicitly convert the results of our previous task to a Pandas dataframe. We then wrote the output of our transformation to our "aggregated_bills" table in Snowflake using the `output_table` parameter, so we didn't have to worry about storing the data in XCom.
 
 Overall, our DAG with `astro` is shorter, simpler to implement, and easier to read. This allows us to implement even more complicated use cases easily while focusing on the movement of our data.
