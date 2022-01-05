@@ -126,6 +126,13 @@ Below are some general tips and tricks for getting them connections work:
 - Every hook/operator will have its own way of using a connection, and it can sometimes be tricky to figure out what parameters are needed. The [Astronomer Registry](https://registry.astronomer.io/) can be a great resource for this: many hooks and operators have documentation there on what is required for a connection.
 - You can define connections using Airflow environment variables instead of adding them in the UI. Take care to not end up with the same connection defined in multiple places. If you do, the environment variable will take precedence.
 
+<!-- markdownlint-disable MD033 -->
+<ul class="learn-more-list">
+    <p>Here are some example DAGs that show implementing callbacks (which are relevant to error-handling and notifications):</p>
+    <li data-icon="→"><a href="https://registry.astronomer.io/dags/slack-callback-dag" onclick="analytics.track('Clicked Learn More List Link', { page: location.href, buttonText: 'Pipeline Alerts and Notifications using Slack', spottedCompany: window.spottedCompany })">Pipeline Alerts and Notifications using Slack</a></li>
+    <li data-icon="→"><a href="https://registry.astronomer.io/dags/ms-teams-callback-dag" onclick="analytics.track('Clicked Learn More List Link', { page: location.href, buttonText: 'Pipeline Alerts and Notifications using Microsoft Teams', spottedCompany: window.spottedCompany })">Pipeline Alerts and Notifications using Microsoft Teams</a></li>
+</ul>
+
 ## Recovering from Failures
 
 Once you have identified the cause of any failures in your tasks, you can begin to address them. If you've made any changes to your code, make sure to redeploy (if applicable) and check the Code View in the Airflow UI to make sure that your changes have been picked up by Airflow.
