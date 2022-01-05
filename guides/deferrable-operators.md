@@ -57,6 +57,28 @@ Let's say we have a DAG that is scheduled to run a sensor every minute, where ea
 
 Because worker slots are held during task execution time, we would need at least 20 worker slots available for this DAG to ensure that future runs are not delayed. To increase concurrency, we would need to add additional resources to our Airflow infrastructure (e.g. another worker pod). 
 
+```python
+from datetime import datetime
+from airflow import DAG
+from airflow.sensors.date_time import DateTimeSensor
+ 
+with DAG(
+   "sync_dag",
+   start_date=datetime(2021, 12, 22, 20, 0),
+   end_date=datetime(2021, 12, 22, 20, 19),
+   schedule_interval="* * * * *",
+   catchup=True,
+   max_active_runs=32,
+   max_active_tasks=32
+) as dag:
+ 
+   sync_sensor = DateTimeSensor(
+       task_id="sync_task",
+       target_time="""{{ macros.datetime.utcnow() + macros.timedelta(minutes=20) }}""",
+       pool="sync",
+   )
+```
+
 By leveraging a deferrable operator for this sensor, we are able to achieve full concurrency while allowing our worker to complete additional work across our Airflow environment. With our updated DAG below, we see that all 20 tasks have entered a state of deferred, indicating that these sensing jobs (triggers) have been registered to run in the triggerer process.
 
 ![Deferrable Tree View](https://assets2.astronomer.io/main/guides/deferrable-operators/deferrable_tree_view.png)
@@ -80,26 +102,6 @@ with DAG(
        task_id="async_task",
        target_time="""{{ macros.datetime.utcnow() + macros.timedelta(minutes=20) }}""",
        pool="async",
-   )
-
-from datetime import datetime
-from airflow import DAG
-from airflow.sensors.date_time import DateTimeSensor
- 
-with DAG(
-   "sync_dag",
-   start_date=datetime(2021, 12, 22, 20, 0),
-   end_date=datetime(2021, 12, 22, 20, 19),
-   schedule_interval="* * * * *",
-   catchup=True,
-   max_active_runs=32,
-   max_active_tasks=32
-) as dag:
- 
-   sync_sensor = DateTimeSensor(
-       task_id="sync_task",
-       target_time="""{{ macros.datetime.utcnow() + macros.timedelta(minutes=20) }}""",
-       pool="sync",
    )
 ```
 
