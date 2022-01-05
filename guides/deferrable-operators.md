@@ -24,7 +24,7 @@ There are some terms and concepts that are important to understand when discussi
 
 > Note: The terms "deferrable" and "async" or "asynchronous" are often used interchangeably. They mean the same thing in this context.
 
-With traditional operators, a task might submit a job to an external system (e.g. a Spark Cluster), and then poll the status of that job until it completes. Even though the task might not be doing significant work, it would still occupy a worker slot during the polling process. As worker slots become occupied, tasks may be queued resulting in delayed start times. Visually, this is represented in the diagram below:
+With traditional operators, a task might submit a job to an external system (e.g. a Spark Cluster) and then poll the status of that job until it completes. Even though the task might not be doing significant work, it would still occupy a worker slot during the polling process. As worker slots become occupied, tasks may be queued resulting in delayed start times. Visually, this is represented in the diagram below:
 
 ![Classic Worker](https://assets2.astronomer.io/main/guides/deferrable-operators/classic_worker_process.png)
 
