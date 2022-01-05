@@ -144,6 +144,14 @@ Clicking this shows the Rendered Template view and the output of the templated a
 
 ![Rendered Template view](https://assets2.astronomer.io/main/guides/templating/renderedtemplate.png)
 
+<!-- markdownlint-disable MD033 -->
+<ul class="learn-more-list">
+    <p>You might also like:</p>
+    <li data-icon="→"><a href="/events/webinars/dynamic-dags?banner=learn-more-banner-click">Dynamic DAGs Webinar</a></li>
+    <li data-icon="→"><a href="https://registry.astronomer.io/dags/example-eks-templated?banner=learn-more-banner-click">Astronomer Registry: Eks_templated Example DAG</a></li>
+    <li data-icon="→"><a href="/blog/data-pipelines-in-ecommerce?banner=learn-more-banner-click">How Data Pipelines Drive Improved Sales in E-commerce</a></li>
+</ul>
+
 ## Using Custom Functions and Variables in Templates
 
 As seen above, we have several variables (e.g. `execution_date` and `ds`) available during templating. For various reasons such as security, a Jinja environment is not the same as your Airflow runtime. You can view a Jinja environment as a very stripped-down Python environment. That, among other things, means modules cannot be imported. For example, this doesn't work in a Jinja template:

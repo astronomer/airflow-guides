@@ -136,6 +136,14 @@ In this DAG we have two short circuits, one which will always return `True` and 
 
 ![Short Circuit](https://assets2.astronomer.io/main/guides/airflow-branching/short_circuit.png)
 
+<!-- markdownlint-disable MD033 -->
+<ul class="learn-more-list">
+    <p>You might also like:</p>
+    <li data-icon="→"><a href="/events/webinars/best-practices-writing-dags-airflow-2?banner=learn-more-banner-click">Best Practices for Writing DAGs in Airflow 2 Webinar</a></li>
+    <li data-icon="→"><a href="/events/webinars/manage-dependencies-between-airflow-deployments-dags-tasks?banner=learn-more-banner-click">Manage Dependencies Between Airflow Deployments, DAGs, and Tasks Webinar</a></li>
+    <li data-icon="→"><a href="/blog/machine-learning-pipeline-orchestration?banner=learn-more-banner-click">Machine Learning Pipeline Orchestration</a></li>
+</ul>
+
 ## Other Branch Operators
 
 Airflow offers a few other branching operators that work similarly to the `BranchPythonOperator` but for more specific contexts: 

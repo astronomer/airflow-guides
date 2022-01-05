@@ -51,6 +51,15 @@ One thing to watch out for, especially with Python packages, is dependency confl
 
 If you do have package conflicts that can't be resolved, consider breaking up your DAGs into multiple projects that are run on separate Airflow deployments so that DAGs requiring conflicting packages are not in the same environment. For example, you might have a set of DAGs that require package X that run on Airflow Deployment A, and another set of DAGs that require package Y (which conflicts with package X) that run on Airflow Deployment B. Alternatively, you can use the [Kubernetes Pod Operator](https://registry.astronomer.io/providers/kubernetes/modules/kubernetespodoperator) to isolate package dependencies to a specific task and avoid conflicts in your broader Airflow environment.
 
+<!-- markdownlint-disable MD033 -->
+<ul class="learn-more-list">
+    <p>Listen to the webinar for more DAG tips:</p>
+    <li data-icon="→"><a href="/events/webinars/best-practices-writing-dags-airflow-2?banner=learn-more-banner-click">Best Practices for Writing  DAGs in Airflow 2</a></li>
+    <li data-icon="→"><a href="/events/webinars/trigger-dags-any-schedule?banner=learn-more-banner-click">Scheduling In Airflow</a></li>
+    <li data-icon="→"><a href="/events/webinars/dags-with-airflow-notifications?banner=learn-more-banner-click">Monitor Your DAGs with Airflow Notifications</a></li>
+    <li data-icon="→"><a href="/events/webinars/dynamic-dags?banner=learn-more-banner-click">Dynamic DAGs</a></li>
+</ul>
+
 ## Tasks Aren't Running
 
 In this scenario, your DAG is visible in the Airflow UI, but your tasks don't run when you trigger the DAG. This is a commonly encountered issue in Airflow, and the causes can be very simple or complex. Below are some debugging steps that can resolve the most common scenarios:
