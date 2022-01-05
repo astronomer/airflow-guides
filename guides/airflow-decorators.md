@@ -11,13 +11,13 @@ tags: ["DAGs", "Basics", "astro"]
 
 Since Airflow 2.0, decorators have been available for some functions as an alternative DAG authoring experience to traditional operators. In Python, [decorators](https://realpython.com/primer-on-python-decorators/) are functions that take another function as an argument and extend the behavior of that function. In the context of Airflow, decorators provide a simpler, cleaner way to define your tasks and DAG. 
 
-In this guide, we'll cover when and why to use decorators, the decorators available in Airflow, and decorators provided in Astronomer's open source `astro` library. We'll show examples throughout and address common questions, like whether you *should* use decorators in certain scenarios, and how to combine decorators with traditional operators in a DAG.
+In this guide, we'll cover the benefit of decorators, the decorators available in Airflow, and decorators provided in Astronomer's open source `astro` library. We'll also show examples throughout and address common questions about when to use decorators and how to combine them with traditional operators in a DAG.
 
 ## When and Why To Use Decorators
 
-The goal of decorators in Airflow is to simplify the DAG authoring experience and allow the developer to reduce much of the boilerplate code required with traditional operators. The result can be cleaner DAG files that are more concise and easier to read. Currently, available decorators can be used for Python and SQL functions.
+The purpose of decorators in Airflow is to simplify the DAG authoring experience by eliminating the boilerplate code required by traditional operators. The result can be cleaner DAG files that are more concise and easier to read. Currently, decorators can be used for Python and SQL functions.
 
-In general, whether to use decorators is a matter of developer preference and style. Generally, a decorator and the corresponding traditional operator will have the same functionality. One exception to this is `astro` library decorators (more on these below), which do not have equivalent traditional operators. You can also easily mix decorators and traditional operators within your DAG if needed to implement your use case.
+In general, whether to use decorators is a matter of developer preference and style. Generally, a decorator and the corresponding traditional operator will have the same functionality. One exception to this is the `astro` library of decorators (more on these below), which do not have equivalent traditional operators. You can also easily mix decorators and traditional operators within your DAG if your use case requires that.
 
 ## How to Use Airflow Decorators
 
@@ -111,13 +111,12 @@ def taskflow():
 dag = taskflow()
 ```
 
-The resulting DAG has much less code and is easier to read. Notice that it also doesn't require us to use `ti.xcom_pull` and `ti.xcom_push` to explicitly pass data between our tasks. This is all handled by the TaskFlow API when we define our task dependencies with `store_data(process_data(extract_bitcoin_price()))`. 
+The resulting DAG has much less code and is easier to read. Notice that it also doesn't require using `ti.xcom_pull` and `ti.xcom_push` to pass data between tasks. This is all handled by the TaskFlow API when we define our task dependencies with `store_data(process_data(extract_bitcoin_price()))`. 
 
 Here are some other things to keep in mind when using decorators:
 
-- For any decorated object in your DAG file, you must call them for Airflow to register the task or DAG (e.g. `dag = taskflow()`).
-- When you define a task, the `task_id` will default to the name of the function you decorated. If you want to change that, you can simply pass a `task_id` to the decorator as we do in the `extract` task above.
-- Similarly, other task level parameters such as retries or pools can be defined within the decorator (see example with `retries` above).
+- For any decorated object in your DAG file, you must call them so that Airflow can register the task or DAG (e.g. `dag = taskflow()`).
+- When you define a task, the `task_id` will default to the name of the function you decorated. If you want to change that, you can simply pass a `task_id` to the decorator as we do in the `extract` task above. Similarly, other task level parameters such as retries or pools can be defined within the decorator (see the example with `retries` above).
 - You can decorate a function that is imported from another file with something like the following:
 
     ```python
@@ -128,11 +127,11 @@ Here are some other things to keep in mind when using decorators:
         my_function()
     ```
     
-    This is recommended in cases where you have lengthy Python functions since it will keep your DAG file easier to read. 
+    This is recommended in cases where you have lengthy Python functions since it will make your DAG file easier to read. 
 
 ### Mixing Decorators with Traditional Operators
 
-If you have a DAG that uses `PythonOperator` and other operators that don't have decorators, you can easily combine decorated functions and traditional operators in the same DAG. For example, we can add an `EmailOperator` to our DAG above like this:
+If you have a DAG that uses `PythonOperator` and other operators that don't have decorators, you can easily combine decorated functions and traditional operators in the same DAG. For example, we can add an `EmailOperator` to the previous example by updating our code to the following:
 
 ```python
 from airflow.decorators import dag, task
@@ -181,13 +180,13 @@ Note that when adding traditional operators, dependencies are still defined usin
 
 ## Astro Project Decorators
 
-The [`astro` library](https://github.com/astro-projects/astro) provides decorators and modules that allow data engineers to think in terms of data transformations rather than Airflow concepts when writing DAGs. The goal is to allow DAG writers to focus on defining *execution* logic, without having to worry about orchestration logic.
+The [`astro` library](https://github.com/astro-projects/astro) provides decorators and modules that allow data engineers to think in terms of data transformations rather than Airflow concepts when writing DAGs. The goal is to allow DAG writers to focus on defining *execution* logic without having to worry about orchestration logic.
 
-The library contains SQL and dataframe decorators that greatly simplify your DAG code and allow you to directly define tasks without boilerplate operator code. It also allows you to transition seamlessly between SQL and Python for transformations, without having to explicitly pass data between tasks or convert the results of queries to dataframes and vice versa. For a full description of functionality, check out the [repo Readme](https://github.com/astro-projects/astro).
+The library contains SQL and dataframe decorators that greatly simplify your DAG code and allow you to directly define tasks without boilerplate operator code. It also allows you to transition seamlessly between SQL and Python for transformations without having to explicitly pass data between tasks or convert the results of queries to dataframes and vice versa. For a full description of functionality, check out the [repo Readme](https://github.com/astro-projects/astro).
 
-To use the `astro` library, you need to install the `astro-projects` package in your Airflow environment, and enable pickling (`AIRFLOW__CORE__ENABLE_XCOM_PICKLING=True`). 
+To use the `astro` library, you need to install the `astro-projects` package in your Airflow environment and enable pickling (`AIRFLOW__CORE__ENABLE_XCOM_PICKLING=True`). 
 
-To show `astro` in action, we'll take a simple ETL example. We have data on adoptions from two different animal shelters that we need to aggregate, clean, transform, and append to a reporting table. Some of these tasks are better suited to SQL, and some to Python, but we can easily combine both using `astro` functions. The DAG looks like this:
+To show `astro` in action, we'll use a simple ETL example. We have data on adoptions from two different animal shelters that we need to aggregate, clean, transform, and append to a reporting table. Some of these tasks are better suited to SQL, and some to Python, but we can easily combine both using `astro` functions. The DAG looks like this:
 
 ```python
 from airflow.decorators import dag
@@ -256,16 +255,16 @@ animal_adoptions_etl_dag = animal_adoptions_etl()
 
 The general steps in the DAG are:
 
-- Start by combining data from our two source tables. We use a `transform()` function since we are running a SQL statement on tables that already exist in our database. We define the source tables with the `Table()` parameter when we call the function (e.g. `center_1=Table('ADOPTION_CENTER_1', conn_id="snowflake", schema='SANDBOX_KENTEND')`).
-- Run another `transform()` function to clean the data; we don't report on guinea pig adoptions in this example, so we remove them from the dataset. Note that each `transform` function will store results in a table in your database. You can specify an `output_table` to store the results in a specific table, or you can let `astro` create a table in a default temporary schema for you as we do in this task by not defining any output.
-- Transform the data by pivoting using Python. Pivoting is notoriously difficult in Snowflake, so we seamlessly switch to Pandas. In this task we do specify an `output_table` that we want the results stored in.
-- Append the results to an existing reporting table using the `append` function. 
+1. Combine data from our two source tables. We use a `transform()` function since we are running a SQL statement on tables that already exist in our database. We define the source tables with the `Table()` parameter when we call the function (`center_1=Table('ADOPTION_CENTER_1', conn_id="snowflake", schema='SANDBOX_KENTEND')`).
+2. Run another `transform()` function to clean the data; we don't report on guinea pig adoptions in this example, so we remove them from the dataset. Note that each `transform` function will store results in a table in your database. You can specify an `output_table` to store the results in a specific table, or you can let `astro` create a table in a default temporary schema for you by not defining any output.
+3. Transform the data by pivoting using Python. Pivoting is notoriously difficult in Snowflake, so we seamlessly switch to Pandas. In this task we specify an `output_table` that we want the results stored in.
+4. Append the results to an existing reporting table using the `append` function. 
 
-Note that by simply defining our task dependencies when calling the functions (e.g. `cleaned_data = clean_data(combined_data)`), `astro` takes care of passing all context and metadata between the tasks. The result is a DAG where we accomplished some tricky transformations without having to write a lot of Airflow code or messily transition between SQL and Python.
+Note that by simply defining our task dependencies when calling the functions (e.g. `cleaned_data = clean_data(combined_data)`), `astro` takes care of passing all context and metadata between the tasks. The result is a DAG where we accomplished some tricky transformations without having to write a lot of Airflow code or transition between SQL and Python.
 
 ## List of Available Airflow Decorators
 
-There are a limited number of decorators available to use with Airflow, although more will be added in the future. This list provides a reference of what is currently available so you don't have to dig through source code.
+There are a limited number of decorators available to use with Airflow, although more will be added in the future. This list provides a reference of what is currently available so you don't have to dig through source code:
 
 - `astro` project [SQL and dataframe decorators](https://github.com/astro-projects/astro)
 - DAG decorator (`@dag()`)
