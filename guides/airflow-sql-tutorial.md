@@ -320,6 +320,10 @@ After this setup, we're ready to run the DAG! After a successful run, we can see
 
 Note that while this example is specific to Snowflake, the concepts apply to any database you might be using. If a transfer operator doesn't exist for your specific source and destination tools, you can always write your own (and maybe contribute it back to the Airflow project)!
 
+<!-- markdownlint-disable MD033 -->
+<a href="https://academy.astronomer.io/airflow-sql" onclick="analytics.track('Clicked Academy Banner CTA', { bannerText: 'Learn how to interact with SQL and Airflow. Register for a free Airflow x SQL course!', buttonText: 'Register | Free'})" style="border:none">
+    <img src="https://images.ctfassets.net/bsbv786nih7n/3qvsz9pn2Bqp0B3aKXhwkR/8e67668e2431953bcf52fb33fe91f5bf/free-airflow-sql-course-banner.png" alt="Learn how to interact with SQL and Airflow. Register for a free Airflow x SQL course!" style="border:none" />
+</a>
 
 ## Example 4 - Using Pandas
 

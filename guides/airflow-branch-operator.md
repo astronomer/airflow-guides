@@ -89,6 +89,11 @@ Note that if you have downstream tasks that need to run regardless of which bran
 
 Finally, note that with the `BranchPythonOperator`, your Python callable *must* return at least one task ID for whichever branch is chosen (i.e. it can't return nothing). If one of the paths in your branching should do nothing, you can use a `DummyOperator` in that branch.
 
+<!-- markdownlint-disable MD033 -->
+<a href="https://academy.astronomer.io/branching-course" onclick="analytics.track('Clicked Academy Banner CTA', { bannerText: 'For more guidance and best practices try out Astronomer\'s Academy Course on Branching. Register for free today!', buttonText: 'Register | Free'})" style="border:none">
+    <img src="https://images.ctfassets.net/bsbv786nih7n/xz2NEHok6rmqjWTioHbK1/b13fc5a03da78e7c336ad450ba5990b5/academy-branching-course-banner.png" alt="For more guidance and best practices try out Astronomer\'s Academy Course on Branching. Register for free today!" style="border:none" />
+</a>
+
 ## ShortCircuitOperator
 
 Another option for implementing conditional logic in your DAGs is the [ShortCircuitOperator](https://registry.astronomer.io/providers/apache-airflow/modules/shortcircuitoperator). This operator also takes a Python callable that returns `True` or `False` based on logic implemented for your use case. If `True` is returned, the DAG will continue, and if `False` is returned, all downstream tasks will be skipped.

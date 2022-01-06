@@ -295,6 +295,11 @@ Additionally, if you change the `start_date` of your DAG you should also change 
 
 Changing the name of a DAG also creates a new entry in the database, which powers the dashboard, so follow a consistent naming convention since changing a DAG's name doesn't delete the entry in the database for the old name.
 
+<!-- markdownlint-disable MD033 -->
+<a href="https://academy.astronomer.io/airflow-best-practices" onclick="analytics.track('Clicked Academy Banner CTA', { bannerText: 'Take your DAGs to the next level with our free Airflow Best Practices course. Register today!', buttonText: 'Register | Free'})" style="border:none">
+    <img src="https://images.ctfassets.net/bsbv786nih7n/70UIikCB0wdXioGW3jHejh/81e29d370c381e7114a05e16febc7e80/dags-best-practices-course-banner.png" alt="Take your DAGs to the next level with our free Airflow Best Practices course. Register today!" style="border:none" />
+</a>
+
 ### Set Retries at the DAG Level
 
 Even if your code is perfect, failures happen. In a distributed environment where task containers are executed on shared hosts, it's possible for tasks to be killed off unexpectedly. When this happens, you might see Airflow's logs mention a [zombie process](https://en.wikipedia.org/wiki/Zombie_process).
