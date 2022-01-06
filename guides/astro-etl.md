@@ -170,7 +170,7 @@ def transform_data(df: pd.DataFrame):
 @dag(start_date=datetime(2021, 12, 1), schedule_interval='@daily', catchup=False)
 
 def astro_billing_dag():
-    # Load subscripton data
+    # Load subscription data
     load_subscription_data = aql.load_file(
         path=S3_FILE_PATH + '/subscription_data.csv',
         file_conn_id="my_s3_conn",
