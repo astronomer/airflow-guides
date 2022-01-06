@@ -231,10 +231,10 @@ task_1 >> task_2 >> [task_3, task_4]
 <!-- markdownlint-disable MD033 -->
 <ul class="learn-more-list">
     <p>You might also like:</p>
-    <li data-icon="→"><a href="/events/webinars/dynamic-dags?banner=learn-more-banner-click">Dynamic DAGs Webinar</a></li>
-    <li data-icon="→"><a href="/events/webinars/best-practices-writing-dags-airflow-2?banner=learn-more-banner-click">Best Practices for Writing DAGs in Airflow 2 Webinar</a></li>
-    <li data-icon="→"><a href="/blog/7-common-errors-to-check-when-debugging-airflow-dag?banner=learn-more-banner-click">7 Common Errors to Check when Debugging Airflow DAGs</a></li>
-    <li data-icon="→"><a href="/guides/dynamically-generating-dags?banner=learn-more-banner-click">Dynamically Generating DAGs in Airflow</a></li>
+    <li data-icon="→"><a href="/events/webinars/dynamic-dags" onclick="analytics.track('Clicked Learn More List Link', { page: location.href, buttonText: 'Dynamic DAGs Webinar', spottedCompany: window.spottedCompany })">Dynamic DAGs Webinar</a></li>
+    <li data-icon="→"><a href="/events/webinars/best-practices-writing-dags-airflow-2" onclick="analytics.track('Clicked Learn More List Link', { page: location.href, buttonText: 'Best Practices for Writing DAGs in Airflow 2 Webinar', spottedCompany: window.spottedCompany })">Best Practices for Writing DAGs in Airflow 2 Webinar</a></li>
+    <li data-icon="→"><a href="/blog/7-common-errors-to-check-when-debugging-airflow-dag" onclick="analytics.track('Clicked Learn More List Link', { page: location.href, buttonText: '7 Common Errors to Check when Debugging Airflow DAGs', spottedCompany: window.spottedCompany })">7 Common Errors to Check when Debugging Airflow DAGs</a></li>
+    <li data-icon="→"><a href="/guides/dynamically-generating-dags" onclick="analytics.track('Clicked Learn More List Link', { page: location.href, buttonText: 'Dynamically Generating DAGs in Airflow', spottedCompany: window.spottedCompany })">Dynamically Generating DAGs in Airflow</a></li>
 </ul>
 
 ## Use Airflow as an Orchestrator
@@ -294,6 +294,11 @@ You should always use a static `start_date` with your DAGs. A dynamic start_date
 Additionally, if you change the `start_date` of your DAG you should also change the DAG name. Changing the `start_date` of a DAG creates a new entry in Airflow's database, which could confuse the scheduler because there will be two DAGs with the same name but different schedules.
 
 Changing the name of a DAG also creates a new entry in the database, which powers the dashboard, so follow a consistent naming convention since changing a DAG's name doesn't delete the entry in the database for the old name.
+
+<!-- markdownlint-disable MD033 -->
+<a href="https://academy.astronomer.io/airflow-best-practices" onclick="analytics.track('Clicked Academy Banner CTA', { bannerText: 'Take your DAGs to the next level with our free Airflow Best Practices course. Register today!', buttonText: 'Register | Free'})" style="border:none">
+    <img src="https://images.ctfassets.net/bsbv786nih7n/70UIikCB0wdXioGW3jHejh/81e29d370c381e7114a05e16febc7e80/dags-best-practices-course-banner.png" alt="Take your DAGs to the next level with our free Airflow Best Practices course. Register today!" style="border:none" />
+</a>
 
 ### Set Retries at the DAG Level
 

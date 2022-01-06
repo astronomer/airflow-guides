@@ -79,10 +79,10 @@ What if your Task Groups can't be processed independently? Next, we'll show how 
 <!-- markdownlint-disable MD033 -->
 <ul class="learn-more-list">
     <p>You might also like:</p>
-    <li data-icon="→"><a href="/guides/airflow-passing-data-between-tasks?banner=learn-more-banner-click">Passing Data Between Airflow Tasks</a></li>
-    <li data-icon="→"><a href="/events/webinars/taskflow-api-airflow-2.0?banner=learn-more-banner-click">TaskFlow API in Airflow 2.0 Webinar</a></li>
-    <li data-icon="→"><a href="/blog/machine-learning-pipelines-everything-you-need-to-know?banner=learn-more-banner-click">Machine Learning Pipelines: Everything You Need to Know</a></li>
-    <li data-icon="→"><a href="/blog/big-data-architecture?banner=learn-more-banner-click">Big Data Architecture: Core Components, Use Cases and Limitations</a></li>
+    <li data-icon="→"><a href="/guides/airflow-passing-data-between-tasks" onclick="analytics.track('Clicked Learn More List Link', { page: location.href, buttonText: 'Passing Data Between Airflow Tasks', spottedCompany: window.spottedCompany })">Passing Data Between Airflow Tasks</a></li>
+    <li data-icon="→"><a href="/events/webinars/taskflow-api-airflow-2.0" onclick="analytics.track('Clicked Learn More List Link', { page: location.href, buttonText: 'TaskFlow API in Airflow 2.0 Webinar', spottedCompany: window.spottedCompany })">TaskFlow API in Airflow 2.0 Webinar</a></li>
+    <li data-icon="→"><a href="/blog/machine-learning-pipelines-everything-you-need-to-know" onclick="analytics.track('Clicked Learn More List Link', { page: location.href, buttonText: 'Machine Learning Pipelines: Everything You Need to Know', spottedCompany: window.spottedCompany })">Machine Learning Pipelines: Everything You Need to Know</a></li>
+    <li data-icon="→"><a href="/blog/big-data-architecture" onclick="analytics.track('Clicked Learn More List Link', { page: location.href, buttonText: 'Big Data Architecture: Core Components, Use Cases and Limitations', spottedCompany: window.spottedCompany })">Big Data Architecture: Core Components, Use Cases and Limitations</a></li>
 </ul>
 
 ## Ordering Task Groups

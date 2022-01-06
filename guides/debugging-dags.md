@@ -13,7 +13,7 @@ Getting started with Airflow is easy if you know a bit of Python; you create you
 
 For these common situations (and a few more), we've got you covered! In this guide, we'll cover some frequently encountered issues with Airflow DAGs, and how to debug them. If you're brand new to Airflow, we recommend also checking out one of our [Introduction to Airflow Webinars](https://www.astronomer.io/events/webinars/intro-to-data-orchestration-with-airflow) to get started.
 
-> Note: This guide focuses on Airflow 2.0+. For older Airflow versions, some debugging steps may be slightly different. 
+> Note: This guide focuses on [Airflow 2.0+](https://www.astronomer.io/events/webinars/intro-to-data-orchestration-with-airflow). For older Airflow versions, some debugging steps may be slightly different.
 
 ## DAGs Aren't Showing Up in the Airflow UI
 
@@ -54,10 +54,10 @@ If you do have package conflicts that can't be resolved, consider breaking up yo
 <!-- markdownlint-disable MD033 -->
 <ul class="learn-more-list">
     <p>Listen to the webinar for more DAG tips:</p>
-    <li data-icon="→"><a href="/events/webinars/best-practices-writing-dags-airflow-2?banner=learn-more-banner-click">Best Practices for Writing  DAGs in Airflow 2</a></li>
-    <li data-icon="→"><a href="/events/webinars/trigger-dags-any-schedule?banner=learn-more-banner-click">Scheduling In Airflow</a></li>
-    <li data-icon="→"><a href="/events/webinars/dags-with-airflow-notifications?banner=learn-more-banner-click">Monitor Your DAGs with Airflow Notifications</a></li>
-    <li data-icon="→"><a href="/events/webinars/dynamic-dags?banner=learn-more-banner-click">Dynamic DAGs</a></li>
+    <li data-icon="→"><a href="/events/webinars/best-practices-writing-dags-airflow-2" onclick="analytics.track('Clicked Learn More List Link', { page: location.href, buttonText: 'Best Practices for Writing  DAGs in Airflow 2', spottedCompany: window.spottedCompany })">Best Practices for Writing  DAGs in Airflow 2</a></li>
+    <li data-icon="→"><a href="/events/webinars/trigger-dags-any-schedule" onclick="analytics.track('Clicked Learn More List Link', { page: location.href, buttonText: 'Scheduling In Airflow', spottedCompany: window.spottedCompany })">Scheduling In Airflow</a></li>
+    <li data-icon="→"><a href="/events/webinars/dags-with-airflow-notifications" onclick="analytics.track('Clicked Learn More List Link', { page: location.href, buttonText: 'Monitor Your DAGs with Airflow Notifications', spottedCompany: window.spottedCompany })">Monitor Your DAGs with Airflow Notifications</a></li>
+    <li data-icon="→"><a href="/events/webinars/dynamic-dags" onclick="analytics.track('Clicked Learn More List Link', { page: location.href, buttonText: 'Dynamic DAGs', spottedCompany: window.spottedCompany })">Dynamic DAGs</a></li>
 </ul>
 
 ## Tasks Aren't Running
@@ -125,6 +125,13 @@ Below are some general tips and tricks for getting them connections work:
 
 - Every hook/operator will have its own way of using a connection, and it can sometimes be tricky to figure out what parameters are needed. The [Astronomer Registry](https://registry.astronomer.io/) can be a great resource for this: many hooks and operators have documentation there on what is required for a connection.
 - You can define connections using Airflow environment variables instead of adding them in the UI. Take care to not end up with the same connection defined in multiple places. If you do, the environment variable will take precedence.
+
+<!-- markdownlint-disable MD033 -->
+<ul class="learn-more-list">
+    <p>Here are some example DAGs that show implementing callbacks (which are relevant to error-handling and notifications):</p>
+    <li data-icon="→"><a href="https://registry.astronomer.io/dags/slack-callback-dag" onclick="analytics.track('Clicked Learn More List Link', { page: location.href, buttonText: 'Pipeline Alerts and Notifications using Slack', spottedCompany: window.spottedCompany })">Pipeline Alerts and Notifications using Slack</a></li>
+    <li data-icon="→"><a href="https://registry.astronomer.io/dags/ms-teams-callback-dag" onclick="analytics.track('Clicked Learn More List Link', { page: location.href, buttonText: 'Pipeline Alerts and Notifications using Microsoft Teams', spottedCompany: window.spottedCompany })">Pipeline Alerts and Notifications using Microsoft Teams</a></li>
+</ul>
 
 ## Recovering from Failures
 

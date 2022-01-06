@@ -89,6 +89,11 @@ Note that if you have downstream tasks that need to run regardless of which bran
 
 Finally, note that with the `BranchPythonOperator`, your Python callable *must* return at least one task ID for whichever branch is chosen (i.e. it can't return nothing). If one of the paths in your branching should do nothing, you can use a `DummyOperator` in that branch.
 
+<!-- markdownlint-disable MD033 -->
+<a href="https://academy.astronomer.io/branching-course" onclick="analytics.track('Clicked Academy Banner CTA', { bannerText: 'For more guidance and best practices try out Astronomer\'s Academy Course on Branching. Register for free today!', buttonText: 'Register | Free'})" style="border:none">
+    <img src="https://images.ctfassets.net/bsbv786nih7n/xz2NEHok6rmqjWTioHbK1/b13fc5a03da78e7c336ad450ba5990b5/academy-branching-course-banner.png" alt="For more guidance and best practices try out Astronomer\'s Academy Course on Branching. Register for free today!" style="border:none" />
+</a>
+
 ## ShortCircuitOperator
 
 Another option for implementing conditional logic in your DAGs is the [ShortCircuitOperator](https://registry.astronomer.io/providers/apache-airflow/modules/shortcircuitoperator). This operator also takes a Python callable that returns `True` or `False` based on logic implemented for your use case. If `True` is returned, the DAG will continue, and if `False` is returned, all downstream tasks will be skipped.
@@ -139,9 +144,9 @@ In this DAG we have two short circuits, one which will always return `True` and 
 <!-- markdownlint-disable MD033 -->
 <ul class="learn-more-list">
     <p>You might also like:</p>
-    <li data-icon="→"><a href="/events/webinars/best-practices-writing-dags-airflow-2?banner=learn-more-banner-click">Best Practices for Writing DAGs in Airflow 2 Webinar</a></li>
-    <li data-icon="→"><a href="/events/webinars/manage-dependencies-between-airflow-deployments-dags-tasks?banner=learn-more-banner-click">Manage Dependencies Between Airflow Deployments, DAGs, and Tasks Webinar</a></li>
-    <li data-icon="→"><a href="/blog/machine-learning-pipeline-orchestration?banner=learn-more-banner-click">Machine Learning Pipeline Orchestration</a></li>
+    <li data-icon="→"><a href="/events/webinars/best-practices-writing-dags-airflow-2" onclick="analytics.track('Clicked Learn More List Link', { page: location.href, buttonText: 'Best Practices for Writing DAGs in Airflow 2 Webinar', spottedCompany: window.spottedCompany })">Best Practices for Writing DAGs in Airflow 2 Webinar</a></li>
+    <li data-icon="→"><a href="/events/webinars/manage-dependencies-between-airflow-deployments-dags-tasks" onclick="analytics.track('Clicked Learn More List Link', { page: location.href, buttonText: 'Manage Dependencies Between Airflow Deployments, DAGs, and Tasks Webinar', spottedCompany: window.spottedCompany })">Manage Dependencies Between Airflow Deployments, DAGs, and Tasks Webinar</a></li>
+    <li data-icon="→"><a href="/blog/machine-learning-pipeline-orchestration" onclick="analytics.track('Clicked Learn More List Link', { page: location.href, buttonText: 'Machine Learning Pipeline Orchestration', spottedCompany: window.spottedCompany })">Machine Learning Pipeline Orchestration</a></li>
 </ul>
 
 ## Other Branch Operators
