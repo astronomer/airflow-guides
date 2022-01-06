@@ -963,6 +963,7 @@ sagemaker
 papermill
 pre-process
 unpaused
+triggerer
  - posts/4-pillars-to-becoming-data-driven.md
 astronomer.io
  - posts/why-we-built-our-data-platform-on-aws-and-why-we-rebuilt-it-with-open-source.md
@@ -1700,3 +1701,7 @@ backfilled
 metastore
 exec'ing
 backfills
+ - guides/deferrable-operators.md
+asyncio
+TimeSensorAsync
+DateTimeSensorAsync
