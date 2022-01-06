@@ -21,7 +21,7 @@ In general, whether to use decorators is a matter of developer preference and st
 
 ## How to Use Airflow Decorators
 
-Airflow decorators were introduced as part of the TaskFlow API, which also handles passing data between tasks using XCom and inferring task dependencies automatically. To learn more about the TaskFlow API, check out [Astronomer's webinar](https://www.astronomer.io/events/webinars/taskflow-api-airflow-2.0) or the Apache Airflow [Taskflow API tutorial](https://airflow.apache.org/docs/apache-airflow/stable/tutorial_taskflow_api.html#tutorial-on-the-taskflow-api). 
+Airflow decorators were introduced as part of the TaskFlow API, which also handles passing data between tasks using XCom and inferring task dependencies automatically. To learn more about the TaskFlow API, check out [Astronomer's webinar](https://www.astronomer.io/events/webinars/taskflow-api-airflow-2.0) or the Apache Airflow [TaskFlow API tutorial](https://airflow.apache.org/docs/apache-airflow/stable/tutorial_taskflow_api.html#tutorial-on-the-taskflow-api). 
 
 Using decorators to define your Python functions as tasks is easy. Let's take a before and after example. In the "traditional" DAG below, we have a basic ETL flow where we have tasks to get data from an API, process the data, and store it.
 
@@ -200,13 +200,17 @@ import pandas as pd
 # Start by selecting data from two source tables in Snowflake
 @aql.transform()
 def combine_data(center_1: Table, center_2: Table):
-    return """SELECT * FROM {center_1}
-    UNION SELECT * FROM {center_2}"""
+    return """
+    SELECT * FROM {center_1}
+    UNION
+    SELECT * FROM {center_2}
+    """
 
 # Clean data using SQL
 @aql.transform()
 def clean_data(input_table: Table):
-    return '''SELECT * 
+    return '''
+    SELECT * 
     FROM {input_table} WHERE TYPE NOT LIKE 'Guinea Pig'
     '''
 
