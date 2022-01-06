@@ -1701,6 +1701,10 @@ backfilled
 metastore
 exec'ing
 backfills
+ - guides/airflow-decorators.md
+bitshift
+Readme
+TaskGroup
  - guides/deferrable-operators.md
 asyncio
 TimeSensorAsync
