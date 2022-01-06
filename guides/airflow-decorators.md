@@ -28,18 +28,14 @@ Using decorators to define your Python functions as tasks is easy. Let's take a 
 ```python
 from airflow import DAG
 from airflow.operators.python_operator import PythonOperator
-from airflow.utils.dates import days_ago
 
+from datetime import datetime
 import json
 from typing import Dict
 import requests
 import logging
 
 API = "https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=usd&include_market_cap=true&include_24hr_vol=true&include_24hr_change=true&include_last_updated_at=true"
-
-default_args = {
-    'start_date': days_ago(1),
-}
 
 def _extract_bitcoin_price():
     return requests.get(API).json()['bitcoin']
@@ -54,7 +50,7 @@ def _store_data(ti):
     data = ti.xcom_pull(task_ids='process_data', key='processed_data')
     logging.info(f"Store: {data['usd']} with change {data['change']}")
 
-with DAG('classic_dag', schedule_interval='@daily', default_args=default_args, catchup=False) as dag:
+with DAG('classic_dag', schedule_interval='@daily', start_date=datetime(2021, 12, 1), catchup=False) as dag:
     
     extract_bitcoin_price = PythonOperator(
         task_id='extract_bitcoin_price',
@@ -78,19 +74,16 @@ We can now rewrite this DAG using decorators, which will eliminate the need to e
 
 ```python
 from airflow.decorators import dag, task
-from airflow.utils.dates import days_ago
 
+from datetime import datetime
 from typing import Dict
 import requests
 import logging
 
 API = "https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=usd&include_market_cap=true&include_24hr_vol=true&include_24hr_change=true&include_last_updated_at=true"
 
-default_args = {
-    'start_date': days_ago(1),
-}
 
-@dag(schedule_interval='@daily', default_args=default_args, catchup=False)
+@dag(schedule_interval='@daily', start_date=datetime(2021, 12, 1), catchup=False)
 def taskflow():
 
     @task(task_id='extract', retries=2)
@@ -135,20 +128,16 @@ If you have a DAG that uses `PythonOperator` and other operators that don't have
 
 ```python
 from airflow.decorators import dag, task
-from airflow.utils.dates import days_ago
 from airflow.operators.email_operator import EmailOperator
 
+from datetime import datetime
 from typing import Dict
 import requests
 import logging
 
 API = "https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=usd&include_market_cap=true&include_24hr_vol=true&include_24hr_change=true&include_last_updated_at=true"
 
-default_args = {
-    'start_date': days_ago(1),
-}
-
-@dag(schedule_interval='@daily', default_args=default_args, catchup=False)
+@dag(schedule_interval='@daily', start_date=datetime(2021, 12, 1), catchup=False)
 def taskflow():
 
     @task(task_id='extract', retries=2)
@@ -190,32 +179,31 @@ To show `astro` in action, we'll use a simple ETL example. We have data on adopt
 
 ```python
 from airflow.decorators import dag
-from astro import sql as aql
+from astro.sql import transform, append
 from astro.sql.table import Table
-from astro import dataframe as df
+from astro import dataframe
 
 from datetime import datetime, timedelta
 import pandas as pd
 
+SNOWFLAKE_CONN = "snowflake"
+SCHEMA = "example_schema"
+
 # Start by selecting data from two source tables in Snowflake
-@aql.transform()
+@transform
 def combine_data(center_1: Table, center_2: Table):
-    return """
-    SELECT * FROM {center_1}
-    UNION
-    SELECT * FROM {center_2}
-    """
+    return """SELECT * FROM {center_1}
+    UNION SELECT * FROM {center_2}"""
 
 # Clean data using SQL
-@aql.transform()
+@transform
 def clean_data(input_table: Table):
-    return '''
-    SELECT * 
+    return '''SELECT * 
     FROM {input_table} WHERE TYPE NOT LIKE 'Guinea Pig'
     '''
 
 # Switch to Pandas for pivoting transformation
-@df
+@dataframe
 def aggregate_data(df: pd.DataFrame):
     adoption_reporting_dataframe = df.pivot_table(index='DATE', 
                                                 values='NAME', 
@@ -236,18 +224,19 @@ def aggregate_data(df: pd.DataFrame):
     )
 def animal_adoptions_etl():
     # Define task dependencies
-    combined_data = combine_data(center_1=Table('ADOPTION_CENTER_1', conn_id="snowflake", schema='SANDBOX_KENTEND'),
-                                        center_2=Table('ADOPTION_CENTER_2', conn_id="snowflake", schema='SANDBOX_KENTEND'))
+    combined_data = combine_data(center_1=Table('ADOPTION_CENTER_1', conn_id=SNOWFLAKE_CONN, schema=SCHEMA),
+                                        center_2=Table('ADOPTION_CENTER_2', conn_id=SNOWFLAKE_CONN, schema=SCHEMA))
 
     cleaned_data = clean_data(combined_data)
     aggregated_data = aggregate_data(cleaned_data,
-                                    output_table=Table('aggregated_adoptions', conn_id='snowflake'))
+                                    output_table=Table('aggregated_adoptions', conn_id=SNOWFLAKE_CONN))
+    
     # Append transformed data to reporting table
-    reporting_data = aql.append(
-        conn_id="snowflake",
+    reporting_data = append(
+        conn_id=SNOWFLAKE_CONN,
         append_table="aggregated_adoptions",
         columns=["DATE", "CAT", "DOG"],
-        main_table="SANDBOX_KENTEND.adoption_reporting",
+        main_table=SCHEMA+".adoption_reporting",
     )
 
     aggregated_data >> reporting_data
