@@ -192,14 +192,19 @@ SCHEMA = "example_schema"
 # Start by selecting data from two source tables in Snowflake
 @transform
 def combine_data(center_1: Table, center_2: Table):
-    return """SELECT * FROM {center_1}
-    UNION SELECT * FROM {center_2}"""
+    return """
+    SELECT * FROM {center_1}
+    UNION 
+    SELECT * FROM {center_2}
+    """
 
 # Clean data using SQL
 @transform
 def clean_data(input_table: Table):
-    return '''SELECT * 
-    FROM {input_table} WHERE TYPE NOT LIKE 'Guinea Pig'
+    return '''
+    SELECT * 
+    FROM {input_table} 
+    WHERE TYPE NOT LIKE 'Guinea Pig'
     '''
 
 # Switch to Pandas for pivoting transformation
