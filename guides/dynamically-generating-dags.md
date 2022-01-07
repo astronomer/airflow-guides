@@ -120,10 +120,10 @@ And if we look at the Airflow UI we can see the DAGs have been created:
 <!-- markdownlint-disable MD033 -->
 <ul class="learn-more-list">
     <p>You might also like:</p>
-    <li data-icon="→"><a href="/blog/7-common-errors-to-check-when-debugging-airflow-dag?banner=learn-more-banner-click">7 Common Errors to Check when Debugging Airflow DAGs</a></li>
-    <li data-icon="→"><a href="/events/webinars/trigger-dags-any-schedule?banner=learn-more-banner-click">Scheduling In Airflow Webinar</a></li>
-    <li data-icon="→"><a href="/events/webinars/dynamic-dags?banner=learn-more-banner-click">Dynamic DAGs Webinar</a></li>
-    <li data-icon="→"><a href="/guides/dag-best-practices?banner=learn-more-banner-click">DAG Writing Best Practices in Apache Airflow</a></li>
+    <li data-icon="→"><a href="/blog/7-common-errors-to-check-when-debugging-airflow-dag" onclick="analytics.track('Clicked Learn More List Link', { page: location.href, buttonText: '7 Common Errors to Check when Debugging Airflow DAGs', spottedCompany: window.spottedCompany })">7 Common Errors to Check when Debugging Airflow DAGs</a></li>
+    <li data-icon="→"><a href="/events/webinars/trigger-dags-any-schedule" onclick="analytics.track('Clicked Learn More List Link', { page: location.href, buttonText: 'Scheduling In Airflow Webinar', spottedCompany: window.spottedCompany })">Scheduling In Airflow Webinar</a></li>
+    <li data-icon="→"><a href="/events/webinars/dynamic-dags" onclick="analytics.track('Clicked Learn More List Link', { page: location.href, buttonText: 'Dynamic DAGs Webinar', spottedCompany: window.spottedCompany })">Dynamic DAGs Webinar</a></li>
+    <li data-icon="→"><a href="/guides/dag-best-practices" onclick="analytics.track('Clicked Learn More List Link', { page: location.href, buttonText: 'DAG Writing Best Practices in Apache Airflow', spottedCompany: window.spottedCompany })">DAG Writing Best Practices in Apache Airflow</a></li>
 </ul>
 
 ### Example: Generate DAGs From Variables
@@ -375,9 +375,13 @@ Dynamically generating DAGs can cause performance issues when used at scale. Whe
 Upgrading to Airflow 2.0 to make use of the [HA Scheduler](https://www.astronomer.io/blog/airflow-2-scheduler) should help with these performance issues. But it can still take some additional optimization work depending on the scale you're working at. There is no single right way to implement or scale dynamically generated DAGs, but the flexibility of Airflow means there are many ways to arrive at a solution that works for a particular use case.
 
 <!-- markdownlint-disable MD033 -->
-### Dynamic DAGs in Action
+### Dynamic DAGs in Action: Part 1
 
 <iframe src="https://fast.wistia.net/embed/iframe/1fkd7hcqfu" title="dynamic_dags_part_1 Video" allow="autoplay; fullscreen" allowtransparency="true" frameborder="0" scrolling="no" class="wistia_embed" name="wistia_embed" allowfullscreen msallowfullscreen width="100%" height="450"></iframe>
+
+### Dynamic DAGs in Action: Part 2
+
+<iframe src="https://fast.wistia.net/embed/iframe/x82mrgp900" title="dynamic_dags_part_2 Video" allow="autoplay; fullscreen" allowtransparency="true" frameborder="0" scrolling="no" class="wistia_embed" name="wistia_embed" allowfullscreen msallowfullscreen width="100%" height="450"></iframe>
 
 That was the easiest and fastest way for creating DAGs.
 

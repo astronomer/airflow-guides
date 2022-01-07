@@ -143,9 +143,9 @@ With the connection established, we can now run the DAG to execute our SQL queri
 <!-- markdownlint-disable MD033 -->
 <ul class="learn-more-list">
     <p>You might also like:</p>
-    <li data-icon="→"><a href="/blog/best_airflow_etl_tools?banner=learn-more-banner-click">How to Select the Best ETL Tool to Integrate with Airflow?</a></li>
-    <li data-icon="→"><a href="/blog/data-pipeline?banner=learn-more-banner-click">Data Pipeline: Components, Types and Best Practices</a></li>
-    <li data-icon="→"><a href="/guides/airflow-sql-data-quality-tutorial?banner=learn-more-banner-click">Airflow Data Quality Checks with SQL Operators</a></li>
+    <li data-icon="→"><a href="/blog/best_airflow_etl_tools" onclick="analytics.track('Clicked Learn More List Link', { page: location.href, buttonText: 'How to Select the Best ETL Tool to Integrate with Airflow?', spottedCompany: window.spottedCompany })">How to Select the Best ETL Tool to Integrate with Airflow?</a></li>
+    <li data-icon="→"><a href="/blog/data-pipeline" onclick="analytics.track('Clicked Learn More List Link', { page: location.href, buttonText: 'Data Pipeline: Components, Types and Best Practices', spottedCompany: window.spottedCompany })">Data Pipeline: Components, Types and Best Practices</a></li>
+    <li data-icon="→"><a href="/guides/airflow-sql-data-quality-tutorial" onclick="analytics.track('Clicked Learn More List Link', { page: location.href, buttonText: 'Airflow Data Quality Checks with SQL Operators', spottedCompany: window.spottedCompany })">Airflow Data Quality Checks with SQL Operators</a></li>
 </ul>
 
 ### Example 2 - Executing a Query with Parameters
@@ -320,6 +320,10 @@ After this setup, we're ready to run the DAG! After a successful run, we can see
 
 Note that while this example is specific to Snowflake, the concepts apply to any database you might be using. If a transfer operator doesn't exist for your specific source and destination tools, you can always write your own (and maybe contribute it back to the Airflow project)!
 
+<!-- markdownlint-disable MD033 -->
+<a href="https://academy.astronomer.io/airflow-sql" onclick="analytics.track('Clicked Academy Banner CTA', { bannerText: 'Learn how to interact with SQL and Airflow. Register for a free Airflow x SQL course!', buttonText: 'Register | Free'})" style="border:none">
+    <img src="https://images.ctfassets.net/bsbv786nih7n/3qvsz9pn2Bqp0B3aKXhwkR/8e67668e2431953bcf52fb33fe91f5bf/free-airflow-sql-course-banner.png" alt="Learn how to interact with SQL and Airflow. Register for a free Airflow x SQL course!" style="border:none" />
+</a>
 
 ## Example 4 - Using Pandas
 

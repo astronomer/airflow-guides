@@ -91,9 +91,9 @@ If all of these tasks exist within a single DAG and `dag_concurrency=16`, howeve
 <!-- markdownlint-disable MD033 -->
 <ul class="learn-more-list">
     <p>You might also like:</p>
-    <li data-icon="→"><a href="/blog/airflow-dbt-1?banner=learn-more-banner-click">Building a Scalable Analytics Architecture with Airflow and dbt</a></li>
-    <li data-icon="→"><a href="/case-studies/datasembly?banner=learn-more-banner-click">Datasembly: From One Airflow Instance to Multiple Deployments with Astronomer</a></li>
-    <li data-icon="→"><a href="https://registry.astronomer.io/providers/google/modules/dataprocscaleclusteroperator?banner=learn-more-banner-click">Astronomer Registry: DataprocScaleClusterOperator</a></li>
+    <li data-icon="→"><a href="/blog/airflow-dbt-1" onclick="analytics.track('Clicked Learn More List Link', { page: location.href, buttonText: 'Building a Scalable Analytics Architecture with Airflow and dbt', spottedCompany: window.spottedCompany })">Building a Scalable Analytics Architecture with Airflow and dbt</a></li>
+    <li data-icon="→"><a href="/case-studies/datasembly" onclick="analytics.track('Clicked Learn More List Link', { page: location.href, buttonText: 'Datasembly: From One Airflow Instance to Multiple Deployments with Astronomer', spottedCompany: window.spottedCompany })">Datasembly: From One Airflow Instance to Multiple Deployments with Astronomer</a></li>
+    <li data-icon="→"><a href="https://registry.astronomer.io/providers/google/modules/dataprocscaleclusteroperator" onclick="analytics.track('Clicked Learn More List Link', { page: location.href, buttonText: 'Astronomer Registry: DataprocScaleClusterOperator', spottedCompany: window.spottedCompany })">Astronomer Registry: DataprocScaleClusterOperator</a></li>
 </ul>
 
 ## DAG-level Airflow Settings

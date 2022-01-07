@@ -963,6 +963,7 @@ sagemaker
 papermill
 pre-process
 unpaused
+triggerer
  - posts/4-pillars-to-becoming-data-driven.md
 astronomer.io
  - posts/why-we-built-our-data-platform-on-aws-and-why-we-rebuilt-it-with-open-source.md
@@ -1703,3 +1704,11 @@ backfills
  - guides/astro-etl.md
 Readme
 aggregated_bills
+ - guides/airflow-decorators.md
+bitshift
+Readme
+TaskGroup
+ - guides/deferrable-operators.md
+asyncio
+TimeSensorAsync
+DateTimeSensorAsync

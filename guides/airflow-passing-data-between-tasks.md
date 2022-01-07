@@ -138,11 +138,11 @@ In the logs for the `analyze_data` task, we can see the value from the prior tas
 <!-- markdownlint-disable MD033 -->
 <ul class="learn-more-list">
     <p>You might also like:</p>
-    <li data-icon="→"><a href="/events/webinars/taskflow-api-airflow-2.0?banner=learn-more-banner-click">TaskFlow API in Airflow 2.0 Webinar</a></li>
-    <li data-icon="→"><a href="https://registry.astronomer.io/dags/xcom-gcs-ds?banner=learn-more-banner-click">Data Science Modeling Using Google Cloud Storage XCom Backend</a></li>
-    <li data-icon="→"><a href="/events/webinars/manage-dependencies-between-airflow-deployments-dags-tasks?banner=learn-more-banner-click">Manage Dependencies Between Airflow Deployments, DAGs, and Tasks Webinar</a></li>
-    <li data-icon="→"><a href="/blog/build-an-etl-process?banner=learn-more-banner-click">How to Build an ETL Process?</a></li>
-    <li data-icon="→"><a href="/guides/custom-xcom-backends?banner=learn-more-banner-click">Custom XCom Backends</a></li>
+    <li data-icon="→"><a href="/events/webinars/taskflow-api-airflow-2.0" onclick="analytics.track('Clicked Learn More List Link', { page: location.href, buttonText: 'TaskFlow API in Airflow 2.0 Webinar', spottedCompany: window.spottedCompany })">TaskFlow API in Airflow 2.0 Webinar</a></li>
+    <li data-icon="→"><a href="https://registry.astronomer.io/dags/xcom-gcs-ds" onclick="analytics.track('Clicked Learn More List Link', { page: location.href, buttonText: 'Data Science Modeling Using Google Cloud Storage XCom Backend', spottedCompany: window.spottedCompany })">Data Science Modeling Using Google Cloud Storage XCom Backend</a></li>
+    <li data-icon="→"><a href="/events/webinars/manage-dependencies-between-airflow-deployments-dags-tasks" onclick="analytics.track('Clicked Learn More List Link', { page: location.href, buttonText: 'Manage Dependencies Between Airflow Deployments, DAGs, and Tasks Webinar', spottedCompany: window.spottedCompany })">Manage Dependencies Between Airflow Deployments, DAGs, and Tasks Webinar</a></li>
+    <li data-icon="→"><a href="/blog/build-an-etl-process" onclick="analytics.track('Clicked Learn More List Link', { page: location.href, buttonText: 'How to Build an ETL Process?', spottedCompany: window.spottedCompany })">How to Build an ETL Process?</a></li>
+    <li data-icon="→"><a href="/guides/custom-xcom-backends" onclick="analytics.track('Clicked Learn More List Link', { page: location.href, buttonText: 'Custom XCom Backends', spottedCompany: window.spottedCompany })">Custom XCom Backends</a></li>
 </ul>
 
 ## TaskFlow API

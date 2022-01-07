@@ -169,10 +169,10 @@ This functionality may also be useful when your pipelines have conditional branc
 <!-- markdownlint-disable MD033 -->
 <ul class="learn-more-list">
     <p>You might also like:</p>
-    <li data-icon="→"><a href="https://registry.astronomer.io/dags/slack-callback-partial-dag?banner=learn-more-banner-click">Astronomer Registry: Pipeline Alerts and Notifications for Multiple Slack Channels</a></li>
-    <li data-icon="→"><a href="https://registry.astronomer.io/dags/ms-teams-callback-partial-dag?banner=learn-more-banner-click">Astronomer Registry: Pipeline Alerts and Notifications for Multiple Microsoft Teams Channels</a></li>
-    <li data-icon="→"><a href="/events/webinars/dags-with-airflow-notifications?banner=learn-more-banner-click">Monitor Your DAGs with Airflow Notifications Webinar</a></li>
-    <li data-icon="→"><a href="/blog/airflow-business-workflow-hightouch?banner=learn-more-banner-click">Democratizing the Data Stack—Airflow for Business Workflows</a></li>
+    <li data-icon="→"><a href="https://registry.astronomer.io/dags/slack-callback-partial-dag" onclick="analytics.track('Clicked Learn More List Link', { page: location.href, buttonText: 'Astronomer Registry: Pipeline Alerts and Notifications for Multiple Slack Channels', spottedCompany: window.spottedCompany })">Astronomer Registry: Pipeline Alerts and Notifications for Multiple Slack Channels</a></li>
+    <li data-icon="→"><a href="https://registry.astronomer.io/dags/ms-teams-callback-partial-dag" onclick="analytics.track('Clicked Learn More List Link', { page: location.href, buttonText: 'Astronomer Registry: Pipeline Alerts and Notifications for Multiple Microsoft Teams Channels', spottedCompany: window.spottedCompany })">Astronomer Registry: Pipeline Alerts and Notifications for Multiple Microsoft Teams Channels</a></li>
+    <li data-icon="→"><a href="/events/webinars/dags-with-airflow-notifications" onclick="analytics.track('Clicked Learn More List Link', { page: location.href, buttonText: 'Monitor Your DAGs with Airflow Notifications Webinar', spottedCompany: window.spottedCompany })">Monitor Your DAGs with Airflow Notifications Webinar</a></li>
+    <li data-icon="→"><a href="/blog/airflow-business-workflow-hightouch" onclick="analytics.track('Clicked Learn More List Link', { page: location.href, buttonText: 'Democratizing the Data Stack—Airflow for Business Workflows', spottedCompany: window.spottedCompany })">Democratizing the Data Stack—Airflow for Business Workflows</a></li>
 </ul>
 
 ## Email Notifications
