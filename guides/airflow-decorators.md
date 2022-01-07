@@ -216,6 +216,7 @@ def aggregate_data(df: pd.DataFrame):
                                                 aggfunc='count').reset_index()
     return adoption_reporting_dataframe
 
+main_table = Table("adoption_reporting", schema="SANDBOX_KENTEND")
 
 @dag(start_date=datetime(2021, 1, 1),
     max_active_runs=1,
@@ -230,21 +231,21 @@ def aggregate_data(df: pd.DataFrame):
 def animal_adoptions_etl():
     # Define task dependencies
     combined_data = combine_data(center_1=Table('ADOPTION_CENTER_1', conn_id=SNOWFLAKE_CONN, schema=SCHEMA),
-                                        center_2=Table('ADOPTION_CENTER_2', conn_id=SNOWFLAKE_CONN, schema=SCHEMA))
+                                center_2=Table('ADOPTION_CENTER_2', conn_id=SNOWFLAKE_CONN, schema=SCHEMA))
 
     cleaned_data = clean_data(combined_data)
-    aggregated_data = aggregate_data(cleaned_data,
-                                    output_table=Table('aggregated_adoptions', conn_id=SNOWFLAKE_CONN))
+    aggregated_data = aggregate_data(
+        cleaned_data,
+        output_table=Table('aggregated_adoptions')
+        )
     
     # Append transformed data to reporting table
-    reporting_data = append(
+    append(
         conn_id=SNOWFLAKE_CONN,
-        append_table="aggregated_adoptions",
+        append_table=aggregated_data,
         columns=["DATE", "CAT", "DOG"],
-        main_table=SCHEMA+".adoption_reporting",
+        main_table=main_table,
     )
-
-    aggregated_data >> reporting_data
 
 animal_adoptions_etl_dag = animal_adoptions_etl()
 ```
