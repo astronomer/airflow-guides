@@ -208,7 +208,7 @@ The key differences in this implementation are:
 
 - The `load_file` and `append` functions take care of loading our raw data from S3 and transforming data to our reporting table respectively. We didn't have to write any extra code to get the data into Snowflake.
 - Using the `transform` function, we easily executed SQL to combine our data from multiple tables. The results are automatically stored in a table in Snowflake. We didn't have to use the `SnowflakeHook` or write any of the code to execute the query.
-- We seamlessly transitioned to a transformation in Python with the `df` function without needing to explicitly convert the results of our previous task to a Pandas dataframe. We then wrote the output of our transformation to our "aggregated_bills" table in Snowflake using the `output_table` parameter, so we didn't have to worry about storing the data in XCom.
+- We seamlessly transitioned to a transformation in Python with the `df` function without needing to explicitly convert the results of our previous task to a Pandas dataframe. We then wrote the output of our transformation to our aggregated bills table in Snowflake using the `output_table` parameter, so we didn't have to worry about storing the data in XCom.
 - We only had to define our connection in the first `load_file` task. All downstream task that inherit from a task with a connection defined will use it.
 
 Overall, our DAG with `astro` is shorter, simpler to implement, and easier to read. This allows us to implement even more complicated use cases easily while focusing on the movement of our data.
