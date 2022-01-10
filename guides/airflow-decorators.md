@@ -237,14 +237,14 @@ def animal_adoptions_etl():
     aggregated_data = aggregate_data(
         cleaned_data,
         output_table=Table('aggregated_adoptions')
-        )
+    )
     
     # Append transformed data to reporting table
     append(
         conn_id=SNOWFLAKE_CONN,
         append_table=aggregated_data,
         columns=["DATE", "CAT", "DOG"],
-        main_table=main_table,
+        main_table=Table("adoption_reporting", schema="SANDBOX_KENTEND"),
     )
 
 animal_adoptions_etl_dag = animal_adoptions_etl()
