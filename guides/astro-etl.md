@@ -37,7 +37,6 @@ Here is our billing subscription ETL DAG implemented with OSS Airflow operators 
 from datetime import datetime
 import pandas as pd
 
-from airflow import DAG
 from airflow.decorators import dag, task
 from airflow.providers.snowflake.hooks.snowflake import SnowflakeHook
 from airflow.providers.snowflake.transfers.s3_to_snowflake import S3ToSnowflakeOperator
@@ -128,7 +127,7 @@ classic_billing_dag = classic_billing_dag()
 
 While we achieved our ETL goal with the DAG above, there are a couple of limitations that made this implementation more complicated:
 
-- Since there is no way to pass results from `SnowflakeOperator` query to the next task, we had to write our query in a `_DecoratedPythonOperator` function using the `SnowflakeHook` and explicitly do the conversion from SQL to a dataframe ourselves.
+- Since there is no way to pass results from [`SnowflakeOperator`](https://registry.astronomer.io/providers/snowflake/modules/snowflakeoperator) query to the next task, we had to write our query in a `_DecoratedPythonOperator` function using the [`SnowflakeHook`](https://registry.astronomer.io/providers/snowflake/modules/snowflakehook) and explicitly do the conversion from SQL to a dataframe ourselves.
 - Some of our transformations are better suited to SQL, and others are better suited to Python, but transitioning between the two requires extra boilerplate code to explicitly make those conversions.
 - While the TaskFlow API makes it easier to pass data between tasks here, it is storing the resulting dataframes as XComs by default. This means that we need to worry about the size of our data. We could implement a custom XCom backend, but that would be extra lift.
 - Loading data back to Snowflake after the transformation is complete requires writing extra code to store an intermediate CSV in S3.
