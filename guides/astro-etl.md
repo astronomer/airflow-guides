@@ -191,6 +191,7 @@ def astro_billing_dag():
     )
     
     # Append transformed data to billing table
+    # Dependency is inferred by passing the previous `transformed_data` task to `append_table` param
     append(
         conn_id="snowflake",
         append_table=transformed_data,
