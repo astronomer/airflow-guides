@@ -152,9 +152,12 @@ S3_FILE_PATH = '</path/to/file/'
 # Start by selecting data from two source tables in Snowflake
 @transform
 def extract_data(subscriptions: Table, customer_data: Table):
-    return """SELECT * FROM {subscriptions}
+    return """
+    SELECT *
+    FROM {subscriptions}
     LEFT JOIN {customer_data}
-    ON customer_id=customer_id"""
+           ON customer_id=customer_id
+    """
 
 # Switch to Pandas for pivoting transformation
 @dataframe
@@ -193,7 +196,7 @@ def astro_billing_dag():
         conn_id="snowflake",
         append_table=transformed_data,
         columns=["DATE", "CUSTOMER_ID", "AMOUNT"],
-        main_table=main_table,
+        main_table=Table("billing_reporting", schema="SANDBOX_KENTEND"),
     )
 
 astro_billing_dag = astro_billing_dag()
