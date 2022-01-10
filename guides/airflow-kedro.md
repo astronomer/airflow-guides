@@ -34,11 +34,11 @@ To use the plugin, you'll need the following running on your machine or a fresh 
 
 ## Try it Out
 
-We've added some additional functionality to the plugin that makes for a great integration with Astronomer. To give it a try, we'll use the `astro-iris` starter that's included in the Kedro project; The steps below walk through spinning up a fresh Kedro project and running your pipelines as DAGs on a local Airflow environment.
+We've added some additional functionality to the plugin that makes for a great integration with Astronomer. To give it a try, we'll use the `astro-airflow-iris` starter that's included in the Kedro project; The steps below walk through spinning up a fresh Kedro project and running your pipelines as DAGs on a local Airflow environment.
 
 ### Create an Astro-Kedro project
 
-1. `kedro new --starter astro-iris` to build your starter directory.
+1. `kedro new --starter astro-airflow-iris` to build your starter directory.
 2. `cd <kedro-project-directory>`
 3. `kedro install`
 4. `kedro package`
