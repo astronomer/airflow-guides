@@ -216,7 +216,6 @@ def aggregate_data(df: pd.DataFrame):
                                                 aggfunc='count').reset_index()
     return adoption_reporting_dataframe
 
-
 @dag(start_date=datetime(2021, 1, 1),
     max_active_runs=1,
     schedule_interval='@daily', 
@@ -230,21 +229,21 @@ def aggregate_data(df: pd.DataFrame):
 def animal_adoptions_etl():
     # Define task dependencies
     combined_data = combine_data(center_1=Table('ADOPTION_CENTER_1', conn_id=SNOWFLAKE_CONN, schema=SCHEMA),
-                                        center_2=Table('ADOPTION_CENTER_2', conn_id=SNOWFLAKE_CONN, schema=SCHEMA))
+                                center_2=Table('ADOPTION_CENTER_2', conn_id=SNOWFLAKE_CONN, schema=SCHEMA))
 
     cleaned_data = clean_data(combined_data)
-    aggregated_data = aggregate_data(cleaned_data,
-                                    output_table=Table('aggregated_adoptions', conn_id=SNOWFLAKE_CONN))
+    aggregated_data = aggregate_data(
+        cleaned_data,
+        output_table=Table('aggregated_adoptions')
+    )
     
     # Append transformed data to reporting table
-    reporting_data = append(
+    append(
         conn_id=SNOWFLAKE_CONN,
-        append_table="aggregated_adoptions",
+        append_table=aggregated_data,
         columns=["DATE", "CAT", "DOG"],
-        main_table=SCHEMA+".adoption_reporting",
+        main_table=Table("adoption_reporting", schema="SANDBOX_KENTEND"),
     )
-
-    aggregated_data >> reporting_data
 
 animal_adoptions_etl_dag = animal_adoptions_etl()
 ```
@@ -256,7 +255,7 @@ The general steps in the DAG are:
 1. Combine data from our two source tables. We use a `transform()` function since we are running a SQL statement on tables that already exist in our database. We define the source tables with the `Table()` parameter when we call the function (`center_1=Table('ADOPTION_CENTER_1', conn_id="snowflake", schema='SANDBOX_KENTEND')`).
 2. Run another `transform()` function to clean the data; we don't report on guinea pig adoptions in this example, so we remove them from the dataset. Note that each `transform` function will store results in a table in your database. You can specify an `output_table` to store the results in a specific table, or you can let `astro` create a table in a default temporary schema for you by not defining any output.
 3. Transform the data by pivoting using Python. Pivoting is notoriously difficult in Snowflake, so we seamlessly switch to Pandas. In this task we specify an `output_table` that we want the results stored in.
-4. Append the results to an existing reporting table using the `append` function. 
+4. Append the results to an existing reporting table using the `append` function. Note that because we pass the results of the previous function (`aggregated_data`) to the `append_data` parameter, `astro` infers a dependency between the tasks. We don't need to explicitly define the dependency ourselves.
 
 Note that by simply defining our task dependencies when calling the functions (e.g. `cleaned_data = clean_data(combined_data)`), `astro` takes care of passing all context and metadata between the tasks. The result is a DAG where we accomplished some tricky transformations without having to write a lot of Airflow code or transition between SQL and Python.
 
