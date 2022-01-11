@@ -4,7 +4,7 @@ description: "Using the `astro` library to implement ETL use cases in Airflow."
 date: 2022-01-10T00:00:00.000Z
 slug: "astro-etl"
 heroImagePath: null
-tags: ["astro", "ETL", "SQL"]
+tags: ["Astro", "ETL", "SQL"]
 ---
 
 ## Overview
