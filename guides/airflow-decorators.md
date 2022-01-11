@@ -216,8 +216,6 @@ def aggregate_data(df: pd.DataFrame):
                                                 aggfunc='count').reset_index()
     return adoption_reporting_dataframe
 
-main_table = Table("adoption_reporting", schema="SANDBOX_KENTEND")
-
 @dag(start_date=datetime(2021, 1, 1),
     max_active_runs=1,
     schedule_interval='@daily', 
