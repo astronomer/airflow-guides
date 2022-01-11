@@ -4,7 +4,7 @@ description: "An overview of Airflow decorators and how they can improve the DAG
 date: 2021-12-27T00:00:00.000Z
 slug: "airflow-decorators"
 heroImagePath: null
-tags: ["DAGs", "Basics", "astro"]
+tags: ["DAGs", "Basics", "Astro"]
 ---
 
 ## Overview
