@@ -316,7 +316,7 @@ config_filepath = 'include/dag-config/'
 dag_template_filename = 'include/dag-template.py'
 
 for filename in os.listdir(config_filepath):
-    f = open(filepath + filename)
+    f = open(config_filepath + filename)
     config = json.load(f)
     
     new_filename = 'dags/'+config['DagId']+'.py'
