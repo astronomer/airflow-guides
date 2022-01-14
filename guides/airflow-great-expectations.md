@@ -68,14 +68,14 @@ Our [demo repository](https://github.com/astronomer/airflow-data-quality-demo/) 
 
 1. Import the operator in your DAG file. You may also need to import the `DataContextConfig`, `CheckpointConfig`, or `BatchRequest` classes as well, depending on how you're using the operator. To import the Great Expectations provider and config and batch classes in a given DAG, add the following line to the top of the DAG file in your `dags` directory:
 
-  ```python
-  from great_expectations_provider.operators.great_expectations import GreatExpectationsOperator
-  from great_expectations.core.batch import BatchRequest
-  from great_expectations.data_context.types.base import (
-      DataContextConfig,
-      CheckpointConfig
-  )
-  ```
+    ```python
+    from great_expectations_provider.operators.great_expectations import GreatExpectationsOperator
+    from great_expectations.core.batch import BatchRequest
+    from great_expectations.data_context.types.base import (
+        DataContextConfig,
+        CheckpointConfig
+    )
+    ```
 
 2. Create a task using the [`GreatExpectationsOperator`](https://registry.astronomer.io/providers/great-expectations/modules/greatexpectationsoperator).
 
