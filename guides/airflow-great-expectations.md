@@ -49,7 +49,7 @@ Now that we've set up our system to work with Great Expectations, we can start e
 
 The `GreatExpectationsOperator` runs a Checkpoint against a given dataset. Before you start writing your DAG, make sure you have a Data Context and Checkpoint configured.
 
-A [Data Context](https://docs.greatexpectations.io/docs/reference/data_context) represents a Great Expectations project. It organizes storage and access for Expectation Suites, Datasources, notification settings, and data fixtures.
+A [Data Context](https://docs.greatexpectations.io/docs/reference/data_context) represents a Great Expectations project. It organizes storage and access for Expectation Suites, data sources, notification settings, and data fixtures.
 
 [Checkpoints](https://docs.greatexpectations.io/docs/reference/checkpoints_and_actions) provide a convenient abstraction for bundling the validation of a Batch (or Batches) of data against an Expectation Suite (or several), as well as the actions that should be taken after the validation.
 
@@ -113,7 +113,7 @@ For more information about possible parameters and examples, see the [README in 
 
 ### Connections and Backends
 
-The `GreatExpectationsOperator` can run a checkpoint on a dataset stored in any backend compatible with Great Expectations. All that’s needed to get the Operator to point at an external dataset is to set up an [Airflow Connection](https://www.astronomer.io/guides/connections) to the datasource, and add the connection to your Great Expectations project, e.g. [using the CLI to add a Postgres backend](https://docs.greatexpectations.io/docs/guides/connecting_to_your_data/database/postgres). Then, if using a `DataContextConfig` or `CheckpointConfig`, ensure that the `"datasources"` field refers to your backend connection name.
+The `GreatExpectationsOperator` can run a checkpoint on a dataset stored in any backend compatible with Great Expectations. All that’s needed to get the Operator to point at an external dataset is to set up an [Airflow Connection](https://www.astronomer.io/guides/connections) to the `datasource`, and add the connection to your Great Expectations project, e.g. [using the CLI to add a Postgres backend](https://docs.greatexpectations.io/docs/guides/connecting_to_your_data/database/postgres). Then, if using a `DataContextConfig` or `CheckpointConfig`, ensure that the `"datasources"` field refers to your backend connection name.
 
 ## Conclusion
 
