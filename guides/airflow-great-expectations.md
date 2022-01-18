@@ -43,11 +43,11 @@ If you set up a project manually, you will see a `great_expectations` directory 
 
 ## Use Case: Great Expectations Operator
 
-Now that we've set up our system to work with Great Expectations, we can start exploring how to use it in our DAGs. The current Great Expectations provider version uses the Great Expectations V3 API.
+Now that we've set up our system to work with Great Expectations, we can start exploring how to use it in our DAGs. The current Great Expectations provider version uses the [Great Expectations V3 API](https://docs.greatexpectations.io/docs/).
 
 ### Configuration
 
-The `GreatExpectationsOperator` runs a Checkpoint against a given dataset. Before you start writing your DAG, make sure you have a Data Context and Checkpoint configured.
+The `GreatExpectationsOperator` runs a Checkpoint against a given dataset. Before you start writing your DAG, make sure you have a Data Context and Checkpoint configured. These can be defined as dictionaries containing the necessary [Data Context](https://github.com/astronomer/airflow-data-quality-demo/blob/main/include/great_expectations/configs/snowflake_configs.py#L14) and [Checkpoint](https://github.com/astronomer/airflow-data-quality-demo/blob/main/include/great_expectations/configs/snowflake_configs.py#L99) fields and then imported into the DAG.
 
 A [Data Context](https://docs.greatexpectations.io/docs/reference/data_context) represents a Great Expectations project. It organizes storage and access for Expectation Suites, data sources, notification settings, and data fixtures.
 
@@ -77,25 +77,23 @@ Our [demo repository](https://github.com/astronomer/airflow-data-quality-demo/) 
     )
     ```
 
-2. Create a task using the [`GreatExpectationsOperator`](https://registry.astronomer.io/providers/great-expectations/modules/greatexpectationsoperator).
+2. Create a task using the [`GreatExpectationsOperator`](https://registry.astronomer.io/providers/great-expectations/modules/greatexpectationsoperator). To use the operator in the DAG, define an instance of the `GreatExpectationsOperator` class and assign it to a variable. In the following example, we define two different instances of the operator to complete two different steps in a data quality check workflow:
 
-To use the operator in the DAG, define an instance of the `GreatExpectationsOperator` class and assign it to a variable. In the following example, we define two different instances of the operator to complete two different steps in a data quality check workflow:
+  ```python
+  ge_data_context_root_dir_with_checkpoint_name_pass = GreatExpectationsOperator(
+      task_id="ge_data_context_root_dir_with_checkpoint_name_pass",
+      data_context_root_dir=ge_root_dir,
+      checkpoint_name="taxi.pass.chk",
+  )
 
-```python
-ge_data_context_root_dir_with_checkpoint_name_pass = GreatExpectationsOperator(
-    task_id="ge_data_context_root_dir_with_checkpoint_name_pass",
-    data_context_root_dir=ge_root_dir,
-    checkpoint_name="taxi.pass.chk",
-)
+  ge_data_context_config_with_checkpoint_config_pass = GreatExpectationsOperator(
+      task_id="ge_data_context_config_with_checkpoint_config_pass",
+      data_context_config=example_data_context_config,
+      checkpoint_config=example_checkpoint_config,
+  )
 
-ge_data_context_config_with_checkpoint_config_pass = GreatExpectationsOperator(
-    task_id="ge_data_context_config_with_checkpoint_config_pass",
-    data_context_config=example_data_context_config,
-    checkpoint_config=example_checkpoint_config,
-)
-
-ge_data_context_root_dir_with_checkpoint_name_pass >> ge_data_context_config_with_checkpoint_config_pass
-```
+  ge_data_context_root_dir_with_checkpoint_name_pass >> ge_data_context_config_with_checkpoint_config_pass
+  ```
 
 ### Operator Parameters
 
@@ -103,7 +101,7 @@ The operator has several optional parameters, but it always requires either a `d
 
 The `data_context_root_dir` should point to the `great_expectations` project directory generated when you created the project with the CLI. If using an in-memory `data_context_config`, a `DataContextConfig` must be defined, as in [this example](https://github.com/great-expectations/airflow-provider-great-expectations/blob/main/include/great_expectations/object_configs/example_data_context_config.py).
 
-A `checkpoint_name` references a checkpoint in the project `CheckpointStore` defined in the `DataContext` (which is often the `great_expectations/checkpoints/` path), so that a `checkpoint_name = "taxi.pass.chk"` would reference the file `great_expectations/checkpoints/taxi/pass/chk.yml`. With a `checkpoint_name`, `checkpoint_kwargs` may be passed to the operator to specify additional, overwriting configurations. A `checkpoint_config` may be passed to the operator in place of a name, and can be defined like [this example](https://github.com/great-expectations/airflow-provider-great-expectations/blob/main/include/great_expectations/object_configs/example_checkpoint_config.py).
+A `checkpoint_name` references a checkpoint in the project `CheckpointStore` defined in the `DataContext` (which is often the `great_expectations/checkpoints/` path), so that `checkpoint_name = "taxi.pass.chk"` would reference the file `great_expectations/checkpoints/taxi/pass/chk.yml`. With a `checkpoint_name`, `checkpoint_kwargs` may be passed to the operator to specify additional, overwriting configurations. A `checkpoint_config` may be passed to the operator in place of a name, and can be defined like [this example](https://github.com/great-expectations/airflow-provider-great-expectations/blob/main/include/great_expectations/object_configs/example_checkpoint_config.py).
 
 For a full list of parameters, see the `GreatExpectationsOperator` [documentation](https://registry.astronomer.io/providers/great-expectations/modules/greatexpectationsoperator).
 
@@ -113,7 +111,7 @@ For more information about possible parameters and examples, see the [README in 
 
 ### Connections and Backends
 
-The `GreatExpectationsOperator` can run a checkpoint on a dataset stored in any backend compatible with Great Expectations. All that’s needed to get the Operator to point at an external dataset is to set up an [Airflow Connection](https://www.astronomer.io/guides/connections) to the `datasource`, and add the connection to your Great Expectations project, e.g. [using the CLI to add a Postgres backend](https://docs.greatexpectations.io/docs/guides/connecting_to_your_data/database/postgres). Then, if using a `DataContextConfig` or `CheckpointConfig`, ensure that the `"datasources"` field refers to your backend connection name.
+The `GreatExpectationsOperator` can run a checkpoint on a dataset stored in any backend compatible with Great Expectations, e.g. BigQuery, MSSQL, MySQL, PostgreSQL, Redshift, Snowflake, SQLite, Athena. All that’s needed to get the Operator to point at an external dataset is to set up an [Airflow Connection](https://www.astronomer.io/guides/connections) to the `datasource`, and add the connection to your Great Expectations project, e.g. [using the CLI to add a Postgres backend](https://docs.greatexpectations.io/docs/guides/connecting_to_your_data/database/postgres). Then, if using a `DataContextConfig` or `CheckpointConfig`, ensure that the `"datasources"` field refers to your backend connection name.
 
 ## Conclusion
 
