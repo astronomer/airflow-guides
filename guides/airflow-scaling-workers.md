@@ -29,7 +29,7 @@ The reason Airflow has so many nobs at different levels is that, as an agnostic 
 
 ### Environment-level Settings
 
-Environment-level settings are those that impact your entire Airflow environment (all DAGs). They will all have default values, which can be overriden by setting the appropriate environment variable or modifying your `airflow.cfg` file. Generally, all default values can be found in the [Airflow Configuration Reference](https://airflow.apache.org/docs/apache-airflow/stable/configurations-ref.html). To check current values for an existing Airflow environment, go to **Admin** > **Configurations** in the Airflow UI. For more information, read [Setting Configuration Options](https://airflow.apache.org/docs/apache-airflow/stable/howto/set-config.html) in Airflow's documentation.
+Environment-level settings are those that impact your entire Airflow environment (all DAGs). They will all have default values, which can be overridden by setting the appropriate environment variable or modifying your `airflow.cfg` file. Generally, all default values can be found in the [Airflow Configuration Reference](https://airflow.apache.org/docs/apache-airflow/stable/configurations-ref.html). To check current values for an existing Airflow environment, go to **Admin** > **Configurations** in the Airflow UI. For more information, read [Setting Configuration Options](https://airflow.apache.org/docs/apache-airflow/stable/howto/set-config.html) in Airflow's documentation.
 
 > **Note:** If you're running on Astronomer, you should modify these parameters via Environment Variables. For more information, read [Environment Variables on Astronomer](https://www.astronomer.io/docs/cloud/stable/deploy/environment-variables).
 
@@ -47,9 +47,9 @@ Core settings control the number of processes running concurrently and how long 
 
 - **`max_active_runs_per_dag`:** Default 16. This determines the maximum number of active DAG Runs (per DAG) the Airflow Scheduler can create at any given time. In Airflow, a [DAG Run](https://airflow.apache.org/docs/apache-airflow/stable/dag-run.html) represents an instantiation of a DAG in time, much like a task instance represents an instantiation of a task.
 
-- **`dag_file_processor_timeout`:**: Default 30 seconds. This is how long a DagFileProcessor, which processes a DAG file, can run before timing out. If your DAG processing logs show timeouts, try increasing this value.
+- **`dag_file_processor_timeout`:**: Default 30 seconds. This is how long a `DagFileProcessor`, which processes a DAG file, can run before timing out. If your DAG processing logs show timeouts, try increasing this value.
 
-- **`dagbag_import_timeout`:**: Default 30 seconds. This is how long the dagbag can import DAG objects before timing out. It must be lower than the value set for `dag_file_processor_timeout`.
+- **`dagbag_import_timeout`:**: Default 30 seconds. This is how long the `dagbag` can import DAG objects before timing out. It must be lower than the value set for `dag_file_processor_timeout`.
 
 #### Scheduler Settings
 
@@ -81,23 +81,24 @@ Scheduler settings control how the scheduler parses DAG files and creates DAG ru
 
 ### DAG-level Airflow Settings
 
-DAG-level settings apply only to specific DAGs and are defined in your DAG code. You should look to modify DAG-level settings if you want to performance tune a particular DAG, especially in cases where that DAG is hitting an external system (e.g. an API or database) that might cause performance issues if hit too frequently. In general, DAG-level settings will supercede environment-level settings for the same topic.
+DAG-level settings apply only to specific DAGs and are defined in your DAG code. You should look to modify DAG-level settings if you want to performance tune a particular DAG, especially in cases where that DAG is hitting an external system (e.g. an API or database) that might cause performance issues if hit too frequently. In general, DAG-level settings will supersede environment-level settings for the same topic.
 
 There are three primary DAG-level Airflow settings users can define in code:
 
 - **`max_active_runs`:** This is the maximum number of active DAG Runs allowed for the DAG in question. Once this limit is hit, the Scheduler will not create new active DAG Runs. If this setting is not defined, the value of `max_active_runs_per_dag` (described above) is assumed.
 
-  ```
+  ```python
   # Allow a maximum of 3 active runs of this DAG at any given time
   dag = DAG('my_dag_id', max_active_runs=3)
   ```
+
   If are utilizing `catchup` or `backfill` for your DAG, consider defining this parameter to ensure you don't accidentally trigger a high number of DAG runs.
 - **`max_active_tasks`:** This is the total number of tasks that can run at the same time for a given DAG run. It essentially controls the parallelism within your DAG. If this setting is not defined, the value of `max_active_tasks_per_dag` (described above) is assumed.
 - **`concurrency`:** This is the maximum number of task instances allowed to run concurrently across all active DAG runs of the DAG for which this setting is defined. This allows you to set 1 DAG to be able to run 32 tasks at once, while another DAG might only be able to run 16 tasks at once. If this setting is not defined, the value of `dag_concurrency` (described above) is assumed.
 
   For example:
 
-  ```
+  ```python
   # Allow a maximum of concurrent 10 tasks across a max of 3 active DAG runs
   dag = DAG('my_dag_id', concurrency=10,  max_active_runs=3)
   ```
@@ -112,7 +113,7 @@ There are two primary task-level Airflow settings users can define in code:
 
   For example, you might set the following in your task definition:
 
-  ```
+  ```python
   t1 = PythonOperator(pool='my_custom_pool', max_active_tis_per_dag=14)
   ```
 
@@ -125,7 +126,7 @@ Depending on which executor you choose for your Airflow environment, there are a
 
 ### Celery Executor
 
-The [Celery executor](https://airflow.apache.org/docs/apache-airflow/stable/executor/celery.html) utilizes standing workers to run tasks. Scaling with the Celergy executor involves choosing both the number and size of the workers available to Airflow. The more workers you have available in your environment, or the larger your workers are, the more capacity you have to run tasks concurrently.
+The [Celery executor](https://airflow.apache.org/docs/apache-airflow/stable/executor/celery.html) utilizes standing workers to run tasks. Scaling with the Celery executor involves choosing both the number and size of the workers available to Airflow. The more workers you have available in your environment, or the larger your workers are, the more capacity you have to run tasks concurrently.
 
 You can also tune your **`worker_concurrency`** (environment variable `AIRFLOW__CELERY__WORKER_CONCURRENCY`), which determines how many tasks each Celery worker can run at any given time. If this value is not set, the Celery executor will run a maximum of 16 tasks concurrently by default.
 
@@ -144,15 +145,13 @@ You can also tune your **`worker_pods_creation_batch_size`** (environment variab
 Scaling your Airflow environment can be more of an art than a science, and is highly dependent on your supporting infrastructure and your DAGs. There are too many potential scaling issues to address them all here, but below are some commonly encountered issues and possible parameters to change. 
 
 - Issue: Tasks scheduling latency is high
-  - Potential cause: The scheduler may not have enough resources to parse DAGs in order to then schedule tasks.
-  - Try changing: `worker_concurrency` (if using Celery), `parallelism`
-
+    - Potential cause: The scheduler may not have enough resources to parse DAGs in order to then schedule tasks.
+    - Try changing: `worker_concurrency` (if using Celery), `parallelism`
 - Issue: DAGs are stuck in queued state, but not running
-  - Potential cause: The number of tasks being scheduled may be beyond the capacity of your Airflow infrastructure.
-  - Try changing: `scheduler_heartbeat_sec`, `parsing_processes`
-
+    - Potential cause: The number of tasks being scheduled may be beyond the capacity of your Airflow infrastructure.
+    - Try changing: `scheduler_heartbeat_sec`, `parsing_processes`
 - Issue: An individual DAG is having trouble running tasks in parallel, while other DAGs seem unaffected
-  - Potential cause: Possible DAG-level bottleneck
-  - Try changing: `max_active_task_per_dag`
+    - Potential cause: Possible DAG-level bottleneck
+    - Try changing: `max_active_task_per_dag`
 
 For help with other scaling issues, consider joining the [Apache Airflow Slack](https://airflow.apache.org/community/) or [reach out to Astronomer](https://www.astronomer.io/get-astronomer/).
