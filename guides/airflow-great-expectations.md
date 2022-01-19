@@ -47,7 +47,7 @@ Now that we've set up our system to work with Great Expectations, we can start e
 
 ### Configuration
 
-The `GreatExpectationsOperator` runs a Checkpoint against a given dataset. Before you start writing your DAG, make sure you have a Data Context and Checkpoint configured. These can be defined as dictionaries containing the necessary [Data Context](https://github.com/astronomer/airflow-data-quality-demo/blob/main/include/great_expectations/configs/snowflake_configs.py#L14) and [Checkpoint](https://github.com/astronomer/airflow-data-quality-demo/blob/main/include/great_expectations/configs/snowflake_configs.py#L99) fields and then imported into the DAG.
+To validate your data, the `GreatExpectationsOperator` runs a Checkpoint against your dataset. Before you start writing your DAG, make sure you have a Data Context and Checkpoint configured. To do this, define dictionaries containing the necessary [Data Context](https://github.com/astronomer/airflow-data-quality-demo/blob/main/include/great_expectations/configs/snowflake_configs.py#L14) and [Checkpoint](https://github.com/astronomer/airflow-data-quality-demo/blob/main/include/great_expectations/configs/snowflake_configs.py#L99) fields and import those dictionaries into your DAG.
 
 A [Data Context](https://docs.greatexpectations.io/docs/reference/data_context) represents a Great Expectations project. It organizes storage and access for Expectation Suites, data sources, notification settings, and data fixtures.
 
@@ -66,7 +66,7 @@ Our [demo repository](https://github.com/astronomer/airflow-data-quality-demo/) 
 
 ### Using the Great Expectations Operator
 
-1. Import the operator in your DAG file. You may also need to import the `DataContextConfig`, `CheckpointConfig`, or `BatchRequest` classes as well, depending on how you're using the operator. To import the Great Expectations provider and config and batch classes in a given DAG, add the following line to the top of the DAG file in your `dags` directory:
+1. Import the operator in your DAG file. You might also need to import the `DataContextConfig`, `CheckpointConfig`, or `BatchRequest` classes depending on how you're using the operator. To import the Great Expectations provider, configurations, and batch classes in a given DAG, add the following line to the top of the DAG file in your `dags` directory:
 
     ```python
     from great_expectations_provider.operators.great_expectations import GreatExpectationsOperator
@@ -115,4 +115,4 @@ The `GreatExpectationsOperator` can run a checkpoint on a dataset stored in any 
 
 ## Conclusion
 
-In this guide, we presented a brief overview of Great Expectations and how to use the provider operator to create Great Expectations Airflow Tasks. For more examples on how to use the `GreatExpectationsOperator` as part of an ELT pipeline, check out the [Snowflake](https://registry.astronomer.io/dags/simple-great-expectations-snowflake-el), [BigQuery](https://registry.astronomer.io/dags/simple-great-expectations-bigquery-el/), and [Redshift](https://registry.astronomer.io/dags/simple-great-expectations-redshift-el) examples on the [Astronomer Registry](https://registry.astronomer.io/).
+In this guide, we presented a brief overview of Great Expectations and explained how to use the provider operator to create Great Expectations Airflow tasks. For more examples on how to use the `GreatExpectationsOperator` as part of an ELT pipeline, check out the [Snowflake](https://registry.astronomer.io/dags/simple-great-expectations-snowflake-el), [BigQuery](https://registry.astronomer.io/dags/simple-great-expectations-bigquery-el/), and [Redshift](https://registry.astronomer.io/dags/simple-great-expectations-redshift-el) examples on the [Astronomer Registry](https://registry.astronomer.io/).
