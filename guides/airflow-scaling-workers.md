@@ -61,7 +61,7 @@ Scheduler settings control how the scheduler parses DAG files and creates DAG ru
 
   It is helpful know how long it takes to parse your DAGs (`dag_processing.total_parse_time`) to know what values to choose for `min_file_process_interval` and `dag_dir_list_interval`. If your `dag_dir_list_interval` is less than the amount of time it takes to parse each DAG, you may see performance issues.
 
-- **`parsing_processes`:** (formerly `max_threads`) Default 2 x vCPU. The scheduler can run multiple processes in parallel to parse dags. This defines how many processes will run. Increasing this value can help serialize DAGs more efficiently if you have a large number of them. Note that if you are running multiple schedulers, this value will apply to *each* of them.
+- **`parsing_processes`:** (formerly `max_threads`) Default 2. The scheduler can run multiple processes in parallel to parse dags. This setting defines how many processes will run. We recommend setting a value of 2 x vCPU. Increasing this value can help serialize DAGs more efficiently if you have a large number of them. Note that if you are running multiple schedulers, this value will apply to *each* of them.
 
 - **`file_parsing_sort_mode`**: Default `modified_time`. This determines how the scheduler will list and sort DAG files to decide the parsing order. Set to one of: `modified_time`, `random_seeded_by_host` and `alphabetical`.
 
