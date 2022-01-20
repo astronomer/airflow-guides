@@ -47,9 +47,9 @@ Core settings control the number of processes running concurrently and how long 
 
 - **`max_active_runs_per_dag`:** Default 16. This determines the maximum number of active DAG Runs (per DAG) the Airflow Scheduler can create at any given time. In Airflow, a [DAG Run](https://airflow.apache.org/docs/apache-airflow/stable/dag-run.html) represents an instantiation of a DAG in time, much like a task instance represents an instantiation of a task. This parameter is most relevant when backfilling or if Airflow has to catch up from missed DAG Runs. Consider how you want to handle these scenarios when setting this parameter.
 
-- **`dag_file_processor_timeout`:**: Default 30 seconds. This is how long a `DagFileProcessor`, which processes a DAG file, can run before timing out. If your DAG processing logs show timeouts, or if your DAG is not showing up either in the list of DAGs or the import errors, try increasing this value.
+- **`dag_file_processor_timeout`:**: Default 50 seconds. This is how long a `DagFileProcessor`, which processes a DAG file, can run before timing out.
 
-- **`dagbag_import_timeout`:**: Default 30 seconds. This is how long the `dagbag` can import DAG objects before timing out. It must be lower than the value set for `dag_file_processor_timeout`.
+- **`dagbag_import_timeout`:**: Default 30 seconds. This is how long the `dagbag` can import DAG objects before timing out. It must be lower than the value set for `dag_file_processor_timeout`. If your DAG processing logs show timeouts, or if your DAG is not showing up either in the list of DAGs or the import errors, try increasing this value. You can also try increasing this value if your tasks aren't executing, since workers need to fill up the `dagbag` when tasks execute.
 
 #### Scheduler Settings
 
@@ -61,7 +61,7 @@ Scheduler settings control how the scheduler parses DAG files and creates DAG ru
 
   It is helpful know how long it takes to parse your DAGs (`dag_processing.total_parse_time`) to know what values to choose for `min_file_process_interval` and `dag_dir_list_interval`. If your `dag_dir_list_interval` is less than the amount of time it takes to parse each DAG, you may see performance issues.
 
-- **`parsing_processes`:** (formerly `max_threads`) Default 2. The scheduler can run multiple processes in parallel to parse dags. This defines how many processes will run. Increasing this value can help serialize DAGs more efficiently if you have a large number of them. Note that if you are running multiple schedulers, this value will apply to *each* of them.
+- **`parsing_processes`:** (formerly `max_threads`) Default 2 x vCPU. The scheduler can run multiple processes in parallel to parse dags. This defines how many processes will run. Increasing this value can help serialize DAGs more efficiently if you have a large number of them. Note that if you are running multiple schedulers, this value will apply to *each* of them.
 
 - **`file_parsing_sort_mode`**: Default `modified_time`. This determines how the scheduler will list and sort DAG files to decide the parsing order. Set to one of: `modified_time`, `random_seeded_by_host` and `alphabetical`.
 
