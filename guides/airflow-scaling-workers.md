@@ -87,16 +87,11 @@ There are three primary DAG-level Airflow settings that users can define in code
 
 - **`max_active_runs`:** This is the maximum number of active DAG Runs allowed for the DAG in question. Once this limit is hit, the Scheduler will not create new active DAG Runs. If this setting is not defined, the value of the environment-level setting `max_active_runs_per_dag` is assumed.
 
-  ```python
-  # Allow a maximum of 3 active runs of this DAG at any given time
-  dag = DAG('my_dag_id', max_active_runs=3)
-  ```
-
-  If are utilizing `catchup` or `backfill` for your DAG, consider defining this parameter to ensure that you don't accidentally trigger a high number of DAG runs.
+  If you are utilizing `catchup` or `backfill` for your DAG, consider defining this parameter to ensure that you don't accidentally trigger a high number of DAG runs.
 - **`max_active_tasks`:** This is the total number of tasks that can run at the same time for a given DAG run. It essentially controls the parallelism within your DAG. If this setting is not defined, the value of the environment-level setting `max_active_tasks_per_dag` is assumed.
 - **`concurrency`:** This is the maximum number of task instances allowed to run concurrently across all active DAG runs for a given DAG. This allows you to set 1 DAG to be able to run 32 tasks at once, while another DAG might only be able to run 16 tasks at once. If this setting is not defined, the value of the environment-level setting `max_active_tasks_per_dag` is assumed.
 
-  For example:
+You can define any DAG-level settings within your DAG definition. For example:
 
   ```python
   # Allow a maximum of concurrent 10 tasks across a max of 3 active DAG runs
@@ -109,15 +104,14 @@ Task-level settings are defined in a task's operators and can be used to impleme
 
 There are two primary task-level Airflow settings users can define in code:
 
-- **`max_active_tis_per_dag`:** (Formerly `task_concurrency`) This the maximum amount of times that the same task can run concurrently across all DAG Runs. For instance, if a task reaches out to an external resource, such as a data table, that should not me modified by multiple tasks at once, then you can set this value to 1.
+- **`max_active_tis_per_dag`:** (Formerly `task_concurrency`) This the maximum amount of times that the same task can run concurrently across all DAG Runs. For instance, if a task reaches out to an external resource, such as a data table, that should not be modified by multiple tasks at once, then you can set this value to 1.
+- **`pool`:** This setting defines the amount of pools available for a task. Pools are a way to limit the number of concurrent instances of an arbitrary group of tasks. This setting is useful if you have a lot of workers or DAG runs in parallel, but you want to avoid an API rate limit or otherwise don't want to overwhelm a data source or destination. For more information, read our [Airflow Pools Guide](https://www.astronomer.io/guides/airflow-pools).
 
-  You can set the following in your task definition:
+The parameters above are inherited from the `BaseOperator`, so you can set them in any operator definition like this:
 
   ```python
   t1 = PythonOperator(pool='my_custom_pool', max_active_tis_per_dag=14)
   ```
-
-- **`pool`:** This setting defines the amount of pools available for a task. Pools are a way to limit the number of concurrent instances of an arbitrary group of tasks. This setting is useful if you have a lot of workers or DAG runs in parallel, but you want to avoid an API rate limit or otherwise don't want to overwhelm a data source or destination. For more information, read our [Airflow Pools Guide](https://www.astronomer.io/guides/airflow-pools).
 
 
 ## Executors and Scaling
@@ -142,13 +136,13 @@ You can also tune your **`worker_pods_creation_batch_size`** (environment variab
 
 Scaling your Airflow environment can be more of an art than a science, and it's highly dependent on your supporting infrastructure and your DAGs. There are too many potential scaling issues to address them all here, but below are some commonly encountered issues and possible parameters to change. 
 
-- Issue: Tasks scheduling latency is high
+- **Issue:** Tasks scheduling latency is high
     - Potential cause: The scheduler may not have enough resources to parse DAGs in order to then schedule tasks.
     - Try changing: `worker_concurrency` (if using Celery), `parallelism`
-- Issue: DAGs are stuck in queued state, but not running
+- **Issue:** DAGs are stuck in queued state, but not running
     - Potential cause: The number of tasks being scheduled may be beyond the capacity of your Airflow infrastructure.
     - Try changing: If using the Kubernetes executor, check that there are available resources in the namespace and check if `worker_pods_creation_batch_size` can be increased. If using the Celery executor, check if `worker_concurrency` can be increased.
-- Issue: An individual DAG is having trouble running tasks in parallel, while other DAGs seem unaffected
+- **Issue:** An individual DAG is having trouble running tasks in parallel, while other DAGs seem unaffected
     - Potential cause: Possible DAG-level bottleneck
     - Try changing: `max_active_task_per_dag`, pools (if using them), or overall `parallelism`
 
