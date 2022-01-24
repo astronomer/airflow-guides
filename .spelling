@@ -1648,6 +1648,10 @@ PostgresHook
 SSHHook
  - guides/airflow-scaling-workers.md
 default_airflow.cfg
+metastore
+vCPU
+2x
+vCPUs
  - guides/cross-dag-dependencies.md
 ExternalTaskSensor
  - guides/airflow-sagemaker.md
