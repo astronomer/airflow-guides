@@ -33,7 +33,7 @@ Environment-level settings are those that impact your entire Airflow environment
 
 > **Note:** If you're running Airflow on Astronomer, you should modify these parameters via Astronomer environment variables. For more information, read [Environment Variables on Astronomer](https://www.astronomer.io/docs/cloud/stable/deploy/environment-variables).
 
-You should modify environment-level settings if you want to tune performance across *all* of the DAGs in your Airflow environment. This is particularly relevant if you want your DAGs can run adequately on your supporting infrastructure. Specifically, the following settings are relevant:
+You should modify environment-level settings if you want to tune performance across *all* of the DAGs in your Airflow environment. This is particularly relevant if you want your DAGs to run adequately on your supporting infrastructure. Specifically, the following settings are relevant:
 
 #### Core Settings
 
@@ -41,7 +41,7 @@ Core settings control the number of processes running concurrently and how long 
 
 - **`parallelism`:** This is the maximum number of tasks that can run concurrently within a single Airflow environment. For example, if this setting is set to 32 then no more than 32 tasks can run at once across all DAGs. Think of this as "maximum active tasks anywhere." If you notice that tasks are stuck queued for extended periods of time, this is a value you may want to increase. By default, this is set to 32.
 
-- **`max_active_tasks_per_dag`:** (formerly `dag_concurrency`) This determines maximum number of tasks that can be scheduled at once, per DAG." Use this setting to prevent any one DAG from taking up too many of the available slots from parallelism or your pools, which helps DAGs be good neighbors to one another. By default, this is set to 16.
+- **`max_active_tasks_per_dag`:** (formerly `dag_concurrency`) This determines the maximum number of tasks that can be scheduled at once, per DAG." Use this setting to prevent any one DAG from taking up too many of the available slots from parallelism or your pools, which helps DAGs be good neighbors to one another. By default, this is set to 16.
 
   If you increase the amount of resources available to Airflow (such as Celery workers or Kubernetes resources) and notice that tasks are still not running as expected, you might have to increase the values of both `parallelism` and `max_active_tasks_per_dag`.
 
@@ -59,7 +59,7 @@ Scheduler settings control how the scheduler parses DAG files and creates DAG ru
 
 - **`dag_dir_list_interval`:** This is how often to scan the DAGs directory for new files, in seconds. The lower the value, the faster new DAGs will be processed but the higher your CPU usage. By default, this is set to 300 seconds (5 minutes). 
 
-  It is helpful know how long it takes to parse your DAGs (`dag_processing.total_parse_time`) to know what values to choose for `min_file_process_interval` and `dag_dir_list_interval`. If your `dag_dir_list_interval` is less than the amount of time it takes to parse each DAG, you might see performance issues.
+  It is helpful to know how long it takes to parse your DAGs (`dag_processing.total_parse_time`) to know what values to choose for `min_file_process_interval` and `dag_dir_list_interval`. If your `dag_dir_list_interval` is less than the amount of time it takes to parse each DAG, you might see performance issues.
 
 - **`parsing_processes`:** (formerly `max_threads`) The scheduler can run multiple processes in parallel to parse DAGs. This setting defines how many processes can run in parallel. We recommend setting a value of 2x your available vCPUs. Increasing this value can help serialize DAGs more efficiently if you have a large number of them. Note that if you are running multiple schedulers, this value will apply to *each* of them. By default, this value is set to 2. 
 
@@ -81,7 +81,7 @@ Scheduler settings control how the scheduler parses DAG files and creates DAG ru
 
 ### DAG-level Airflow Settings
 
-DAG-level settings apply only to specific DAGs and are defined in your DAG code. You should modify DAG-level settings if you want to performance tune a particular DAG, especially in cases where that DAG is hitting an external system (e.g. an API or database) that might cause performance issues if hit too frequently. When a there's a setting at both the DAG-level and environment-level, the DAG-level setting takes precedence.
+DAG-level settings apply only to specific DAGs and are defined in your DAG code. You should modify DAG-level settings if you want to performance tune a particular DAG, especially in cases where that DAG is hitting an external system (e.g. an API or database) that might cause performance issues if hit too frequently. When a setting exists at both the DAG-level and environment-level, the DAG-level setting takes precedence.
 
 There are three primary DAG-level Airflow settings that users can define in code:
 
@@ -104,7 +104,7 @@ Task-level settings are defined in a task's operators and can be used to impleme
 
 There are two primary task-level Airflow settings users can define in code:
 
-- **`max_active_tis_per_dag`:** (Formerly `task_concurrency`) This the maximum amount of times that the same task can run concurrently across all DAG Runs. For instance, if a task reaches out to an external resource, such as a data table, that should not be modified by multiple tasks at once, then you can set this value to 1.
+- **`max_active_tis_per_dag`:** (Formerly `task_concurrency`) This is the maximum number of times that the same task can run concurrently across all DAG Runs. For instance, if a task reaches out to an external resource, such as a data table, that should not be modified by multiple tasks at once, then you can set this value to 1.
 - **`pool`:** This setting defines the amount of pools available for a task. Pools are a way to limit the number of concurrent instances of an arbitrary group of tasks. This setting is useful if you have a lot of workers or DAG runs in parallel, but you want to avoid an API rate limit or otherwise don't want to overwhelm a data source or destination. For more information, read our [Airflow Pools Guide](https://www.astronomer.io/guides/airflow-pools).
 
 The parameters above are inherited from the `BaseOperator`, so you can set them in any operator definition like this:
