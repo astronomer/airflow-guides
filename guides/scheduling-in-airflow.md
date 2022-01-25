@@ -56,9 +56,9 @@ In the sections below, we'll walk through how to use the `schedule_interval` or 
 
 ## Schedule Interval
 
-For pipelines with basic schedules, you can define a `schedule_interval` in your DAG. Prior to Airflow 2.2, this was the *only* mechanism for defining a DAG's schedule. 
+For pipelines with basic schedules, you can define a `schedule_interval` in your DAG. For versions of Airflow prior to 2.2, this is the *only* mechanism for defining a DAG's schedule. 
 
-### Setting Schedule Interval
+### Setting a Schedule Interval
 
 #### Cron expression
     
@@ -78,18 +78,19 @@ If you want to schedule your DAG on a particular cadence (hourly, every 5 minute
     
 > Note: Do not make your DAG's schedule dynamic (e.g. `datetime.now()`)! This will cause an error in the Scheduler.
 
-### Logical Date / Execution Date
+### Schedule Interval & Logical Date / Execution Date
+
 Airflow was developed for ETL under the expectation that data is constantly flowing in from some source and then will be summarized on a regular interval. If you want to summarize Monday's data, you can only do it after Monday is over (Tuesday at 12:01 AM). However, this assumption has turned out to be ill suited to the many other things Airflow is being used for. This discrepancy is what led to Timetables, which were introduced in Airflow 2.2. 
 
-Each DagRun therefore has a `logical_date` that is separate from the time that the DagRun is expected to begin (`logical_date` was confusingly called `execution_date` before Airflow 2.2). A DagRun is not actually allowed to run until the `logical_date` for the *following* DagRun has passed. So if you are running a daily DAG, Monday's DagRun will not actually execute until Tuesday. In this example, the `logical_date` would be Monday 12:01 AM, even though the DagRun will not actually begin until Tuesday 12:01 AM.
+Each DagRun therefore has a `logical_date` that is separate from the time that the DagRun is expected to begin (`logical_date` was called `execution_date` before Airflow 2.2). A DagRun is not actually allowed to run until the `logical_date` for the *following* DagRun has passed. So if you are running a daily DAG, Monday's DagRun will not actually execute until Tuesday. In this example, the `logical_date` would be Monday 12:01 AM, even though the DagRun will not actually begin until Tuesday 12:01 AM.
 
- If you want to pass the DagRun a timestamp that represents "the earliest time at which this DagRun could have started", use {{ next_ds }} from the [jinja templating macros](https://airflow.apache.org/docs/apache-airflow/2.1.4/macros-ref.html?highlight=next_ds). (It is best practice to make DagRuns idempotent (able to be re-run without consequence) which prevents using `datetime.now()`.)
+ If you want to pass the DagRun a timestamp that represents "the earliest time at which this DagRun could have started", use `{{ next_ds }}` from the [jinja templating macros](https://airflow.apache.org/docs/apache-airflow/2.1.4/macros-ref.html?highlight=next_ds). (It is best practice to make DagRuns idempotent (able to be re-run without consequence) which prevents using `datetime.now()`.)
 
-### Limitations
+### Schedule Interval Limitations
 
-This behavior leads to particularly unintuitive results when the spacing between DagRuns is irregular. The most common example of irregular spacing is when DAGs run only during business days (Mon-Fri). In this case, the DagRun with an `execution_date` of Friday will not run until Monday, even though all of Friday's data will be available on Saturday. This means that a DAG whose desired behavior is to summarize results at the end of each business day actually cannot be set using only the `schedule_interval`. In pre-2.2 versions of Airflow, one must instead schedule the DAG to run every day (including the weekend) and include logic in the DAG itself to skip all tasks for days on which the DAG doesn't really need to run.
+The relationship between a DAG's `schedule_interval` and its `logical_date` leads to particularly unintuitive results when the spacing between DagRuns is irregular. The most common example of irregular spacing is when DAGs run only during business days (Mon-Fri). In this case, the DagRun with an `execution_date` of Friday will not run until Monday, even though all of Friday's data will be available on Saturday. This means that a DAG whose desired behavior is to summarize results at the end of each business day actually cannot be set using only the `schedule_interval`. In versions of Airflow prior to 2.2, one must instead schedule the DAG to run every day (including the weekend) and include logic in the DAG itself to skip all tasks for days on which the DAG doesn't really need to run.
 
-In addition, it is difficult or impossible to implement situations like:
+In addition, it is difficult or impossible to implement situations like the following using a schedule interval:
 
 - Schedule a DAG at different times on different days, like 2pm on Thursdays and 4pm on Saturdays.
 - Schedule a DAG daily except for holidays.
