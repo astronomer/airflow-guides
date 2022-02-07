@@ -1,6 +1,6 @@
 ---
 title: "Astro for ETL"
-description: "Using the `astro` library to implement ETL use cases in Airflow."
+description: "Using the astro library to implement ETL use cases in Airflow."
 date: 2022-01-10T00:00:00.000Z
 slug: "astro-etl"
 heroImagePath: null
@@ -8,6 +8,8 @@ tags: ["Astro", "ETL", "SQL"]
 ---
 
 ## Overview
+
+> **Note:** The `astro` project is currently in the alpha stage and is not yet ready for production. The API will likely change as it progresses. However, we are actively seeking alpha users to test functionality and offer feedback.
 
 The [`astro` library](https://github.com/astro-projects/astro) is an open source Python package maintained by Astronomer that provides tools to improve the DAG authoring experience for Airflow users. The available decorators and functions allow you to write DAGs based on how you want your data to move by simplifying the data transformation process between different environments.
 
