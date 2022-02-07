@@ -169,6 +169,8 @@ Note that when adding traditional operators, dependencies are still defined usin
 
 ## Astro Project Decorators
 
+> **Note:** The `astro` project is currently in the alpha stage and is not yet ready for production. The API will likely change as it progresses. However, we are actively seeking alpha users to test functionality and offer feedback.
+
 The [`astro` library](https://github.com/astro-projects/astro) provides decorators and modules that allow data engineers to think in terms of data transformations rather than Airflow concepts when writing DAGs. The goal is to allow DAG writers to focus on defining *execution* logic without having to worry about orchestration logic.
 
 The library contains SQL and dataframe decorators that greatly simplify your DAG code and allow you to directly define tasks without boilerplate operator code. It also allows you to transition seamlessly between SQL and Python for transformations without having to explicitly pass data between tasks or convert the results of queries to dataframes and vice versa. For a full description of functionality, check out the [repo Readme](https://github.com/astro-projects/astro).
