@@ -74,8 +74,7 @@ with DAG(
  
    sync_sensor = DateTimeSensor(
        task_id="sync_task",
-       target_time="""{{ macros.datetime.utcnow() + macros.timedelta(minutes=20) }}""",
-       pool="sync",
+       target_time="""{{ macros.datetime.utcnow() + macros.timedelta(minutes=20) }}"""
    )
 ```
 
@@ -100,8 +99,7 @@ with DAG(
  
    async_sensor = DateTimeSensorAsync(
        task_id="async_task",
-       target_time="""{{ macros.datetime.utcnow() + macros.timedelta(minutes=20) }}""",
-       pool="async",
+       target_time="""{{ macros.datetime.utcnow() + macros.timedelta(minutes=20) }}"""
    )
 ```
 
