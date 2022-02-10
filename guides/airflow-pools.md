@@ -41,9 +41,9 @@ task_a = PythonOperator(
 
 When tasks are assigned to a pool, they will be scheduled as normal until all of the pool's slots are filled. As slots open up, the remaining queued tasks will start running. 
 
-> **Note:** If you assign a task to a pool that doesn't exist, the task will not be scheduled when the DAG runs. Currently this will not result in an error in the task logs or Airflow UI.
+> **Note:** If you assign a task to a pool that doesn't exist, then the task will not be scheduled when the DAG runs. There are currently no errors or checks for this in the Airflow UI, so be sure to double check the name of the pool that you're assigning a task to.
 
-You can control which tasks within the pool are run first by assigning [priority weights](https://airflow.apache.org/docs/apache-airflow/stable/concepts/priority-weight.html#concepts-priority-weight) which define priorities for the executor queue. These are assigned at the pool level with the `priority_weights` parameter. The values can be any arbitrary integer (default is 1), and higher values get higher priority.
+You can control which tasks within the pool are run first by assigning [priority weights](https://airflow.apache.org/docs/apache-airflow/stable/concepts/priority-weight.html#concepts-priority-weight). These are assigned at the pool level with the `priority_weights` parameter. The values can be any arbitrary integer (default is 1), and higher values get higher priority in the executor queue.
 
 For example, in the DAG snippet below `task_a` and `task_b` are both assigned to the `single_task_pool` which has one slot. `task_b` has a priority weight of 2, while `task_a` has the default priority weight of 1. Therefore, `task_b` would be executed first.
 
