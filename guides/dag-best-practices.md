@@ -239,7 +239,7 @@ task_1 >> task_2 >> [task_3, task_4]
 
 ## Leverage Airflow Features
 
-The next category of best practices relates to getting the most out of Airflow by leveraging built-in features and the broader Airflow ecosystem to fulfill specific use cases. Using Airflow in this way makes it easier to scale and pull in the right tools based on your needs.
+The next category of best practices relates to getting the most out of Airflow by leveraging built-in features and the broader Airflow ecosystem, namely provider packages for third-party integrations, to fulfill specific use cases. Using Airflow in this way makes it easier to scale and pull in the right tools based on your needs.
 
 ### Make Use of Provider Packages
 
