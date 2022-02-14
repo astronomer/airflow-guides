@@ -109,7 +109,7 @@ To start a triggerer process, run `airflow triggerer` in your Airflow environmen
 
 ![Triggerer Logs](https://assets2.astronomer.io/main/guides/deferrable-operators/triggerer_logs.png)
 
-Note that if you are running Airflow on [Astro](https://docs.astronomer.io/cloud/deferrable-operators#prerequisites), the triggerer runs automatically if you are on Astronomer Runtime 4.0+. If you are using Astro Software 0.26+, you can add a triggerer to an Airflow 2.2+ deployment in the **Deployment Settings** tab. This [guide](https://docs.astronomer.io/enterprise/configure-deployment#triggerer) details the steps for configuring this feature in the platform.
+Note that if you are running Airflow on [Astro](https://docs.astronomer.io/cloud/deferrable-operators#prerequisites), the triggerer runs automatically if you are on Astro Runtime 4.0+. If you are using Astronomer Software 0.26+, you can add a triggerer to an Airflow 2.2+ deployment in the **Deployment Settings** tab. This [guide](https://docs.astronomer.io/enterprise/configure-deployment#triggerer) details the steps for configuring this feature in the platform.
 
 As tasks are raised into a deferred state, triggers are registered in the triggerer. You can set the number of concurrent triggers that can run in a single triggerer process with the [`default_capacity`](https://airflow.apache.org/docs/apache-airflow/stable/configurations-ref.html#triggerer) configuration setting in Airflow. This can also be set via the `AIRFLOW__TRIGGERER__DEFAULT_CAPACITY` environment variable. By default, this variable's value is `1,000`.
 
