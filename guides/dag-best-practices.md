@@ -237,21 +237,23 @@ task_1 >> task_2 >> [task_3, task_4]
     <li data-icon="→"><a href="/guides/dynamically-generating-dags" onclick="analytics.track('Clicked Learn More List Link', { page: location.href, buttonText: 'Dynamically Generating DAGs in Airflow', spottedCompany: window.spottedCompany })">Dynamically Generating DAGs in Airflow</a></li>
 </ul>
 
-## Leverage Airflow Features and Ecosystem
+## Leverage Airflow Features
 
-The next category of best practices relates to getting the most out of Airflow by leveraging built-in features and the broader Airflow ecosystem to tailor your DAGs to your specific use case. Using Airflow in this way makes it easier to scale and pull in the right tools based on your needs.
+The next category of best practices relates to getting the most out of Airflow by leveraging built-in features and the broader Airflow ecosystem to fulfill specific use cases. Using Airflow in this way makes it easier to scale and pull in the right tools based on your needs.
 
 ### Make Use of Provider Packages
 
-A great feature of Airflow is its [provider packages](https://airflow.apache.org/docs/apache-airflow-providers/), which orchestrate jobs using third party tools. One of the best aspects of Airflow is its robust and active community, which has resulted in many integrations between Airflow and other tools in the data ecosystem. Wherever possible, it's best practice to make use of these integrations rather than writing Python functions yourself (no need to reinvent the wheel). This makes it easier for teams using existing tools to adopt Airflow, and it means you get to write less code since many existing hooks and operators have taken care of that for you.
+One of the best aspects of Airflow is its robust and active community, which has resulted in integrations between Airflow and other tools known as [provider packages](https://airflow.apache.org/docs/apache-airflow-providers/). 
+
+Provider packages enable you to orchestrate third party data processing jobs directly from Airflow. Wherever possible, it's best practice to make use of these integrations rather than writing Python functions yourself (no need to reinvent the wheel). This makes it easier for teams using existing tools to adopt Airflow, and it means you get to write less code.
 
 For easy discovery of all the great provider packages out there, check out the [Astronomer Registry](https://registry.astronomer.io/).
 
-### Be Intentional About Data Processing
+### Decide Where to Run Data Processing Jobs
 
-Since DAGs are written in Python, you have many options available for implementing data processing. For small to medium scale workloads, it is typically safe to do your data processing within Airflow as long as you allocate enough resources to your Airflow infrastructure. On the other hand, processing very large amounts of data is typically best offloaded to a framework specifically optimized for those use cases, like [Apache Spark](https://spark.apache.org/). You can then use Airflow to orchestrate those jobs.
+Because DAGs are written in Python, you have many options available for implementing data processing. For small to medium scale workloads, it is typically safe to do your data processing within Airflow as long as you allocate enough resources to your Airflow infrastructure. Large data processing jobs are typically best offloaded to a framework specifically optimized for those use cases, such as [Apache Spark](https://spark.apache.org/). You can then use Airflow to orchestrate those jobs.
 
-Our recommendation is to consider the size of your data now and in the future when deciding whether to process data within Airflow or offload to an external tool. If your use case is well suited to processing data within Airflow, we would recommend the following:
+We recommend that you consider the size of your data now and in the future when deciding whether to process data within Airflow or offload to an external tool. If your use case is well suited to processing data within Airflow, then we would recommend the following:
 
 - Ensure your Airflow infrastructure has the necessary resources.
 - Use the Kubernetes Executor to isolate task processing and have more control over resources at the task level.
