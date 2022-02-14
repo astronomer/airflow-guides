@@ -121,7 +121,7 @@ There are a couple of things to keep in mind when using backfill:
 - Consider your available resources. If your backfill will trigger many DAG runs, you may want to use some of the parameters described in the Catchup section above in your DAG.
 - Clearing the task or DAG status of a backfilled DAG run **does not** trigger the task/DAG to be rerun.
 
-If you don't have access to the Airflow CLI (for example, if you are running Airflow with Astronomer Cloud), there are a couple of workarounds you can use to achieve the same functionality as backfilling:
+If you don't have access to the Airflow CLI (for example, if you are running Airflow with Astronomer Nebula), there are a couple of workarounds you can use to achieve the same functionality as backfilling:
 
 - Deploy a copy of the DAG with a new name and a start date that is the date you want to backfill to. Airflow will consider this a separate DAG so you won't see all the DAG runs/task instances in the same place, but it would accomplish running the DAG for data in the desired time period.
 - If you have a small number of DAG runs to backfill, you can trigger them manually from the Airflow UI and choose the desired logical date.
