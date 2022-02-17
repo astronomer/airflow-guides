@@ -41,7 +41,7 @@ Currently, the following deferrable operators are available in Airflow:
 - [TimeSensorAsync](https://airflow.apache.org/docs/apache-airflow/stable/_api/airflow/sensors/time_sensor/index.html?highlight=timesensor#module-contents)
 - [DateTimeSensorAsync](https://airflow.apache.org/docs/apache-airflow/stable/_api/airflow/sensors/date_time/index.html#airflow.sensors.date_time.DateTimeSensorAsync)
 
-However, this list will grow quickly as the Airflow community makes more investments into these operators. In the meantime, you can also create your own (more on this in the last section of this guide). Additionally, Astronomer maintains some deferrable operators [available only on Astronomer Runtime](https://docs.astronomer.io/cloud/deferrable-operators/#astronomers-deferrable-operators).
+However, this list will grow quickly as the Airflow community makes more investments into these operators. In the meantime, you can also create your own (more on this in the last section of this guide). Additionally, Astronomer maintains some deferrable operators [available only on Astro Runtime](https://docs.astronomer.io/cloud/deferrable-operators/#astronomers-deferrable-operators).
 
 There are numerous benefits to using deferrable operators. Some of the most notable are:
 
@@ -109,7 +109,7 @@ To start a triggerer process, run `airflow triggerer` in your Airflow environmen
 
 ![Triggerer Logs](https://assets2.astronomer.io/main/guides/deferrable-operators/triggerer_logs.png)
 
-Note that if you are using [Astronomer Cloud](https://docs.astronomer.io/cloud/deferrable-operators#prerequisites), the triggerer runs automatically if you are on Astronomer Runtime 4.0+. If you are using Astronomer Enterprise 0.26+, you can add a triggerer to an Airflow 2.2+ deployment in the **Deployment Settings** tab. This [guide](https://docs.astronomer.io/enterprise/configure-deployment#triggerer) details the steps for configuring this feature in the platform.
+Note that if you are running Airflow on [Astro](https://docs.astronomer.io/cloud/deferrable-operators#prerequisites), the triggerer runs automatically if you are on Astro Runtime 4.0+. If you are using Astronomer Software 0.26+, you can add a triggerer to an Airflow 2.2+ deployment in the **Deployment Settings** tab. This [guide](https://docs.astronomer.io/enterprise/configure-deployment#triggerer) details the steps for configuring this feature in the platform.
 
 As tasks are raised into a deferred state, triggers are registered in the triggerer. You can set the number of concurrent triggers that can run in a single triggerer process with the [`default_capacity`](https://airflow.apache.org/docs/apache-airflow/stable/configurations-ref.html#triggerer) configuration setting in Airflow. This can also be set via the `AIRFLOW__TRIGGERER__DEFAULT_CAPACITY` environment variable. By default, this variable's value is `1,000`.
 
@@ -119,4 +119,4 @@ Note that triggers are designed to be highly-available. You can implement this b
 
 ### Creating Your Own Deferrable Operator
 
-If you have an operator that would benefit from being asynchronous but does not yet exist in OSS Airflow or Astronomer Runtime, you can create your own. The [Airflow docs](https://airflow.apache.org/docs/apache-airflow/stable/concepts/deferring.html#writing-deferrable-operators) have great instructions to get you started.
+If you have an operator that would benefit from being asynchronous but does not yet exist in OSS Airflow or Astro Runtime, you can create your own. The [Airflow docs](https://airflow.apache.org/docs/apache-airflow/stable/concepts/deferring.html#writing-deferrable-operators) have great instructions to get you started.
