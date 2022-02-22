@@ -13,11 +13,9 @@ If you'd like to test Airflow 2.0 on your local machine, Astronomer's [open-sour
 
 Read below for guidelines.
 
-> **Note:** If you're an Astronomer user looking to upgrade an Airflow Deployment on Astronomer to 2.0, refer to [Upgrade to Apache Airflow 2.0 on Astronomer](https://www.astronomer.io/docs/cloud/stable/customize-airflow/upgrade-to-airflow-2).
-
 ## Step 1: Install or Upgrade the Astronomer CLI
 
-The [Astronomer CLI](https://github.com/astronomer/astro-cli) is the easiest way to run Apache Airflow on your machine. From the CLI, you can establish a local testing environment regardless of where you'll be deploying to from there.
+The [Astronomer CLI](https://docs.astronomer.io/astro/install-cli) is the easiest way to run Apache Airflow on your machine. From the CLI, you can establish a local testing environment regardless of where you'll be deploying to from there.
 
 There are two ways to install any version of the Astronomer CLI:
 

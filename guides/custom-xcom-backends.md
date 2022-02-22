@@ -14,7 +14,7 @@ In December 2020, the Apache Airflow project took a huge step forward with the r
 
 One of the features of the TaskFlow API that increases the flexibility of XComs is support for a [custom XCom backend](https://airflow.apache.org/docs/apache-airflow/stable/concepts.html?highlight=xcom#custom-xcom-backend). This means that rather than store XComs in Airflow's metadata database by default, you can push and pull XComs to and from an external system such as S3, GCS, or HDFS. You can also implement your own serialization / deserialization methods to define how XComs are handled. 
 
-This guide discusses the benefits of using an XCom backend, shows an example of implementing an XCom backend with S3, and describes how to set this up if you're running Airflow on the Astronomer platform.
+This guide discusses the benefits of using an XCom backend, shows an example of implementing an XCom backend with S3, and describes how to set this up if you're running Airflow on Astro.
 
 If you're new to working with XComs or the TaskFlow API and want some background before diving into custom XCom Backends, check out the [Airflow documentation on XComs](https://airflow.apache.org/docs/apache-airflow/stable/concepts.html?highlight=xcom#xcoms) and our [webinar on using the TaskFlow API](https://www.astronomer.io/events/webinars/taskflow-api-airflow-2.0/).
 
@@ -159,16 +159,16 @@ When you restart Airflow and run a DAG with pandas dataframe XComs, you should s
 
 > Note: if you make any changes to your XCom Backend class by modifying `s3_xcom_backend.py`, you will need to restart Airflow (in this example, with `docker-compose down && docker-compose up -d`) for those changes to take effect.
 
-## Using XCom Backends on the Astronomer Platform
+## Using XCom Backends on Astro
 
-Now that we've shown the general steps for setting up a custom XCom backend, in this section we'll show how to apply those steps when working with Airflow on the Astronomer platform. For this example, we'll use the Great Expectations use case for storing operator results XComs as described above.
+Now that we've shown the general steps for setting up a custom XCom backend, in this section we'll show how to apply those steps when working with Airflow on Astro. For this example, we'll use the Great Expectations use case for storing operator results XComs as described above.
 
 > Note: All supporting code for this section can be found in [this repo](https://github.com/astronomer/custom-xcom-backend-tutorial).
 
-First, use the following steps to configure your XCom backend on the Astronomer platform:
+First, use the following steps to configure your XCom backend on Astro:
 
 1. Configure your backend (S3, GCS, etc.) as described in Section 1 from the previous example.
-2. Open an existing Astronomer project, or initialize a new one using `astro dev init` (if you don't already have the Astronomer CLI, install it using the [CLI Quickstart](https://www.astronomer.io/docs/cloud/stable/develop/cli-quickstart) before completing these steps).
+2. Open an existing Astronomer project, or initialize a new one using `astro dev init` (if you don't already have the Astronomer CLI, install it using the [CLI Quickstart](https://docs.astronomer.io/astro/install-cli) before completing these steps).
 3. Add the XCom backend Python file with serialization/deserialization methods as shown below to the `include/` directory of your Astronomer project.
 4. Add the `AIRFLOW__CORE_XCOM_BACKEND` environment variable to your Astronomer project. For this example, it should look like `AIRFLOW__CORE__XCOM_BACKEND=include.s3_xcom_backend.S3XComBackend`. There are a few ways to add an environment variable to your Astronomer Deployment, which are detailed in Astronomer's [Environment Variables guide](https://www.astronomer.io/docs/cloud/stable/deploy/environment-variables). In this case, we added the variable to our Dockerfile.
 5. Deploy your project code to Astronomer, or start Airflow locally by running `astro dev start`.

@@ -20,7 +20,7 @@ If you are newer to test-driven development, or CI/CD in general, we'd recommend
 - [Getting Started with Testing in Python](https://realpython.com/python-testing/)
 - [Continuous Integration with Python](https://realpython.com/python-continuous-integration/)
 - [The Challenge of Testing Data Pipelines](https://medium.com/slalom-build/the-challenge-of-testing-data-pipelines-4450744a84f1)
-- [Deploying to Astronomer via CI/CD](https://www.astronomer.io/docs/enterprise/v0.25/deploy/ci-cd)
+- [Deploying to Astro via CI/CD](https://docs.astronomer.io/software/ci-cd)
 
 We also recommend checking out [Airflow's documentation on testing DAGs](https://airflow.apache.org/docs/apache-airflow/stable/best-practices.html#testing-a-dag) and [testing guidelines for contributors](https://github.com/apache/airflow/blob/main/TESTING.rst); we'll walk through some of the concepts covered in those docs in more detail below.
 

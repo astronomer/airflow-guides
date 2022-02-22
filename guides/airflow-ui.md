@@ -11,7 +11,7 @@ tags: ["DAGs", "Airflow UI", "Basics", "XCom", "Tasks", "Connections"]
 
 A notable feature of Apache Airflow is the [UI](https://airflow.apache.org/docs/apache-airflow/stable/ui.html#), which provides insights into your DAGs and DAG Runs. The UI is a useful tool for understanding, monitoring, and troubleshooting your pipelines.
 
-In this guide, we'll walk through an overview of some of the most useful features and visualizations in the Airflow UI. Each section of the guide corresponds to one of the tabs at the top of the Airflow UI. If you're not already using Airflow and want to get it up and running to follow along, check out the [Astronomer CLI](https://www.astronomer.io/docs/enterprise/v0.25/develop/cli-quickstart) to quickly run Airflow on your local machine. 
+In this guide, we'll walk through an overview of some of the most useful features and visualizations in the Airflow UI. Each section of the guide corresponds to one of the tabs at the top of the Airflow UI. If you're not already using Airflow and want to get it up and running to follow along, check out the [Astronomer CLI](https://docs.astronomer.io/astro/install-cli) to quickly run Airflow on your local machine. 
 
 > Note: This guide focuses on the Airflow 2 UI, which was significantly redesigned compared to previous Airflow versions. If you haven't upgraded yet, check out this guide on [getting started with Airflow 2.0](https://www.astronomer.io/guides/get-started-airflow-2).
 
@@ -21,7 +21,7 @@ The DAGs view is the landing page when you sign in to Airflow. It shows a list o
 
 ![DAGs View](https://assets2.astronomer.io/main/guides/airflow-ui/ui_dags.png)
 
-> Note: All screenshots in this guide were taken from an [Astronomer Certified](https://www.astronomer.io/docs/enterprise/v0.25/astronomer-certified/image-architecture) Airflow image. Other than the additional `Astronomer` tab and some modified colors, the UI is the same as that of OSS Airflow. 
+> Note: All screenshots in this guide were taken from an [Astronomer Certified](https://docs.astronomer.io/software/image-architecture) Airflow image. Other than the additional `Astronomer` tab and some modified colors, the UI is the same as that of OSS Airflow. 
 
 From the DAGs view you can:
 

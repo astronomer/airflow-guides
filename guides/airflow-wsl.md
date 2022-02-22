@@ -80,7 +80,7 @@ And that’s it- happy Airflowing!
 
 ### Using Astronomer
 
-If you are using the Astronomer platform, you can install the Astro CLI in WSL to easily create local development environments and push deployments to clusters. The CLI requires Docker installed in WSL. Astro CLI for Windows is coming soon!
+If you are using Astro, you can install the [Astro CLI](https://docs.astronomer.io/astro/install-cli) in WSL to easily create local development environments and push deployments to clusters. The CLI requires Docker installed in WSL. Astro CLI for Windows is coming soon!
 
 #### Docker
 
@@ -90,7 +90,7 @@ Docker is required to use Astronomer's CLI. [Here](https://nickjanetakis.com/blo
 
 Install the CLI via `curl -sSL https://install.astronomer.io | sudo bash`.
 
-Running `astro version` will test if it's installed correctly. You can now navigate to your `AIRFLOW_HOME` directory and run `astro airflow init`, creating an initialized Astronomer project in that directory. Running `astro aiflow start` will spin up some docker containers and launch a local environment with a webserver and scheduler, which you can view in your browser at `localhost:8080`. There, you will also see your Airflow UI and your example_dag. Running `astro airflow stop` will take down the containers. [Here](https://www.astronomer.io/docs/cli-quickstart/) is the quickstart guide for the Astro CLI if you'd like a more detailed rundown of how to get started with it.
+Running `astro version` will test if it's installed correctly. You can now navigate to your `AIRFLOW_HOME` directory and run `astro airflow init`, creating an initialized Astronomer project in that directory. Running `astro aiflow start` will spin up some docker containers and launch a local environment with a webserver and scheduler, which you can view in your browser at `localhost:8080`. There, you will also see your Airflow UI and your example_dag. Running `astro airflow stop` will take down the containers. [Here](https://docs.astronomer.io/astro/install-cli) is the quickstart guide for the Astro CLI if you'd like a more detailed rundown of how to get started with it.
 
 **Note:** If you get a Postgres error, try running `Docker pull postgres:10.1-alpine`
 
