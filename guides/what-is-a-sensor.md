@@ -104,13 +104,15 @@ Sensors are easy to implement, but there are a few things to keep in mind when u
 
 ## Smart Sensors
 
+> **Note:** Smart sensors have been deprecated as of Airflow 2.2.4. It is generally recommended to use deferrable operators instead.
+
 [Smart sensors](https://airflow.apache.org/docs/apache-airflow/stable/concepts/smart-sensors.html) are a relatively new feature released with Airflow 2.0, where sensors are executed in batches using a centralized process. This eliminates a major drawback of classic sensors, which use one process per sensor and therefore can consume considerable resources at scale for longer running tasks. With smart sensors, sensors in your DAGs are registered to the metadata database, and then a separate DAG fetches those sensors and manages processing them. 
 
 ![Smart Sensors](https://assets2.astronomer.io/main/guides/sensors-101/smart_sensors_architecture.png)
 
-Note that smart sensors are considered a beta feature, and so they might be changed in future versions of Airflow. They are somewhat complex to implement, and not very widely used to-date. They are also generally less preferable to deferrable operators (more on these in the section below), which are more flexible. For these reasons, we recommend using smart sensors only to advanced Airflow users who are running many sensors.
+Note that smart sensors were considered a beta feature, and have been deprecated as of Airflow 2.2.4. They are somewhat complex to implement, and not very widely used to-date. They are also generally less preferable to deferrable operators (more on these in the section below), which are more flexible.
 
-To use smart sensors, you must be using Airflow 2.0+. You can then enable smart sensors using the following steps:
+If you are going to use smart sensors with an applicable Airflow version, you can enable them using the following steps:
 
 1. Update your Airflow config with the following environment variables. If you're using Astronomer, you can add them to your Dockerfile with the code below.
 
