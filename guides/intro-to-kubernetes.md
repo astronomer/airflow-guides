@@ -21,11 +21,11 @@ However, applications cannot be developed this way without an abstraction to man
 
 The most popular options for container orchestration tools right now are Kubernetes, Docker Swarm, and Apache Mesos. As a whole, Kubernetes  has the most community support and is the most popular by a significant margin. Regardless, we'll compare the three here, as the best option for container orchestration is largely contingent on your use case.
 
-**Kubernetes** is a powerful and highly extensible orchestrator. though it comes with its own vocabulary and complexities, it has the most community support (with growing corporate support from Google, Amazon, Microsoft, and others).
+**Kubernetes** is a powerful and highly extensible orchestrator. Though it comes with its own vocabulary and complexities, it has the most community support (with growing corporate support from Google, Amazon, Microsoft, and others).
 
 **Docker Swarm** is very simple to set up, but is not as robust as Kubernetes. It's a good option if simplicity is desired and your services are limited to those provided by Docker Compose.
 
-**Apache Mesos** is more suited for large data centers where multiple complex applications will need to be setup and configured. It's a good option if you're going to need to manage multiple Kubernetes clusters ]within a larger data center. Mesos existed prior to the widespread interest in containerization, and is therefore less geared towards running containers.
+**Apache Mesos** is more suited for large data centers where multiple complex applications will need to be setup and configured. It's a good option if you're going to need to manage multiple Kubernetes clusters within a larger data center. Mesos existed prior to the widespread interest in containerization, and is therefore less geared towards running containers.
 
 The best option should depend on your use case, but Kubernetes has the strongest community support, upward-trending development, and flexibility.
 
@@ -39,7 +39,7 @@ Kubernetes, also known as k8s, is originally an internal project Google that is 
 
 If implementing a modern microservice architecture, containers are probably running across a host of nodes, each with different resources and requirements required to run. Kubernetes provides a common abstraction to deploy, manage, and scale those containers as the application needs. 
 
-As system requirements change, move container workloads in Kubernetes can be moved from one cloud provider or hosting infrastructure to another without changing any application level code.
+As system requirements change, container workloads in Kubernetes can be moved from one cloud provider or hosting infrastructure to another without changing any application level code.
 
 ![move_to_kubes](https://assets.astronomer.io/website/img/guides/move_to_kubes.jpg)
 
