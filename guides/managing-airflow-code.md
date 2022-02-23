@@ -36,7 +36,7 @@ At Astronomer, we use the following project structure (note that this example as
 └── requirements.txt            # For any Python packages
 ```
 
-To create a project with this structure automatically, you can install the [Astronomer CLI](https://docs.astronomer.io/astro/install-cli) and initialize a project with `astro dev init`.
+To create a project with this structure automatically, you can install the [Astro CLI](https://docs.astronomer.io/astro/install-cli) and initialize a project with `astro dev init`.
 
 If you are not running Airflow with Docker or have different requirements for your organization, your project structure may look slightly different. The most important part is choosing a structure that works for your team and keeping it consistent so that anyone working with Airflow can easily transition between projects without having to re-learn a new structure.
 

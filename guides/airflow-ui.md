@@ -11,7 +11,7 @@ tags: ["DAGs", "Airflow UI", "Basics", "XCom", "Tasks", "Connections"]
 
 A notable feature of Apache Airflow is the [UI](https://airflow.apache.org/docs/apache-airflow/stable/ui.html#), which provides insights into your DAGs and DAG Runs. The UI is a useful tool for understanding, monitoring, and troubleshooting your pipelines.
 
-In this guide, we'll walk through an overview of some of the most useful features and visualizations in the Airflow UI. Each section of the guide corresponds to one of the tabs at the top of the Airflow UI. If you're not already using Airflow and want to get it up and running to follow along, check out the [Astronomer CLI](https://docs.astronomer.io/astro/install-cli) to quickly run Airflow on your local machine. 
+In this guide, we'll walk through an overview of some of the most useful features and visualizations in the Airflow UI. Each section of the guide corresponds to one of the tabs at the top of the Airflow UI. If you're not already using Airflow and want to get it up and running to follow along, check out the [Astro CLI](https://docs.astronomer.io/astro/install-cli) to quickly run Airflow on your local machine. 
 
 > Note: This guide focuses on the Airflow 2 UI, which was significantly redesigned compared to previous Airflow versions. If you haven't upgraded yet, check out this guide on [getting started with Airflow 2.0](https://www.astronomer.io/guides/get-started-airflow-2).
 
