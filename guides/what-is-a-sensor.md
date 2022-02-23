@@ -110,7 +110,7 @@ Sensors are easy to implement, but there are a few things to keep in mind when u
 
 ![Smart Sensors](https://assets2.astronomer.io/main/guides/sensors-101/smart_sensors_architecture.png)
 
-Note that smart sensors were considered a beta feature, and have been deprecated as of Airflow 2.2.4. They are somewhat complex to implement, and not very widely used to-date. They are also generally less preferable to deferrable operators (more on these in the section below), which are more flexible.
+Note that smart sensors have been deprecated since Airflow 2.2.4. They are somewhat complex to implement and not very widely used to-date. They are also generally less preferable to deferrable operators (more on these in the section below), which are more flexible.
 
 If you are going to use smart sensors with an applicable Airflow version, you can enable them using the following steps:
 
