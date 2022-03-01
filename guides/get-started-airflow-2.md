@@ -1,6 +1,6 @@
 ---
 title: "Get Started with Apache Airflow 2.0"
-description: "Test Apache Airflow 2.0 on your local machine with the Astronomer CLI."
+description: "Test Apache Airflow 2.0 on your local machine with the Astro CLI."
 date: 2020-12-17T00:00:00.000Z
 slug: "get-started-airflow-2"
 heroImagePath: "https://assets2.astronomer.io/main/guides/getting-started-airflow-2.png"
@@ -13,28 +13,26 @@ If you'd like to test Airflow 2.0 on your local machine, Astronomer's [open-sour
 
 Read below for guidelines.
 
-> **Note:** If you're an Astronomer user looking to upgrade an Airflow Deployment on Astronomer to 2.0, refer to [Upgrade to Apache Airflow 2.0 on Astronomer](https://www.astronomer.io/docs/cloud/stable/customize-airflow/upgrade-to-airflow-2).
+## Step 1: Install or Upgrade the Astro CLI
 
-## Step 1: Install or Upgrade the Astronomer CLI
+The [Astro CLI](https://docs.astronomer.io/astro/install-cli) is the easiest way to run Apache Airflow on your machine. From the CLI, you can establish a local testing environment regardless of where you'll be deploying to from there.
 
-The [Astronomer CLI](https://github.com/astronomer/astro-cli) is the easiest way to run Apache Airflow on your machine. From the CLI, you can establish a local testing environment regardless of where you'll be deploying to from there.
-
-There are two ways to install any version of the Astronomer CLI:
+There are two ways to install any version of the Astro CLI:
 
 - cURL
 - [Homebrew](https://brew.sh/)
 
-> **Note:** If you already have the Astronomer CLI installed, make sure you're running `v0.23.2` or above. To check, run `$ astro version`.
+> **Note:** If you already have the Astro CLI installed, make sure you're running `v0.23.2` or above. To check, run `$ astro version`.
 >
 > If you're running an earlier version, follow the install steps below to upgrade.
 
 ### Prerequisites
 
-To use the Astronomer CLI, make sure you have [Docker](https://www.docker.com/) (v18.09 or higher) installed and running on your machine.
+To use the Astro CLI, make sure you have [Docker](https://www.docker.com/) (v18.09 or higher) installed and running on your machine.
 
 ### Install or Upgrade the CLI via cURL
 
-To install or upgrade to the latest version of the Astronomer CLI via cURL, run:
+To install or upgrade to the latest version of the Astro CLI via cURL, run:
 
 ```bash
 $ curl -ssl https://install.astronomer.io | sudo bash
@@ -44,13 +42,13 @@ $ curl -ssl https://install.astronomer.io | sudo bash
 
 ### Install or Upgrade the CLI via Homebrew
 
-To install or upgrade to the latest version of the Astronomer CLI via [Homebrew](https://brew.sh/), run:
+To install or upgrade to the latest version of the Astro CLI via [Homebrew](https://brew.sh/), run:
 
 ```bash
 $ brew install astronomer/tap/astro
 ```
 
-For more information, refer to the [Astronomer CLI README](https://github.com/astronomer/astro-cli#latest-version).
+For more information, refer to the [Astro CLI README](https://github.com/astronomer/astro-cli#latest-version).
 
 ## Step 2: Initialize an Airflow Project
 
@@ -90,7 +88,7 @@ $ astro dev start
 
 This command spins up 3 Docker containers on your machine, 1 each for the Airflow Webserver, Scheduler, and Postgres components.
 
-> **Note:** If you’re running the Astronomer CLI with the [buildkit](https://docs.docker.com/develop/develop-images/build_enhancements/) feature enabled in Docker, you may see an error (`buildkit not supported by daemon`). Check out [this forum post](https://forum.astronomer.io/t/buildkit-not-supported-by-daemon-error-command-docker-build-t-airflow-astro-bcb837-airflow-latest-failed-failed-to-execute-cmd-exit-status-1/857) for the suggested resolution.
+> **Note:** If you’re running the Astro CLI with the [buildkit](https://docs.docker.com/develop/develop-images/build_enhancements/) feature enabled in Docker, you may see an error (`buildkit not supported by daemon`). Check out [this forum post](https://forum.astronomer.io/t/buildkit-not-supported-by-daemon-error-command-docker-build-t-airflow-astro-bcb837-airflow-latest-failed-failed-to-execute-cmd-exit-status-1/857) for the suggested resolution.
 
 ## Step 5: Access the Airflow 2.0 UI
 

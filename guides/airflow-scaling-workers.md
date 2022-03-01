@@ -31,7 +31,7 @@ The reason Airflow has so many knobs at different levels is that, as an agnostic
 
 Environment-level settings are those that impact your entire Airflow environment (all DAGs). They all have default values which can be overridden by setting the appropriate environment variable or modifying your `airflow.cfg` file. Generally, all default values can be found in the [Airflow Configuration Reference](https://airflow.apache.org/docs/apache-airflow/stable/configurations-ref.html). To check current values for an existing Airflow environment, go to **Admin** > **Configurations** in the Airflow UI. For more information, read [Setting Configuration Options](https://airflow.apache.org/docs/apache-airflow/stable/howto/set-config.html) in the Apache Airflow documentation.
 
-> **Note:** If you're running Airflow on Astronomer, you should modify these parameters via Astronomer environment variables. For more information, read [Environment Variables on Astronomer](https://www.astronomer.io/docs/cloud/stable/deploy/environment-variables).
+> **Note:** If you're running Airflow on Astronomer, you should modify these parameters via Astronomer environment variables. For more information, read [Environment Variables on Astronomer](https://docs.astronomer.io/astro/environment-variables).
 
 You should modify environment-level settings if you want to tune performance across *all* of the DAGs in your Airflow environment. This is particularly relevant if you want your DAGs to run adequately on your supporting infrastructure. Specifically, the following settings are relevant:
 

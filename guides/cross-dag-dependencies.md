@@ -252,13 +252,13 @@ Dependencies can be viewed in the UI by going to `Browse` → `DAG Dependencies`
 
 ## Cross-Deployment Dependencies
 
-Sometimes it may be necessary to implement cross-DAG dependencies where the DAGs do not exist in the same Airflow deployment. The `TriggerDagRunOperator` and `ExternalTaskSensor` methods described above are designed to work with DAGs in the same Airflow environment, so they are not ideal for cross-Airflow deployments. The Airflow API, on the other hand, is perfect for this use case. In this section, we'll focus on how to implement this method on the Astronomer platform, but the general concepts will likely be similar wherever your Airflow environments are deployed.
+Sometimes it may be necessary to implement cross-DAG dependencies where the DAGs do not exist in the same Airflow deployment. The `TriggerDagRunOperator` and `ExternalTaskSensor` methods described above are designed to work with DAGs in the same Airflow environment, so they are not ideal for cross-Airflow deployments. The Airflow API, on the other hand, is perfect for this use case. In this section, we'll focus on how to implement this method on Astro, but the general concepts will likely be similar wherever your Airflow environments are deployed.
 
-### Cross-Deployment Dependencies on Astronomer
+### Cross-Deployment Dependencies with Astronomer
 
-To implement cross-DAG dependencies on two different Airflow environments on the Astronomer platform, we can follow the same general steps for triggering a DAG using the Airflow API described above. It may be helpful to first read our documentation on [making requests to the Airflow API](https://www.astronomer.io/docs/enterprise/v0.25/customize-airflow/airflow-api#overview) from Astronomer. When you're ready to implement a cross-deployment dependency, follow these steps:
+To implement cross-DAG dependencies on two different Airflow environments on Astro, we can follow the same general steps for triggering a DAG using the Airflow API described above. It may be helpful to first read our documentation on [making requests to the Airflow API](https://docs.astronomer.io/software/airflow-api) from Astronomer. When you're ready to implement a cross-deployment dependency, follow these steps:
 
 1. In the upstream DAG, create a `SimpleHttpOperator` task that will trigger the downstream DAG. Refer to the section above for details on configuring the operator.
-2. In the downstream DAG Airflow environment, [create a Service Account](https://www.astronomer.io/docs/enterprise/v0.25/deploy/ci-cd#step-1-create-a-service-account) and copy the API key.
+2. In the downstream DAG Airflow environment, [create a Service Account](https://docs.astronomer.io/software/ci-cd#step-1-create-a-service-account) and copy the API key.
 3. In the upstream DAG Airflow environment, create an Airflow connection as shown in the Airflow API section above. The Host should be `https://<your-base-domain>/<deployment-release-name>/airflow` where the base domain and deployment release name are from your downstream DAG's Airflow deployment. In the Extras, use `{"Authorization": "api-token"}` where `api-token` is the service account API key you copied in step 2.
 4. Ensure the downstream DAG is turned on, then run the upstream DAG.

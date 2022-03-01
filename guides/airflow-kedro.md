@@ -27,7 +27,7 @@ This makes for a super clean experience for anyone looking to deploy their Kedro
 
 To use the plugin, you'll need the following running on your machine or a fresh virtual environment:
 
-- [The Astronomer CLI](https://www.astronomer.io/docs/cloud/stable/develop/cli-quickstart#step-1-install-the-astronomer-cli)
+- [The Astro CLI](https://docs.astronomer.io/astro/install-cli)
 - [Kedro](https://github.com/quantumblacklabs/kedro)
 - [The `kedro-airflow` Plugin](https://github.com/quantumblacklabs/kedro-airflow)
 - [Docker](https://docs.docker.com/docker-for-mac/install/)

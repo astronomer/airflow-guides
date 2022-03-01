@@ -11,7 +11,7 @@ tags: ["DAGs", "Integrations", "Operators"]
 
 A key question when using any data orchestration tool is "How do I know if something has gone wrong?". Airflow users always have the option to check the UI to see the status of their DAGs, but this is an inefficient way of managing errors systematically, especially if certain failures need to be addressed promptly or by multiple team members. Fortunately, Airflow has built-in notification mechanisms that can be leveraged to configure error notifications in a way that works for your team. 
 
-In this guide, we'll cover the basics of Airflow notifications and how to set up common notification mechanisms including email, Slack, and SLAs. We'll also discuss how to make the most of Airflow alerting when using the Astronomer platform.
+In this guide, we'll cover the basics of Airflow notifications and how to set up common notification mechanisms including email, Slack, and SLAs. We'll also discuss how to make the most of Airflow alerting when using Astro.
 
 ## Airflow Notification Basics
 
@@ -220,7 +220,7 @@ smtp_mail_from = noreply@astronomer.io
 
 You can also set these values using environment variables. In this case, all parameters are preceded by `AIRFLOW__SMTP__`, consistent with Airflow environment variable naming convention. For example, `smtp_host` can be specified by setting the `AIRFLOW__SMTP__SMTP_HOST` variable. For more on Airflow email configuration, check out the [Airflow documentation](https://airflow.apache.org/docs/apache-airflow/stable/howto/email-config.html). 
 
-> Note: If you are running on the Astronomer platform, you can set up SMTP using environment variables since the `airflow.cfg` cannot be directly edited. For more on email alerting on the Astronomer platform, see the 'Notifications on Astronomer' section below.
+> Note: If you are using Astro, you can set up SMTP using environment variables since the `airflow.cfg` cannot be directly edited. For more on email alerting on Astro, see the 'Notifications on Astronomer' section below.
 
 ### Customizing Email Notifications
 
@@ -405,6 +405,6 @@ Note that there is no functionality to disable email alerting for SLAs. If you h
 
 ## Notifications on Astronomer
 
-If you are running Airflow on the Astronomer platform, you have multiple options for managing your Airflow notifications. All of the methods above for sending task notifications from Airflow are easily implemented on Astronomer. Our documentation [here](https://www.astronomer.io/docs/enterprise/v0.25/customize-airflow/airflow-alerts) discusses how to leverage these notifications on the platform, including how to set up SMTP to enable email alerts.
+If you are running Airflow with Astronomer Software, you have multiple options for managing your Airflow notifications. All of the methods above for sending task notifications from Airflow are easily implemented on Astronomer. Our documentation [here](https://docs.astronomer.io/software/airflow-alerts) discusses how to leverage these notifications on the platform, including how to set up SMTP to enable email alerts.
 
-Astronomer also provides deployment and platform-level alerting to notify you if any aspect of your Airflow or Astronomer infrastructure is unhealthy. For more on that, including how to customize alerts for Enterprise platform users, check out our documentation [here](https://www.astronomer.io/docs/enterprise/v0.25/monitor/platform-alerts).
+Astronomer also provides deployment and platform-level alerting to notify you if any aspect of your Airflow or Astronomer infrastructure is unhealthy. For more on that, including how to customize alerts for Software users, check out our documentation [here](https://docs.astronomer.io/software/platform-alerts).

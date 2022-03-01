@@ -134,7 +134,7 @@ CALL sp_pi_squared();
 
 `sp_pi()` and `sp_pi_squared()` are two stored procedures that we have defined in our Snowflake instance. Note that the SQL in these files could be any type of query you need to execute; sprocs are used here just as an example.
 
-Finally, we need to set up a connection to Snowflake. There are a few ways to manage connections using Astronomer, including [IAM roles](https://www.astronomer.io/docs/enterprise/stable/customize-airflow/integrate-iam), [secrets managers](https://www.astronomer.io/docs/enterprise/stable/customize-airflow/secrets-backend), and the [Airflow API](https://www.astronomer.io/docs/enterprise/stable/customize-airflow/airflow-api). For this example, we set up a connection using the Airflow UI. In this DAG our connection is called `snowflake`, and the connection should look something like this:
+Finally, we need to set up a connection to Snowflake. There are a few ways to manage connections using Astronomer, including [IAM roles](https://docs.astronomer.io/software/integrate-iam), [secrets managers](https://docs.astronomer.io/software/secrets-backend), and the [Airflow API](https://docs.astronomer.io/software/airflow-api). For this example, we set up a connection using the Airflow UI. In this DAG our connection is called `snowflake`, and the connection should look something like this:
 
 ![Snowflake Connection](https://assets2.astronomer.io/main/guides/sql-tutorial/snowflake_connection.png)
 
