@@ -1315,6 +1315,11 @@ AzureBlobs
 TaskInstance
 TaskInstances
 SequentialExecutor
+Gunicorn
+MsSQL
+CeleryKubernetes
+Dask
+preconfigured
  - guides/airflow-database.md
 public.ab_permission
 public.ab
