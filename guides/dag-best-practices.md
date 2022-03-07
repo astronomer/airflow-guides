@@ -58,7 +58,7 @@ A better way of implementing this is by using an Airflow variable:
 yesterday = {{ yesterday_ds_nodash }}
 ```
 
-You can use on of Airflow's many built-in [variables and macros](https://airflow.apache.org/docs/apache-airflow/stable/macros-ref.html), or you can create your own templated field to pass in information at runtime. For more on this topic check out our guide on [templating and macros in Airflow](https://www.astronomer.io/guides/templating).
+You can use one of Airflow's many built-in [variables and macros](https://airflow.apache.org/docs/apache-airflow/stable/macros-ref.html), or you can create your own templated field to pass in information at runtime. For more on this topic check out our guide on [templating and macros in Airflow](https://www.astronomer.io/guides/templating).
 
 
 ### Incremental Record Filtering
