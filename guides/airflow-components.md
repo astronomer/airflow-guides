@@ -29,9 +29,9 @@ In addition to these core components, there are a few situational components tha
 - **Worker:** The process that executes tasks, as defined by the executor. Depending on which executor you choose, you may or may not have workers as part of your Airflow infrastructure.
 - **[Triggerer](https://airflow.apache.org/docs/apache-airflow/stable/concepts/deferring.html):** A separate process which supports [deferrable operators](https://www.astronomer.io/guides/deferrable-operators). This component is optional and must be run separately. It is needed only if you plan to use deferrable (or "asynchronous") operators. 
 
-In the following diagram, you can see how all of these components work together to schedule your DAGs and run your tasks:
+In the following diagram taken from the [Airflow documentation](https://airflow.apache.org/docs/apache-airflow/stable/concepts/overview.html), you can see how all of these components work together:
 
-![title](https://assets2.astronomer.io/main/guides/airflow_component_relationship_fixed.png)
+![Architecture](https://assets2.astronomer.io/main/guides/airflow-components/airflow_component_architecture.png)
 
 ## Executors
 
