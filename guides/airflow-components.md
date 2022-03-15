@@ -15,17 +15,17 @@ In this guide, we'll describe Airflow's core components and touch on managing Ai
 
 ## Core Components
 
-Apache Airflow has three core components that are running at all times: 
+Apache Airflow has four core components that are running at all times: 
 
 - **Webserver:** A Flask server running with Gunicorn that serves the [Airflow UI](https://www.astronomer.io/guides/airflow-ui/).
 - **[Scheduler](https://airflow.apache.org/docs/apache-airflow/stable/concepts/scheduler.html):** A Daemon responsible for scheduling jobs. This is a multi-threaded Python process that determines what tasks need to be run, when they need to be run, and where they are run.
 - **[Database:](https://airflow.apache.org/docs/apache-airflow/stable/howto/set-up-database.html)** A database where all DAG and task metadata are stored. This is typically a Postgres database, but MySQL, MsSQL, and SQLite are also supported.
+- **[Executor](https://airflow.apache.org/docs/apache-airflow/stable/executor/index.html):** The mechanism for running tasks. An executor is running at all times Airflow is up (it runs within the Scheduler process). In the section below, we walk through the different executors available and how to choose between them.
 
 If you run Airflow locally using the [Astro CLI](https://docs.astronomer.io/astro/install-cli), you'll notice that when you start Airflow using `astrocloud dev start`, it will spin up three containers, one for each of the components listed above.
 
 In addition to these core components, there are a few situational components that are used only to run tasks or make use of certain features:
 
-- **[Executor](https://airflow.apache.org/docs/apache-airflow/stable/executor/index.html):** The mechanism for running tasks. An executor is running at all times Airflow is up (it runs within the Scheduler process). In the section below, we walk through the different executors available and how to choose between them.
 - **Worker:** The process that executes tasks, as defined by the executor. Depending on which executor you choose, you may or may not have workers as part of your Airflow infrastructure.
 - **[Triggerer](https://airflow.apache.org/docs/apache-airflow/stable/concepts/deferring.html):** A separate process which supports [deferrable operators](https://www.astronomer.io/guides/deferrable-operators). This component is optional and must be run separately. It is needed only if you plan to use deferrable (or "asynchronous") operators. 
 
