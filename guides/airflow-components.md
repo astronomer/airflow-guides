@@ -1,117 +1,67 @@
 ---
 title: "Airflow's Components"
-description: "How all of Apache Airflow's components fit together."
+description: "Learn about the core components of Apache Airflow's infrastructure."
 date: 2018-05-21T00:00:00.000Z
 slug: "airflow-components"
 heroImagePath: null
-tags: ["Components", "Executors", "Airflow UI", "Database", "Basics"]
+tags: ["Components", "Executors", "Database", "Basics"]
 ---
+
+## Overview
+
+When working with Airflow, it is important to understand its underlying components of its infrastructure. Even if you mostly interact with Airflow as a DAG author, knowing which components are "under the hood" are and why they are needed can be helpful for running developing your DAGs, debugging, and running Airflow successfully.
+
+In this guide, we'll describe Airflow's core components and touch on managing Airflow infrastructure and high availability. Note that this guide is focused on the components and features of Airflow 2.0+. Some of the components and features mentioned here are not available in earlier versions of Airflow.
 
 ## Core Components
 
-Apache Airflow consists of 4 core components:
+Apache Airflow has four core components that are running at all times: 
 
-**Webserver** Airflow's UI.
+- **Webserver:** A Flask server running with Gunicorn that serves the [Airflow UI](https://www.astronomer.io/guides/airflow-ui/).
+- **[Scheduler](https://airflow.apache.org/docs/apache-airflow/stable/concepts/scheduler.html):** A Daemon responsible for scheduling jobs. This is a multi-threaded Python process that determines what tasks need to be run, when they need to be run, and where they are run.
+- **[Database](https://airflow.apache.org/docs/apache-airflow/stable/howto/set-up-database.html):** A database where all DAG and task metadata are stored. This is typically a Postgres database, but MySQL, MsSQL, and SQLite are also supported.
+- **[Executor](https://airflow.apache.org/docs/apache-airflow/stable/executor/index.html):** The mechanism for running tasks. An executor is running within the Scheduler whenever Airflow is up. In the section below, we walk through the different executors available and how to choose between them.
 
-At its core, this is just a Flask app that displays the status of your jobs and provides an interface to interact with the database and reads logs from a remote file store (S3, Google Cloud Storage, AzureBlobs, ElasticSearch etc.).
+If you run Airflow locally using the [Astro CLI](https://docs.astronomer.io/astro/install-cli), you'll notice that when you start Airflow using `astrocloud dev start`, it will spin up three containers, one for each of the components listed above.
 
-**Scheduler** This is responsible for scheduling jobs.
+In addition to these core components, there are a few situational components that are used only to run tasks or make use of certain features:
 
-This is a multi-threaded Python process that uses the DAG object with the state of tasks in the metadata database to decide what tasks need to be run, when they need to be run, and where they are run.
+- **Worker:** The process that executes tasks, as defined by the executor. Depending on which executor you choose, you may or may not have workers as part of your Airflow infrastructure.
+- **[Triggerer](https://airflow.apache.org/docs/apache-airflow/stable/concepts/deferring.html):** A separate process which supports [deferrable operators](https://www.astronomer.io/guides/deferrable-operators). This component is optional and must be run separately. It is needed only if you plan to use deferrable (or "asynchronous") operators. 
 
-**Executor** The mechanism by which work actually gets done.
+In the following diagram taken from the [Airflow documentation](https://airflow.apache.org/docs/apache-airflow/stable/concepts/overview.html), you can see how all of these components work together:
 
-There are several executors, each with strengths and weaknesses.
+![Architecture](https://assets2.astronomer.io/main/guides/airflow-components/airflow_component_architecture.png)
 
-**Metadata Database** A database (usually PostgresDB or MySql, but can be anything with SQLAlchemy support) that determines how the other components interact. The scheduler stores and updates task statuses, which the Webserver then uses to display job information.
+## Executors
 
-![title](https://assets2.astronomer.io/main/guides/airflow_component_relationship_fixed.png)
+Airflow users can choose from multiple available executors or [write a custom one](https://airflow.apache.org/docs/apache-airflow/stable/executor/index.html). Each executor excels in specific situations:
 
-## How does work get scheduled?
+- **[SequentialExecutor](https://airflow.apache.org/docs/apache-airflow/stable/executor/sequential.html):** Executes tasks sequentially inside the Scheduler process, with no parallelism or concurrency. This executor is rarely used in practice, but it is the default in Airflow's configuration.
+- **[LocalExecutor](https://airflow.apache.org/docs/apache-airflow/stable/executor/local.html):** Executes tasks locally inside the Scheduler process, but supports parallelism and hyperthreading. This executor is a good fit for testing Airflow on a local machine or on a single node.
+- **[CeleryExecutor](https://airflow.apache.org/docs/apache-airflow/stable/executor/celery.html):** Uses a Celery backend (such as Redis, RabbitMq, or another message queue system) to coordinate tasks between preconfigured workers. This executor is ideal if you have a high volume of shorter running tasks or a more consistent task load.
+- **[KubernetesExecutor](https://airflow.apache.org/docs/apache-airflow/stable/executor/kubernetes.html):** Calls the Kubernetes API to create a separate pod for each task to run, enabling users to pass in custom configurations for each of their tasks and use resources efficiently. This executor is great in a few different contexts: 
 
-Once the scheduler is started:
+    - You have long running tasks that you don't want to be interrupted by code deploys or Airflow updates
+    - Your tasks require very specific resource configurations
+    - Your tasks run infrequently, and you don't want to incur worker resource costs when they aren't running.
 
-1. The scheduler "taps" the _dags_ folder and instantiates all DAG objects in the metadata databases. Depending on the configuration, each DAG gets a configurable number of processes.
+Note that there are also a couple of other executors that we don't cover here, including the [CeleryKubernetes Executor](https://airflow.apache.org/docs/apache-airflow/stable/executor/celery_kubernetes.html) and the [Dask Executor](https://airflow.apache.org/docs/apache-airflow/stable/executor/dask.html). These are considered more experimental and are not as widely adopted as the other executors covered here.
 
-  **Note**: This means all top level code (i.e. anything that isn't defining the DAG) in a DAG file will get run each scheduler heartbeat. Try to avoid top level code to your DAG file unless absolutely necessary.
+## Managing Airflow Infrastructure
 
-1. Each process parses the DAG file and creates the necessary DagRuns based on the scheduling parameters of each DAG's tasks. A TaskInstance is instantiated for each task that needs to be executed. These TaskInstances are set to `Scheduled` in the metadata database.
+All of the components discussed above should be run on supporting infrastructure appropriate for your scale and use case. Running Airflow on a local computer (e.g. using the [Astro CLI](https://docs.astronomer.io/astro/install-cli)) can be great for testing and DAG development, but is likely not sufficient to support DAGs running in production. 
 
-1. The primary scheduler process queries the database for all tasks in the `SCHEDULED` state and sends them to the executors (with state changed to `QUEUED`).
+There are many resources out there to help with managing Airflow's components, including:
 
-1. Depending on the execution setup, workers will pull tasks from the queue and start executing it. Tasks that are pulled off of the queue are changed from "queued" to "running."
+- OSS [Production Docker Images](https://airflow.apache.org/docs/apache-airflow/stable/installation/index.html#using-production-docker-images)
+- OSS [Official Helm Chart](https://airflow.apache.org/docs/apache-airflow/stable/installation/index.html#using-official-airflow-helm-chart)
+- [Astro Cloud](https://www.astronomer.io/product/) managed Airflow
 
-1. If a task finishes, the worker then changes the status of that task to its final state (finished, failed, etc.). The scheduler then reflects this change in the metadata database.
+Scalability is also important to consider when setting up your production Airflow. For more on this, check out our [Scaling Out Airflow guide](https://www.astronomer.io/guides/airflow-scaling-workers/).
 
-```python
-# https://github.com/apache/incubator-airflow/blob/2d50ba43366f646e9391a981083623caa12e8967/airflow/jobs.py#L1386
+## High Availability
 
-def _process_dags(self, dagbag, dags, tis_out):
-        """
-        Iterates over the dags and processes them. Processing includes:
-        1. Create appropriate DagRun(s) in the DB.
+Airflow can be made highly available, which makes it suitable for large organizations with critical production workloads. Airflow 2 introduced a highly available Scheduler, meaning that you can run multiple Scheduler replicas in an active-active model. This makes the Scheduler more performant and resilient, eliminating a single point of failure within your Airflow environment. 
 
-        2. Create appropriate TaskInstance(s) in the DB.
-
-        3. Send emails for tasks that have missed SLAs.
-
-        :param dagbag: a collection of DAGs to process
-        :type dagbag: models.DagBag
-        :param dags: the DAGs from the DagBag to process
-        :type dags: DAG
-        :param tis_out: A queue to add generated TaskInstance objects
-        :type tis_out: multiprocessing.Queue[TaskInstance]
-        :return: None
-        """
-        for dag in dags:
-            dag = dagbag.get_dag(dag.dag_id)
-            if dag.is_paused:
-                self.log.info("Not processing DAG %s since it's paused", dag.dag_id)
-                continue
-
-            if not dag:
-                self.log.error("DAG ID %s was not found in the DagBag", dag.dag_id)
-                continue
-
-            self.log.info("Processing %s", dag.dag_id)
-
-            dag_run = self.create_dag_run(dag)
-            if dag_run:
-                self.log.info("Created %s", dag_run)
-            self._process_task_instances(dag, tis_out)
-            self.manage_slas(dag)
-
-        models.DagStat.update([d.dag_id for d in dags])
-```
-
-## Controlling Component Interactions
-
-The schedule at which these components interact can be set through airflow.cfg. This file has tuning for several airflow settings that can be optimized for a use case.
-
-This file is well documented, but a few notes:
-
-### Executors
-
-By default, Airflow can use the LocalExecutor, SequentialExecutor, the CeleryExecutor, or the KubernetesExecutor.
-
-- The SequentialExecutor just executes tasks sequentially, with no parallelism or concurrency. It is good for a test environment or when debugging deeper Airflow bugs.
-
-- The LocalExecutor supports parallelism and hyperthreading and is a good fit for Airflow running on local machine or a single node.
-
-- The CeleryExecutor is the preferred method to run a distributed Airflow cluster. It requires Redis, RabbitMq, or another message queue system to coordinate tasks between workers.
-
-- The KubernetesExecutor, which was introduced in Airflow 1.10, calls the Kubernetes API to create a temporary pod for each task to run, enabling users to pass in custom configurations for each of their tasks and use resources efficiently.
-
-### Parallelism
-
-The `parallelism`, `dag_concurrency` and `max_active_runs_per_dag` settings can be tweaked to determine how many tasks can be executed at once.
-
-It is important to note that `parallelism` determines how many task instances can run in parallel in the executor, while `dag_concurrency` determines the maximum number of tasks that can run within each DAG. These two numbers should be fine tuned together when optimizing an Airflow deployment, with the ratio depending on the number of DAGs.
-
-`max_active_runs_per_dag` determines how many DagRuns across time can be scheduled for each particular DAG. This number should depend on how how long DAGs take to execute, their schedule interval, and scheduler performance.
-
-### Scheduler Settings
-
-`job_heartbeat_sec` determines the frequency at which the scheduler listens for external kill signals,  while `scheduler_heartbeat_sec` looks for new tasks.
-
-As the cluster grows in size, increasing the `scheduler_heartbeat_sec` gets increasingly expensive. Depending on the infrastructure and how long tasks generally take, and how the scheduler performs, consider increasing this number from the default.
+Note that running multiple Schedulers does come with some extra requirements for the database. For more on how to make use of the HA Scheduler, check out the [Apache Airflow documentation](https://airflow.apache.org/docs/apache-airflow/stable/concepts/scheduler.html#running-more-than-one-scheduler).
