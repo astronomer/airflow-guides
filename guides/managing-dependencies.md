@@ -9,7 +9,7 @@ tags: ["Best Practices", "Dependencies", "Basics"]
 
 ## Overview
 
-[Dependencies]((https://airflow.apache.org/docs/apache-airflow/stable/concepts/tasks.html#relationships)) are one of Airflow's most powerful and popular features. In Airflow, your pipelines are defined as Directed, Acyclic Graphs (DAGs). If each task is a node in that graph, then dependencies are the directed edges that determine how you can move through the graph. Because of this, dependencies are key to following data engineering best practices because they help you define flexible pipelines with atomic tasks.
+[Dependencies](https://airflow.apache.org/docs/apache-airflow/stable/concepts/tasks.html#relationships) are one of Airflow's most powerful and popular features. In Airflow, your pipelines are defined as Directed, Acyclic Graphs (DAGs). If each task is a node in that graph, then dependencies are the directed edges that determine how you can move through the graph. Because of this, dependencies are key to following data engineering best practices because they help you define flexible pipelines with atomic tasks.
 
 Throughout this guide, we'll use the following terms to describe task dependencies:
 
