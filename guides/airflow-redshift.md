@@ -9,11 +9,13 @@ tags: ["Database", "SQL", "DAGs", "Integrations", "AWS"]
 >Note: All code in this guide can be found [in this GitHub repo](https://github.com/astronomer/cs-tutorial-redshift). 
 
 ### Install Required pip Dependency
+
 Before you can use all the Airflow components for Redshift, you will need to ensure that you have the Amazon 
 Provider installed on your Airflow deployment. To do this, simply add `apache-airflow-providers-amazon` to your 
 `requirements.txt` file.
 
 ### Add Required Connections
+
 Assuming you have a local sandbox running to develop Redshift pipelines, you'll need to add a connection in the Airflow 
 UI to authenticate to Redshift. In the Airflow UI, navigate to *Admin >> Connections* and add the following connections:
  
@@ -57,10 +59,12 @@ UI to authenticate to Redshift. In the Airflow UI, navigate to *Admin >> Connect
         - `redshift:ResumeCluster`
 
 ### Underlying Data
+
 It is worth noting that these examples will be using the Sample database (TICKIT) provided by AWS. For more details 
 on the underlying data, please see Amazon's documentation [here](https://docs.aws.amazon.com/redshift/latest/dg/c_sampledb.html).
 
 ### Using the RedshiftSQLOperator
+
 With an established connection to Redshift, it's time to explore the 
 [RedshiftSQLOperator](https://registry.astronomer.io/providers/amazon/modules/redshiftsqloperator)! The 
 RedshiftSQLOperator is used to run one or multiple SQL statements against a Redshift Cluster. The below example shows 
@@ -132,6 +136,7 @@ practices (particularly around the concept of
 [idempotency](https://airflow-tutorial.readthedocs.io/en/latest/airflow-intro.html#idempotency)).
 
 ### Using the S3ToRedshiftOperator
+
 The [S3ToRedshiftOperator](https://registry.astronomer.io/providers/amazon/modules/s3toredshiftoperator) executes a 
 `COPY` command to load files from s3 to Redshift. The example below demonstrates how to use this Operator:
 
@@ -174,6 +179,7 @@ documentation for the `COPY` commmand
 the delimiter for the blob has been specified as a comma (this overrides the default of a pipe delimiter). 
 
 ### Using the RedshiftToS3Operator
+
 The [RedshiftToS3Operator](https://registry.astronomer.io/providers/amazon/modules/redshifttos3operator) executes an 
 `UNLOAD` command to s3 as a CSV with headers.
 
@@ -219,7 +225,8 @@ blob has been specified as a comma, the format of the blob has been specified as
 overwritten, data will *not* be written in parallel across multiple files, and  a header line containing column names 
 will be included at the top of the file.
 
-### Pause and Resume a Redshift Cluster from Airflow 
+### Pause and Resume a Redshift Cluster from Airflow
+
 Amazon Redshift supports the ability to pause and resume a cluster, 
 allowing customer to easily suspend on-demand billing while the cluster is not being used. For example, a cluster used 
 for development can now have compute billing suspended when not in use. Read more on this from AWS [here](https://aws.amazon.com/about-aws/whats-new/2020/03/amazon-redshift-launches-pause-resume/#:~:text=Amazon%20Redshift%20now%20supports%20the,suspended%20when%20not%20in%20use.).
