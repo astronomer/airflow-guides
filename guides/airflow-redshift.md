@@ -50,7 +50,8 @@ UI to authenticate to Redshift. In the Airflow UI, navigate to *Admin >> Connect
   ```
 
 
-**Additional Notes:** 
+**Additional Notes:**
+
 - To authenticate to Redshift using IAM Authentication or Okta Identity Provider, see 
   [this doc](https://airflow.apache.org/docs/apache-airflow-providers-amazon/stable/connections/redshift.html) 
   for instructions
@@ -235,6 +236,7 @@ Amazon Redshift supports the ability to pause and resume a cluster,
 allowing customer to easily suspend on-demand billing while the cluster is not being used. For example, a cluster used 
 for development can now have compute billing suspended when not in use. Read more on this from AWS [here](https://aws.amazon.com/about-aws/whats-new/2020/03/amazon-redshift-launches-pause-resume/#:~:text=Amazon%20Redshift%20now%20supports%20the,suspended%20when%20not%20in%20use.).
 At the time of publishing this guide, there are 3 main components that aide in utilizing this feature.
+
 1. The [RedshiftPauseClusterOperator](https://registry.astronomer.io/providers/amazon/modules/redshiftpauseclusteroperator)
    can be used to pause an AWS Redshift Cluster.
 2. The [RedshiftResumeClusterOperator](https://registry.astronomer.io/providers/amazon/modules/redshiftresumeclusteroperator)
