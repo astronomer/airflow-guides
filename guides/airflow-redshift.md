@@ -23,6 +23,7 @@ UI to authenticate to Redshift. In the Airflow UI, navigate to *Admin >> Connect
   different name from `redshift_default` is used for this connection, then it will have to be specified on the 
   components that require a Redshift connection. Use the following parameters for your new connection (all other fields 
   can be left blank):
+  
   ```yaml
   Connection ID: redshift_default
   Connection Type: Amazon Redshift
@@ -32,10 +33,12 @@ UI to authenticate to Redshift. In the Airflow UI, navigate to *Admin >> Connect
   Password: <YOUR-REDSHIFT-PASSWORD>
   Port: <YOUR-REDSHIFT-PORT> (i.e. 5439)
   ```
+  
 - `aws_default` (this is the default connection that other Airflow AWS components will search for and use). If a 
   different name from `aws_default` is used for this connection, then it will have to be specified on the components 
   that require an AWS connection. Use the following parameters for your new connection (all other fields can be left 
   blank):
+  
   ```yaml
   Connection ID: aws_default
   Connection Type: Amazon Web Services
@@ -45,6 +48,7 @@ UI to authenticate to Redshift. In the Airflow UI, navigate to *Admin >> Connect
     "region_name": "<your-region-name>"
   }
   ```
+
 
 **Additional Notes:** 
 - To authenticate to Redshift using IAM Authentication or Okta Identity Provider, see 
@@ -240,6 +244,7 @@ At the time of publishing this guide, there are 3 main components that aide in u
    
 The following DAG would effectively pause and unpause a Redshift Cluster. The DAG would only be marked as success once
 the cluster has the state of `Available`:
+
 ```python
 from datetime import datetime
 from airflow.models import DAG
