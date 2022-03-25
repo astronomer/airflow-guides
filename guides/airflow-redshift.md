@@ -1,6 +1,6 @@
 ---
 title: "Orchestrating Redshift Operations from Airflow"
-description: "Everything you need to know about setting up a connection to Redshift and using available Redshift components."
+description: "Setting up a connection to Redshift and using available Redshift modules."
 date: 2022-03-21T00:00:00.000Z
 slug: "airflow-redshift"
 tags: ["Database", "SQL", "DAGs", "Integrations", "AWS"]
