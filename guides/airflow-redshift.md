@@ -159,7 +159,7 @@ those values will be injected into the SQL at runtime. The `{{ ds }}` variable i
 Variable](https://airflow.apache.org/docs/apache-airflow/stable/templates-ref.html) that will return the DAG run's 
 logical date as *YYYY-MM-DD*. Using these variables will make your SQL code reusable and on par with DAG writing best
 practices (particularly around the concept of 
-[idempotency](https://airflow-tutorial.readthedocs.io/en/latest/airflow-intro.html#idempotency)).
+[idempotency](https://www.astronomer.io/guides/dag-best-practices#reviewing-idempotency)).
 
 ## Using the S3ToRedshiftOperator
 
