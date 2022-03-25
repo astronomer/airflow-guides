@@ -1,5 +1,5 @@
 ---
-title: "Orchestrate Redshift Operations from Airflow"
+title: "Orchestrating Redshift Operations from Airflow"
 description: "Everything you need to know about setting up a connection to Redshift and using available Redshift components."
 date: 2022-03-21T00:00:00.000Z
 slug: "airflow-redshift"
