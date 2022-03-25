@@ -259,8 +259,9 @@ will be included at the top of the file.
 ## Pause and Resume a Redshift Cluster from Airflow
 
 Amazon Redshift supports the ability to pause and resume a cluster, 
-allowing customer to easily suspend on-demand billing while the cluster is not being used. For example, a cluster used 
-for development can now have compute billing suspended when not in use. Read more on this from AWS [here](https://aws.amazon.com/about-aws/whats-new/2020/03/amazon-redshift-launches-pause-resume/#:~:text=Amazon%20Redshift%20now%20supports%20the,suspended%20when%20not%20in%20use.).
+allowing customers to easily suspend on-demand billing while the cluster isn't being used. A cluster used 
+for development can now have compute billing suspended when not in use. Read more on this from AWS[here](https://aws.amazon.com/about-aws/whats-new/2020/03/amazon-redshift-launches-pause-resume/#:~:text=Amazon%20Redshift%20now%20supports%20the,suspended%20when%20not%20in%20use.).
+You may want your Airflow DAG to pause and unpause a Redshift cluster at times when it isn't being queried or used.  
 At the time of publishing this guide, there are 3 main components that aide in utilizing this feature.
 
 1. The [RedshiftPauseClusterOperator](https://registry.astronomer.io/providers/amazon/modules/redshiftpauseclusteroperator)
