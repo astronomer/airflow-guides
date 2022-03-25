@@ -30,7 +30,7 @@ to your Redshift cluster.
 ### Install Required pip Dependency
 
 Before you can use all the Airflow components for Redshift, you will need to ensure that you have the Amazon 
-Provider installed on your Airflow deployment. If you are working with the Astro CLI, simply add `apache-airflow-providers-amazon` to your 
+Provider installed on your Airflow deployment. To do this, simply add `apache-airflow-providers-amazon` to your 
 `requirements.txt` file.
 
 ### Add Required Connections
