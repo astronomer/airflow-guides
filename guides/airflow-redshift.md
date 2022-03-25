@@ -161,7 +161,7 @@ logical date as *YYYY-MM-DD*. Using these variables will make your SQL code reus
 practices (particularly around the concept of 
 [idempotency](https://airflow-tutorial.readthedocs.io/en/latest/airflow-intro.html#idempotency)).
 
-### Using the S3ToRedshiftOperator
+## Using the S3ToRedshiftOperator
 
 The [S3ToRedshiftOperator](https://registry.astronomer.io/providers/amazon/modules/s3toredshiftoperator) executes a 
 `COPY` command to load files from s3 to Redshift. The example below demonstrates how to use this Operator:
@@ -204,7 +204,7 @@ documentation for the `COPY` commmand
 [here](https://docs.aws.amazon.com/redshift/latest/dg/r_COPY.html#r_COPY-syntax-overview-data-format). In this example, 
 the delimiter for the blob has been specified as a comma (this overrides the default of a pipe delimiter). 
 
-### Using the RedshiftToS3Operator
+## Using the RedshiftToS3Operator
 
 The [RedshiftToS3Operator](https://registry.astronomer.io/providers/amazon/modules/redshifttos3operator) executes an 
 `UNLOAD` command to s3 as a CSV with headers.
@@ -251,7 +251,7 @@ blob has been specified as a comma, the format of the blob has been specified as
 overwritten, data will *not* be written in parallel across multiple files, and  a header line containing column names 
 will be included at the top of the file.
 
-### Pause and Resume a Redshift Cluster from Airflow
+## Pause and Resume a Redshift Cluster from Airflow
 
 Amazon Redshift supports the ability to pause and resume a cluster, 
 allowing customer to easily suspend on-demand billing while the cluster is not being used. For example, a cluster used 
