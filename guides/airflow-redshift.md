@@ -9,6 +9,7 @@ tags: ["Database", "SQL", "DAGs", "Integrations", "AWS"]
 >Note: All code in this guide can be found [in this GitHub repo](https://github.com/astronomer/cs-tutorial-redshift). 
 
 ## Overview
+
 Amazon Redshift is a fully-managed cloud data warehouse. It is capable of analyzing exabytes of data and running complex
 analytical queries, making it the most widely used cloud data warehouse. Developing a dimensional data mart in Redshift
 requires automation and orchestration for repeated queries, data quality checks, and overall cluster operations.
@@ -35,8 +36,9 @@ Provider installed on your Airflow deployment. To do this, simply add `apache-ai
 
 ### Add Required Connections
 
-Assuming you have a local sandbox running to develop Redshift pipelines, you'll need to add a connection in the Airflow 
-UI to authenticate to Redshift. In the Airflow UI, navigate to *Admin >> Connections* and add the following connections:
+You will need to set up your Airflow instance so that it can connect to Redshift. You can do this by adding the following 
+connections in the Airflow UI to authenticate to Redshift. In the Airflow UI, navigate to *Admin >> Connections* and add 
+the following connections:
  
 - `redshift_default` (this is the default connection that Airflow redshift components will search for and use). If a 
   different name from `redshift_default` is used for this connection, then it will have to be specified on the 
