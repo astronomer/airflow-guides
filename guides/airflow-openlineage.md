@@ -28,7 +28,7 @@ If you want to read more on the concept of data lineage and why it’s important
 
 Visually, your data lineage graph might look something like this:
 
-![Untitled](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/32fdbe1c-d9ca-4848-a29e-14fb036a7201/Untitled.png)
+![Lineage Graph](https://assets2.astronomer.io/main/guides/airflow-openlineage/example_lineage_graph.png)
 
 If you are using data lineage, you will likely have a lineage tool that collects lineage metadata, as well as a front end for visualizing the lineage graph. There are paid tools (including Datakin) that provide these services, but in this guide we will focus on the open source options that can be integrated with Airflow: namely OpenLineage (the lineage tool) and [Marquez](https://marquezproject.github.io/marquez/) (the lineage front end).
 
@@ -98,7 +98,7 @@ For this example, we’ll run Airflow with OpenLineage and Marquez locally follo
     ```
     
 6. Run Airflow locally using `astrocloud dev start`.
-7. Confirm Airflow is running by going to http://localhost:8080, and Marquez is running by going to http://localhost:3000.
+7. Confirm Airflow is running by going to `http://localhost:8080`, and Marquez is running by going to `http://localhost:3000`.
 
 ### Generating and Viewing Lineage Data
 
@@ -194,11 +194,11 @@ with DAG('lineage-reporting-postgres',
 
 If we run these DAGs in Airflow, and then go to Marquez, we will see a list of our jobs, including the four tasks from the DAGs above.
 
-SCREENSHOT
+![Marquez Jobs](https://assets2.astronomer.io/main/guides/airflow-openlineage/marquez_jobs.png)
 
 Then, if we click on one of the jobs from our DAGs, we see the full lineage graph.
 
-SCREENSHOT
+![Marquez Graph](https://assets2.astronomer.io/main/guides/airflow-openlineage/marquez_lineage_graph.png)
 
 The lineage graph shows:
 
