@@ -7,9 +7,26 @@ tags: ["Database", "SQL", "DAGs", "Integrations", "AWS"]
 ---
 
 >Note: All code in this guide can be found [in this GitHub repo](https://github.com/astronomer/cs-tutorial-redshift). 
+
+## Overview
+Amazon Redshift is a fully-managed cloud data warehouse. It is capable of analyzing exabytes of data and running complex
+analytical queries, making it the most widely used cloud data warehouse. Developing a dimensional data mart in Redshift
+requires automation and orchestration for repeated queries, data quality checks, and overall cluster operations.
+
+Airflow is the perfect orchestrator to pair with Redshift. With Airflow, you can easily orchestrate each step of your
+Redshift pipeline, integrate with services that clean your data, and store and publish your results using only SQL and 
+Python code.
+
+In this guide, we'll review the Redshift modules available as part of the 
+[AWS Airflow provider](https://registry.astronomer.io/providers/amazon). We'll also provide three example 
+implementations using Redshift with Airflow: one for executing SQL in a Redshift Cluster, one for Pausing & Resuming a 
+Redshift Cluster, and one for transferring data between Amazon S3 and a Redshift Cluster.
+
 ## Setup
 
-To use any Redshift operators in Airflow, you will first need to install the provider package and create a connection to your Redshift cluster.
+To use any Redshift operators in Airflow, you will first need to install the provider package and create a connection 
+to your Redshift cluster.
+
 ### Install Required pip Dependency
 
 Before you can use all the Airflow components for Redshift, you will need to ensure that you have the Amazon 
