@@ -87,7 +87,7 @@ UI to authenticate to Redshift. In the Airflow UI, navigate to *Admin >> Connect
 It is worth noting that these examples will be using the Sample database (TICKIT) provided by AWS. For more details 
 on the underlying data, please see Amazon's documentation [here](https://docs.aws.amazon.com/redshift/latest/dg/c_sampledb.html).
 
-### Using the RedshiftSQLOperator
+## Using the RedshiftSQLOperator
 
 With an established connection to Redshift, it's time to explore the 
 [RedshiftSQLOperator](https://registry.astronomer.io/providers/amazon/modules/redshiftsqloperator)! The 
