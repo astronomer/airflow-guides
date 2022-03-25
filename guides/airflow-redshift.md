@@ -277,18 +277,25 @@ will be included at the top of the file.
 
 ## Pause and Resume a Redshift Cluster from Airflow
 
-Amazon Redshift supports the ability to pause and resume a cluster, 
-allowing customers to easily suspend on-demand billing while the cluster isn't being used. A cluster used 
-for development can now have compute billing suspended when not in use. Read more on this from AWS[here](https://aws.amazon.com/about-aws/whats-new/2020/03/amazon-redshift-launches-pause-resume/#:~:text=Amazon%20Redshift%20now%20supports%20the,suspended%20when%20not%20in%20use.).
-You may want your Airflow DAG to pause and unpause a Redshift cluster at times when it isn't being queried or used.  
-At the time of publishing this guide, there are 3 main components that aide in utilizing this feature.
+Amazon Redshift supports the ability to pause and resume a cluster, allowing customers to easily suspend on-demand 
+billing while the cluster isn't being used. Read more on this from AWS [here](https://aws.amazon.com/about-aws/whats-new/2020/03/amazon-redshift-launches-pause-resume/#:~:text=Amazon%20Redshift%20now%20supports%20the,suspended%20when%20not%20in%20use.).
+You may want your Airflow DAG to pause and unpause a Redshift cluster at times when it isn't being queried or used. 
+Additionally, you may want to pause your Redshift cluster at the end of your Airflow pipeline and/or resume your 
+Redshift cluster at the beginning of your Airflow pipeline. There are currently three Airflow modules available to 
+accomplish this use case: 
 
 1. The [RedshiftPauseClusterOperator](https://registry.astronomer.io/providers/amazon/modules/redshiftpauseclusteroperator)
    can be used to pause an AWS Redshift Cluster.
 2. The [RedshiftResumeClusterOperator](https://registry.astronomer.io/providers/amazon/modules/redshiftresumeclusteroperator)
    can be used to resume a paused AWS Redshift Cluster.
 3. The [RedshiftClusterSensor](https://registry.astronomer.io/providers/amazon/modules/redshiftclustersensor) can be 
-   used to wait for a Redshift cluster to reach a specific status *(i.e. Available)*
+   used to wait for a Redshift cluster to reach a specific status *(i.e. Available after it has been unpaused)*
+
+If there were no operations querying your Redshift cluster after your last ETL job of the day, you could use the 
+`RedshiftPauseClusterOperator` to pause your Redshift cluster which would lower your AWS bill. On the first ETL job of 
+the day, you could add the `RedshiftResumeClusterOperator` at the beginning of your DAG to send the request to AWS to 
+unpause it. Following that task, you could use a `RedshiftClusterSensor` to ensure the cluster is fully available before 
+running the remainder of your DAG.
    
 The following DAG would effectively pause and unpause a Redshift Cluster. The DAG would only be marked as success once
 the cluster has the state of `Available`:
