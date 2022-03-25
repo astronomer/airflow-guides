@@ -7,7 +7,9 @@ tags: ["Database", "SQL", "DAGs", "Integrations", "AWS"]
 ---
 
 >Note: All code in this guide can be found [in this GitHub repo](https://github.com/astronomer/cs-tutorial-redshift). 
+## Setup
 
+To use any Redshift operators in Airflow, you will first need to install the provider package and create a connection to your Redshift cluster.
 ### Install Required pip Dependency
 
 Before you can use all the Airflow components for Redshift, you will need to ensure that you have the Amazon 
