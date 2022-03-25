@@ -91,8 +91,10 @@ on the underlying data, please see Amazon's documentation [here](https://docs.aw
 
 With an established connection to Redshift, it's time to explore the 
 [RedshiftSQLOperator](https://registry.astronomer.io/providers/amazon/modules/redshiftsqloperator)! The 
-RedshiftSQLOperator is used to run one or multiple SQL statements against a Redshift Cluster. The below example shows 
-how to call a `.sql` file in the RedshiftSQLOperator:
+RedshiftSQLOperator is used to run one or multiple SQL statements against a Redshift Cluster. Use cases for this include: 
+creating data schema models in your data warehouse, creating fact or dimension tables for various data models, 
+performing data transformations or data cleaning, etc. The below example shows how to call a `.sql` file in the 
+RedshiftSQLOperator:
 
 ```python
 from datetime import datetime
