@@ -201,8 +201,25 @@ with DAG(
 
 The result of this would be to copy the s3 blob `s3://airflow-redshift-demo/fct/from_redshift` into the table 
 `fct.from_redshift` on the Redshift cluster. With this operator, you can pass all the same copy options that exist in
-AWS. This includes Data format parameters, Data conversion parameters, Data load operations, etc. Read AWS's official 
-documentation for the `COPY` commmand 
+AWS via the `copy_options` parameter. This includes:
+
+- [Data format parameters](https://docs.aws.amazon.com/redshift/latest/dg/copy-parameters-data-format.html) (i.e 
+  [FORMAT](https://docs.aws.amazon.com/redshift/latest/dg/copy-parameters-data-format.html#copy-format), 
+  [CSV](https://docs.aws.amazon.com/redshift/latest/dg/copy-parameters-data-format.html#copy-csv), 
+  [DELIMITER](https://docs.aws.amazon.com/redshift/latest/dg/copy-parameters-data-format.html#copy-delimiter), 
+  [FIXEDWIDTH](https://docs.aws.amazon.com/redshift/latest/dg/copy-parameters-data-format.html#copy-fixedwidth), etc.)
+- [Data conversion parameters](https://docs.aws.amazon.com/redshift/latest/dg/copy-parameters-data-conversion.html) (i.e. 
+  [ACCEPTANYDATE](https://docs.aws.amazon.com/redshift/latest/dg/copy-parameters-data-conversion.html#copy-acceptanydate), 
+  [EMPTYASNULL](https://docs.aws.amazon.com/redshift/latest/dg/copy-parameters-data-conversion.html#copy-emptyasnull), 
+  [NULL AS](https://docs.aws.amazon.com/redshift/latest/dg/copy-parameters-data-conversion.html#copy-null-as), 
+  [TRUNCATECOLUMNS](https://docs.aws.amazon.com/redshift/latest/dg/copy-parameters-data-conversion.html#copy-truncatecolumns), etc.)
+- [Data load operations](https://docs.aws.amazon.com/redshift/latest/dg/copy-parameters-data-load.html) (i.e 
+  [COMPROWS](https://docs.aws.amazon.com/redshift/latest/dg/copy-parameters-data-load.html#copy-comprows), 
+  [COMPUPDATE](https://docs.aws.amazon.com/redshift/latest/dg/copy-parameters-data-load.html#copy-compupdate), 
+  [NOLOAD](https://docs.aws.amazon.com/redshift/latest/dg/copy-parameters-data-load.html#copy-noload), 
+  [MAXERROR](https://docs.aws.amazon.com/redshift/latest/dg/copy-parameters-data-load.html#copy-maxerror), etc.)
+  
+Read AWS's official documentation for the `COPY` commmand 
 [here](https://docs.aws.amazon.com/redshift/latest/dg/r_COPY.html#r_COPY-syntax-overview-data-format). In this example, 
 the delimiter for the blob has been specified as a comma (this overrides the default of a pipe delimiter). 
 
