@@ -1721,3 +1721,9 @@ TaskGroup
 asyncio
 TimeSensorAsync
 DateTimeSensorAsync
+ - guides/airflow-redshift.md
+RedshiftSQLOperator
+fct
+YYYY-MM-DD
+S3ToRedshiftOperator
+RedshiftToS3Operator
