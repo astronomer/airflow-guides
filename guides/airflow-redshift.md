@@ -207,7 +207,12 @@ the delimiter for the blob has been specified as a comma (this overrides the def
 ## Using the RedshiftToS3Operator
 
 The [RedshiftToS3Operator](https://registry.astronomer.io/providers/amazon/modules/redshifttos3operator) executes an 
-`UNLOAD` command to s3 as a CSV with headers.
+`UNLOAD` command to s3 as a CSV with headers. `UNLOAD` automatically creates encrypted files using Amazon S3 server-side
+encryption (SSE). There are various use cases for using the `UNLOAD` command. Some of the more common ones include:
+
+- Archiving old data that is no longer needed in your Redshift Cluster
+- Sharing the results of query data without granting access to Redshift 
+- Saving the result of query data into S3 to analyze it with BI tools or use it in an ML pipeline 
 
 ```python
 from datetime import datetime
