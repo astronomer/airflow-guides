@@ -22,7 +22,7 @@ In this guide, we’ll define data lineage, review the OpenLineage standard and 
 According to [Datakin](https://datakin.com/), the creators of the OpenLineage standard and leaders in the data lineage space, data lineage is “the complicated set of relationships between datasets”.  The concept of data lineage encompasses:
 
 - **Lineage metadata** that describes your datasets (e.g. a table in Snowflake) and jobs (e.g. tasks in your DAG).
-- **The lineage graph** that shows a visual representation of your jobs and datasets and how they are connected.
+- **A lineage graph** that visualizes your jobs and datasets and shows how they are connected.
 
 If you want to read more on the concept of data lineage and why it’s important, check out this [Datakin blog post](https://datakin.com/what-is-data-lineage/).
 
@@ -30,7 +30,7 @@ Visually, your data lineage graph might look something like this:
 
 ![Lineage Graph](https://assets2.astronomer.io/main/guides/airflow-openlineage/example_lineage_graph.png)
 
-If you are using data lineage, you will likely have a lineage tool that collects lineage metadata, as well as a front end for visualizing the lineage graph. There are paid tools (including Datakin) that provide these services, but in this guide we will focus on the open source options that can be integrated with Airflow: namely OpenLineage (the lineage tool) and [Marquez](https://marquezproject.github.io/marquez/) (the lineage front end).
+If you are using data lineage, you will likely have a lineage tool that collects lineage metadata, as well as a front end for visualizing the lineage graph. There are paid tools (including Datakin) that provide these services, but in this guide we will focus on the open source options that can be integrated with Airflow: namely OpenLineage (the lineage tool) and [Marquez](https://marquezproject.github.io/marquez/)(the lineage front end).
 
 ### OpenLineage
 
@@ -73,11 +73,11 @@ In this example, we’ll show how to run OpenLineage with Airflow locally using 
 
 ### Running Marquez and Airflow Locally
 
-For this example, we’ll run Airflow with OpenLineage and Marquez locally following the steps below. You will need Docker and the [Astro CLI](https://docs.astronomer.io/cloud/install-cli) installed before starting.
+For this example, we’ll run Airflow with OpenLineage and Marquez locally. You will need to install Docker and the [Astro CLI](https://docs.astronomer.io/cloud/install-cli) before starting.
 
-1. Run Marquez locally using their [quickstart instructions](https://github.com/MarquezProject/marquez#quickstart): clone the repo, then run `./docker/up.sh` from the root directory.
-2. Start an astro project using the CLI by creating a new directory and running `astrocloud dev init`.
-3. Add `openlineage-airflow` to your `requirements.txt` file. Note if you are using Astronomer Runtime 4.0.9 or greater, this package is already included.
+1. Run Marquez locally using the quickstart in the [Marquez README](https://github.com/MarquezProject/marquez#quickstart).
+2. Start an Astro project using the CLI by creating a new directory and running `astrocloud dev init`.
+3. Add `openlineage-airflow` to your `requirements.txt` file. Note if you are using Astro Runtime 4.0.9 or greater, this package is already included.
 4. Add the environment variables below to your `.env` file. These will allow Airflow to connect with the OpenLineage API and send your lineage data to Marquez.
     
     ```bash
@@ -86,7 +86,7 @@ For this example, we’ll run Airflow with OpenLineage and Marquez locally follo
     AIRFLOW__LINEAGE__BACKEND=openlineage.lineage_backend.OpenLineageBackend
     ```
     
-    Port 5000 is used by Marquez by default when you run it using Docker in Step 1. If you are not using Marquez and are using a different OpenLineage front end, or are running Marquez remotely, you can modify the `OPENLINEAGE_URL` as needed.
+    By default, Marquez uses port 5000 when you run it using Docker. If you are using a different OpenLineage front end instead of Marquez, or you are running Marquez remotely, you can modify the `OPENLINEAGE_URL` as needed.
     
 5. Modify your `config.yaml` in the `.astrocloud/` directory to choose a different port for Postgres. Marquez also uses Postgres, so you will need to have Airflow use a different port than the default 5432, which will already be allocated.
     
