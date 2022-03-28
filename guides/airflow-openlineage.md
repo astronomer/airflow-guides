@@ -22,7 +22,7 @@ In this guide, we’ll define data lineage, review the OpenLineage standard and 
 According to [Datakin](https://datakin.com/), the creators of the OpenLineage standard and leaders in the data lineage space, data lineage is “the complicated set of relationships between datasets”.  The concept of data lineage encompasses:
 
 - **Lineage metadata** that describes your datasets (e.g. a table in Snowflake) and jobs (e.g. tasks in your DAG).
-- **A lineage graph** that visualizes your jobs and datasets and shows how they are connected.
+- **A lineage frontend** that allows you to view and interact with your lineage metadata, including a graph that visualizes your jobs and datasets and shows how they are connected.
 
 If you want to read more on the concept of data lineage and why it’s important, check out this [Datakin blog post](https://datakin.com/what-is-data-lineage/).
 
@@ -220,3 +220,4 @@ OpenLineage is rapidly evolving, and new functionality and integrations are bein
     - `BigQueryOperator`
     
     To get lineage data from other operators, you can create your own custom extractor.
+- To get lineage from an external system connected to Airflow, such as [Apache Spark](https://openlineage.io/integration/apache-spark/), you will need to configure an [OpenLineage integration](https://openlineage.io/integration) with that system in addition to Airflow.
