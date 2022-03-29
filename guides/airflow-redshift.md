@@ -8,92 +8,76 @@ tags: ["Database", "SQL", "DAGs", "Integrations", "AWS"]
 
 ## Overview
 
-Amazon Redshift is a fully-managed cloud data warehouse. It is capable of analyzing exabytes of data and running complex analytical queries, making it the most widely used cloud data warehouse. Developing a dimensional data mart in Redshift requires automation and orchestration for repeated queries, data quality checks, and overall cluster operations.
+Amazon Redshift is a fully-managed cloud data warehouse. It has become the most popular cloud data warehouse in part because of its ability to analyze exabytes of data and run complex analytical queries. 
 
-Airflow is the perfect orchestrator to pair with Redshift. With Airflow, you can easily orchestrate each step of your
-Redshift pipeline, integrate with services that clean your data, and store and publish your results using only SQL and Python code.
+Developing a dimensional data mart in Redshift requires automation and orchestration for repeated queries, data quality checks, and overall cluster operations. This makes Airflow the perfect orchestrator to pair with Redshift: With Airflow, you can easily orchestrate each step of your Redshift pipeline, integrate with services that clean your data, and store and publish your results using only SQL and Python code.
 
-In this guide, we'll review the Redshift modules available as part of the 
-[AWS Airflow provider](https://registry.astronomer.io/providers/amazon). We'll also provide three example 
-implementations using Redshift with Airflow: one for executing SQL in a Redshift Cluster, one for Pausing & Resuming a Redshift Cluster, and one for transferring data between Amazon S3 and a Redshift Cluster.
+
+In this guide, we'll provide an overview of the Redshift modules which are available in the [AWS Airflow provider package](https://registry.astronomer.io/providers/amazon). We'll also provide three example 
+implementations of using Redshift with Airflow: one for executing SQL in a Redshift cluster, one for pausing & resuming a Redshift cluster, and one for transferring data between Amazon S3 and a Redshift cluster.
 
 > Note: All code in this guide can be found [in this GitHub repo](https://github.com/astronomer/cs-tutorial-redshift). 
 
 ## Setup
 
-To use any Redshift operators in Airflow, you will first need to install the provider package and create a connection 
-to your Redshift cluster.
+To use Redshift operators in Airflow, you first need to install the Redshift provider package and create a connection to your Redshift cluster.
 
-### Install Required pip Dependency
+1. If you are working from the [Astro CLI](https://docs.astronomer.io/astro/install-cli), add `apache-airflow-providers-amazon` to your `requirements.txt` file. Otherwise, run `pip install apache-airflow-providers-amazon`.
 
-Before you can use all the Airflow components for Redshift, you will need to ensure that you have the Amazon 
-Provider installed on your Airflow deployment. If you are working from the [Astro CLI](https://docs.astronomer.io/astro/install-cli), simply add `apache-airflow-providers-amazon` to your 
-`requirements.txt` file.
-
-### Add Required Connections
-
-You will need to set up your Airflow instance so that it can connect to Redshift. The most common way of doing this is by adding the following 
-connections to Airflow to authenticate to Redshift. In the Airflow UI, navigate to *Admin >> Connections* and add 
+2. Connect your Airflow instance to Redshift. The most common way of doing this is by configuring
+an Airflow connection. In the Airflow UI, go to **Admin > Connections** and add 
 the following connections:
  
-- `redshift_default`: This is the default connection that Airflow redshift components will search for and use. If a 
-  different name from `redshift_default` is used for this connection, then it will have to be specified on the 
-  components that require a Redshift connection. Use the following parameters for your new connection (all other fields can be left blank):
+    - `redshift_default`: This is the default connection that Airflow Redshift components will use. If you use a name other than `redshift_default` for this connection, then it will have to be specified in the components that require a Redshift connection. Use the following parameters for your new connection (all other fields can be left blank):
   
-  ```yaml
-  Connection ID: redshift_default
-  Connection Type: Amazon Redshift
-  Host: <YOUR-REDSHIFT-ENDPOINT> (i.e. redshift-cluster-1.123456789.us-west-1.redshift.amazonaws.com)
-  Schema: <YOUR-REDSHIFT-DATABASE> (i.e. dev, test, prod, ect.)
-  Login: <YOUR-REDSHIFT-USERNAME> (i.e. awsuser)
-  Password: <YOUR-REDSHIFT-PASSWORD>
-  Port: <YOUR-REDSHIFT-PORT> (i.e. 5439)
-  ```
+     ```yaml
+     Connection ID: redshift_default
+     Connection Type: Amazon Redshift
+     Host: <YOUR-REDSHIFT-ENDPOINT> (i.e. redshift-cluster-1.123456789.us-west-1.redshift.amazonaws.com)
+     Schema: <YOUR-REDSHIFT-DATABASE> (i.e. dev, test, prod, ect.)
+     Login: <YOUR-REDSHIFT-USERNAME> (i.e. awsuser)
+     Password: <YOUR-REDSHIFT-PASSWORD>
+     Port: <YOUR-REDSHIFT-PORT> (i.e. 5439)
+     ```
   
-- `aws_default`: This is the default connection that other Airflow AWS components will search for and use. If a 
-  different name from `aws_default` is used for this connection, then it will have to be specified on the components 
-  that require an AWS connection. Use the following parameters for your new connection (all other fields can be left 
-  blank):
+    - `aws_default`: This is the default connection that other Airflow AWS components will  use. If you use a name other than `aws_default` for this connection, then it will have to be specified in the components that require an AWS connection. Use the following parameters for your new connection (all other fields can be left blank):
   
-  ```yaml
-  Connection ID: aws_default
-  Connection Type: Amazon Web Services
-  Extra: {
-    "aws_access_key_id": "<your-access-key-id>", 
-    "aws_secret_access_key": "<your-secret-access-key>", 
-    "region_name": "<your-region-name>"
-  }
-  ```
+     ```yaml
+     Connection ID: aws_default
+     Connection Type: Amazon Web Services
+     Extra: {
+       "aws_access_key_id": "<your-access-key-id>", 
+       "aws_secret_access_key": "<your-secret-access-key>", 
+       "region_name": "<your-region-name>"
+     }
+    ```
 
 
-There are a few additional steps needed from the AWS side when connecting to Redshift:
+3. Configure the following in your Redshift cluster:
 
-- Ensure that your Redshift Cluster allows inbound traffic from the IP Address where Airflow is running
-- The `aws_default` connection will need the following permissions on AWS:
-    - Access to perform read/write actions for a preconfigured S3 Bucket
-    - Access to interact with the Redshift Cluster, specifically: 
-        - `redshift:DescribeClusters`
-        - `redshift:PauseCluster`
-        - `redshift:ResumeCluster`
+    - [Allow inbound traffic](https://docs.aws.amazon.com/redshift/latest/gsg/rs-gsg-authorize-cluster-access.html) from the IP Address where Airflow is running
+    - Give `aws_default` the following permissions on AWS:
+        - Read/write permissions for a preconfigured S3 Bucket
+        - Permission to interact with the Redshift Cluster, specifically: 
+            - `redshift:DescribeClusters`
+            - `redshift:PauseCluster`
+            - `redshift:ResumeCluster`
 
-If your Airflow instance is running in the same AWS VPC as your Redshift cluster, you may have other authentication options available. To authenticate to Redshift using IAM Authentication or Okta Identity Provider, see [this doc](https://airflow.apache.org/docs/apache-airflow-providers-amazon/stable/connections/redshift.html) for instructions.
+    If your Airflow instance is running in the same AWS VPC as your Redshift cluster, you may have other authentication options available. To authenticate to Redshift using IAM Authentication or Okta Identity Provider, see the [Apache Airflow documentation](https://airflow.apache.org/docs/apache-airflow-providers-amazon/stable/connections/redshift.html) for instructions.
 
 ### Example Data
 
-It is worth noting that these examples will be using the Sample database (TICKIT) provided by AWS. For more details 
-on the underlying data, please see Amazon's documentation [here](https://docs.aws.amazon.com/redshift/latest/dg/c_sampledb.html).
+The following examples use the sample database (TICKIT) provided by AWS. For more details on the underlying data, please see [Amazon's documentation](https://docs.aws.amazon.com/redshift/latest/dg/c_sampledb.html).
 
 ## Using the RedshiftSQLOperator
 
-Now that we have an established connection to Redshift, we can explore the 
-[`RedshiftSQLOperator`](https://registry.astronomer.io/providers/amazon/modules/redshiftsqloperator). The 
-`RedshiftSQLOperator` is used to run one or multiple SQL statements against a Redshift Cluster. Use cases for this operator include: 
+Now that we have an established connection to Redshift, we can start working with the [`RedshiftSQLOperator`](https://registry.astronomer.io/providers/amazon/modules/redshiftsqloperator). The `RedshiftSQLOperator` is used to run one or multiple SQL statements against a Redshift Cluster. Use cases for this operator include: 
 
-- Creating data schema models in your data warehouse 
-- Creating fact or dimension tables for various data models, 
-- Performing data transformations or data cleaning
+- Creating data schema models in your data warehouse.
+- Creating fact or dimension tables for various data models. 
+- Performing data transformations or data cleaning.
 
-The DAG below shows how to call a `.sql` file in the `RedshiftSQLOperator`:
+The DAG below shows how to you can use the `RedshiftSQLOperator` to run a `.sql` query against a Redshift schema:
 
 ```python
 from datetime import datetime
@@ -121,7 +105,7 @@ with DAG(
     )
 ```
 
-Notice that the `template_searchpath` parameter is used on the `DAG()` object. This means that our `.sql` file should be located at `/usr/local/airflow/include/example_dag_redshift/sql/fct_listing.sql`. For this example, we use the following SQL file:
+Notice that `template_searchpath` is set in the `DAG()` configuration. This means the DAG will look for the `.sql` file at `/usr/local/airflow/include/example_dag_redshift/sql/fct_listing.sql`. For this example, let's use the following SQL file:
 
 ```sql
 begin;
@@ -150,7 +134,7 @@ insert into {{ params.schema }}.{{ params.table }}
 end;
 ```
 
-In this SQL query, we have multiple templated parameters: `{{ params.schema }}`, `{{ params.table }}`, and `{{ ds }`. Based on the task definition, `{{ params.schema }}` will be set as *fct* and `{{ params.table }}` will be set as *listing*. These values will be injected into the SQL query at runtime. The `{{ ds }}` variable is a built-in [Airflow Jinja Template Variable](https://airflow.apache.org/docs/apache-airflow/stable/templates-ref.html) that will return the DAG run's logical date in the format *YYYY-MM-DD*. Using templated variables will make your SQL code reusable and on par with DAG writing best practices (particularly around the concept of [idempotency](https://www.astronomer.io/guides/dag-best-practices#reviewing-idempotency)).
+In this SQL query, we have multiple templated parameters: `{{ params.schema }}`, `{{ params.table }}`, and `{{ ds }}`. Based on the task definition, `{{ params.schema }}` will be set as `fct` and `{{ params.table }}` will be set as `listing`. These values will be injected into the SQL query at runtime. The `{{ ds }}` variable is a built-in [Airflow Jinja Template Variable](https://airflow.apache.org/docs/apache-airflow/stable/templates-ref.html) that will return the DAG run's logical date in the format *YYYY-MM-DD*. Using templated variables will make your SQL code reusable and aligned DAG writing best practices (particularly in relation to [idempotency](https://www.astronomer.io/guides/dag-best-practices#reviewing-idempotency)).
 
 ## Using the S3ToRedshiftOperator
 
@@ -189,27 +173,7 @@ with DAG(
     )
 ```
 
-This DAG copies the S3 blob `s3://airflow-redshift-demo/fct/from_redshift` into the table 
-`fct.from_redshift` on the Redshift cluster. With this operator, you can pass all the same copy options that exist in
-AWS via the `copy_options` parameter. This includes:
-
-- [Data format parameters](https://docs.aws.amazon.com/redshift/latest/dg/copy-parameters-data-format.html) (i.e 
-  [FORMAT](https://docs.aws.amazon.com/redshift/latest/dg/copy-parameters-data-format.html#copy-format), 
-  [CSV](https://docs.aws.amazon.com/redshift/latest/dg/copy-parameters-data-format.html#copy-csv), 
-  [DELIMITER](https://docs.aws.amazon.com/redshift/latest/dg/copy-parameters-data-format.html#copy-delimiter), 
-  [FIXEDWIDTH](https://docs.aws.amazon.com/redshift/latest/dg/copy-parameters-data-format.html#copy-fixedwidth), etc.)
-- [Data conversion parameters](https://docs.aws.amazon.com/redshift/latest/dg/copy-parameters-data-conversion.html) (i.e. 
-  [ACCEPTANYDATE](https://docs.aws.amazon.com/redshift/latest/dg/copy-parameters-data-conversion.html#copy-acceptanydate), 
-  [EMPTYASNULL](https://docs.aws.amazon.com/redshift/latest/dg/copy-parameters-data-conversion.html#copy-emptyasnull), 
-  [NULL AS](https://docs.aws.amazon.com/redshift/latest/dg/copy-parameters-data-conversion.html#copy-null-as), 
-  [TRUNCATECOLUMNS](https://docs.aws.amazon.com/redshift/latest/dg/copy-parameters-data-conversion.html#copy-truncatecolumns), etc.)
-- [Data load operations](https://docs.aws.amazon.com/redshift/latest/dg/copy-parameters-data-load.html) (i.e 
-  [COMPROWS](https://docs.aws.amazon.com/redshift/latest/dg/copy-parameters-data-load.html#copy-comprows), 
-  [COMPUPDATE](https://docs.aws.amazon.com/redshift/latest/dg/copy-parameters-data-load.html#copy-compupdate), 
-  [NOLOAD](https://docs.aws.amazon.com/redshift/latest/dg/copy-parameters-data-load.html#copy-noload), 
-  [MAXERROR](https://docs.aws.amazon.com/redshift/latest/dg/copy-parameters-data-load.html#copy-maxerror), etc.)
-  
-You can read more about the `COPY` command in [AWS's official documentation](https://docs.aws.amazon.com/redshift/latest/dg/r_COPY.html#r_COPY-syntax-overview-data-format). In this example, the delimiter for the blob has been specified as a comma (this overrides the default of a pipe delimiter). 
+This DAG copies the S3 blob `s3://airflow-redshift-demo/fct/from_redshift` into the table `fct.from_redshift` on the Redshift cluster. With this operator, you can pass all the same copy options that exist in AWS via the `copy_options` parameter. For more information about the `COPY` command, see [AWS's official documentation](https://docs.aws.amazon.com/redshift/latest/dg/r_COPY.html#r_COPY-syntax-overview-data-format). In this example, we use a copy option to change the delimiter for the blob from a pipe character to a comma.
 
 ## Using the RedshiftToS3Operator
 
@@ -217,7 +181,7 @@ The [`RedshiftToS3Operator`](https://registry.astronomer.io/providers/amazon/mod
 
 - Archiving old data that is no longer needed in your Redshift Cluster.
 - Sharing the results of query data without granting access to Redshift. 
-- Saving the result of query data into S3 to analyze it with BI tools or use it in an ML pipeline.
+- Saving the result of query data into S3 for analysis with BI tools or use in an ML pipeline.
 
 The DAG below shows an example implementation:
 
@@ -261,20 +225,15 @@ In this example, based on the parameters set in the DAG, the delimiter for the b
 
 ## Pause and Resume a Redshift Cluster from Airflow
 
-Amazon Redshift supports the ability to pause and resume a cluster, allowing customers to easily suspend on-demand 
-billing while the cluster isn't being used. Read more on this from AWS [here](https://aws.amazon.com/about-aws/whats-new/2020/03/amazon-redshift-launches-pause-resume/#:~:text=Amazon%20Redshift%20now%20supports%20the,suspended%20when%20not%20in%20use.).
+Amazon Redshift supports the ability to pause and resume a cluster, allowing customers to easily suspend on-demand billing while the cluster isn't being used. Read more about this feature in the [AWS documentation](https://aws.amazon.com/about-aws/whats-new/2020/03/amazon-redshift-launches-pause-resume/#:~:text=Amazon%20Redshift%20now%20supports%20the,suspended%20when%20not%20in%20use.).
 
-You may want your Airflow DAG to pause and unpause a Redshift cluster at times when it isn't being queried or used. 
-Additionally, you may want to pause your Redshift cluster at the end of your Airflow pipeline, and/or resume your 
-Redshift cluster at the beginning of your Airflow pipeline. There are currently three Airflow modules available to 
-accomplish this use case: 
+You may want your Airflow DAG to pause and unpause a Redshift cluster at times when it isn't being queried or used. Additionally, you may want to pause your Redshift cluster at the end of your Airflow pipeline, and/or resume your Redshift cluster at the beginning of your Airflow pipeline. There are currently three Airflow modules available to accomplish this use case: 
 
-1. The [`RedshiftPauseClusterOperator`](https://registry.astronomer.io/providers/amazon/modules/redshiftpauseclusteroperator) can be used to pause an AWS Redshift Cluster.
-2. The [`RedshiftResumeClusterOperator`](https://registry.astronomer.io/providers/amazon/modules/redshiftresumeclusteroperator) can be used to resume a paused AWS Redshift Cluster.
-3. The [`RedshiftClusterSensor`](https://registry.astronomer.io/providers/amazon/modules/redshiftclustersensor) can be  used to wait for a Redshift cluster to reach a specific status *(i.e. Available after it has been unpaused)*
+- The [`RedshiftPauseClusterOperator`](https://registry.astronomer.io/providers/amazon/modules/redshiftpauseclusteroperator) can be used to pause an AWS Redshift Cluster.
+- The [`RedshiftResumeClusterOperator`](https://registry.astronomer.io/providers/amazon/modules/redshiftresumeclusteroperator) can be used to resume a paused AWS Redshift Cluster.
+- The [`RedshiftClusterSensor`](https://registry.astronomer.io/providers/amazon/modules/redshiftclustersensor) can be  used to wait for a Redshift cluster to reach a specific status (e.g. Available after it has been unpaused)
 
-If there were no operations querying your Redshift cluster after your last ETL job of the day, you could use the 
-`RedshiftPauseClusterOperator` to pause your Redshift cluster which would lower your AWS bill. On the first ETL job of the day, you could add the `RedshiftResumeClusterOperator` at the beginning of your DAG to send the request to AWS to unpause it. Following that task, you could use a `RedshiftClusterSensor` to ensure the cluster is fully available before running the remainder of your DAG.
+If no operations queried your Redshift cluster after your last ETL job of the day, you could use the `RedshiftPauseClusterOperator` to pause your Redshift cluster, which would lower your AWS bill. On the first ETL job of the day, you could add the `RedshiftResumeClusterOperator` at the beginning of your DAG to send the request to AWS to unpause it. Following that task, you could use a `RedshiftClusterSensor` to ensure the cluster is fully available before running the remainder of your DAG.
    
 The following DAG shows how to pause and unpause a Redshift Cluster using available operators. Since we implement a sensor at the end, the DAG would only be marked as success once the cluster has the state of `Available`.
 
