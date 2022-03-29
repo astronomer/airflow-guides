@@ -19,9 +19,10 @@ In this guide, we’ll define data lineage, review the OpenLineage standard and 
 
 ## What is Data Lineage
 
-According to [Datakin](https://datakin.com/), the creators of the OpenLineage standard and leaders in the data lineage space, data lineage is “the complicated set of relationships between datasets”.  The concept of data lineage encompasses:
+Data lineage is a way of tracing the complex set of relationships that exist among datasets within an ecosystem.  The concept of data lineage encompasses:
 
 - **Lineage metadata** that describes your datasets (e.g. a table in Snowflake) and jobs (e.g. tasks in your DAG).
+- **A Lineage backend** that stores and processes lineage metadata.
 - **A lineage frontend** that allows you to view and interact with your lineage metadata, including a graph that visualizes your jobs and datasets and shows how they are connected.
 
 If you want to read more on the concept of data lineage and why it’s important, check out this [Datakin blog post](https://datakin.com/what-is-data-lineage/).
@@ -30,7 +31,7 @@ Visually, your data lineage graph might look something like this:
 
 ![Lineage Graph](https://assets2.astronomer.io/main/guides/airflow-openlineage/example_lineage_graph.png)
 
-If you are using data lineage, you will likely have a lineage tool that collects lineage metadata, as well as a front end for visualizing the lineage graph. There are paid tools (including Datakin) that provide these services, but in this guide we will focus on the open source options that can be integrated with Airflow: namely OpenLineage (the lineage tool) and [Marquez](https://marquezproject.github.io/marquez/)(the lineage front end).
+If you are using data lineage, you will likely have a lineage tool that collects lineage metadata, as well as a front end for visualizing the lineage graph. There are paid tools (including Astro) that provide these services, but in this guide we will focus on the open source options that can be integrated with Airflow: namely OpenLineage (the lineage tool) and [Marquez](https://marquezproject.github.io/marquez/)(the lineage front end).
 
 ### OpenLineage
 
@@ -44,9 +45,9 @@ If you are working with lineage data from Airflow, that integration will be buil
 
 The following terms are used frequently when discussing data lineage and OpenLineage in particular. We define them here specifically in the context of using OpenLineage with Airflow.
 
-- **Integration:** A means of gathering lineage data from a source system (e.g. a scheduler or data platform). For example, the OpenLineage Airflow integration allows lineage data to be collected from Airflow DAGs. Existing integrations will use the OpenLineage API under the hood to automatically gather lineage data from the source system every time your DAG is run. A full list of OpenLineage integrations can be found [here](https://openlineage.io/integration).
-- **Extractor:** In the `openlineage-airflow` package, an extractor is a module that gathers lineage metadata from a specific hook or operator. For example, extractors exist for the `PostgresOperator` and `SnowflakeOperator`, meaning that if `openlineage-airflow` is installed and running in your Airflow environment, lineage data will be generated automatically from those operators when your DAG runs. An extractor must exist for a specific operator to get lineage data from it.
-- **Job:** A process which consumes or produces datasets. Jobs can be viewed on your lineage graph. In the context of the Airflow integration, an OpenLineage job corresponds to a task in your DAG (assuming the task is an instance of an operator for which there is an extractor).
+- **Integration:** A means of gathering lineage data from a source system (e.g. a scheduler or data platform). For example, the OpenLineage Airflow integration allows lineage data to be collected from Airflow DAGs. Existing integrations automatically gather lineage data from the source system every time a job runs, preparing and transmitting OpenLineage events to a lineage backend. A full list of OpenLineage integrations can be found [here](https://openlineage.io/integration).
+- **Extractor:** An extractor is a module that gathers lineage metadata from a specific hook or operator. For example, in the openlineage-airflow package, extractors exist for the `PostgresOperator` and `SnowflakeOperator`, meaning that if `openlineage-airflow` is installed and running in your Airflow environment, lineage data will be generated automatically from those operators when your DAG runs. An extractor must exist for a specific operator to get lineage data from it.
+- **Job:** A process which consumes or produces datasets. Jobs can be viewed on your lineage graph. In the context of the Airflow integration, an OpenLineage job corresponds to a task in your DAG. Note that only tasks that come from operators with extractors will have input and output metadata; other tasks in your DAG will show as orphaned on the lineage graph.
 - **Dataset:** A representation of a set of data in your lineage data and graph. For example, it might correspond to a table in your database or a set of data you run a Great Expectations check on. Typically a dataset is registered as part of your lineage data when a job writing to the dataset is completed (e.g. data is inserted into a table).
 - **Run:** An instance of a job where lineage data is generated. In the context of the Airflow integration, an OpenLineage run will be generated with each DAG run.
 - **Facet:** A piece of lineage metadata about a job, dataset, or run (e.g. you might hear “job facet”).
@@ -102,12 +103,11 @@ For this example, we’ll run Airflow with OpenLineage and Marquez locally. You 
 
 ### Generating and Viewing Lineage Data
 
-To show the lineage data that can result from Airflow DAG runs, we'll use an example of two DAGs that process data in Postgres. The first DAG creates and populates a table (`animal_adoptions_combined`) with data aggregated from two source tables (`adoption_center_1` and `adoption_center_2`):
+To show the lineage data that can result from Airflow DAG runs, we'll use an example of two DAGs that process data in Postgres. The first DAG creates and populates a table (`animal_adoptions_combined`) with data aggregated from two source tables (`adoption_center_1` and `adoption_center_2`). Note that to run this DAG in your own environment, you will first need to create the two source tables. You can also update the table names and schemas in the DAG to reference existing tables in your own environment.
 
 ```python
 from airflow import DAG
 from airflow.providers.postgres.operators.postgres import PostgresOperator
-import random
 
 from datetime import datetime, timedelta
 
