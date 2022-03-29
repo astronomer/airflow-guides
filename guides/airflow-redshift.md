@@ -13,8 +13,7 @@ Amazon Redshift is a fully-managed cloud data warehouse. It has become the most 
 Developing a dimensional data mart in Redshift requires automation and orchestration for repeated queries, data quality checks, and overall cluster operations. This makes Airflow the perfect orchestrator to pair with Redshift: With Airflow, you can easily orchestrate each step of your Redshift pipeline, integrate with services that clean your data, and store and publish your results using only SQL and Python code.
 
 
-In this guide, we'll provide an overview of the Redshift modules which are available in the [AWS Airflow provider package](https://registry.astronomer.io/providers/amazon). We'll also provide three example 
-implementations of using Redshift with Airflow: one for executing SQL in a Redshift cluster, one for pausing & resuming a Redshift cluster, and one for transferring data between Amazon S3 and a Redshift cluster.
+In this guide, we'll provide an overview of the Redshift modules which are available in the [AWS Airflow provider package](https://registry.astronomer.io/providers/amazon). We'll also provide three example implementations of using Redshift with Airflow: one for executing SQL in a Redshift cluster, one for pausing & resuming a Redshift cluster, and one for transferring data between Amazon S3 and a Redshift cluster.
 
 > Note: All code in this guide can be found [in this GitHub repo](https://github.com/astronomer/cs-tutorial-redshift). 
 
@@ -28,7 +27,7 @@ To use Redshift operators in Airflow, you first need to install the Redshift pro
 an Airflow connection. In the Airflow UI, go to **Admin > Connections** and add 
 the following connections:
  
-    - `redshift_default`: This is the default connection that Airflow Redshift components will use. If you use a name other than `redshift_default` for this connection, then it will have to be specified in the components that require a Redshift connection. Use the following parameters for your new connection (all other fields can be left blank):
+    - `redshift_default`: This is the default connection that Airflow Redshift modules will use. If you use a name other than `redshift_default` for this connection, then it will have to be specified in the modules that require a Redshift connection. Use the following parameters for your new connection (all other fields can be left blank):
   
      ```yaml
      Connection ID: redshift_default
@@ -40,7 +39,7 @@ the following connections:
      Port: <YOUR-REDSHIFT-PORT> (i.e. 5439)
      ```
   
-    - `aws_default`: This is the default connection that other Airflow AWS components will  use. If you use a name other than `aws_default` for this connection, then it will have to be specified in the components that require an AWS connection. Use the following parameters for your new connection (all other fields can be left blank):
+    - `aws_default`: This is the default connection that other Airflow AWS modules will use. For the examples in this guide, you will need this connection for Airflow to talk to S3. If you use a name other than `aws_default` for this connection, then it will have to be specified in the modules that require an AWS connection. Use the following parameters for your new connection (all other fields can be left blank):
   
      ```yaml
      Connection ID: aws_default
@@ -50,8 +49,7 @@ the following connections:
        "aws_secret_access_key": "<your-secret-access-key>", 
        "region_name": "<your-region-name>"
      }
-    ```
-
+     ```
 
 3. Configure the following in your Redshift cluster:
 
@@ -231,7 +229,7 @@ You may want your Airflow DAG to pause and unpause a Redshift cluster at times w
 
 - The [`RedshiftPauseClusterOperator`](https://registry.astronomer.io/providers/amazon/modules/redshiftpauseclusteroperator) can be used to pause an AWS Redshift Cluster.
 - The [`RedshiftResumeClusterOperator`](https://registry.astronomer.io/providers/amazon/modules/redshiftresumeclusteroperator) can be used to resume a paused AWS Redshift Cluster.
-- The [`RedshiftClusterSensor`](https://registry.astronomer.io/providers/amazon/modules/redshiftclustersensor) can be  used to wait for a Redshift cluster to reach a specific status (e.g. Available after it has been unpaused)
+- The [`RedshiftClusterSensor`](https://registry.astronomer.io/providers/amazon/modules/redshiftclustersensor) can be  used to wait for a Redshift cluster to reach a specific status (e.g. Available after it has been unpaused).
 
 If no operations queried your Redshift cluster after your last ETL job of the day, you could use the `RedshiftPauseClusterOperator` to pause your Redshift cluster, which would lower your AWS bill. On the first ETL job of the day, you could add the `RedshiftResumeClusterOperator` at the beginning of your DAG to send the request to AWS to unpause it. Following that task, you could use a `RedshiftClusterSensor` to ensure the cluster is fully available before running the remainder of your DAG.
    
