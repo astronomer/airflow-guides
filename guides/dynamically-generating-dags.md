@@ -296,7 +296,7 @@ with dag:
 
 Next we create a `dag-config` folder that will contain a JSON config file for each DAG. The config file should define the parameters that we noted above, the DAG Id, schedule interval, and query to be executed.
 
-```Json
+```json
 {
     "DagId": "dag_file_1",
     "Schedule": "'@daily'",

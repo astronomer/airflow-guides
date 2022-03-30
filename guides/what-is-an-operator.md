@@ -18,7 +18,7 @@ When you create an instance of an operator in a DAG and provide it with it's req
 
 ### BashOperator
 
-```Python
+```python
 t1 = BashOperator(
         task_id='bash_hello_world',
         dag=dag,
