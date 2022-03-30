@@ -39,7 +39,7 @@ We recommend using built-in hooks with Kerberos support if they work for your us
 
 Settings for Kerberos can be configured via the `[kerberos]` group in `airflow.cfg`:
 
-```cfg
+```toml
 [kerberos]
 ccache = /tmp/airflow_krb5_ccache
 # gets augmented with fqdn
