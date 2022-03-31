@@ -31,7 +31,7 @@ Visually, your data lineage graph might look something like this:
 
 ![Lineage Graph](https://assets2.astronomer.io/main/guides/airflow-openlineage/example_lineage_graph.png)
 
-If you are using data lineage, you will likely have a lineage tool that collects lineage metadata, as well as a front end for visualizing the lineage graph. There are paid tools (including Astro) that provide these services, but in this guide we will focus on the open source options that can be integrated with Airflow: namely OpenLineage (the lineage tool) and [Marquez](https://marquezproject.github.io/marquez/)(the lineage front end).
+If you are using data lineage, you will likely have a lineage tool that collects lineage metadata, as well as a front end for visualizing the lineage graph. There are paid tools (including Astro) that provide these services, but in this guide we will focus on the open source options that can be integrated with Airflow: namely OpenLineage (the lineage tool) and [Marquez](https://marquezproject.github.io/marquez/) (the lineage front end).
 
 ### OpenLineage
 
