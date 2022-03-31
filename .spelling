@@ -964,6 +964,8 @@ papermill
 pre-process
 unpaused
 triggerer
+openlineage
+datakin
  - posts/4-pillars-to-becoming-data-driven.md
 astronomer.io
  - posts/why-we-built-our-data-platform-on-aws-and-why-we-rebuilt-it-with-open-source.md
