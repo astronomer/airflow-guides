@@ -25,7 +25,7 @@ Data lineage is a way of tracing the complex set of relationships that exist amo
 - **A Lineage backend** that stores and processes lineage metadata.
 - **A lineage frontend** that allows you to view and interact with your lineage metadata, including a graph that visualizes your jobs and datasets and shows how they are connected.
 
-If you want to read more on the concept of data lineage and why it’s important, check out this [Datakin blog post](https://datakin.com/what-is-data-lineage/).
+If you want to read more on the concept of data lineage and why it’s important, check out this [Astronomer blog post](https://www.astronomer.io/blog/what-is-data-lineage).
 
 Visually, your data lineage graph might look something like this:
 
