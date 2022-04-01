@@ -78,7 +78,7 @@ For this example, we’ll run Airflow with OpenLineage and Marquez locally. You 
 
 1. Run Marquez locally using the quickstart in the [Marquez README](https://github.com/MarquezProject/marquez#quickstart).
 2. Start an Astro project using the CLI by creating a new directory and running `astrocloud dev init`.
-3. Add `openlineage-airflow` to your `requirements.txt` file. Note if you are using Astro Runtime 4.0.9 or greater, this package is already included.
+3. Add `openlineage-airflow` to your `requirements.txt` file. Note if you are using Astro Runtime 4.2.1 or greater, this package is already included.
 4. Add the environment variables below to your `.env` file. These will allow Airflow to connect with the OpenLineage API and send your lineage data to Marquez.
     
     ```bash
