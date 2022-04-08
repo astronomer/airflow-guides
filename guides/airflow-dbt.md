@@ -358,7 +358,7 @@ with dag:
 
 Using the jaffleshop demo dbt project, the parser creates the following DAG including two task groups for the `dbt_run` and `dbt_test` tasks:
 
-![DAG including two task groups from "dbt_run" and "dbt_test"](https://www.astronomer.io/static/202d5a37d1059b83deb4d6a6a1b55b8a/1df5b/image1.png)
+![DAG including two task groups from "dbt_run" and "dbt_test"](https://images.ctfassets.net/bsbv786nih7n/7LwANRais0OSzBslqgczED/456ec067e6e10e9838dc036ab905cdf5/taskgroup.gif)
 
 One important fact to note here is that the `DbtDagParser` does not include a `dbt compile` step that updates the `manifest.json` file. Since the Airflow Scheduler parses the DAG file periodically, having a compile step as part of the DAG creation could incur some unnecessary load for the scheduler. We recommend adding a `dbt compile` step either as part of a CI/CD pipeline, or as part of a pipeline run in production before the Airflow DAG is run.
 
