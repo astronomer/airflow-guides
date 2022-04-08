@@ -82,7 +82,6 @@ from datetime import datetime
 from airflow.models import DAG
 from airflow.providers.amazon.aws.operators.redshift_sql import RedshiftSQLOperator
 
-from datetime import datetime
 with DAG(
     dag_id=f"example_dag_redshift",
     schedule_interval="@daily",
@@ -143,8 +142,6 @@ The [`S3ToRedshiftOperator`](https://registry.astronomer.io/providers/amazon/mod
 from datetime import datetime
 from airflow.models import DAG
 from airflow.providers.amazon.aws.transfers.s3_to_redshift import S3ToRedshiftOperator
-
-from datetime import datetime
 
 with DAG(
     dag_id=f"example_dag_redshift",
