@@ -76,8 +76,6 @@ In your Dockerfile, replace the existing FROM statement with:
 FROM quay.io/astronomer/ap-airflow:2.0.0-2-buster-onbuild
 ```
 
-Feel free to refer to the [Astronomer Certified 2.0.0 image source](https://github.com/astronomer/ap-airflow/tree/master/2.0.0/buster).
-
 ## Step 4: Start Airflow
 
 Now, run the following command:
