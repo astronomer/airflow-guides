@@ -26,5 +26,7 @@ In this section we'll show how to implement dynamic task mapping for two classic
 traditional operators
 get files -> load files -> [delete files, transform task] in Snowflake (snowflake operator) (or single task, but show how to create multiple tasks afterwards)
 
+Keep in mind the format needed for the parameter you are mapping on. In the example above, we write our own Python function to get the S3 keys because the `S3toSnowflakeOperator` requires *each* `s3_key` parameter to be in a list format, and the `s3_hook.list_keys` function returns a single list with all keys. By writing our own simple function, we can turn our resulting list into a list of lists that can be used by the downstream operator. 
+
 ### Hyperparameter Tuning a Model
 decorated tasks
