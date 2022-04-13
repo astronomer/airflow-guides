@@ -11,22 +11,91 @@ tags: ["Tasks"]
 
 With the release of Airflow 2.3 (LINK?), users can write DAGs that dynamically generate parallel tasks at runtime. This feature, known as dynamic task mapping, is a paradigm shift for DAG design in Airflow. Prior to Airflow 2.3, tasks could only be generated dynamically at the time the DAG was parsed, meaning you had to change your DAG code if you needed to adjust tasks based on some external factor. Now, you can easily design your DAGs to respond to external criteria by creating a varied number of tasks each time they are run.
 
-In this guide, we'll cover the concept of dynamic task mapping, common use cases where this feature is helpful, and a couple of example implementations of this feature.
+In this guide, we'll cover the concept of dynamic task mapping, and a couple of example implementations showing how to use this feature for common use cases.
 
 ## Dynamic Task Concepts
 
-## Common Use Cases
+Map reduce concepts. expand & partial functions. For high level examples of how to apply these functions in different cases, check out the Airflow docs (LINK).
+
+In the Airflow UI, we can see mapped tasks in both the Graph View and the Grid View.
+
+Screenshots and walk through what everything looks like. 
 
 ## Example Implementations
 
-In this section we'll show how to implement dynamic task mapping for two classic use cases: processing files in S3 and hyper-parameter tuning a model. The first will highlight use of traditional Airflow operators, and the second will use decorated functions and the TaskFlow API.
+In this section we'll show how to implement dynamic task mapping for two classic use cases: processing files in S3 and implementing a pluggable ML Ops pipeline. The first will highlight use of traditional Airflow operators, and the second will use decorated functions and the TaskFlow API.
 
 ### Processing Files From S3
 
-traditional operators
-get files -> load files -> [delete files, transform task] in Snowflake (snowflake operator) (or single task, but show how to create multiple tasks afterwards)
+For our first example, we'll implement one of the most common use cases for dynamic tasks: processing files in S3. In this scenario, we will use an ELT framework to extract data from files in S3, load it into Snowflake, and then transform the data using Snowflake's built-in compute. We assume that files will be dropped daily, but we don't know how many will arrive each day. We'll leverage dynamic task mapping to create a unique task for each file at runtime. This gives us the benefit of atomicity, better observability, and easier recovery from failures.
 
-Keep in mind the format needed for the parameter you are mapping on. In the example above, we write our own Python function to get the S3 keys because the `S3toSnowflakeOperator` requires *each* `s3_key` parameter to be in a list format, and the `s3_hook.list_keys` function returns a single list with all keys. By writing our own simple function, we can turn our resulting list into a list of lists that can be used by the downstream operator. 
+The DAG below has the following steps:
+
+1. Uses a decorated Python operator to get the current list of files from S3. The S3 prefix passed to this function is parameterized with `ds_nodash` so it pulls files only for the execution date of the DAG run (e.g. for a DAG run on April 12th, we would assume the files landed in a folder named `20220412/`).
+2. Using the results of the first task, map an `S3ToSnowflakeOperator` for each file.
+3. Move the daily folder of processed files into a `processed/` folder while,
+4. Simultaneously (with step 3), run a Snowflake query that transforms the data. The query is located in a separate SQL file in our `include/` directory. 
+5. Delete the folder of daily files now that it has been moved to `processed/` for record keeping.
+
+```python
+from airflow import DAG
+from airflow.decorators import task
+from airflow.providers.snowflake.transfers.s3_to_snowflake import S3ToSnowflakeOperator
+from airflow.providers.snowflake.operators.snowflake import SnowflakeOperator
+from airflow.providers.amazon.aws.hooks.s3 import S3Hook
+from airflow.providers.amazon.aws.operators.s3_copy_object import S3CopyObjectOperator
+from airflow.providers.amazon.aws.operators.s3_delete_objects import S3DeleteObjectsOperator
+
+from datetime import datetime
+
+@task
+def get_s3_files(current_prefix):
+    s3_hook = S3Hook(aws_conn_id='s3')
+    current_files = s3_hook.list_keys(bucket_name='airflow-kenten', prefix=current_prefix + "/", start_after_key=current_prefix + "/")
+    return [[file] for file in current_files]
+
+
+with DAG(dag_id='mapping_elt', 
+        start_date=datetime(2022, 4, 2),
+        catchup=False,
+        template_searchpath='/usr/local/airflow/include',
+        schedule_interval='@daily') as dag:
+
+    copy_to_snowflake = S3ToSnowflakeOperator.partial(
+        task_id='load_files_to_snowflake', 
+        stage='KENTEN_S3_DEMO_STAGE',
+        table='COMBINED_HOMES',
+        schema='KENTENDANAS',
+        file_format="(type = 'CSV',field_delimiter = ',', skip_header=1)",
+        snowflake_conn_id='snowflake').expand(s3_keys=get_s3_files(current_prefix="{{ ds_nodash }}"))
+
+    move_s3 = S3CopyObjectOperator(
+        task_id='move_files_to_processed',
+        aws_conn_id='s3',
+        source_bucket_name='airflow-kenten',
+        source_bucket_key="{{ ds_nodash }}"+"/",
+        dest_bucket_name='airflow-kenten',
+        dest_bucket_key="processed/"+"{{ ds_nodash }}"+"/"
+    )
+
+    delete_landing_files = S3DeleteObjectsOperator(
+        task_id='delete_landing_files',
+        aws_conn_id='s3',
+        bucket='airflow-kenten',
+        prefix="{{ ds_nodash }}"+"/"
+    )
+
+    transform_in_snowflake = SnowflakeOperator(
+        task_id='run_transformation_query',
+        sql='/transformation_query.sql',
+        snowflake_conn_id='snowflake'
+    )
+
+    copy_to_snowflake >> [move_s3, transform_in_snowflake]
+    move_s3 >> delete_landing_files
+```
+
+Keep in mind the format needed for the parameter you are mapping on. In the example above, we write our own Python function to get the S3 keys because the `S3toSnowflakeOperator` requires *each* `s3_key` parameter to be in a list format, and the `s3_hook.list_keys` function returns a single list with all keys. By writing our own simple function, we can turn the hook results into a list of lists that can be used by the downstream operator. 
 
 ### Hyperparameter Tuning a Model
 decorated tasks
