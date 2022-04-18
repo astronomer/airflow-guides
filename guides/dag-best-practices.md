@@ -21,9 +21,9 @@ For an in-depth walk through and examples of some of the concepts covered here, 
 
 Before we jump into best practices specific to Airflow, we need to review one concept which applies to all data pipelines. 
 
-[Idempotency](https://en.wikipedia.org/wiki/Idempotence) is the foundation for many computing practices, including the Airflow best practices in this guide. Specifically, it is a quality: A program is considered idempotent if running the program on a set input once has the same effect as running the program multiple times.
+[Idempotency](https://en.wikipedia.org/wiki/Idempotence) is the foundation for many computing practices, including the Airflow best practices in this guide. Specifically, it is a quality: A program is considered idempotent if, for a set input, running the program once has the same effect as running the program multiple times.
 
-In the context of Airflow, a DAG is considered idempotent if rerunning the same *DAG Run* (with the same inputs) multiple times has the same effect as running it only once. Designing idempotent DAGs decreases recovery time from failures and prevents data loss.
+In the context of Airflow, a DAG is considered idempotent if rerunning the same *DAG Run* (with the same inputs) multiple times has the same effect as running it only once. This can be acheived by designing each individual task in your DAG to be idempotent. Designing idempotent DAGs and tasks decreases recovery time from failures and prevents data loss.
 
 ## DAG Design
 
