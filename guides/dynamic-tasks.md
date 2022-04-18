@@ -1,7 +1,7 @@
 ---
 title: "Dynamic Tasks in Airflow"
 description: "How to dynamically create tasks at runtime in your Airflow DAGs."
-date: 2022-04-15T00:00:00.000Z
+date: 2022-04-22T00:00:00.000Z
 slug: "dynamic-tasks"
 heroImagePath: null
 tags: ["Tasks"]
@@ -15,9 +15,35 @@ In this guide, we'll cover the concept of dynamic task mapping, and a couple of 
 
 ## Dynamic Task Concepts
 
-Map reduce concepts. expand & partial functions. For high level examples of how to apply these functions in different cases, check out the Airflow docs (LINK).
+Airflow's dynamic task mapping feature it built off of the [MapReduce](https://en.wikipedia.org/wiki/MapReduce) programming model. The map procedure takes a set of inputs and creates a single task for each one. The reduce procedure, which is optional, allows a task to operate on the collected output of a mapped task.
 
-In the Airflow UI, we can see mapped tasks in both the Graph View and the Grid View.
+In practice, DAG authors have two new functions available to implement this feature:
+
+- `expand()`, which passes the input you want to map on to a particular parameter of the operator
+- `partial()`, which passes parameters that stay constant for all mapped instances of the operator
+
+Put together, you can have a task that looks like this:
+
+```python
+@task
+    def add(x: int, y: int):
+        return x + y
+
+    added_values = add.partial(y=10).expand(x=[1, 2, 3])
+```
+
+This will result in three mapped `add` tasks, one for each entry in the `x` input list, where `y` remains constant in each task.
+
+There are a couple of things to keep in mind when working with mapped tasks:
+
+- You *can* use the results of an upstream task as the input to a mapped task (in fact, this is where the real flexibility comes with this feature). The only requirement is that the upstream task return a value in a dict or list form. If using traditional operators (not decorated tasks), the mapping values must be stored in XCom.
+- You *can* map over multiple parameters. This will result in a cross product with one task for each combination of parameters.
+- You *can* use the results of a mapped task as input to a downstream mapped task.
+- You *can't* map over any parameter. For example, `task_id`, `pool`, and many `BaseOperator` arguments are not mappable.
+
+For more high level examples of how to apply dynamic task mapping functions in different cases, check out the Airflow docs (LINK).
+
+The Airflow UI gives us observability for mapped tasks in both the Graph View and the Grid View.
 
 Screenshots and walk through what everything looks like. 
 
@@ -51,7 +77,7 @@ from datetime import datetime
 @task
 def get_s3_files(current_prefix):
     s3_hook = S3Hook(aws_conn_id='s3')
-    current_files = s3_hook.list_keys(bucket_name='airflow-kenten', prefix=current_prefix + "/", start_after_key=current_prefix + "/")
+    current_files = s3_hook.list_keys(bucket_name='my-bucket', prefix=current_prefix + "/", start_after_key=current_prefix + "/")
     return [[file] for file in current_files]
 
 
@@ -63,25 +89,25 @@ with DAG(dag_id='mapping_elt',
 
     copy_to_snowflake = S3ToSnowflakeOperator.partial(
         task_id='load_files_to_snowflake', 
-        stage='KENTEN_S3_DEMO_STAGE',
+        stage='MY_STAGE',
         table='COMBINED_HOMES',
-        schema='KENTENDANAS',
+        schema='MYSCHEMA',
         file_format="(type = 'CSV',field_delimiter = ',', skip_header=1)",
         snowflake_conn_id='snowflake').expand(s3_keys=get_s3_files(current_prefix="{{ ds_nodash }}"))
 
     move_s3 = S3CopyObjectOperator(
         task_id='move_files_to_processed',
         aws_conn_id='s3',
-        source_bucket_name='airflow-kenten',
+        source_bucket_name='my-bucket',
         source_bucket_key="{{ ds_nodash }}"+"/",
-        dest_bucket_name='airflow-kenten',
+        dest_bucket_name='my-bucket',
         dest_bucket_key="processed/"+"{{ ds_nodash }}"+"/"
     )
 
     delete_landing_files = S3DeleteObjectsOperator(
         task_id='delete_landing_files',
         aws_conn_id='s3',
-        bucket='airflow-kenten',
+        bucket='my-bucket',
         prefix="{{ ds_nodash }}"+"/"
     )
 
@@ -97,5 +123,12 @@ with DAG(dag_id='mapping_elt',
 
 Keep in mind the format needed for the parameter you are mapping on. In the example above, we write our own Python function to get the S3 keys because the `S3toSnowflakeOperator` requires *each* `s3_key` parameter to be in a list format, and the `s3_hook.list_keys` function returns a single list with all keys. By writing our own simple function, we can turn the hook results into a list of lists that can be used by the downstream operator. 
 
-### Hyperparameter Tuning a Model
-decorated tasks
+### Making a Pluggable ML Ops Pipeline
+
+ Dynamic tasks can be very useful for productionizing machine learning pipelines. ML Ops often includes some sort of dynamic component. The following use cases are common:
+
+ - train different models
+ - hyperparameter train a single model
+ - create a different model for each customer
+
+ In the example DAG below, we implement the first of these use cases. We also highlight how dynamic task mapping is simple to implement with decorated tasks.
