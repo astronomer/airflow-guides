@@ -23,7 +23,7 @@ At a high level, creating a custom operator is straightforward. At a minimum, al
 This will look something like the code below:
 
 ```python
-from airflow.operators.bash_operator import BaseOperator
+from airflow.models.baseoperator import BaseOperator
 from airflow.utils.decorators import apply_defaults
 from hooks.my_hook import MyHook
 
@@ -61,7 +61,7 @@ Airflow by default will add the `dags/` and `plugins/` directories in a project 
 │       └── transforms.sql
 ├── packages.txt     
 ├── plugins/             
-│   └── hooks/
+│   └── operators/
 │       └── my_operator.py
 │   └── sensors/
 │       └── my_sensor.py
