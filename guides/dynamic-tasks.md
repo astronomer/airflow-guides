@@ -63,9 +63,9 @@ Similarly, the Grid View shows task details and history for each mapped task. Al
 
 ## Example Implementations
 
-In this section we'll show how to implement dynamic task mapping for two classic use cases: processing files in S3 and implementing a pluggable ML Ops pipeline. The first will highlight use of traditional Airflow operators, and the second will use decorated functions and the TaskFlow API.
+In this section we'll show how dynamic task mapping can be implemented for two classic use cases: ELT and ML Ops. The first will highlight use of traditional Airflow operators, and the second will use decorated functions and the TaskFlow API.
 
-### Processing Files From S3
+### ELT
 
 For our first example, we'll implement one of the most common use cases for dynamic tasks: processing files in S3. In this scenario, we will use an ELT framework to extract data from files in S3, load it into Snowflake, and then transform the data using Snowflmappake's built-in compute. We assume that files will be dropped daily, but we don't know how many will arrive each day. We'll leverage dynamic task mapping to create a unique task for each file at runtime. This gives us the benefit of atomicity, better observability, and easier recovery from failures.
 
@@ -137,16 +137,191 @@ with DAG(dag_id='mapping_elt',
 
 The Graph View of the DAG looks like this:
 
-SCREENSHOT
+![ELT Graph](https://assets2.astronomer.io/main/guides/dynamic-tasks/mapping_elt_graph.png)
 
 Keep in mind the format needed for the parameter you are mapping on. In the example above, we write our own Python function to get the S3 keys because the `S3toSnowflakeOperator` requires *each* `s3_key` parameter to be in a list format, and the `s3_hook.list_keys` function returns a single list with all keys. By writing our own simple function, we can turn the hook results into a list of lists that can be used by the downstream operator. 
 
-### Making a Pluggable ML Ops Pipeline
+### ML Ops
 
- Dynamic tasks can be very useful for productionizing machine learning pipelines. ML Ops often includes some sort of dynamic component. The following use cases are common:
+ Dynamic tasks can also be very useful for productionizing machine learning pipelines. ML Ops often includes some sort of dynamic component. The following use cases are common:
 
- - train different models
- - hyperparameter train a single model
- - create a different model for each customer
+ - **Training different models:** you have a reusable pipeline that you use to create a separate DAG for each data source. For each DAG, you point your pluggable pipeline to your data source, and to a list of models you want to experiment with in parallel. That list of models might change periodically, but by leveraging dynamic task mapping, you can always have a single task per model without any user intervention when the models change. You also maintain all of the history for any models you have trained in the past, even if they are no longer included in your list.  
+ - **Hyperparameter training a model:** you have a single model that you want to hyperparameter tune before publishing results from the best set of parameters. With dynamic task mapping, you can grab your parameters from any external system at runtime, giving you full flexibility and history.
+ - **Creating a different model for each customer:** you have a model that you need to train separately for each individual customer. Your customer list changes frequently, and you need to retain the history of any previous customer models. This can be a tricky use case to implement with dynamic *DAGs*, because the history of any removed DAGs is not retained in the Airflow UI, and performance issues can arise if the customer list is long. With dynamic tasks, you can maintain a single DAG that updates as needed based on the current list of customers at runtime. 
 
  In the example DAG below, we implement the first of these use cases. We also highlight how dynamic task mapping is simple to implement with decorated tasks.
+
+ ```python
+from airflow.decorators import task, dag, task_group
+from airflow.providers.google.cloud.hooks.bigquery import BigQueryHook
+
+from datetime import datetime
+
+import logging
+import mlflow
+
+import pandas as pd
+
+from sklearn.model_selection import train_test_split, GridSearchCV
+from sklearn.linear_model import LogisticRegression
+import lightgbm as lgb
+
+import include.metrics as metrics
+from include.grid_configs import models, params
+
+
+mlflow.set_tracking_uri('http://host.docker.internal:5000')
+try:
+    # Creating an experiment 
+    mlflow.create_experiment('census_prediction')
+except:
+    pass
+# Setting the environment with the created experiment
+mlflow.set_experiment('census_prediction')
+
+mlflow.sklearn.autolog()
+mlflow.lightgbm.autolog()
+
+@dag(
+    start_date=datetime(2022, 1, 1),
+    schedule_interval=None,
+    catchup=False
+)
+def mlflow_multimodel_example():
+
+    @task
+    def load_data():
+        """Pull Census data from Public BigQuery and save as Pandas dataframe in GCS bucket with XCom"""
+
+        bq = BigQueryHook()
+        sql = """
+        SELECT * FROM `bigquery-public-data.ml_datasets.census_adult_income`
+        """
+
+        return bq.get_pandas_df(sql=sql, dialect='standard')
+
+
+    @task
+    def preprocessing(df: pd.DataFrame):
+        """Clean Data and prepare for feature engineering
+        
+        Returns pandas dataframe via Xcom to GCS bucket.
+
+        Keyword arguments:
+        df -- Raw data pulled from BigQuery to be processed. 
+        """
+
+        df.dropna(inplace=True)
+        df.drop_duplicates(inplace=True)
+
+        # Clean Categorical Variables (strings)
+        cols = df.columns
+        for col in cols:
+            if df.dtypes[col]=='object':
+                df[col] =df[col].apply(lambda x: x.rstrip().lstrip())
+
+
+        # Rename up '?' values as 'Unknown'
+        df['workclass'] = df['workclass'].apply(lambda x: 'Unknown' if x == '?' else x)
+        df['occupation'] = df['occupation'].apply(lambda x: 'Unknown' if x == '?' else x)
+        df['native_country'] = df['native_country'].apply(lambda x: 'Unknown' if x == '?' else x)
+
+
+        # Drop Extra/Unused Columns
+        df.drop(columns=['education_num', 'relationship', 'functional_weight'], inplace=True)
+
+        return df
+
+
+    @task
+    def feature_engineering(df: pd.DataFrame):
+        """Feature engineering step
+        
+        Returns pandas dataframe via XCom to GCS bucket.
+
+        Keyword arguments:
+        df -- data from previous step pulled from BigQuery to be processed. 
+        """
+        # Onehot encoding 
+        df = pd.get_dummies(df, prefix='workclass', columns=['workclass'])
+        df = pd.get_dummies(df, prefix='education', columns=['education'])
+        df = pd.get_dummies(df, prefix='occupation', columns=['occupation'])
+        df = pd.get_dummies(df, prefix='race', columns=['race'])
+        df = pd.get_dummies(df, prefix='sex', columns=['sex'])
+        df = pd.get_dummies(df, prefix='income_bracket', columns=['income_bracket'])
+        df = pd.get_dummies(df, prefix='native_country', columns=['native_country'])
+
+        # Bin Ages
+        df['age_bins'] = pd.cut(x=df['age'], bins=[16,29,39,49,59,100], labels=[1, 2, 3, 4, 5])
+
+        # Dependent Variable
+        df['never_married'] = df['marital_status'].apply(lambda x: 1 if x == 'Never-married' else 0) 
+
+        # Drop redundant column
+        df.drop(columns=['income_bracket_<=50K', 'marital_status', 'age'], inplace=True)
+
+        return df
+
+    @task
+    def get_models():
+        """
+        Returns list of models to train from 
+        """
+        return [models]
+
+    @task()
+    def train(df: pd.DataFrame, model_type=k, model=models[k], grid_params=params[k], **kwargs):
+        """Train and validate model using a grid search for the optimal parameter values and a five fold cross validation.
+
+        Returns accuracy score via XCom to GCS bucket.
+
+        Keyword arguments:
+        df -- data from previous step pulled from BigQuery to be processed. 
+        """
+        y = df['never_married']
+        X = df.drop(columns=['never_married'])
+
+        X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=55, stratify=y)
+
+        grid_search = GridSearchCV(model, param_grid=grid_params, verbose=1, cv=5, n_jobs=-1)
+
+        with mlflow.start_run(run_name=f'{model_type}_{kwargs["run_id"]}'):
+
+            logging.info('Performing Gridsearch')
+            grid_search.fit(X_train, y_train)
+
+            logging.info(f'Best Parameters\n{grid_search.best_params_}')
+            best_params = grid_search.best_params_
+
+            if model_type == 'lgbm':
+
+                train_set = lgb.Dataset(X_train, label=y_train)
+                test_set = lgb.Dataset(X_test, label=y_test)
+
+                best_params['metric'] = ['auc', 'binary_logloss']
+
+                logging.info('Training model with best parameters')
+                clf = lgb.train(
+                    train_set=train_set,
+                    valid_sets=[train_set, test_set],
+                    valid_names=['train', 'validation'],
+                    params=best_params,
+                    early_stopping_rounds=5
+                )
+
+            else:
+                logging.info('Training model with best parameters')
+                clf = LogisticRegression(penalty=best_params['penalty'], C=best_params['C'], solver=best_params['solver']).fit(X_train, y_train)
+
+            y_pred_class = metrics.test(clf, X_test)
+
+            # Log Classfication Report, Confusion Matrix, and ROC Curve
+            metrics.log_all_eval_metrics(y_test, y_pred_class)
+
+    df = load_data()
+    clean_data = preprocessing(df)
+    features = feature_engineering(clean_data)
+    train_modes = train.partial(features).expand(get_models())
+    
+dag = mlflow_multimodel_example()
+ ```
