@@ -39,6 +39,7 @@ There are a couple of things to keep in mind when working with mapped tasks:
 - You *can* use the results of an upstream task as the input to a mapped task (in fact, this is where the real flexibility comes with this feature). The only requirement is that the upstream task return a value in a dict or list form. If using traditional operators (not decorated tasks), the mapping values must be stored in XCom.
 - You *can* map over multiple parameters. This will result in a cross product with one task for each combination of parameters.
 - You *can* use the results of a mapped task as input to a downstream mapped task.
+- You *can* have a mapped task that results in no task instances (e.g. if your upstream task that generates the mapping values returns an empty list). In this case, the mapped task will be marked skipped, and downstream tasks will be run according to the trigger rules you set (by default, downstream tasks will also be skipped).
 - You *can't* map over all parameters. For example, `task_id`, `pool`, and many `BaseOperator` arguments are not mappable.
 
 For more high level examples of how to apply dynamic task mapping functions in different cases, check out the Airflow docs (LINK).
