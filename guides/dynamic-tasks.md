@@ -39,13 +39,27 @@ There are a couple of things to keep in mind when working with mapped tasks:
 - You *can* use the results of an upstream task as the input to a mapped task (in fact, this is where the real flexibility comes with this feature). The only requirement is that the upstream task return a value in a dict or list form. If using traditional operators (not decorated tasks), the mapping values must be stored in XCom.
 - You *can* map over multiple parameters. This will result in a cross product with one task for each combination of parameters.
 - You *can* use the results of a mapped task as input to a downstream mapped task.
-- You *can't* map over any parameter. For example, `task_id`, `pool`, and many `BaseOperator` arguments are not mappable.
+- You *can't* map over all parameters. For example, `task_id`, `pool`, and many `BaseOperator` arguments are not mappable.
 
 For more high level examples of how to apply dynamic task mapping functions in different cases, check out the Airflow docs (LINK).
 
 The Airflow UI gives us observability for mapped tasks in both the Graph View and the Grid View.
 
-Screenshots and walk through what everything looks like. 
+In the Graph View, any mapped tasks will be indicated by a set of brackets `[ ]` following the task ID. The number in the brackets will update for each DAG run to reflect how many mapped instances were created.
+
+![Mapped Graph](https://assets2.astronomer.io/main/guides/dynamic-tasks/mapped_task_graph.png)
+
+Clicking on the mapped task, we have a new Mapped Instances drop down where we can choose a specific instance to perform task actions on.
+
+![Mapped Actions](https://assets2.astronomer.io/main/guides/dynamic-tasks/mapped_instances_task_actions.png)
+
+Selecting one of the mapped instances provides links to other views like you would see for any other Airflow task: Instance Details, Rendered, Log, XCom, etc.
+
+![Mapped Views](https://assets2.astronomer.io/main/guides/dynamic-tasks/mapped_instance_views.png)
+
+Similarly, the Grid View shows task details and history for each mapped task. All mapped tasks will be combined into one row on the grid (shown as `load_files_to_snowflake [ ]` in this example), and clicking into that task will provide details on each individual mapped instance.
+
+![Mapped Grid](https://assets2.astronomer.io/main/guides/dynamic-tasks/mapped_grid_view.png)
 
 ## Example Implementations
 
@@ -53,7 +67,7 @@ In this section we'll show how to implement dynamic task mapping for two classic
 
 ### Processing Files From S3
 
-For our first example, we'll implement one of the most common use cases for dynamic tasks: processing files in S3. In this scenario, we will use an ELT framework to extract data from files in S3, load it into Snowflake, and then transform the data using Snowflake's built-in compute. We assume that files will be dropped daily, but we don't know how many will arrive each day. We'll leverage dynamic task mapping to create a unique task for each file at runtime. This gives us the benefit of atomicity, better observability, and easier recovery from failures.
+For our first example, we'll implement one of the most common use cases for dynamic tasks: processing files in S3. In this scenario, we will use an ELT framework to extract data from files in S3, load it into Snowflake, and then transform the data using Snowflmappake's built-in compute. We assume that files will be dropped daily, but we don't know how many will arrive each day. We'll leverage dynamic task mapping to create a unique task for each file at runtime. This gives us the benefit of atomicity, better observability, and easier recovery from failures.
 
 The DAG below has the following steps:
 
@@ -120,6 +134,10 @@ with DAG(dag_id='mapping_elt',
     copy_to_snowflake >> [move_s3, transform_in_snowflake]
     move_s3 >> delete_landing_files
 ```
+
+The Graph View of the DAG looks like this:
+
+SCREENSHOT
 
 Keep in mind the format needed for the parameter you are mapping on. In the example above, we write our own Python function to get the S3 keys because the `S3toSnowflakeOperator` requires *each* `s3_key` parameter to be in a list format, and the `s3_hook.list_keys` function returns a single list with all keys. By writing our own simple function, we can turn the hook results into a list of lists that can be used by the downstream operator. 
 
