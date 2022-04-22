@@ -29,6 +29,8 @@ jobs:
   link-check:
     runs-on: ubuntu-latest
     steps:
+      - name: fix-permissions-check
+        run: git config --global --add safe.directory /github/workspace
       - uses: actions/checkout@v1
       - uses: actions/setup-node@main
       - name: markdown-link-check
