@@ -48,10 +48,8 @@ from airflow.providers.dbt.cloud.hooks.dbt import DbtCloudHook, DbtCloudJobRunSt
 from airflow.providers.dbt.cloud.operators.dbt import DbtCloudRunJobOperator
 from airflow.utils.edgemodifier import Label
 
-
 DBT_CLOUD_CONN_ID = "dbt"
 JOB_ID = "{{ var.value.dbt_cloud_job_id }}"
-
 
 def _check_job_not_running(job_id):
     """
@@ -62,7 +60,6 @@ def _check_job_not_running(job_id):
     latest_run = runs[0].json()["data"][0]
 
     return DbtCloudJobRunStatus.is_terminal(latest_run["status"])
-
 
 @dag(
     start_date=datetime(2022, 2, 10),
@@ -89,7 +86,6 @@ def check_before_running_dbt_cloud_job():
     )
 
     begin >> check_job >> Label("Job not currently running. Proceeding.") >> trigger_job >> end
-
 
 dag = check_before_running_dbt_cloud_job()
 ```
