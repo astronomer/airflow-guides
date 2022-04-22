@@ -9,21 +9,100 @@ tags: ["DAGs", "Integrations"]
 
 ## Overview
 
-> This guide summarizes some of the key practices and findings from our blog series with [Updater](https://updater.com/) and [Sam Bail](https://sambail.com/) about using dbt in Airflow. For more information, check out [Part 1](https://www.astronomer.io/blog/airflow-dbt-1), [Part 2](https://www.astronomer.io/blog/airflow-dbt-2), and [Part 3](https://www.astronomer.io/blog/airflow-dbt-3) of the series.
-
 [dbt](https://getdbt.com/) is an open-source library for analytics engineering that helps users build interdependent SQL models for in-warehouse data transformation. As ephemeral compute becomes more readily available in data warehouses thanks to tools like [Snowflake](https://snowflake.com/), dbt has become a key component of the modern data engineering workflow. Now, data engineers can use dbt to write, organize, and run in-warehouse transformations of raw data.
 
 Teams can use Airflow to orchestrate and execute dbt models as DAGs. Running dbt with Airflow ensures a reliable, scalable environment for models, as well as the ability to trigger models only after every prerequisite task is met. Airflow also gives you fine-grained control over dbt tasks such that teams have observability over every step in their dbt models.
 
-In this guide, we'll walk through two common use cases for orchestrating dbt with Airflow via the `BashOperator`: one at the [project](https://docs.getdbt.com/docs/building-a-dbt-project/projects) level, and another at the [model](https://docs.getdbt.com/docs/building-a-dbt-project/building-models) level. We'll also walk through how to extend the model-level use case by automating changes to a dbt model.
+In this guide, we'll walk through:
 
-## Use Case 1: dbt + Airflow at the Project Level
+- Using the [dbt Provider](https://registry.astronomer.io/providers/dbt-cloud) to orchestrate dbt Cloud with Airflow.
+- Two common use cases for orchestrating dbt Core with Airflow via the `BashOperator`: 
+    - At the [project](https://docs.getdbt.com/docs/building-a-dbt-project/projects) level and, 
+    - At the [model](https://docs.getdbt.com/docs/building-a-dbt-project/building-models) level. 
+- How to extend the model-level use case by automating changes to a dbt model.
 
-When orchestrating dbt, we have a few options for our DAGs. We can use:
+> The dbt Core sections of this guide summarize some of the key practices and findings from our blog series with [Updater](https://updater.com/) and [Sam Bail](https://sambail.com/) about using dbt in Airflow. For more information, check out [Part 1](https://www.astronomer.io/blog/airflow-dbt-1), [Part 2](https://www.astronomer.io/blog/airflow-dbt-2), and [Part 3](https://www.astronomer.io/blog/airflow-dbt-3) of the series.
 
-- A [community-contributed dbt Airflow plugin](https://github.com/dwallace0723/dbt-cloud-plugin/) to farm out execution to dbt Cloud
-- Pre-existing dbt Airflow operators in the [community-contributed airflow-dbt python package](https://pypi.org/project/airflow-dbt/)
-- dbt commands directly through the [`BashOperator`](https://airflow.apache.org/docs/apache-airflow/stable/howto/operator/bash.html)
+## dbt Cloud
+
+To orchestrate [dbt Cloud](https://www.getdbt.com/product/what-is-dbt/) jobs with Airflow, you can use the [dbt Provider](https://registry.astronomer.io/providers/dbt-cloud), which contains the following useful modules:
+
+- **`DbtCloudRunJobOperator`:** Executes a dbt Cloud job.
+- **`DbtCloudGetJonRunArtifactOperator`:** Downloads artifacts from a dbt Cloud job run.
+- **`DbtCloudJobRunSensor`:** Waits for a dbt Cloud job run to complete.
+
+In order to use the dbt Provider in your DAGs, you will need to complete the following steps:
+
+1. Add the `apache-airflow-providers-dbt-cloud` package to your Airflow environment. If you are working in an Astro project, you can add the package to your `requirements.txt` file.
+2. Set up an Airflow connection to your dbt Cloud instance. The connection type should be `dbt Cloud`, and it should include an API token from your dbt Cloud account. If you want your dbt Provider tasks to use a default account ID, you can add that to the connection, but it is not required.
+
+In the DAG below, we show a simple implementation of the dbt Provider. This example showcases how to run a dbt Cloud job from Airflow, while adding an operational check to ensure the dbt Cloud job is not running prior to triggering. The `DbtCloudHook` provides a `list_job_runs()` method which can be used to retrieve the latest triggered run for a job and check the status of said run. If the job is not in a state of 10 (Success), 20 (Error), or 30 (Cancelled), the pipeline will not try to trigger it.
+
+```python
+from pendulum import datetime
+
+from airflow.decorators import dag
+from airflow.operators.dummy import DummyOperator
+from airflow.operators.python import ShortCircuitOperator
+from airflow.providers.dbt.cloud.hooks.dbt import DbtCloudHook, DbtCloudJobRunStatus
+from airflow.providers.dbt.cloud.operators.dbt import DbtCloudRunJobOperator
+from airflow.utils.edgemodifier import Label
+
+
+DBT_CLOUD_CONN_ID = "dbt"
+JOB_ID = "{{ var.value.dbt_cloud_job_id }}"
+
+
+def _check_job_not_running(job_id):
+    """
+    Retrieves the last run for a given dbt Cloud job and checks to see if the job is not currently running.
+    """
+    hook = DbtCloudHook(DBT_CLOUD_CONN_ID)
+    runs = hook.list_job_runs(job_definition_id=job_id, order_by="-id")
+    latest_run = runs[0].json()["data"][0]
+
+    return DbtCloudJobRunStatus.is_terminal(latest_run["status"])
+
+
+@dag(
+    start_date=datetime(2022, 2, 10),
+    schedule_interval="@daily",
+    catchup=False,
+    default_view="graph",
+    doc_md=__doc__,
+)
+def check_before_running_dbt_cloud_job():
+    begin, end = [DummyOperator(task_id=id) for id in ["begin", "end"]]
+
+    check_job = ShortCircuitOperator(
+        task_id="check_job_is_not_running",
+        python_callable=_check_job_not_running,
+        op_kwargs={"job_id": JOB_ID},
+    )
+
+    trigger_job = DbtCloudRunJobOperator(
+        task_id="trigger_dbt_cloud_job",
+        dbt_cloud_conn_id=DBT_CLOUD_CONN_ID,
+        job_id=JOB_ID,
+        check_interval=600,
+        timeout=3600,
+    )
+
+    begin >> check_job >> Label("Job not currently running. Proceeding.") >> trigger_job >> end
+
+
+dag = check_before_running_dbt_cloud_job()
+```
+
+Note that in the `DbtCloudRunJobOperator` you must provide the dbt connection ID as well as the `job_id` of the job you are triggering.
+
+> **Note:** The full code for this example, along with other DAGs that implement the dbt Provider, can be found on the [Astronomer Registry](https://registry.astronomer.io/dags?providers=dbt+Cloud&page=1).
+
+## dbt Core
+
+When orchestrating dbt Core with Airflow, the most straight forward DAG design is to run dbt commands directly through the [`BashOperator`](https://airflow.apache.org/docs/apache-airflow/stable/howto/operator/bash.html). In this section we'll show a couple examples for how to do so.
+
+### Use Case 1: dbt Core + Airflow at the Project Level
 
 For this example we'll use the `BashOperator`, which simply executes a shell command, because it lets us run specific dbt commands. The primary dbt interface is the command line, so the `BashOperator` is one of the best tools for managing dbt. You can execute `dbt run` or `dbt test` directly in Airflow as you would with any other shell.
 
@@ -65,7 +144,7 @@ Using the `BashOperator` to run `dbt run` and `dbt test` is a working solution f
 - Low observability into what execution state the project is in.
 - Failures are absolute and require the whole `dbt` group of models to be run again, which can be costly.
 
-## Use Case 2: dbt + Airflow at the Model Level
+### Use Case 2: dbt Core + Airflow at the Model Level
 
 What if we want more visibility into the steps dbt is running in each task? Instead of running a group of dbt models on a single task, we can write a DAG that runs a task for each model. Using this method, our dbt workflow is more controllable because we can see the successes, failures, and retries of each dbt model in its corresponding Airflow task. If a model near the end of our dbt pipeline fails, we can simply fix the broken model and retry that individual task without having to rerun the entire workflow. Plus, we no longer have to worry about defining Sensors to configure interdependency between Airflow DAGs because we've consolidated our work into a single DAG. Our friends at Updater came up with this solution.
 
@@ -369,4 +448,4 @@ With regards to the `dbt test` runs:
 
 ## Conclusion
 
-To recap, in this guide we have learned about dbt, how to create dbt tasks in Airflow, and how to productionize those tasks to automatically create tasks based on a manifest. For a more detailed discussion on trade-offs, limitations, and adding dbt to a full ELT pipeline, see our blog posts. To see more examples of how to use dbt and Airflow to build pipelines, check out our [dbt DAGs on the Registry](https://registry.astronomer.io/dags/?query=dbt&badges=certified).
+To recap, in this guide we have learned about dbt, how to create dbt tasks in Airflow, and how to productionize those tasks to automatically create tasks based on a manifest. For a more detailed discussion on trade-offs, limitations, and adding dbt Core to a full ELT pipeline, see our blog posts. To see more examples of how to use dbt and Airflow to build pipelines, check out our [dbt DAGs on the Registry](https://registry.astronomer.io/dags/?query=dbt&badges=certified).
