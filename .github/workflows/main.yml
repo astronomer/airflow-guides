@@ -20,7 +20,7 @@ jobs:
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
-      - uses: actions/checkout@v1
+      - uses: actions/checkout@v3
       - uses: actions/setup-node@main
       - name: lint all mardownfiles
         run: |
@@ -29,7 +29,9 @@ jobs:
   link-check:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v1
+      - name: fix-permissions-check
+        run: git config --global --add safe.directory /github/workspace
+      - uses: actions/checkout@v3
       - uses: actions/setup-node@main
       - name: markdown-link-check
         uses: gaurav-nelson/github-action-markdown-link-check@1.0.13
@@ -42,7 +44,7 @@ jobs:
   spell-check:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v1
+      - uses: actions/checkout@v3
       - uses: actions/setup-node@main
       - name: Check spelling
         run: |
