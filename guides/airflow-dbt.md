@@ -15,7 +15,7 @@ Teams can use Airflow to orchestrate and execute dbt models as DAGs. Running dbt
 
 In this guide, we'll walk through:
 
-- Using the [dbt Provider](https://registry.astronomer.io/providers/dbt-cloud) to orchestrate dbt Cloud with Airflow.
+- Using the [dbt Cloud Provider](https://registry.astronomer.io/providers/dbt-cloud) to orchestrate dbt Cloud with Airflow.
 - Two common use cases for orchestrating dbt Core with Airflow via the `BashOperator`: 
     - At the [project](https://docs.getdbt.com/docs/building-a-dbt-project/projects) level and, 
     - At the [model](https://docs.getdbt.com/docs/building-a-dbt-project/building-models) level. 
@@ -25,18 +25,18 @@ In this guide, we'll walk through:
 
 ## dbt Cloud
 
-To orchestrate [dbt Cloud](https://www.getdbt.com/product/what-is-dbt/) jobs with Airflow, you can use the [dbt Provider](https://registry.astronomer.io/providers/dbt-cloud), which contains the following useful modules:
+To orchestrate [dbt Cloud](https://www.getdbt.com/product/what-is-dbt/) jobs with Airflow, you can use the [dbt Cloud Provider](https://registry.astronomer.io/providers/dbt-cloud), which contains the following useful modules:
 
 - **`DbtCloudRunJobOperator`:** Executes a dbt Cloud job.
 - **`DbtCloudGetJonRunArtifactOperator`:** Downloads artifacts from a dbt Cloud job run.
 - **`DbtCloudJobRunSensor`:** Waits for a dbt Cloud job run to complete.
 
-In order to use the dbt Provider in your DAGs, you will need to complete the following steps:
+In order to use the dbt Cloud Provider in your DAGs, you will need to complete the following steps:
 
 1. Add the `apache-airflow-providers-dbt-cloud` package to your Airflow environment. If you are working in an Astro project, you can add the package to your `requirements.txt` file.
-2. Set up an Airflow connection to your dbt Cloud instance. The connection type should be `dbt Cloud`, and it should include an API token from your dbt Cloud account. If you want your dbt Provider tasks to use a default account ID, you can add that to the connection, but it is not required.
+2. Set up an Airflow connection to your dbt Cloud instance. The connection type should be `dbt Cloud`, and it should include an API token from your dbt Cloud account. If you want your dbt Cloud Provider tasks to use a default account ID, you can add that to the connection, but it is not required.
 
-In the DAG below, we show a simple implementation of the dbt Provider. This example showcases how to run a dbt Cloud job from Airflow, while adding an operational check to ensure the dbt Cloud job is not running prior to triggering. The `DbtCloudHook` provides a `list_job_runs()` method which can be used to retrieve the latest triggered run for a job and check the status of said run. If the job is not in a state of 10 (Success), 20 (Error), or 30 (Cancelled), the pipeline will not try to trigger it.
+In the DAG below, we show a simple implementation of the dbt Cloud Provider. This example showcases how to run a dbt Cloud job from Airflow, while adding an operational check to ensure the dbt Cloud job is not running prior to triggering. The `DbtCloudHook` provides a `list_job_runs()` method which can be used to retrieve all runs for a given job. The operational check uses this method to retrieve the latest triggered run for a job and check its status. If the job is currenly not in a state of 10 (Success), 20 (Error), or 30 (Cancelled), the pipeline will not try to trigger another run.
 
 ```python
 from pendulum import datetime
@@ -92,7 +92,7 @@ dag = check_before_running_dbt_cloud_job()
 
 Note that in the `DbtCloudRunJobOperator` you must provide the dbt connection ID as well as the `job_id` of the job you are triggering.
 
-> **Note:** The full code for this example, along with other DAGs that implement the dbt Provider, can be found on the [Astronomer Registry](https://registry.astronomer.io/dags?providers=dbt+Cloud&page=1).
+> **Note:** The full code for this example, along with other DAGs that implement the dbt Cloud Provider, can be found on the [Astronomer Registry](https://registry.astronomer.io/dags?providers=dbt+Cloud&page=1).
 
 ## dbt Core
 
