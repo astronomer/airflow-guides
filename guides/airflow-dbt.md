@@ -30,13 +30,14 @@ To orchestrate [dbt Cloud](https://www.getdbt.com/product/what-is-dbt/) jobs wit
 - **`DbtCloudRunJobOperator`:** Executes a dbt Cloud job.
 - **`DbtCloudGetJonRunArtifactOperator`:** Downloads artifacts from a dbt Cloud job run.
 - **`DbtCloudJobRunSensor`:** Waits for a dbt Cloud job run to complete.
+- **`DbtCloudHook`:** Interacts with dbt Cloud using the V2 API.
 
 In order to use the dbt Cloud Provider in your DAGs, you will need to complete the following steps:
 
 1. Add the `apache-airflow-providers-dbt-cloud` package to your Airflow environment. If you are working in an Astro project, you can add the package to your `requirements.txt` file.
-2. Set up an Airflow connection to your dbt Cloud instance. The connection type should be `dbt Cloud`, and it should include an API token from your dbt Cloud account. If you want your dbt Cloud Provider tasks to use a default account ID, you can add that to the connection, but it is not required.
+2. Set up an [Airflow connection](https://airflow.apache.org/docs/apache-airflow/stable/howto/connection.html) to your dbt Cloud instance. The connection type should be `dbt Cloud`, and it should include an API token from your dbt Cloud account. If you want your dbt Cloud Provider tasks to use a default account ID, you can add that to the connection, but it is not required.
 
-In the DAG below, we show a simple implementation of the dbt Cloud Provider. This example showcases how to run a dbt Cloud job from Airflow, while adding an operational check to ensure the dbt Cloud job is not running prior to triggering. The `DbtCloudHook` provides a `list_job_runs()` method which can be used to retrieve all runs for a given job. The operational check uses this method to retrieve the latest triggered run for a job and check its status. If the job is currenly not in a state of 10 (Success), 20 (Error), or 30 (Cancelled), the pipeline will not try to trigger another run.
+In the DAG below, we show a simple implementation of the dbt Cloud Provider. This example showcases how to run a dbt Cloud job from Airflow, while adding an operational check to ensure the dbt Cloud job is not running prior to triggering. The `DbtCloudHook` provides a `list_job_runs()` method which can be used to retrieve all runs for a given job. The operational check uses this method to retrieve the latest triggered run for a job and check its status. If the job is currently not in a state of 10 (Success), 20 (Error), or 30 (Cancelled), the pipeline will not try to trigger another run.
 
 ```python
 from pendulum import datetime
@@ -96,7 +97,7 @@ Note that in the `DbtCloudRunJobOperator` you must provide the dbt connection ID
 
 ## dbt Core
 
-When orchestrating dbt Core with Airflow, the most straight forward DAG design is to run dbt commands directly through the [`BashOperator`](https://airflow.apache.org/docs/apache-airflow/stable/howto/operator/bash.html). In this section we'll show a couple examples for how to do so.
+When orchestrating dbt Core with Airflow, a straight forward DAG design is to run dbt commands directly through the [`BashOperator`](https://registry.astronomer.io/providers/apache-airflow/modules/bashoperator). In this section we'll show a couple examples for how to do so.
 
 ### Use Case 1: dbt Core + Airflow at the Project Level
 
