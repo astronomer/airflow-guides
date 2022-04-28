@@ -1,7 +1,7 @@
 ---
 title: "Dynamic Tasks in Airflow"
 description: "How to dynamically create tasks at runtime in your Airflow DAGs."
-date: 2022-04-22T00:00:00.000Z
+date: 2022-04-28T00:00:00.000Z
 slug: "dynamic-tasks"
 heroImagePath: null
 tags: ["Tasks"]
@@ -32,7 +32,7 @@ Put together, you can have a task that looks like this:
     added_values = add.partial(y=10).expand(x=[1, 2, 3])
 ```
 
-This will result in three mapped `add` tasks, one for each entry in the `x` input list, where `y` remains constant in each task.
+This will result in three mapped `add` tasks, one for each entry in the `x` input list. The `y` parameter remains constant in each task.
 
 There are a couple of things to keep in mind when working with mapped tasks:
 
@@ -68,14 +68,14 @@ In this section we'll show how dynamic task mapping can be implemented for two c
 
 ### ELT
 
-For our first example, we'll implement one of the most common use cases for dynamic tasks: processing files in S3. In this scenario, we will use an ELT framework to extract data from files in S3, load it into Snowflake, and then transform the data using Snowflake's built-in compute. We assume that files will be dropped daily, but we don't know how many will arrive each day. We'll leverage dynamic task mapping to create a unique task for each file at runtime. This gives us the benefit of atomicity, better observability, and easier recovery from failures.
+For our first example, we'll implement one of the most common use cases for dynamic tasks: processing files in S3. In this scenario, we will use an ELT framework to extract data from files in S3, load the data into Snowflake, and transform the data using Snowflake's built-in compute. We assume that files will be dropped daily, but we don't know how many will arrive each day. We'll leverage dynamic task mapping to create a unique task for each file at runtime. This gives us the benefit of atomicity, better observability, and easier recovery from failures.
 
-The DAG below has the following steps:
+The DAG below completes the following steps:
 
 1. Uses a decorated Python operator to get the current list of files from S3. The S3 prefix passed to this function is parameterized with `ds_nodash` so it pulls files only for the execution date of the DAG run (e.g. for a DAG run on April 12th, we would assume the files landed in a folder named `20220412/`).
 2. Using the results of the first task, map an `S3ToSnowflakeOperator` for each file.
 3. Move the daily folder of processed files into a `processed/` folder while,
-4. Simultaneously (with step 3), run a Snowflake query that transforms the data. The query is located in a separate SQL file in our `include/` directory. 
+4. Simultaneously (with Step 3), run a Snowflake query that transforms the data. The query is located in a separate SQL file in our `include/` directory. 
 5. Delete the folder of daily files now that it has been moved to `processed/` for record keeping.
 
 ```python
@@ -146,9 +146,9 @@ Keep in mind the format needed for the parameter you are mapping on. In the exam
 
  Dynamic tasks can also be very useful for productionizing machine learning pipelines. ML Ops often includes some sort of dynamic component. The following use cases are common:
 
-- **Training different models:** you have a reusable pipeline that you use to create a separate DAG for each data source. For each DAG, you point your generic pipeline to your data source, and to a list of models you want to experiment with in parallel. That list of models might change periodically, but by leveraging dynamic task mapping, you can always have a single task per model without any user intervention when the models change. You also maintain all of the history for any models you have trained in the past, even if they are no longer included in your list.  
-- **Hyperparameter training a model:** you have a single model that you want to hyperparameter tune before publishing results from the best set of parameters. With dynamic task mapping, you can grab your parameters from any external system at runtime, giving you full flexibility and history.
-- **Creating a different model for each customer:** you have a model that you need to train separately for each individual customer. Your customer list changes frequently, and you need to retain the history of any previous customer models. This can be a tricky use case to implement with dynamic *DAGs*, because the history of any removed DAGs is not retained in the Airflow UI, and performance issues can arise if the customer list is long. With dynamic tasks, you can maintain a single DAG that updates as needed based on the current list of customers at runtime. 
+- **Training different models:** You have a reusable pipeline that you use to create a separate DAG for each data source. For each DAG, you point your generic pipeline to your data source, and to a list of models you want to experiment with in parallel. That list of models might change periodically, but by leveraging dynamic task mapping, you can always have a single task per model without any user intervention when the models change. You also maintain all of the history for any models you have trained in the past, even if they are no longer included in your list.  
+- **Hyperparameter training a model:** You have a single model that you want to hyperparameter tune before publishing results from the best set of parameters. With dynamic task mapping, you can grab your parameters from any external system at runtime, giving you full flexibility and history.
+- **Creating a different model for each customer:** You have a model that you need to train separately for each individual customer. Your customer list changes frequently, and you need to retain the history of any previous customer models. This can be a tricky use case to implement with dynamic *DAGs*, because the history of any removed DAGs is not retained in the Airflow UI, and performance issues can arise if the customer list is long. With dynamic tasks, you can maintain a single DAG that updates as needed based on the current list of customers at runtime. 
 
  In the example DAG below, we implement the first of these use cases. We also highlight how dynamic task mapping is simple to implement with decorated tasks.
 
@@ -266,12 +266,13 @@ def mlflow_multimodel_example():
     @task
     def get_models():
         """
-        Returns list of models to train from 
+        Returns list of models to train from by reading a file in the include/ directory.
+        We assume this file has two parameters for each model entry: model, and params
         """
         return [models]
 
     @task()
-    def train(df: pd.DataFrame, model_type=k, model=models[k], grid_params=params[k], **kwargs):
+    def train(df: pd.DataFrame, model_type=models, model=models[model], grid_params=models[params], **kwargs):
         """Train and validate model using a grid search for the optimal parameter values and a five fold cross validation.
 
         Returns accuracy score via XCom to GCS bucket.
@@ -326,3 +327,37 @@ def mlflow_multimodel_example():
     
 dag = mlflow_multimodel_example()
  ```
+
+Note that in this example, our model information that we map on is pulled from a `grid_configs` file in our `include/` directory, which looks like this:
+
+```python
+from numpy.random.mtrand import seed
+from sklearn.linear_model import LogisticRegression
+import lightgbm as lgb
+
+
+models = {
+    'lgbm': {
+        'model': lgb.LGBMClassifier(objective='binary', metric=['auc', 'binary_logloss'], seed=55, boosting_type='gbdt'),
+        'params': {
+            'learning_rate': [0.01, .05, .1], 
+            'n_estimators': [50, 100, 150],
+            'num_leaves': [31, 40, 80],
+            'max_depth': [16, 24, 31, 40]
+        }
+    },
+    'log_reg': {
+        'model': LogisticRegression(max_iter=500), boosting_type='gbdt'),
+        'params': {
+            'penalty': ['l1','l2','elasticnet'],
+            'C': [0.001, 0.01, 0.1, 1, 10, 100],
+            'solver': ['newton-cg', 'lbfgs', 'liblinear', 'sag', 'saga']
+        }
+    }  
+}
+
+```
+
+The model information could come from any external system as well, with an update to the `get_models()` task. The only requirement is that the resulting map input is a dict or list.
+
+Also note that for decorated tasks like in the DAG above, the mapping parameters are automatically passed by calling the proper functions, leveraging the TaskFlow API to avoid explicit calling of XCom.
