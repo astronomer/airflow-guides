@@ -386,5 +386,3 @@ Upgrading to Airflow 2.0 to make use of the [HA Scheduler](https://www.astronome
 That was the easiest and fastest way for creating DAGs.
 
 Now if you are looking for the better and scalable way to create DAGs dynamically, try out Astronomer's [Academy Course on Dynamic DAGs](https://academy.astronomer.io/dynamic-dags) for free today.
-
-See you there! ❤️
