@@ -320,11 +320,6 @@ After this setup, we're ready to run the DAG! After a successful run, we can see
 
 Note that while this example is specific to Snowflake, the concepts apply to any database you might be using. If a transfer operator doesn't exist for your specific source and destination tools, you can always write your own (and maybe contribute it back to the Airflow project)!
 
-<!-- markdownlint-disable MD033 -->
-<a href="https://academy.astronomer.io/airflow-sql" onclick="analytics.track('Clicked Academy Banner CTA', { bannerText: 'Learn how to interact with SQL and Airflow. Register for a free Airflow x SQL course!', buttonText: 'Register | Free'})" style="border:none">
-    <img src="https://images.ctfassets.net/bsbv786nih7n/3qvsz9pn2Bqp0B3aKXhwkR/8e67668e2431953bcf52fb33fe91f5bf/free-airflow-sql-course-banner.png" alt="Learn how to interact with SQL and Airflow. Register for a free Airflow x SQL course!" style="border:none" />
-</a>
-
 ## Example 4 - Using Pandas
 
 While we stated above that the best practice is to use SQL-related operators and keep any data transformations in SQL, for some use cases this doesn't work. For instance, pivoting data into a new format for a report can be difficult to complete with SQL alone. In this next example, we show how you can make use of Python libraries to integrate your SQL into a Python function.
@@ -457,5 +452,3 @@ In this guide we covered how to interact with your SQL database from Airflow and
 - Is it scalable?
 
 Find out more on Astronomer's [Academy Course on Airflow SQL](https://academy.astronomer.io/airflow-sql) for free today.
-
-See you there! ❤️
