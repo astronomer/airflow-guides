@@ -52,7 +52,7 @@ In the **Graph View**, any mapped tasks will be indicated by a set of brackets `
 
 ![Mapped Graph](https://assets2.astronomer.io/main/guides/dynamic-tasks/mapped_task_graph.png)
 
-Clicking on the mapped task, we have a new Mapped Instances drop down where we can choose a specific instance to perform task actions on.
+Clicking on the mapped task, we have a new **Mapped Instances** drop down where we can select a specific mapped task run to perform actions on. 
 
 ![Mapped Actions](https://assets2.astronomer.io/main/guides/dynamic-tasks/mapped_instances_task_actions.png)
 
@@ -321,7 +321,7 @@ def mlflow_multimodel_example():
 
             y_pred_class = metrics.test(clf, X_test)
 
-            # Log Classfication Report, Confusion Matrix, and ROC Curve
+            # Log Classification Report, Confusion Matrix, and ROC Curve
             metrics.log_all_eval_metrics(y_test, y_pred_class)
 
     df = load_data()
