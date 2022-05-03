@@ -72,6 +72,8 @@ In this section we'll show how dynamic task mapping can be implemented for two c
 
 For our first example, we'll implement one of the most common use cases for dynamic tasks: processing files in S3. In this scenario, we will use an ELT framework to extract data from files in S3, load the data into Snowflake, and transform the data using Snowflake's built-in compute. We assume that files will be dropped daily, but we don't know how many will arrive each day. We'll leverage dynamic task mapping to create a unique task for each file at runtime. This gives us the benefit of atomicity, better observability, and easier recovery from failures.
 
+> **Note:** Code for this example can be found in [this repo](https://github.com/astronomer/dynamic-task-mapping-tutorial).
+
 The DAG below completes the following steps:
 
 1. Use a decorated Python operator to get the current list of files from S3. The S3 prefix passed to this function is parameterized with `ds_nodash` so it pulls files only for the execution date of the DAG run (e.g. for a DAG run on April 12th, we would assume the files landed in a folder named `20220412/`).
