@@ -21,6 +21,6 @@
   "homepage": "https://github.com/astronomer/airflow-guides#readme",
   "devDependencies": {},
   "dependencies": {
-    "markdownlint-cli": "^0.26.0"
+    "markdownlint-cli": "^0.31.1"
   }
 }
