@@ -235,7 +235,7 @@ The lineage graph shows us how these two DAGs are connected and how data flows t
 
 ## Lineage on Astro
 
-For Astronomer customers using [Astro](https://www.astronomer.io/product/), lineage is fully integrated with the product and available out of the box. Astro leverages OpenLineage to collect lineage data, and the **Lineage** tab in the Astronomer UI provides multiple pages that can help you troubleshoot issues with your data pipelines and understand the movement of data across your Organization. For more on lineage capabilities with Astro, check out [our documentation](https://docs.astronomer.io/astro/data-lineage) or [reach out to us](https://www.astronomer.io/openlineage). 
+For Astronomer customers using [Astro](https://www.astronomer.io/product/), OpenLineage is integrated and available out of the box. The **Lineage** tab in the Astronomer UI provides multiple pages that can help you troubleshoot issues with your data pipelines and understand the movement of data across your Organization. For more on lineage capabilities with Astro, check out [our documentation](https://docs.astronomer.io/astro/data-lineage) or [reach out to us](https://www.astronomer.io/openlineage). 
 
 ## Limitations
 
