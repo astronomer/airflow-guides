@@ -36,7 +36,7 @@ In this example, we're going to be using [virtualenvwrapper](https://virtualenvw
         # Option 1. Official (run with no UI)
         brew install vault
 
-        ## Option 2. Vault CLI and GUI (recommended becuase the Vault UI is a nice feature)
+        ## Option 2. Vault CLI and GUI (recommended because the Vault UI is a nice feature)
         brew tap petems/vault
         brew install petems/vault-prebuilt/vault
 
