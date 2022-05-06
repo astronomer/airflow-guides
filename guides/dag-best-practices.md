@@ -86,7 +86,7 @@ Airflow executes all code in the `dags_folder` on every `min_file_process_interv
 
 Treat your DAG file like a config file and leave all of the heavy lifting to the hooks and operators that you instantiate within the file. If your DAGs need to access additional code such as a SQL script or a Python function, keep that code in a separate file that can be read into a DAG Run.
 
-For one example of what _not_ to do, in the DAG below a `PostgresOperator` executes a SQL query that was dropped directly into the DAG file:
+For one example of what *not* to do, in the DAG below a `PostgresOperator` executes a SQL query that was dropped directly into the DAG file:
 
 ```python
 from airflow import DAG
