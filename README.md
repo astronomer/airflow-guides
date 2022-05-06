@@ -42,9 +42,7 @@ If you are unsure of who to assign the issue to, you can leave it unassigned. If
 
 ## CI/CD Pipeline
 
-A GitHub Actions CI/CD Pipeline is used to verify each markdown file is free from formatting errors, spelling errors, and broken links. To see logs from this pipeline go to `Actions` section of the GitHub repo. Run the commands outlined below locally to fix errors before contributing posts.
-
-Fix pipeline errors from all posts as old links may break and need to be replaced.
+A GitHub Actions CI/CD Pipeline is used to verify each markdown file is free from formatting errors, typos, and broken links. To see logs from this pipeline go to `Actions` section of the GitHub repo.
 
 ### Markdown Lint
 
@@ -63,32 +61,9 @@ To include lines of code that break certain markdown rules follow the code examp
 
 ### Spell Check
 
-The pipeline features a [spell checker](https://github.com/lukeapage/node-markdown-spellcheck) to ensure that there are no misspelled words in our guides. You may want to run the spell checker locally in "interactive" mode to add proper nouns to the dictionary.
+The pipeline features a [spell checker](https://github.com/crate-ci/typos) to ensure that there are no typos in our guides.
 
-```shell
-yarn spellcheck-interactive
-```
-
-Output should be similar too
-
-```shell
-Spelling - <your-guide>.md
- shows you the context of the spelling mistake and gives you options
-?   (Use arrow keys)
-  Ignore
-  Add to file ignores
-  Add to dictionary - case insensitive
-> Enter correct spelling
-  spelling
-  spieling
-  spewing
-  selling
-  peeling
-```
-
-You can run locally in "report" mode too by running `yarn spellcheck`.
-
-You can also add words directly to dictionary by adding the word to the [.spelling](https://github.com/astronomer/astro-blog/blob/main/.spelling) file located in this repo.
+It is recommended that you run a spell checker locally before committing to save time fixing CI errors. VS Code has a good [spell check integration](https://marketplace.visualstudio.com/items?itemName=streetsidesoftware.code-spell-checker), or you can use any other options. 
 
 ### Link Check
 
