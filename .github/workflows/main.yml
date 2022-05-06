@@ -29,12 +29,10 @@ jobs:
   link-check:
     runs-on: ubuntu-latest
     steps:
-      - name: fix-permissions-check
-        run: git config --global --add safe.directory /github/workspace
       - uses: actions/checkout@v3
       - uses: actions/setup-node@main
       - name: markdown-link-check
-        uses: gaurav-nelson/github-action-markdown-link-check@1.0.13
+        uses: gaurav-nelson/github-action-markdown-link-check@v1
         with:
           use-verbose-mode: 'yes'
           config-file: './mlc_config.json'
