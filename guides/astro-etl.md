@@ -111,7 +111,7 @@ def classic_billing_dag():
     load_transformed_data = S3ToSnowflakeOperator(
         task_id='load_transformed_data',
         snowflake_conn_id=SNOWFLAKE_CONN_ID,
-        s3_keys=[S3_FILE_PATH + '/trasnformed_file_name.csv'],
+        s3_keys=[S3_FILE_PATH + '/transformed_file_name.csv'],
         table=SNOWFLAKE_RESULTS_TABLE,
         schema=SNOWFLAKE_SCHEMA,
         stage=SNOWFLAKE_STAGE,
@@ -175,7 +175,7 @@ main_table = Table("billing_reporting", schema="SANDBOX_KENTEND", )
 @dag(start_date=datetime(2021, 12, 1), schedule_interval='@daily', catchup=False)
 
 def astro_billing_dag():
-    # Load subscripton data
+    # Load subscription data
     subscription_data = load_file(
         path=S3_FILE_PATH + '/subscription_data.csv',
         file_conn_id="my_s3_conn",

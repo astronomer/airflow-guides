@@ -33,7 +33,7 @@ the following connections:
      Connection ID: redshift_default
      Connection Type: Amazon Redshift
      Host: <YOUR-REDSHIFT-ENDPOINT> (i.e. redshift-cluster-1.123456789.us-west-1.redshift.amazonaws.com)
-     Schema: <YOUR-REDSHIFT-DATABASE> (i.e. dev, test, prod, ect.)
+     Schema: <YOUR-REDSHIFT-DATABASE> (i.e. dev, test, prod, etc.)
      Login: <YOUR-REDSHIFT-USERNAME> (i.e. awsuser)
      Password: <YOUR-REDSHIFT-PASSWORD>
      Port: <YOUR-REDSHIFT-PORT> (i.e. 5439)

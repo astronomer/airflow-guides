@@ -75,7 +75,7 @@ t4 = SSHOperator(
 
 Like the `BashOperator`, the [SSHOperator](https://registry.astronomer.io/providers/ssh/modules/sshoperator) allows you to run a bash command, but has built in support to SSH into a remote machine to run commands there.
 
-The private key to authenticate to the remote server is stored in Airflow Connections as `my_ssh_conenction`. This key can be referred to in all DAGs, so the operator itself only needs the command you want to run. This operator uses an [SSHHook](https://registry.astronomer.io/providers/ssh/modules/sshhook) to establish the ssh connection and run the command.
+The private key to authenticate to the remote server is stored in Airflow Connections as `my_ssh_connection`. This key can be referred to in all DAGs, so the operator itself only needs the command you want to run. This operator uses an [SSHHook](https://registry.astronomer.io/providers/ssh/modules/sshhook) to establish the ssh connection and run the command.
 
 [SSHOperator Code](https://github.com/apache/airflow/blob/main/airflow/providers/ssh/operators/ssh.py)
 

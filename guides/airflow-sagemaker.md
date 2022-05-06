@@ -25,7 +25,7 @@ In general, each operator will initiate a particular SageMaker job and each sens
 - [`SageMakerModelOperator`](https://registry.astronomer.io/providers/amazon/modules/sagemakermodeloperator): creates a SageMaker model
 - [`SageMakerProcessingOperator`](https://registry.astronomer.io/providers/amazon/modules/sagemakerprocessingoperator): initiates a SageMaker processing job
 - [`SageMakerTrainingOperator`](https://registry.astronomer.io/providers/amazon/modules/sagemakertrainingoperator): initiates a SageMaker training job
-- [`SageMakerTranformOperator`](https://registry.astronomer.io/providers/amazon/modules/sagemakertransformoperator): initiates a SageMaker transform job
+- [`SageMakerTransformOperator`](https://registry.astronomer.io/providers/amazon/modules/sagemakertransformoperator): initiates a SageMaker transform job
 - [`SageMakerTuningOperator`](https://registry.astronomer.io/providers/amazon/modules/sagemakertuningoperator): initiates a SageMaker hyperparameter tuning job
 - [`SageMakerEndpointSensor`](https://registry.astronomer.io/providers/amazon/modules/sagemakerendpointsensor): waits until the endpoint state is terminated
 - [`SageMakerTransformSensor`](https://registry.astronomer.io/providers/amazon/modules/sagemakertransformsensor): waits until the transform state is terminated
@@ -234,7 +234,7 @@ import numpy as np
 
 """
 This DAG shows an example implementation of machine learning model orchestration using Airflow
-and AWS SageMaker. Using the AWS provider's SageMaker operators, Airlfow orchestrates getting data
+and AWS SageMaker. Using the AWS provider's SageMaker operators, Airflow orchestrates getting data
 from an API endpoint and pre-processing it (PythonOperator), training the model (SageMakerTrainingOperator),
 creating the model with the training results (SageMakerModelOperator), and testing the model using
 a batch transform job (SageMakerTransformOperator).
