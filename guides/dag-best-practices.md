@@ -113,7 +113,8 @@ with DAG('bad_practices_dag_1',
 
 When the scheduler parses this DAG, it will use the `hook` and `result` variables to query the `grocery_list` table to construct the operators in the DAG. This query will be run on every scheduler heartbeat, which could cause performance issues. A better implementation would be to have a separate DAG or task that gets the required information from the `grocery_list` table and saves it to an XCom or an Airflow variable, which can then be used by the dynamic DAG.
 
-### Treat Your DAG File Like a Config File 
+### Treat Your DAG File Like a Config File
+
 Including code that isn't part of your DAG or operator instantiations in your DAG file makes the DAG harder to read, maintain, and update. When possible, leave all of the heavy lifting to the hooks and operators that you instantiate within the file. If your DAGs need to access additional code such as a SQL script or a Python function, consider keeping that code in a separate file that can be read into a DAG Run.
 
 For one example of what *not* to do, in the DAG below a SQL query is provided directly in the `PostgresOperator` `sql` param.
