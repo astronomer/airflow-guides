@@ -101,35 +101,105 @@ For this example, we’ll run Airflow with OpenLineage and Marquez locally. You 
 6. Run Airflow locally using `astrocloud dev start`.
 7. Confirm Airflow is running by going to `http://localhost:8080`, and Marquez is running by going to `http://localhost:3000`.
 
+#### Postgres Connection
+Check to see if your deployment has a connection called `postgres_default`:
+```sh
+astrocloud dev run connections get postgres_default
+id | conn_id          | conn_type | ... | get_uri
+1  | postgres_default | postgres  | ... | postgres://postgres:postgres@postgres:5432
+```
+
+If this command doesn't return anything or doesn't include a line with `postgres_default` in the `conn_id` column, you'll need to create a connection. To do so from the Airflow UI, hover over the "Admin" dropdown and click "Connections". Then, click the blue "+" icon. Define the connection with the following values:
+- Connection Id: postgres_default
+- Connection Type: Postgres
+- Host: postgres
+- Login: postgres
+- Password: postgres
+- Port: 5432
+
+> NOTE: This creates a connection to the Airflow metadata database. It is not recommended to store significant amounts of additional data in the metadata database in production for performance reasons.
+
 ### Generating and Viewing Lineage Data
 
-To show the lineage data that can result from Airflow DAG runs, we'll use an example of two DAGs that process data in Postgres. The first DAG creates and populates a table (`animal_adoptions_combined`) with data aggregated from two source tables (`adoption_center_1` and `adoption_center_2`). 
+To show the lineage data that can result from Airflow DAG runs, we'll use an example of two DAGs that process data in Postgres. The first DAG creates and populates tables called `adoption_center_1` and `adoption_center_2`. The second creates a table called `animal_adoptions_combined` with data aggregated from two source tables (`adoption_center_1` and `adoption_center_2`). 
 
-Note that to run this DAG in your own environment, you will first need to create and populate the two source tables. You can also update the table names and schemas in the DAG to reference existing tables in your own environment. Here are some sample queries to get you started:
+You can also update the table names and schemas in the DAG to reference existing tables in your own environment.
 
-```sql
+lineage_create_tables.py:
+```python
+from airflow import DAG
+from airflow.providers.postgres.operators.postgres import PostgresOperator
+
+from datetime import datetime, timedelta
+
+create_table_1_query = """
 CREATE TABLE IF NOT EXISTS adoption_center_1
 (date DATE, type VARCHAR, name VARCHAR, age INTEGER);
+"""
 
-CREATE TABLE IF NOT EXISTS adoption_center_2
+create_table_2_query = """CREATE TABLE IF NOT EXISTS adoption_center_2
 (date DATE, type VARCHAR, name VARCHAR, age INTEGER);
+"""
 
+insert_table_1_query = """
 INSERT INTO
     adoption_center_1 (date, type, name, age)
 VALUES
     ('2022-01-01', 'Dog', 'Bingo', 4),
     ('2022-02-02', 'Cat', 'Bob', 7),
     ('2022-03-04', 'Fish', 'Bubbles', 2);
+"""
 
+insert_table_2_query = """
 INSERT INTO
     adoption_center_2 (date, type, name, age)
 VALUES
     ('2022-06-10', 'Horse', 'Seabiscuit', 4),
     ('2022-07-15', 'Snake', 'Stripes', 8),
     ('2022-08-07', 'Rabbit', 'Hops', 3);
+"""
+
+with DAG('lineage-create-tables',
+         start_date=datetime(2020, 6, 1),
+         max_active_runs=1,
+         schedule_interval='@daily',
+         default_args = {
+            'retries': 1,
+            'retry_delay': timedelta(minutes=1)
+        },
+         catchup=False
+         ) as dag:
+
+    create_table_1 = PostgresOperator(
+        task_id='create_table_1',
+        postgres_conn_id='postgres_default',
+        sql=create_table_1_query
+    ) 
+
+    create_table_2 = PostgresOperator(
+        task_id='create_table_2',
+        postgres_conn_id='postgres_default',
+        sql=create_table_2_query
+    )
+
+    insert_table_1 = PostgresOperator(
+        task_id='insert_table_1',
+        postgres_conn_id='postgres_default',
+        sql=insert_table_1_query
+    )
+
+    insert_table_2 = PostgresOperator(
+        task_id='insert_table_2',
+        postgres_conn_id='postgres_default',
+        sql=insert_table_2_query
+    )
+
+    create_table_1 >> insert_table_1
+    create_table_2 >> insert_table_2
 
 ```
 
+lineage_combine_postgres.py:
 ```python
 from airflow import DAG
 from airflow.providers.postgres.operators.postgres import PostgresOperator
@@ -176,7 +246,7 @@ with DAG('lineage-combine-postgres',
     create_table >> insert_data
 ```
 
-The second DAG creates and populates a reporting table (`adoption_reporting_long`) using data from the aggregated table (`animal_adoptions_combined`) created in our first DAG:
+lineage_reporting_postgres.py:
 
 ```python
 from airflow import DAG
@@ -217,7 +287,7 @@ with DAG('lineage-reporting-postgres',
     create_table >> insert_data
 ```
 
-If we run these DAGs in Airflow, and then go to Marquez, we will see a list of our jobs, including the four tasks from the DAGs above.
+If we run these DAGs in Airflow (first `lineage-create-tables`, then `lineage-combine-postgres`, and finally `lineage-reporting-postgres`), and then go to Marquez, we will see a list of our jobs, including the four tasks from the DAGs above.
 
 ![Marquez Jobs](https://assets2.astronomer.io/main/guides/airflow-openlineage/marquez_jobs.png)
 
