@@ -103,32 +103,43 @@ For this example, we’ll run Airflow with OpenLineage and Marquez locally. You 
 
 ### Generating and Viewing Lineage Data
 
-To show the lineage data that can result from Airflow DAG runs, we'll use an example of two DAGs that process data in Postgres. The first DAG creates and populates a table (`animal_adoptions_combined`) with data aggregated from two source tables (`adoption_center_1` and `adoption_center_2`). 
+To show the lineage data that can result from Airflow DAG runs, we'll use an example of two DAGs that process data in Postgres. To run this example in your own environment, you will first need to complete the following steps:
 
-Note that to run this DAG in your own environment, you will first need to create and populate the two source tables. You can also update the table names and schemas in the DAG to reference existing tables in your own environment. Here are some sample queries to get you started:
+1. Ensure you have a running Postgres database (separate from the Airflow and Marquez metastores). If you are working with the Astro CLI, you can create a database locally in the same container as the Airflow metastore using `psql`:
 
-```sql
-CREATE TABLE IF NOT EXISTS adoption_center_1
-(date DATE, type VARCHAR, name VARCHAR, age INTEGER);
+    ```bash
+    psql -h localhost -p 5435 -U postgres
+    <enter password `postgres` when prompted>
+    create database lineagedemo;
+    ```
 
-CREATE TABLE IF NOT EXISTS adoption_center_2
-(date DATE, type VARCHAR, name VARCHAR, age INTEGER);
+2. Create an [Airflow connection](https://www.astronomer.io/guides/connections) to the Postgres database you created in Step 1.
+3. Create and populate two source tables that will be used in the example DAGs below. You can alternatively update the table names and schemas in the DAG to reference existing tables in your own environment. To use the given example DAGs, run the following queries:
 
-INSERT INTO
-    adoption_center_1 (date, type, name, age)
-VALUES
-    ('2022-01-01', 'Dog', 'Bingo', 4),
-    ('2022-02-02', 'Cat', 'Bob', 7),
-    ('2022-03-04', 'Fish', 'Bubbles', 2);
+    ```sql
+    CREATE TABLE IF NOT EXISTS adoption_center_1
+    (date DATE, type VARCHAR, name VARCHAR, age INTEGER);
 
-INSERT INTO
-    adoption_center_2 (date, type, name, age)
-VALUES
-    ('2022-06-10', 'Horse', 'Seabiscuit', 4),
-    ('2022-07-15', 'Snake', 'Stripes', 8),
-    ('2022-08-07', 'Rabbit', 'Hops', 3);
+    CREATE TABLE IF NOT EXISTS adoption_center_2
+    (date DATE, type VARCHAR, name VARCHAR, age INTEGER);
 
-```
+    INSERT INTO
+        adoption_center_1 (date, type, name, age)
+    VALUES
+        ('2022-01-01', 'Dog', 'Bingo', 4),
+        ('2022-02-02', 'Cat', 'Bob', 7),
+        ('2022-03-04', 'Fish', 'Bubbles', 2);
+
+    INSERT INTO
+        adoption_center_2 (date, type, name, age)
+    VALUES
+        ('2022-06-10', 'Horse', 'Seabiscuit', 4),
+        ('2022-07-15', 'Snake', 'Stripes', 8),
+        ('2022-08-07', 'Rabbit', 'Hops', 3);
+
+    ```
+
+With those prerequisites met, we can move on to the example DAGs. The first DAG creates and populates a table (`animal_adoptions_combined`) with data aggregated from the two source tables (`adoption_center_1` and `adoption_center_2`). Note that you may want to make adjustments to this DAG if you are working with different source tables, or if your Postgres connection id is not `postgres_default`.
 
 ```python
 from airflow import DAG
