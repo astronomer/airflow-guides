@@ -111,7 +111,7 @@ with DAG('bad_practices_dag_1',
         )
 ```
 
-When the scheduler parses this DAG, it will use the `hook` and `result` variables to query the `grocery_list` table to construct the operators in the DAG. This query will be run on every scheduler heartbeat, which could cause performance issues. A better implementation would be to have a separate DAG or task that gets the required information from the `grocery_list` table and saves it to an XCom or an Airflow variable, which can then be used by the dynamic DAG.
+When the scheduler parses this DAG, it will use the `hook` and `result` variables to query the `grocery_list` table to construct the operators in the DAG. This query will be run on every scheduler heartbeat, which could cause performance issues. A better implementation would be to leverage [dynamic task mapping](https://www.astronomer.io/guides/dynamic-tasks) to have a task that gets the required information from the `grocery_list` table and dynamically maps downstream tasks based on the result. Note that dynamic task mapping is available as of Airflow 2.3.
 
 ### Treat Your DAG File Like a Config File
 
