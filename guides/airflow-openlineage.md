@@ -113,8 +113,7 @@ To show the lineage data that can result from Airflow DAG runs, we'll use an exa
     create database lineagedemo;
     ```
 
-2. Create an [Airflow connection](https://www.astronomer.io/guides/connections) to the Postgres database you created in Step 1.
-3. Create and populate two source tables that will be used in the example DAGs below. You can alternatively update the table names and schemas in the DAG to reference existing tables in your own environment. To use the given example DAGs, run the following queries:
+2. Create and populate two source tables that will be used in the example DAGs below. You can alternatively update the table names and schemas in the DAG to reference existing tables in your own environment. To use the given example DAGs, run the following queries:
 
     ```sql
     CREATE TABLE IF NOT EXISTS adoption_center_1
@@ -138,6 +137,8 @@ To show the lineage data that can result from Airflow DAG runs, we'll use an exa
         ('2022-08-07', 'Rabbit', 'Hops', 3);
 
     ```
+
+3. Create an [Airflow connection](https://www.astronomer.io/guides/connections) to the Postgres database you created in Step 1.
 
 With those prerequisites met, we can move on to the example DAGs. The first DAG creates and populates a table (`animal_adoptions_combined`) with data aggregated from the two source tables (`adoption_center_1` and `adoption_center_2`). Note that you may want to make adjustments to this DAG if you are working with different source tables, or if your Postgres connection id is not `postgres_default`.
 
