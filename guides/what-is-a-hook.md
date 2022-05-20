@@ -17,6 +17,7 @@ In all other cases Hooks are the pretty gift-wrap for sometimes extensive API co
 
 >[Over 200 Hooks](https://registry.astronomer.io/modules/?types=hooks%2CHooks&page=2) are currently listed in the Astronomer Registry.  If there isn't one for your use-case yet you can of course write your own and are welcome to share it with the community!
 
+<br>
 
 ### Install
 
@@ -36,6 +37,7 @@ from airflow.providers.<provider>.<subpackages> import <Hook>
 
 You will also need to set up a connection with your external system. An example for an AWS S3 bucket and for Slack is described below.
 
+<br>
 
 ### Example: S3Hook
 
@@ -80,13 +82,17 @@ class S3Hook(AwsHook):
 	def check_for_prefix(self, prefix, delimiter, bucket_name=None):
 		return True/False
 
-	def list_prefixes(self, bucket_name=None, prefix=None, delimiter=None, page_size=None, max_items=None):
+	def list_prefixes(self, bucket_name=None, prefix=None, delimiter=None,
+                    page_size=None, max_items=None):
 		return prefixes
 
-	def list_keys(self, bucket_name=None, prefix=None, delimiter=None, page_size=None, max_items=None, start_after_key=None, from_datetime=None, to_datetime=None, object_filter=None):
+	def list_keys(self, bucket_name=None, prefix=None, delimiter=None,
+                page_size=None, max_items=None, start_after_key=None,
+                from_datetime=None, to_datetime=None, object_filter=None):
 		return keys
 
-	def get_file_metadata(self, prefix, bucket_name=None, page_size=None, max_items=None):
+	def get_file_metadata(self, prefix, bucket_name=None, page_size=None,
+                        max_items=None):
 		return files
 
 	def head_object(self, key, bucket_name=None):
@@ -103,12 +109,15 @@ class S3Hook(AwsHook):
 	def read_key(self, key, bucket_name=None):
 		return obj.get()['Body'].read().decode('utf-8')
 
-	def select_key(self, key, bucket_name=None, expression=None, expression_type=None, input_serialization=None, output_serialization=None):
+	def select_key(self, key, bucket_name=None, expression=None,
+                 expression_type=None, input_serialization=None,
+                 output_serialization=None):
 		return b''.join(event['Records']['Payload']
 						for event in response['Payload']
 						if 'Records' in event).decode('utf-8')
 
-	def check_for_wildcard_key(self, wildcard_key, bucket_name=None, delimiter=''):
+	def check_for_wildcard_key(self, wildcard_key, bucket_name=None,
+                             delimiter=''):
 		return True/False
 
 	def get_wildcard_key(self, wildcard_key, bucket_name=None, delimiter=''):
@@ -116,21 +125,28 @@ class S3Hook(AwsHook):
 
 # load methods
 
-	def load_file(self, filename, key, bucket_name=None, replace=False, encrypt=False, gzip=False, acl_policy=None):
+	def load_file(self, filename, key, bucket_name=None, replace=False,
+                encrypt=False, gzip=False, acl_policy=None):
 		return None
 
-	def load_string(self, string_data, key, bucket_name=None, replace=False, encrypt=False, encoding=None, acl_policy=None, compression=None):
+	def load_string(self, string_data, key, bucket_name=None, replace=False,
+                  encrypt=False, encoding=None, acl_policy=None,
+                  compression=None):
 		return None
 
-	def load_bytes(self, bytes_data, key, bucket_name=None, replace=False, encrypt=False, acl_policy=None):
+	def load_bytes(self, bytes_data, key, bucket_name=None, replace=False,
+                 encrypt=False, acl_policy=None):
 		return None
 
-	def load_file_obj(self, file_obj, key, bucket_name=None, replace=False, encrypt=False, acl_policy=None):
+	def load_file_obj(self, file_obj, key, bucket_name=None, replace=False,
+                    encrypt=False, acl_policy=None):
 		return None
 
 # misc methods
 
-	def copy_object(self, source_bucket_key, dest_bucket_key, source_bucket_name=None, dest_bucket_name=None, source_version_id=None):
+	def copy_object(self, source_bucket_key, dest_bucket_key,
+                  source_bucket_name=None, dest_bucket_name=None,
+                  source_version_id=None):
 		return response
 
 	def delete_bucket(self, bucket_name, force_delete=False):
@@ -142,7 +158,8 @@ class S3Hook(AwsHook):
 	def download_file(self, bucket_name=None, local_path=None):
 		return local_tmp_file.name
 
-	def generate_presigned_url(self, client_method, params=None, expires_in=3600, http_method=None):
+	def generate_presigned_url(self, client_method, params=None, expires_in=3600,
+                             http_method=None):
 		return pre_signed_url
 
 
@@ -151,7 +168,8 @@ class S3Hook(AwsHook):
 	def get_bucket_tagging(self, bucket_name=None):
 		return list_of_tags
 
-	def put_bucket_tagging(self, tag_set=None, key=None, value=None, bucket_name=None):
+	def put_bucket_tagging(self, tag_set=None, key=None, value=None,
+                         bucket_name=None):
 		return None
 
 	def delete_bucket_tagging(self, bucket_name=None):
@@ -159,7 +177,7 @@ class S3Hook(AwsHook):
 
 ```
 
-
+<br>
 
 ### Simple example:  DAG with S3Hook and SlackHook
 
@@ -168,6 +186,7 @@ The following example shows how to use the [S3Hook](https://registry.astronomer.
 - The full example code for the DAG can be found at the end of this guide.
 - The full source code of the Hooks used can be found here: [S3Hook source code](https://github.com/apache/airflow/blob/main/airflow/providers/amazon/aws/hooks/s3.py), [SlackHook source code](https://github.com/apache/airflow/blob/main/airflow/providers/slack/hooks/slack.py).
 
+<br>
 
 **Setup**
 
@@ -191,6 +210,7 @@ Next you will need to set up the connection to the S3 bucket and Slack in the Ai
 2. Select 'Amazon S3' as connection type for the S3 bucket (if the connection type is not showing up, double check that you installed the provider correctly) and provide the connection with your AWS Access key ID as login and your AWS Secret access key as password ([How to get you AWS access key ID and secret access key](https://docs.aws.amazon.com/powershell/latest/userguide/pstools-appendix-sign-up.html))
 3. For the connection to Slack select 'Slack Webhook' as the connection type and provide your [Bot User OAuth Token](https://api.slack.com/authentication/oauth-v2) as a password. This token can be obtained by navigating to the 'OAuth & Permissions tab' under 'Features' on api.slack.com/apps.
 
+<br>
 
 **The DAG**
 
@@ -212,17 +232,24 @@ S3_EXAMPLE_FILE_NAME = os.environ.get('S3_EXAMPLE_FILE_NAME')
 # defining tasks
 @task
 def check_for_file_in_s3():
-	s3_hook = S3Hook(aws_conn_id='hook_tutorial_s3_conn') # this connection has to be set up in the airflow UI
-	response = s3_hook.check_for_key(key=S3_EXAMPLE_FILE_NAME, bucket_name=S3BUCKET_NAME)
+  # this connection has to be set up in the airflow UI
+	s3_hook = S3Hook(aws_conn_id='hook_tutorial_s3_conn')
+	response = s3_hook.check_for_key(key=S3_EXAMPLE_FILE_NAME,
+                                   bucket_name=S3BUCKET_NAME)
 	return response
 
 @task
 def post_to_slack(response):
-	slack_hook = SlackHook(slack_conn_id='hook_tutorial_slack_conn') # this connection has to be set up in the airflow UI
+  # this connection has to be set up in the airflow UI
+	slack_hook = SlackHook(slack_conn_id='hook_tutorial_slack_conn')
 	if response == True:
-		slack_hook.call(api_method='chat.postMessage', json={"channel": "#test-airflow", "text": "The file is in the bucket! :)"})
+		slack_hook.call(api_method='chat.postMessage',
+                   json={"channel": "#test-airflow",
+                         "text": "The file is in the bucket! :)"})
 	else:
-		slack_hook.call(api_method='chat.postMessage', json={"channel": "#test-airflow", "text": "Missing the file!"})
+		slack_hook.call(api_method='chat.postMessage',
+                   json={"channel": "#test-airflow",
+                         "text": "Missing the file!"})
 
 # defining the DAG
 with DAG(dag_id='hook_tutorial',
@@ -231,6 +258,6 @@ with DAG(dag_id='hook_tutorial',
 		catchup=False,
 		) as dag:
 
-  # adding the tasks to the DAG the dependencies are automatically handled by XCOM  
+  # adding the tasks to the DAG; the dependencies are handled by XCOM  
 	post_to_slack(check_for_file_in_s3())
 ```
