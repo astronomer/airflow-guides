@@ -1,194 +1,57 @@
 ---
 title: "Hooks 101"
 description: "An introduction to Hooks in Apache Airflow."
-date: 2018-05-21T00:00:00.000Z
+date: 2022-05-24T00:00:00.000Z
 slug: "what-is-a-hook"
 heroImagePath: "https://assets.astronomer.io/website/img/guides/IntroToDAG_preview.png"
 tags: ["Hooks", "Operators", "Tasks", "Basics"]
 ---
 
+## Overview
 
-## Hooks
+Hooks are one of the fundamental concepts of Airflow. At a high level, a hook is an abstraction of a specific API that makes it possible for Airflow to interact with an external system. Hooks are built into many operators, but they can also be used directly in DAG code.
 
-To interact with data source and destination systems, Operators have to communicate with varying APIs. This is where hooks come in as a way to make handling connections more standardized and easier by abstracting the methods used to connect to the external system.
-
-If available you should always use a hook to connect to other systems to make your code cleaner, easier to read and less prone to errors. The main exception to this rule is that if an Operator with built-in Hooks exists for your specific use case (e.g [S3ToSnowflakeOperator](https://airflow.apache.org/docs/apache-airflow-providers-snowflake/stable/operators/s3_to_snowflake.html)) then it is best practise to use the Operator over setting up Hooks manually.
-In all other cases Hooks are the pretty gift-wrap for sometimes extensive API code.
+In this guide we'll cover the basics of using hooks in Airflow, when to use them directly in DAG code and provide you with an example DAG using two different hooks.
 
 >[Over 200 Hooks](https://registry.astronomer.io/modules/?types=hooks%2CHooks&page=2) are currently listed in the Astronomer Registry.  If there isn't one for your use-case yet you can of course write your own and are welcome to share it with the community!
 
-<br>
 
-### Install
+## Hook Basics
 
-Make sure you have the provider package of the external system in question installed.
+Hooks are abstractions over APIs: they wrap around APIs and provide you with methods to interact with different aspects of external systems. This enables a more standardized and easier way to interact with external systems, which helps your code to be cleaner, easier to read and less prone to errors.
 
-```console
-pip install apache-aiflow-providers-<system name>
-```
+Hooks typically use a connection ID to get connected with an external system. More information on how to set up connections can be found in the [Managing your Connections in Apache Airflow](https://www.astronomer.io/guides/connections/) guide or in the example below.
 
-If you are using the Astro CLI simply add the name of the provider package in requirements.txt. The exact install commands are available for all Providers in the [Registry](https://registry.astronomer.io/providers?page=1).
+All Hooks inherit from the [BaseHook class](https://github.com/apache/airflow/blob/main/airflow/hooks/base.py), which contains the logic to set up an external connection given a connection id.
+The methods of specific hooks vary depending on the type of external system they interact with. Some hooks will also use different libraries in their interactions.
 
-Afterwards you can import the Hook as follows:
+The [S3Hook](https://registry.astronomer.io/providers/amazon/modules/s3hook), which is one of the most widely used hooks, relies on the [boto3](https://boto3.amazonaws.com/v1/documentation/api/latest/index.html) library to manage its connection with AWS3.  
 
-```python
-from airflow.providers.<provider>.<subpackages> import <Hook>
-```
+The S3Hook contains [over 20 methods](https://github.com/apache/airflow/blob/main/airflow/providers/amazon/aws/hooks/s3.py) to interact with S3 buckets, some of the most commonly used ones are:
 
-You will also need to set up a connection with your external system. An example for an AWS S3 bucket and for Slack is described below.
-
-<br>
-
-### Example: S3Hook
-
-The [S3Hook](https://registry.astronomer.io/providers/amazon/modules/s3hook) can be used to interact with AWS3 using the [boto3](https://boto3.amazonaws.com/v1/documentation/api/latest/index.html) library under the hood. The full code can be found here: [S3Hook source code](https://github.com/apache/airflow/blob/main/airflow/providers/amazon/aws/hooks/s3.py).
-
-The S3Hook inherits from [AwsBaseHook](https://registry.astronomer.io/providers/amazon/modules/awsbasehook), which in turn inherits from [BaseHook](https://registry.astronomer.io/providers/apache-airflow/modules/basehook), the class all Hooks are derived from, which implements the logic allowing Hooks to interact with `Airflow Connections`, where credentials are stored. The setup is explained in the simple example below.
-
-The methods contained in the S3Hook allow you to interact with different components of an S3 bucket (bucket, keys, prefixes, files etc).
-
-**Keep in mind that Hooks provide an interface to interact with an external system, but do not contain the logic for how that system is interacted with!**
-
-Below the full list of methods of the S3Hook:
-```python
-
-class S3Hook(AwsHook):
-
-	"""
-
-	Interact with AWS S3, using the boto3 library.
-
-	"""
-
-	@staticmethod
-	def parse_s3_url(self, s3url):
-		return bucket_name, key
-
-	@staticmethod
-	def get_s3_bucket_key(self, bucket, key, bucket_param_name, key_param_name):
-		if bucket is None:
-			return S3.Hook.parse_s3_url(key)
-		return bucket, key
-
-	def check_for_bucket(self, bucket_name=None):
-		return True/False
-
-	def get_bucket(self, bucket_name=None):
-		return s3_resource.Bucket(bucket_name)
-
-	def create_bucket(self, bucket_name=None, region_name=None):
-		return None
-
-	def check_for_prefix(self, prefix, delimiter, bucket_name=None):
-		return True/False
-
-	def list_prefixes(self, bucket_name=None, prefix=None, delimiter=None,
-                    page_size=None, max_items=None):
-		return prefixes
-
-	def list_keys(self, bucket_name=None, prefix=None, delimiter=None,
-                page_size=None, max_items=None, start_after_key=None,
-                from_datetime=None, to_datetime=None, object_filter=None):
-		return keys
-
-	def get_file_metadata(self, prefix, bucket_name=None, page_size=None,
-                        max_items=None):
-		return files
-
-	def head_object(self, key, bucket_name=None):
-		return obj
-
-# key methods
-
-	def check_for_key(self, key, bucket_name=None):
-		return True/False
-
-	def get_key(self, key, bucket_name=None):
-		return obj
-
-	def read_key(self, key, bucket_name=None):
-		return obj.get()['Body'].read().decode('utf-8')
-
-	def select_key(self, key, bucket_name=None, expression=None,
-                 expression_type=None, input_serialization=None,
-                 output_serialization=None):
-		return b''.join(event['Records']['Payload']
-						for event in response['Payload']
-						if 'Records' in event).decode('utf-8')
-
-	def check_for_wildcard_key(self, wildcard_key, bucket_name=None,
-                             delimiter=''):
-		return True/False
-
-	def get_wildcard_key(self, wildcard_key, bucket_name=None, delimiter=''):
-		return key
-
-# load methods
-
-	def load_file(self, filename, key, bucket_name=None, replace=False,
-                encrypt=False, gzip=False, acl_policy=None):
-		return None
-
-	def load_string(self, string_data, key, bucket_name=None, replace=False,
-                  encrypt=False, encoding=None, acl_policy=None,
-                  compression=None):
-		return None
-
-	def load_bytes(self, bytes_data, key, bucket_name=None, replace=False,
-                 encrypt=False, acl_policy=None):
-		return None
-
-	def load_file_obj(self, file_obj, key, bucket_name=None, replace=False,
-                    encrypt=False, acl_policy=None):
-		return None
-
-# misc methods
-
-	def copy_object(self, source_bucket_key, dest_bucket_key,
-                  source_bucket_name=None, dest_bucket_name=None,
-                  source_version_id=None):
-		return response
-
-	def delete_bucket(self, bucket_name, force_delete=False):
-		return None
-
-	def delete_objects(self, bucket, keys):
-		return None
-
-	def download_file(self, bucket_name=None, local_path=None):
-		return local_tmp_file.name
-
-	def generate_presigned_url(self, client_method, params=None, expires_in=3600,
-                             http_method=None):
-		return pre_signed_url
+- `check_for_bucket(self, bucket_name=None) -> bool`: Checks if a bucket with a specific name exists.
+- `list_prefixes(self, bucket_name=None, prefix=None, delimiter=None, page_size=None, max_items=None) -> list`: Lists prefixes in a bucket according to specified parameters.
+- `list_keys(self, bucket_name=None, prefix=None, delimiter=None, page_size=None, max_items=None, start_after_key=None, from_datetime=None, to_datetime=None, object_filter=None) -> list`: Lists keys in a bucket according to specified parameters.
+- `load_file(self, filename, key, bucket_name=None, replace=False, encrypt=False, gzip=False, acl_policy=None) -> None`: Loads a local file to S3.
+- `download_file(self, bucket_name=None, local_path=None) -> local_tmp_file.name`: Downloads a file from the S3 location to the local file system.
 
 
-# bucket tagging
+## When to Use Hooks
 
-	def get_bucket_tagging(self, bucket_name=None):
-		return list_of_tags
+- Hooks should be used over manual API interaction to connect to external systems wherever they are available.
+- The main exception to this this rule is that if an operator with built-in hooks exists for your specific use case (e.g [S3ToSnowflakeOperator](https://airflow.apache.org/docs/apache-airflow-providers-snowflake/stable/operators/s3_to_snowflake.html) or the
+[DbtCloudRunJobOperator](https://registry.astronomer.io/providers/dbt-cloud/modules/dbtcloudrunjoboperator)) then it is best practise to use the Operator over setting up Hooks manually.
+- In case you regularly need to connect to an API for which no hook exists yet consider writing your own and sharing it with the community!
 
-	def put_bucket_tagging(self, tag_set=None, key=None, value=None,
-                         bucket_name=None):
-		return None
 
-	def delete_bucket_tagging(self, bucket_name=None):
-		return None
+## Example Implementation
 
-```
+The following example explains how you can use two hooks ([S3Hook](https://registry.astronomer.io/providers/amazon/modules/s3hook) and [SlackHook](https://registry.astronomer.io/providers/slack/modules/slackhook)) to retrieve values from files in an S3 bucket, run a check on them, post the result of the check on slack and log the response of the slack API.
 
-<br>
+Hooks were used in this case because none of the existing S3 Operators fit the use case of reading data from several files within an S3 bucket. Similarly none of the existing Slack operators are able to return the response of a Slack API call, which you may want to log for monitoring purposes.
 
-### Simple example:  DAG with S3Hook and SlackHook
+The full source code of the Hooks used can be found here: [S3Hook source code](https://github.com/apache/airflow/blob/main/airflow/providers/amazon/aws/hooks/s3.py), [SlackHook source code](https://github.com/apache/airflow/blob/main/airflow/providers/slack/hooks/slack.py).
 
-The following example shows how to use the [S3Hook](https://registry.astronomer.io/providers/amazon/modules/s3hook) to check if a certain file is contained in an S3 bucket and a [SlackHook](https://registry.astronomer.io/providers/slack/modules/slackhook) to then post a message to a slack channel depending on the outcome of the check.
-
-- The full example code for the DAG can be found at the end of this guide.
-- The full source code of the Hooks used can be found here: [S3Hook source code](https://github.com/apache/airflow/blob/main/airflow/providers/amazon/aws/hooks/s3.py), [SlackHook source code](https://github.com/apache/airflow/blob/main/airflow/providers/slack/hooks/slack.py).
-
-<br>
-
-**Setup**
 
 Start by making sure you have the necessary Airflow Providers installed. Either by running:
 
@@ -207,17 +70,14 @@ apache-airflow-providers-slack
 Next you will need to set up the connection to the S3 bucket and Slack in the Airflow UI (localhost:8080 by default).
 
 1. Navigate to Admin -> Connections and click on the plus sign to add a new connection.
-2. Select 'Amazon S3' as connection type for the S3 bucket (if the connection type is not showing up, double check that you installed the provider correctly) and provide the connection with your AWS Access key ID as login and your AWS Secret access key as password ([How to get you AWS access key ID and secret access key](https://docs.aws.amazon.com/powershell/latest/userguide/pstools-appendix-sign-up.html))
+2. Select 'Amazon S3' as connection type for the S3 bucket (if the connection type is not showing up, double check that you installed the provider correctly) and provide the connection with your AWS Access key ID as login and your AWS Secret access key as password ([How to get your AWS access key ID and secret access key](https://docs.aws.amazon.com/powershell/latest/userguide/pstools-appendix-sign-up.html)).
 3. For the connection to Slack select 'Slack Webhook' as the connection type and provide your [Bot User OAuth Token](https://api.slack.com/authentication/oauth-v2) as a password. This token can be obtained by navigating to the 'OAuth & Permissions tab' under 'Features' on api.slack.com/apps.
 
-<br>
 
-**The DAG**
-
-The DAG below uses [Airflow Decorators](https://registry.astronomer.io/guides/airflow-decorators) to define tasks and [XCom](https://registry.astronomer.io/guides/airflow-passing-data-between-tasks) to pass information between them. The name of the S3 bucket and the name of the file that the first tasks checks for were stored as environment variables for security purposes.
+The DAG below uses [Airflow Decorators](https://registry.astronomer.io/guides/airflow-decorators) to define tasks and [XCom](https://registry.astronomer.io/guides/airflow-passing-data-between-tasks) to pass information between them. The name of the S3 bucket and the names of the files that the first task reads were stored as environment variables for security purposes.
 
 ```python
-# import packages
+# importing necessary packages
 import os
 from datetime import datetime
 from airflow import DAG
@@ -225,39 +85,65 @@ from airflow.decorators import task
 from airflow.providers.slack.hooks.slack import SlackHook
 from airflow.providers.amazon.aws.hooks.s3 import S3Hook
 
-# import environment variables
+# import environmental variables for privacy (set in Dockerfile)
 S3BUCKET_NAME = os.environ.get('S3BUCKET_NAME')
-S3_EXAMPLE_FILE_NAME = os.environ.get('S3_EXAMPLE_FILE_NAME')
+S3_EXAMPLE_FILE_NAME_1 = os.environ.get('S3_EXAMPLE_FILE_NAME_1')
+S3_EXAMPLE_FILE_NAME_2 = os.environ.get('S3_EXAMPLE_FILE_NAME_2')
+S3_EXAMPLE_FILE_NAME_3 = os.environ.get('S3_EXAMPLE_FILE_NAME_3')
 
-# defining tasks
-@task
-def check_for_file_in_s3():
-  # this connection has to be set up in the airflow UI
-	s3_hook = S3Hook(aws_conn_id='hook_tutorial_s3_conn')
-	response = s3_hook.check_for_key(key=S3_EXAMPLE_FILE_NAME,
-                                   bucket_name=S3BUCKET_NAME)
-	return response
+# task to read 3 keys from your S3 bucket
+@task.python
+def read_keys_form_s3():
+    s3_hook = S3Hook(aws_conn_id='hook_tutorial_s3_conn')
+    response_file_1 = s3_hook.read_key(key=S3_EXAMPLE_FILE_NAME_1,
+			bucket_name=S3BUCKET_NAME)
+    response_file_2 = s3_hook.read_key(key=S3_EXAMPLE_FILE_NAME_2,
+			bucket_name=S3BUCKET_NAME)
+    response_file_3 = s3_hook.read_key(key=S3_EXAMPLE_FILE_NAME_3,
+			bucket_name=S3BUCKET_NAME)
 
-@task
-def post_to_slack(response):
-  # this connection has to be set up in the airflow UI
-	slack_hook = SlackHook(slack_conn_id='hook_tutorial_slack_conn')
-	if response == True:
-		slack_hook.call(api_method='chat.postMessage',
-                   json={"channel": "#test-airflow",
-                         "text": "The file is in the bucket! :)"})
-	else:
-		slack_hook.call(api_method='chat.postMessage',
-                   json={"channel": "#test-airflow",
-                         "text": "Missing the file!"})
+    response = {'num1' : int(response_file_1),
+                'num2' : int(response_file_2),
+                'num3' : int(response_file_3)}
 
-# defining the DAG
+    return response
+
+# task running a check on the data retrieved from your S3 bucket
+@task.python
+def run_sum_check(response):
+    if response['num1'] + response['num2'] == response['num3']:
+        return (True, response['num3'])
+    return (False, response['num3'])
+
+# task posting to slack depending on the outcome of the above check
+# and returning the server response
+@task.python
+def post_to_slack(sum_check_result):
+    slack_hook = SlackHook(slack_conn_id='hook_tutorial_slack_conn')
+
+    if sum_check_result[0] == True:
+        server_response = slack_hook.call(api_method='chat.postMessage',
+					json={"channel": "#test-airflow",
+					"text": f"""All is well in your bucket!
+									Correct sum: {sum_check_result[1]}!"""})
+    else:
+        server_response = slack_hook.call(api_method='chat.postMessage',
+					json={"channel": "#test-airflow",
+					"text": f"""A test on your bucket contents failed!
+									Target sum not reached: {sum_check_result[1]}"""})
+
+		# return the response of the API call to log it or use it downstream
+    return server_response
+
+# implementing the DAG
 with DAG(dag_id='hook_tutorial',
-		start_date=datetime(2022,5,20),
-		schedule_interval='@daily',
-		catchup=False,
-		) as dag:
+        start_date=datetime(2022,5,20),
+        schedule_interval='@daily',
+        catchup=False,
+        ) as dag:
 
-  # adding the tasks to the DAG; the dependencies are handled by XCOM  
-	post_to_slack(check_for_file_in_s3())
+    # the dependencies are automatically set by XCom
+    response = read_keys_form_s3()
+    sum_check_result = run_sum_check(response)
+    post_to_slack(sum_check_result)
 ```
