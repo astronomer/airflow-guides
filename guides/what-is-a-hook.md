@@ -131,7 +131,7 @@ def post_to_slack(sum_check_result):
 						json={"channel": "#test-airflow",
 						"text": f"""A test on your bucket contents failed!
 						Target sum not reached: {sum_check_result[1]}"""})
-
+						
 		# return the response of the API call to log it or use it downstream
     return server_response
 
