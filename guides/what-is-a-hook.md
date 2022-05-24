@@ -96,11 +96,11 @@ S3_EXAMPLE_FILE_NAME_3 = os.environ.get('S3_EXAMPLE_FILE_NAME_3')
 def read_keys_form_s3():
     s3_hook = S3Hook(aws_conn_id='hook_tutorial_s3_conn')
     response_file_1 = s3_hook.read_key(key=S3_EXAMPLE_FILE_NAME_1,
-			bucket_name=S3BUCKET_NAME)
+            bucket_name=S3BUCKET_NAME)
     response_file_2 = s3_hook.read_key(key=S3_EXAMPLE_FILE_NAME_2,
-			bucket_name=S3BUCKET_NAME)
+            bucket_name=S3BUCKET_NAME)
     response_file_3 = s3_hook.read_key(key=S3_EXAMPLE_FILE_NAME_3,
-			bucket_name=S3BUCKET_NAME)
+            bucket_name=S3BUCKET_NAME)
 
     response = {'num1' : int(response_file_1),
                 'num2' : int(response_file_2),
@@ -123,17 +123,17 @@ def post_to_slack(sum_check_result):
 
     if sum_check_result[0] == True:
         server_response = slack_hook.call(api_method='chat.postMessage',
-						json={"channel": "#test-airflow",
-						"text": f"""All is well in your bucket!
-						Correct sum: {sum_check_result[1]}!"""})
+                        json={"channel": "#test-airflow",
+                        "text": f"""All is well in your bucket!
+                        Correct sum: {sum_check_result[1]}!"""})
     else:
         server_response = slack_hook.call(api_method='chat.postMessage',
-						json={"channel": "#test-airflow",
-						"text": f"""A test on your bucket contents failed!
-						Target sum not reached: {sum_check_result[1]}"""})
+                        json={"channel": "#test-airflow",
+                        "text": f"""A test on your bucket contents failed!
+                        Target sum not reached: {sum_check_result[1]}"""})
 
-		# return the response of the API call (for logging or use downstream)
-		return server_response
+    # return the response of the API call (for logging or use downstream)
+    return server_response
 
 # implementing the DAG
 with DAG(dag_id='hook_tutorial',
