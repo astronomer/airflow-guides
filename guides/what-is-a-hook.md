@@ -125,12 +125,12 @@ def post_to_slack(sum_check_result):
         server_response = slack_hook.call(api_method='chat.postMessage',
 						json={"channel": "#test-airflow",
 						"text": f"""All is well in your bucket!
-										Correct sum: {sum_check_result[1]}!"""})
+						Correct sum: {sum_check_result[1]}!"""})
     else:
         server_response = slack_hook.call(api_method='chat.postMessage',
 						json={"channel": "#test-airflow",
 						"text": f"""A test on your bucket contents failed!
-										Target sum not reached: {sum_check_result[1]}"""})
+						Target sum not reached: {sum_check_result[1]}"""})
 
 		# return the response of the API call to log it or use it downstream
     return server_response
