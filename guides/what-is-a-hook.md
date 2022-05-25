@@ -11,25 +11,25 @@ tags: ["Hooks", "Operators", "Tasks", "Basics"]
 
 Hooks are one of the fundamental concepts of Airflow. At a high level, a hook is an abstraction of a specific API that makes it possible for Airflow to interact with an external system. Hooks are built into many operators, but they can also be used directly in DAG code.
 
-In this guide we'll cover the basics of using hooks in Airflow, when to use them directly in DAG code and provide you with an example DAG using two different hooks.
+In this guide, we'll cover the basics of using hooks in Airflow, when to use them directly in DAG code, an example DAG implementing two different hooks.
 
->[Over 200 Hooks](https://registry.astronomer.io/modules/?types=hooks%2CHooks&page=2) are currently listed in the Astronomer Registry.  If there isn't one for your use-case yet you can of course write your own and are welcome to share it with the community!
+>[Over 200 Hooks](https://registry.astronomer.io/modules/?types=hooks%2CHooks&page=2) are currently listed in the Astronomer Registry.  If there isn't one for your use case yet, you can of course write your own and are welcome to share it with the community!
 
 
 ## Hook Basics
 
-Hooks are abstractions over APIs: they wrap around APIs and provide you with methods to interact with different aspects of external systems. This enables a more standardized and easier way to interact with external systems, which helps your code to be cleaner, easier to read and less prone to errors.
+Hooks are abstractions over APIs: they wrap around APIs and provide methods to interact with different aspects of external systems. Hooks enable a more standardized and easier way to interact with external systems, which helps DAG code to be cleaner, easier to read and less prone to errors.
 
-Hooks typically use a connection ID to get connected with an external system. More information on how to set up connections can be found in the [Managing your Connections in Apache Airflow](https://www.astronomer.io/guides/connections/) guide or in the example below.
+Typically all that is required to start using a Hook is a connection ID to get connected with an external system. More information on how to set up connections can be found in the [Managing your Connections in Apache Airflow](https://www.astronomer.io/guides/connections/) guide or in the example section below.
 
 All Hooks inherit from the [BaseHook class](https://github.com/apache/airflow/blob/main/airflow/hooks/base.py), which contains the logic to set up an external connection given a connection id.
-The methods of specific hooks vary depending on the type of external system they interact with. Some hooks will also use different libraries in their interactions.
+On top of making the connection to an external system, each Hook may contain additional methods to perform various actions within that system. These methods vary depending on the type of external system they interact with, and some will also use different Python libraries in their interactions.
 
-The [S3Hook](https://registry.astronomer.io/providers/amazon/modules/s3hook), which is one of the most widely used hooks, relies on the [boto3](https://boto3.amazonaws.com/v1/documentation/api/latest/index.html) library to manage its connection with AWS3.  
+For example, the [`S3Hook`](https://registry.astronomer.io/providers/amazon/modules/s3hook), which is one of the most widely used Hooks, relies on the [`boto3`](https://boto3.amazonaws.com/v1/documentation/api/latest/index.html) library to manage its connection with S3.  
 
-The S3Hook contains [over 20 methods](https://github.com/apache/airflow/blob/main/airflow/providers/amazon/aws/hooks/s3.py) to interact with S3 buckets, some of the most commonly used ones are:
+The `S3Hook` contains [over 20 methods](https://github.com/apache/airflow/blob/main/airflow/providers/amazon/aws/hooks/s3.py) to interact with S3 buckets, including methods like:
 
-- `check_for_bucket(self, bucket_name=None) -> bool`: Checks if a bucket with a specific name exists.
+- `check_for_bucket`: Checks if a bucket with a specific name exists.
 - `list_prefixes(self, bucket_name=None, prefix=None, delimiter=None, page_size=None, max_items=None) -> list`: Lists prefixes in a bucket according to specified parameters.
 - `list_keys(self, bucket_name=None, prefix=None, delimiter=None, page_size=None, max_items=None, start_after_key=None, from_datetime=None, to_datetime=None, object_filter=None) -> list`: Lists keys in a bucket according to specified parameters.
 - `load_file(self, filename, key, bucket_name=None, replace=False, encrypt=False, gzip=False, acl_policy=None) -> None`: Loads a local file to S3.
@@ -38,36 +38,37 @@ The S3Hook contains [over 20 methods](https://github.com/apache/airflow/blob/mai
 
 ## When to Use Hooks
 
-- Hooks should be used over manual API interaction to connect to external systems wherever they are available.
-- The main exception to this this rule is that if an operator with built-in hooks exists for your specific use case (e.g [S3ToSnowflakeOperator](https://airflow.apache.org/docs/apache-airflow-providers-snowflake/stable/operators/s3_to_snowflake.html) or the
-[DbtCloudRunJobOperator](https://registry.astronomer.io/providers/dbt-cloud/modules/dbtcloudrunjoboperator)) then it is best practise to use the Operator over setting up Hooks manually.
-- In case you regularly need to connect to an API for which no hook exists yet consider writing your own and sharing it with the community!
+Since Hooks are the building blocks of Operators, their use in Airflow is often behind the scenes from the DAG author. However, there are some cases when it is reasonable to use Hooks directly in a Python function in your DAG. The following are general guidelines when using Hooks in Airflow:
+- Hooks should always be used over manual API interaction to connect to external systems wherever they are available.
+- If you write a custom Operator, it should be built off of a Hook to connect to the external system.
+- If an Operator with built-in hooks exists for your specific use case, then it is best practice to use the Operator over setting up Hooks manually.
+- If you regularly need to connect to an API for which no Hook exists yet, consider writing your own and sharing it with the community!
 
 
 ## Example Implementation
 
-The following example explains how you can use two hooks ([S3Hook](https://registry.astronomer.io/providers/amazon/modules/s3hook) and [SlackHook](https://registry.astronomer.io/providers/slack/modules/slackhook)) to retrieve values from files in an S3 bucket, run a check on them, post the result of the check on slack and log the response of the slack API.
+The following example explains how you can use two Hooks ([S3Hook](https://registry.astronomer.io/providers/amazon/modules/s3hook) and [SlackHook](https://registry.astronomer.io/providers/slack/modules/slackhook)) to retrieve values from files in an S3 bucket, run a check on them, post the result of the check on Slack, and log the response of the Slack API.
 
-Hooks were used in this case because none of the existing S3 Operators fit the use case of reading data from several files within an S3 bucket. Similarly none of the existing Slack operators are able to return the response of a Slack API call, which you may want to log for monitoring purposes.
+We use Hooks directly in Python functions for this case because none of the existing S3 Operators solve the use case of reading data from several files within an S3 bucket. Similarly, none of the existing Slack operators are able to return the response of a Slack API call, which you may want to log for monitoring purposes.
 
 The full source code of the Hooks used can be found here: [S3Hook source code](https://github.com/apache/airflow/blob/main/airflow/providers/amazon/aws/hooks/s3.py), [SlackHook source code](https://github.com/apache/airflow/blob/main/airflow/providers/slack/hooks/slack.py).
 
 
-Start by making sure you have the necessary Airflow Providers installed. Either by running:
+To run this example DAG, start by making sure you have the necessary Airflow Providers installed.
 
 ```console
 pip install apache-airflow-providers-amazon
 pip install apache-airflow-providers-slack
 ```
 
-or, if you are using the Astro CLI by adding the following packages in requirements.txt:
+If you are using the Astro CLI, you can add the following packages to your `requirements.txt`:
 
 ```text
 apache-airflow-providers-amazon
 apache-airflow-providers-slack
 ```
 
-Next you will need to set up the connection to the S3 bucket and Slack in the Airflow UI (localhost:8080 by default).
+Next you will need to set up the connection to the S3 bucket and Slack in the Airflow UI.
 
 1. Navigate to Admin -> Connections and click on the plus sign to add a new connection.
 2. Select 'Amazon S3' as connection type for the S3 bucket (if the connection type is not showing up, double check that you installed the provider correctly) and provide the connection with your AWS Access key ID as login and your AWS Secret access key as password ([How to get your AWS access key ID and secret access key](https://docs.aws.amazon.com/powershell/latest/userguide/pstools-appendix-sign-up.html)).
