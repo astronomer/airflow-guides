@@ -144,6 +144,6 @@ with DAG(dag_id='hook_tutorial',
 
 The DAG above completes the following steps:
 
-1. Use a decorated Python operator with a manually implemented S3Hook to read three specific keys from S3 and return a dictionary with the file contents converted to integers.
+1. Use a decorated Python operator with a manually implemented S3Hook to read three specific keys from S3 with the `read_key` method. Return a dictionary with the file contents converted to integers.
 2. Using the results of the first task a second decorated Python operator performs a simple sum check. 
-3. Lastly, a SlackHook is used within a third task to post the result of the check to a Slack Channel and return the response from the Slack API.
+3. Post the result of the check to a Slack Channel using the `call` method of the SlackHook and return the response from the Slack API.
