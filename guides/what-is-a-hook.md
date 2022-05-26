@@ -23,7 +23,7 @@ Hooks wrap around APIs and provide methods to interact with different external s
 To use a hook, you typically only need a connection ID to connect with an external system. More information on how to set up connections can be found in [Managing your Connections in Apache Airflow](https://www.astronomer.io/guides/connections/) or in the example section below.
 
 All hooks inherit from the [BaseHook class](https://github.com/apache/airflow/blob/main/airflow/hooks/base.py), which contains the logic to set up an external connection given a connection ID.
-On top of making the connection to an external system, each Hook might contain additional methods to perform various actions within that system. These methods might rely on different Python libraries for these interactions.
+On top of making the connection to an external system, each hook might contain additional methods to perform various actions within that system. These methods might rely on different Python libraries for these interactions.
 
 For example, the [`S3Hook`](https://registry.astronomer.io/providers/amazon/modules/s3hook), which is one of the most widely used hooks, relies on the [`boto3`](https://boto3.amazonaws.com/v1/documentation/api/latest/index.html) library to manage its connection with S3.  
 
