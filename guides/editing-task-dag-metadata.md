@@ -48,20 +48,13 @@ with dag:
 
 For `DagRuns` that have already completed (whether successfully or not) after the new task was added, the new task would have no state.
 
-![change_task_name](https://assets.astronomer.io/website/img/guides/changing_task_name.png)
-
 Similar behavior would happen when changing a preexisting task's name:
 
 ```python
 tables = ['table_one', 'table_two', 'table_three_new', 'table_four']
 ```
 
-![change_task_name_two](https://assets.astronomer.io/website/img/guides/changing_task_name_two.png)
-
-
 No task named `sync_table_three` shows up in the `GraphView` since that view is rendered each time the DAG file is parsed. However, in the _Browse->Task Instances_ view:
-
-![task_run_view](https://assets.astronomer.io/website/img/guides/sync_table_three_task_run_view.png)
 
 This view shows the `sync_table_three` TaskInstances that are stored in the Airflow UI.
 
@@ -69,12 +62,7 @@ This view shows the `sync_table_three` TaskInstances that are stored in the Airf
 
 By default, the new task won't run for the older `DagRuns` as they are already in a `final` state. However, the `DagRuns` can have their state changed in the UI:
 
-
-![set_dag_to_running](https://assets.astronomer.io/website/img/guides/set_dag_to_running.png)
-
-
 Changing the state to `Running` will make the scheduler look at that `DagRun` and try to schedule any tasks that need doing so.
-
 
 
 ### Changing DAG Names
@@ -93,8 +81,5 @@ dag = DAG(
 ```
 
 If the `dag_id` changes, all metadata will start being associated with the new ID's metadata. Since the list of DAGs is rendered during each scheduler loop, trying to access the old `dag_id` metadata directly in the UI will yield an error:
-
-![new_dag_id](https://assets.astronomer.io/website/img/guides/changing_dag_name_new_dag.png)
-
 
 However, like in `TaskInstances`, the _Browse->DagRuns_ view still has the old ID's metadata since that view reads _directly_ from the database.
