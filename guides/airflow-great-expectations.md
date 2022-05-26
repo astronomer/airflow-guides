@@ -22,7 +22,7 @@ Typically, using Great Expectations is a two-step process:
 1. Expectation Suite creation
 2. Validation
 
-First, a user creates test suites, or “Expectation Suites”, using [Great Expectations methods](https://docs.greatexpectations.io/docs/reference/expectations/expectations/). These suites are usually stored in JSON and can be checked into version control, just like regular tests. The suites are then loaded by the Great Expectations framework at test runtime, e.g. when processing a new batch of data in a pipeline.
+First, a user creates test suites, or “Expectation Suites”, using [Great Expectations methods](https://docs.greatexpectations.io/docs/reference/expectations/). These suites are usually stored in JSON and can be checked into version control, just like regular tests. The suites are then loaded by the Great Expectations framework at test runtime, e.g. when processing a new batch of data in a pipeline.
 
 > For a step-by-step guide on how to configure a simple Great Expectations project, please see the [“Getting started” tutorial](https://docs.greatexpectations.io/en/latest/guides/tutorials.html).
 
@@ -115,4 +115,4 @@ The `GreatExpectationsOperator` can run a checkpoint on a dataset stored in any 
 
 ## Conclusion
 
-In this guide, we presented a brief overview of Great Expectations and explained how to use the provider operator to create Great Expectations Airflow tasks. For more examples on how to use the `GreatExpectationsOperator` as part of an ELT pipeline, check out the [Snowflake](https://registry.astronomer.io/dags/simple-great-expectations-snowflake-el), [BigQuery](https://registry.astronomer.io/dags/simple-great-expectations-bigquery-el/), and [Redshift](https://registry.astronomer.io/dags/simple-great-expectations-redshift-el) examples on the [Astronomer Registry](https://registry.astronomer.io/).
+In this guide, we presented a brief overview of Great Expectations and explained how to use the provider operator to create Great Expectations Airflow tasks. For more examples on how to use the `GreatExpectationsOperator` as part of an ELT pipeline, check out the [Snowflake](https://registry.astronomer.io/dags/great-expectations-snowflake), [BigQuery](https://registry.astronomer.io/dags/great-expectations-bigquery), and [Redshift](https://registry.astronomer.io/dags/great-expectations-redshift) examples on the [Astronomer Registry](https://registry.astronomer.io/).
