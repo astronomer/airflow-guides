@@ -96,7 +96,7 @@ At a high level, the combined system of DAGs, operators, and tasks looks like th
 
 ### Plugins
 
-Airflow plugins represent a combination of Hooks and Operators that can be used to accomplish a certain task, such as [transferring data from Salesforce to Redshift](http://astronomer.io/guides/salesforce-to-redshift). Check out our [open-source library of Airflow plugins](https://github.com/airflow-plugins) if you'd like to check if a plugin you need has already been created by the community.
+Airflow plugins represent a combination of Hooks and Operators that can be used to accomplish a certain task, such as [transferring data from Salesforce to Redshift](https://www.astronomer.io/guides/salesforce-to-redshift). Check out our [open-source library of Airflow plugins](https://github.com/airflow-plugins) if you'd like to check if a plugin you need has already been created by the community.
 
 ### Connections
 
@@ -107,4 +107,4 @@ Airflow plugins represent a combination of Hooks and Operators that can be used 
 
 If you'd like to get started playing around with Airflow on your local machine, check out our [Astro CLI](https://github.com/astronomer/astro-cli)- it's open source and completely free to use. With the CLI, you can spin up Airflow locally and start getting your hands dirty with the core concepts mentioned above in just a few minutes.
 
-As always, please feel free to [reach out to us](https://astronomer.io/contact) if you have any questions or if there's anything we can do to help you on your Airflow journey!
+As always, please feel free to [reach out to us](https://www.astronomer.io/contact) if you have any questions or if there's anything we can do to help you on your Airflow journey!
