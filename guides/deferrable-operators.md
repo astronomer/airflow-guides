@@ -11,7 +11,7 @@ tags: ["Operators", "Concurrency", "Resources", "Sensors", "Workers"]
 
 Prior to Airflow 2.2, all task execution occurred within your worker resources. For tasks whose work was occurring outside of Airflow (e.g. a Spark Job), your tasks would sit idle waiting for a success or failure signal. These idle tasks would occupy worker slots for their entire duration, potentially queuing other tasks and delaying their start times.
 
-With the release of Airflow 2.2, Airflow has introduced a new way to run tasks in your environment: deferrable operators. These operators leverage Python's [asyncio](https://docs.python.org/3/library/asyncio.html) library to efficiently run tasks waiting for an external resource to finish. This frees up your workers, allowing you to utilize those resources more effectively. In this guide, we'll walk through the concepts of deferrable operators, as well as the new components introduced to Airflow related to this feature.
+With the release of Airflow 2.2, Airflow has introduced a new way to run tasks in your environment: deferrable operators. These operators leverage Python's [asyncio](https://docs.python.org/3/library/asyncio.html) library to efficiently run tasks waiting for an external resource to finish. This frees up your workers, allowing you to utilize those resources more effectively. In this guide, we'll walk through the concepts of deferrable operators, which operators can be deferred, and well as the new components introduced to Airflow related to this feature.
 
 ## Deferrable Operator Concepts
 
@@ -36,12 +36,18 @@ With deferrable operators, worker slots can be released while polling for job st
 
 In general, deferrable operators should be used whenever you have tasks that occupy a worker slot while polling for a condition in an external system. For example, using deferrable operators for sensor tasks (e.g. poking for a file on an SFTP server) can result in efficiency gains and reduced operational costs. In particular, if you are currently working with [smart sensors](https://airflow.apache.org/docs/apache-airflow/stable/concepts/deferring.html#smart-sensors), you should consider using deferrable operators instead. Compared to smart sensors, which were deprecated in Airflow 2.2.4, deferrable operators are more flexible and better supported by Airflow.
 
-Currently, the following deferrable operators are available in Airflow:
+Currently, the following deferrable operators are available in core Airflow:
 
 - [TimeSensorAsync](https://airflow.apache.org/docs/apache-airflow/stable/_api/airflow/sensors/time_sensor/index.html?highlight=timesensor#module-contents)
 - [DateTimeSensorAsync](https://airflow.apache.org/docs/apache-airflow/stable/_api/airflow/sensors/date_time/index.html#airflow.sensors.date_time.DateTimeSensorAsync)
 
-However, this list will grow quickly as the Airflow community makes more investments into these operators. In the meantime, you can also create your own (more on this in the last section of this guide). Additionally, Astronomer maintains some deferrable operators [available only on Astro Runtime](https://docs.astronomer.io/cloud/deferrable-operators/#astronomers-deferrable-operators).
+ These deferrable operators will be automatically available in your Airflow environment. Additional deferrable operators that cover many use cases are available through [Astronomer Providers](https://github.com/astronomer/astronomer-providers). This is a separate open source Python package (`astronomer-providers`) that can be installed in your Airflow environment and contains exclusively deferrable operators and sensors created by Astronomer. Some of the available deferrable operators include:
+
+- `SnowflakeOperatorAsync`
+- `DatabricksSubmitRunOperatorAsync`
+- `HttpSensorAsync`
+ 
+For a full list of deferrable operators and sensors available in the `astronomer-providers` package, check out the [Changelog](https://github.com/astronomer/astronomer-providers/blob/main/CHANGELOG.rst). You can also create your own deferrable operator if one does not already exist for your use case (more on this in the last section of this guide).
 
 There are numerous benefits to using deferrable operators. Some of the most notable are:
 
@@ -119,4 +125,4 @@ Note that triggers are designed to be highly-available. You can implement this b
 
 ### Creating Your Own Deferrable Operator
 
-If you have an operator that would benefit from being asynchronous but does not yet exist in OSS Airflow or Astro Runtime, you can create your own. The [Airflow docs](https://airflow.apache.org/docs/apache-airflow/stable/concepts/deferring.html#writing-deferrable-operators) have great instructions to get you started.
+If you have an operator that would benefit from being asynchronous but does not yet exist in OSS Airflow or Astronomer Providers, you can create your own. The [Airflow docs](https://airflow.apache.org/docs/apache-airflow/stable/concepts/deferring.html#writing-deferrable-operators) have great instructions to get you started.
