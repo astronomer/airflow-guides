@@ -91,7 +91,7 @@ default_args = {
 	'email_on_failure': True,
 	'email_on_retry': True,
 	'retry_exponential_backoff': True,
-	'retry_delay' = timedelta(seconds=300)
+	'retry_delay': timedelta(seconds=300),
 	'retries': 3
 }
 
@@ -251,9 +251,11 @@ Sending notifications to Slack is another common way of alerting with Airflow.
 There are multiple ways you can send messages to Slack from Airflow. In this guide, we'll cover how to use the [Slack Provider's](https://registry.astronomer.io/providers/slack) `SlackWebhookOperator` with a Slack Webhook to send messages, since this is Slack's recommended way of posting messages from apps. To get started, follow these steps:
 
  1. From your Slack workspace, create a Slack app and an incoming Webhook. The Slack documentation [here](https://api.slack.com/messaging/webhooks) walks through the necessary steps. Make note of the Slack Webhook URL to use in your Python function.
- 2. Create an Airflow connection to provide your Slack Webhook to Airflow. Choose an HTTP connection type (if you are using Airflow 2.0 or greater, you will need to install the `apache-airflow-providers-http` provider for the HTTP connection type to appear in the Airflow UI). Enter [`https://hooks.slack.com/services/`](https://hooks.slack.com/services/) as the Host, and enter the remainder of your Webhook URL from the last step as the Password (formatted as `T00000000/B00000000/XXXXXXXXXXXXXXXXXXXXXXXX`). 
+ 2. Create an Airflow connection to provide your Slack Webhook to Airflow. Choose an HTTP connection type. Enter [`https://hooks.slack.com/services/`](https://hooks.slack.com/services/) as the Host, and enter the remainder of your Webhook URL from the last step as the Password (formatted as `T00000000/B00000000/XXXXXXXXXXXXXXXXXXXXXXXX`). 
 
     ![Slack Connection](https://assets2.astronomer.io/main/guides/error-notifications/slack_webhook_connection.png)
+    
+    > Note: in Airflow 2.0 or greater, to use the `SlackWebhookOperator` you will need to install the `apache-airflow-providers-slack` provider package.
 
  3. Create a Python function to use as your `on_failure_callback` method. Within the function, define the information you want to send and invoke the `SlackWebhookOperator` to send the message. Here's an example:
 
@@ -280,8 +282,6 @@ There are multiple ways you can send messages to Slack from Airflow. In this gui
             message=slack_msg)
         return failed_alert.execute(context=context)
     ```
-
-    > Note: in Airflow 2.0 or greater, to use the `SlackWebhookOperator` you will need to install the `apache-airflow-providers-slack` provider package.
 
  4. Define your `on_failure_callback` parameter in your DAG either as a `default_arg` for the whole DAG, or for specific tasks. Set it equal to the function you created in the previous step. You should now see any failure notifications show up in Slack!
 
@@ -401,10 +401,10 @@ If you configured an SMTP server in your Airflow environment, you will also rece
 
 ![SLA Email](https://assets2.astronomer.io/main/guides/error-notifications/sla_email.png)
 
-Note that there is no functionality to disable email alerting for SLAs. If you have an`'email'` array defined and an SMTP server configured in your Airflow environment, an email will be sent to those addresses for each DAG Run that has missed SLAs.
+Note that there is no functionality to disable email alerting for SLAs. If you have an `'email'` array defined and an SMTP server configured in your Airflow environment, an email will be sent to those addresses for each DAG Run that has missed SLAs.
 
 ## Notifications on Astronomer
 
-If you are running Airflow with Astronomer Software, you have multiple options for managing your Airflow notifications. All of the methods above for sending task notifications from Airflow are easily implemented on Astronomer. Our documentation [here](https://docs.astronomer.io/software/airflow-alerts) discusses how to leverage these notifications on the platform, including how to set up SMTP to enable email alerts.
+If you are running Airflow with Astronomer Software or Astro, you have multiple options for managing your Airflow notifications. All of the methods above for sending task notifications from Airflow are easily implemented on Astronomer. Our documentation for [Astronomer Software](https://docs.astronomer.io/software/airflow-alerts) and [Astro](https://docs.astronomer.io/astro/airflow-alerts) discusses how to leverage these notifications on the platform, including how to set up SMTP to enable email alerts.
 
 Astronomer also provides deployment and platform-level alerting to notify you if any aspect of your Airflow or Astronomer infrastructure is unhealthy. For more on that, including how to customize alerts for Software users, check out our documentation [here](https://docs.astronomer.io/software/platform-alerts).
