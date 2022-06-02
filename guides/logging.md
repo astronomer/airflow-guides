@@ -101,8 +101,8 @@ Logging in Airflow can be configured in `airflow.cfg` or by providing a custom `
 The current task handler and logging configuration can be found running the following commands using the Airflow CLI (if you are running Airflow in Docker, make sure to enter your Docker container before running the commands):
 
 ```console
-$ airflow info          # shows the current handler
-$ airflow config list   # shows current parameters under [logging]
+airflow info          # shows the current handler
+airflow config list   # shows current parameters under [logging]
 ```
 
 A full list parameters relating to logging that can be configured in `airflow.cfg` can be found in the [Airflow Documentation](https://airflow.apache.org/docs/apache-airflow/stable/configurations-ref.html#logging). They can also be configured by setting their corresponding environmental variables.
@@ -132,11 +132,7 @@ It is important to note that logs are only sent to remote storage once a task ha
 
 The following is a step-by-step guide on how to quickly set up logging of task logs to a S3 bucket using the Astro CLI ([Install instructions for the Astro CLI](https://docs.astronomer.io/astro/install-cli)).
 
-1. Add the Amazon provider module to `requirements.txt`:
-
-```text
-apache-airflow-providers-amazon
-```
+1. Add the Amazon provider module `apache-airflow-providers-amazon` to `requirements.txt`.
 
 2. Start the Airflow environment and navigate to **Admin** -> **Connections** in the Airflow UI to add the connection to the S3 bucket. Select Amazon S3 as connection type for the S3 bucket and provide the connection with your AWS access key ID as `login` and your AWS secret access key as `password` ([See AWS documentation for how to retrieve your AWS access key ID and AWS secret access key](https://docs.aws.amazon.com/powershell/latest/userguide/pstools-appendix-sign-up.html)).  
 
@@ -154,4 +150,4 @@ ENV AIRFLOW__LOGGING__REMOTE_BASE_LOG_FOLDER=s3://${S3BUCKET_NAME}/logs
 ENV AIRFLOW__LOGGING__ENCRYPT_S3_LOGS=True
 ```
 
-4. Restart your Airflow environment and run any task to verify that the task logs are copied to your S3 bucket.
+Afterwards don't forget to restart your Airflow environment and run any task to verify that the task logs are copied to your S3 bucket.
