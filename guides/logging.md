@@ -68,7 +68,7 @@ If you run Airflow in Docker (either via [Astro CLI](https://docs.astronomer.io/
 - **Triggerer**: Is logged to the console by default. You can access the log by running `docker logs <triggerer_container_id>`.
 - **Tasks**: From within the Docker container navigate to  `/usr/local/airflow/logs/` or navigate to your task instance in the Grid view of the Airflow UI and click on the `Log` button.
 
-If you run Airflow locally the logs from your scheduler, webserver and triggerer will be printed to the console. Additionally you will find logs from your scheduler seperated by DAG in `$AIRFLOW_HOME/logs/scheduler` While your task logs can be viewed either in the Airflow UI or at `$AIRFLOW_HOME/logs/`. How the logs from your metadatabase are handled depends on which database you use.
+If you run Airflow locally the logs from your scheduler, webserver and triggerer will be printed to the console. Additionally you will find logs from your scheduler separated by DAG in `$AIRFLOW_HOME/logs/scheduler` While your task logs can be viewed either in the Airflow UI or at `$AIRFLOW_HOME/logs/`. How the logs from your metadatabase are handled depends on which database you use.
 
 ## Adding task logs
 
