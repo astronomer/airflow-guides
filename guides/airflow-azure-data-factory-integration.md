@@ -8,9 +8,9 @@ tags: ["Integrations", "Azure"]
 
 ## Overview
 
-Azure Data Factory (ADF) is a commonly used service for constructing data pipelines and jobs. With a little preparation, it can be used in combination with Airflow to leverage the best of both tools. Here we'll discuss why you might want to use these two tools together, how Airflow can be used to execute ADF jobs, and a simple example tutorial showing how it all fits together.
+Azure Data Factory (ADF) is a commonly used service for constructing data pipelines and jobs. With a little preparation, it can be used in combination with Airflow to leverage the best of both tools. In this guide, we'll discuss why you might want to use these two tools together, how Airflow can be used to execute ADF jobs, and a simple example tutorial showing how it all fits together.
 
-> **Note:** All code in this guide can be found on [the Astronomer Registry](https://registry.astronomer.io/dags/azure-data-factory-dag).
+> **Note:** All code in this guide can be found on [the Astronomer Registry](https://registry.astronomer.io/dags/example-adf-run-pipeline).
 
 ## Why Use Airflow with ADF
 
@@ -23,44 +23,27 @@ ADF is an easy to learn tool that allows you to quickly create jobs without writ
 
 That's where Airflow comes in. ADF jobs can be run using an Airflow DAG, giving the full capabilities of Airflow orchestration beyond using ADF alone. This allows users that are comfortable with ADF to write their job there, while Airflow acts as the control plane for orchestration.
 
-## How to Execute ADF Pipelines with Airflow
+## ADF Modules in Airflow
 
-Operators and hooks are the main building blocks of Airflow, and both can be used easily to execute, or interact with, an ADF pipeline.
+The [Microsoft Azure provider](https://registry.astronomer.io/providers/microsoft-azure) has multiple modules for orchestrating ADF pipelines from Airflow.
 
-### Hooks
+- [`AzureDataFactoryHook`](https://registry.astronomer.io/providers/microsoft-azure/modules/azuredatafactoryhook): Abstracts the ADF API and provides an easy way of connecting to ADF from Airflow.
+- [`AzureDataFactoryRunPipelineOperator`](https://registry.astronomer.io/providers/microsoft-azure/modules/azuredatafactoryrunpipelineoperator): Executes an ADF pipeline.
+- [`AzureDataFactoryPipelineRunStatusSensor`](https://registry.astronomer.io/providers/microsoft-azure/modules/azuredatafactorypipelinerunstatussensor): Waits for an ADF pipeline run to complete.
 
-We recommend using Airflow hooks when interacting with any external system. Hooks are used as a way to abstract the methods you would use against a source system. The Microsoft Azure Airflow provider has an [Azure Data Factory hook](https://registry.astronomer.io/providers/microsoft-azure/modules/azuredatafactoryhook) that is the easiest way to interact with ADF from your Airflow DAG.
+If the existing operators or sensors are not quite right for your use case, you can use the `AzureDataFactoryHook` in your own Python function to take advantage of any ADF API functionality. Understanding how the [ADF API](https://docs.microsoft.com/en-us/rest/api/datafactory/v1/data-factory-data-factory) works can be helpful when designing your own custom functions, or for gaining a deeper understanding of how the provider modules work.
 
-This hook builds off of the `azure-mgmt-datafactory` Python package; since this is used under the hood, [this](https://docs.microsoft.com/en-us/azure/data-factory/quickstart-create-data-factory-python) resource on interacting with ADF using Python could be helpful for determining parameter names, etc.
+## Example Implementation
 
-It is worth noting that you could also use the ADF API directly to run a pipeline or perform some other operations. Even though we don't recommend this method over using hooks, it is still helpful to understand how the [API](https://docs.microsoft.com/en-us/rest/api/datafactory/v1/data-factory-data-factory) works when developing a DAG that interacts with ADF since the API is used under the hood.
+This example shows how to use ADF operators and sensors to orchestrate multiple ADF pipelines using Airflow.
 
+### ADF Prerequisites
 
-### Operators
+Before you can orchestrate your ADF pipelines with Airflow, you have to make those pipelines runnable. 
 
-There is currently no published Azure Data Factory operator, although given that a hook has been developed we expect that an operator will not be far behind. You could make your own ADF operator that builds off of the hook mentioned above. Or you can use the [PythonOperator](https://registry.astronomer.io/providers/apache-airflow/modules/pythonoperator) and build your own function that suits your use case; this is the method we show in the example below.
+> **Note:** If you do not currently have an ADF pipeline in your Azure account and are new to ADF, check out the [ADF quick start docs](https://docs.microsoft.com/en-us/azure/data-factory/quickstart-create-data-factory-portal) for help getting started.
 
-## Example
-
-### Create an ADF Pipeline
-
-To create an ADF Pipeline you will need to create a Data Factory resource in your resource group. To do this go to your resources group or create a new resource group from your Azure Portal. Once in the resource group click 'add resource' and search for Data Factory. Once the resource is created click on the resource to get an overview of the current runs. Next click on 'Author and Monitor' to create or own pipeline.
-
-![ADF Author Pipeline](https://assets2.astronomer.io/main/guides/azure-data-factory/adf_pipeline_author.png)
-
-Once in 'Author and Monitor' you can create a pipeline from a variety of options or watch tutorials. If it's your first ADF pipeline either watch a tutorial or create a pipeline from a template. In the example shown the 'Copy from REST or HTTP using OAuth' template was used. This template creates a [Copy Activity](https://docs.microsoft.com/en-us/azure/data-factory/copy-activity-overview) pipeline that gets data from a REST API and saves it in the storage system of your choice.
-
-![ADF Rest API Activity](https://assets2.astronomer.io/main/guides/azure-data-factory/adf_rest_api.png)
-
-In the example pipeline shown below there are 5 Copy Activities that each request Covid-19 data for 5 different states from a [REST API](https://covidtracking.com/data/api) and stores the data in Azure Blob storage. The pipeline has one parameter `date` which allows a user to enter a date for when they want the data.
-
-![ADF Pipeline Parameters](https://assets2.astronomer.io/main/guides/azure-data-factory/adf_pipeline_param.png)
-
-Once you have built a pipeline like the one above you can enter a parameter and run the pipeline. You can find more information on creating a data pipeline at this [doc](https://docs.microsoft.com/en-us/azure/data-factory/quickstart-create-data-factory-portal).
-
-### Make your ADF Pipeline Runnable
-
-Next, to make your ADF pipeline accessible by Airflow you will need to register an App with Azure Active Directory to get a Client ID and Client Secret (API Key) for your Data Factory. First go to Azure Active Directory and click on 'Registered Apps' to see a list of registered apps. If you created a Resource group you should already have an app registered with the same name.
+To make your ADF pipeline accessible by Airflow you will need to register an App with Azure Active Directory to get a Client ID and Client Secret (API Key) for your Data Factory. First go to Azure Active Directory and click on 'Registered Apps' to see a list of registered apps. If you created a Resource group you should already have an app registered with the same name.
 
 ![ADF App Registration](https://assets2.astronomer.io/main/guides/azure-data-factory/adf_app_registration.png)
 
@@ -78,11 +61,10 @@ Once you have a Client ID and Secret you need to connect the your API key to the
 
 Next a screen asking you to add a role assignment will pop up. Add the following settings:
 
-Role: Contributor
+- Role: Contributor
+- Assign access to: User, group, or service principal
 
-Assign access to: User, group, or service principal
-
-Next search for your app (david-astro in this example), add it to 'Selected members' and click save.
+Next search for your app (`david-astro` in this example), add it to 'Selected members' and click save.
 
 ![ADF Role Assignment](https://assets2.astronomer.io/main/guides/azure-data-factory/adf_add_role_assignment2.png)
 
@@ -90,82 +72,81 @@ Now you should be able to connect to your Data Factory from Airflow using your C
 
 Additional detail on requirements for interacting with Azure Data Factory using the REST API can be found [here](https://docs.microsoft.com/en-us/azure/data-factory/quickstart-create-data-factory-rest-api). You can also see [this link](https://docs.microsoft.com/en-us/azure/active-directory/develop/howto-create-service-principal-portal#register-an-application-with-azure-ad-and-create-a-service-principal) for more information on creating a registered application in Azure Active Directory
 
-### Create a DAG to run the ADF job
+### Create a DAG to Orchestrate ADF Jobs
 
-Now that we have an existing ADF job that should be runnable externally to Azure, we will create a DAG that will execute that pipeline with parameters we pass in. Let's say in this scenario we want to create a DAG that will execute the pipeline described above for yesterday's date, so that we grab recent Covid data and drop it in our file storage.
-
-> **Note:** In Airflow 2.0, provider packages are separate from the core of Airflow. For this example, you will need at least version 1.2.0 of the [Microsoft provider](https://registry.astronomer.io/providers/microsoft-azure) package. If you are running Airflow 2.0 with Astronomer, the provider package is already included in our Airflow Certified Image; if you are not using Astronomer you may need to install this package separately to use the hooks and connections described here.
-
-As mentioned above, we will use the ADF hook with the `PythonOperator`. The DAG code is straight forward:
+Now that we have existing ADF pipelines that should be runnable externally to Azure, we will create a DAG that will execute those pipelines using Azure provider modules. The DAG below executes two ADF pipelines in parallel (tasks `run_pipeline1` and `run_pipeline2`). It then uses an `AzureDataFactoryPipelineRunStatusSensor` to wait until "pipeline2" has completed before finishing the DAG.
 
 ```python
-from airflow import DAG
 from datetime import datetime, timedelta
-from airflow.operators.python import PythonOperator
-from airflow.providers.microsoft.azure.hooks.azure_data_factory import AzureDataFactoryHook
 
-azure_data_factory_conn = 'azure_data_factory_conn'
+from airflow.models import DAG, BaseOperator
 
-#Get yesterday's date, in the correct format
-yesterday_date = '{{ yesterday_ds_nodash }}'
-
-def run_adf_pipeline(pipeline_name, date):
-    '''Runs an Azure Data Factory pipeline using the AzureDataFactoryHook and passes in a date parameter
-    '''
-
-    #Create a dictionary with date parameter
-    params = {}
-    params["date"] = date
-
-    #Make connection to ADF, and run pipeline with parameter
-    hook = AzureDataFactoryHook(azure_data_factory_conn)
-    hook.run_pipeline(pipeline_name, parameters=params)
-
-default_args = {
-    'owner': 'airflow',
-    'depends_on_past': False,
-    'email_on_failure': False,
-    'email_on_retry': False,
-    'retries': 0,
-    'retry_delay': timedelta(minutes=5)
-}
+try:
+    from airflow.operators.empty import EmptyOperator
+except ModuleNotFoundError:
+    from airflow.operators.dummy import DummyOperator as EmptyOperator
+from airflow.providers.microsoft.azure.operators.data_factory import AzureDataFactoryRunPipelineOperator
+from airflow.providers.microsoft.azure.sensors.data_factory import AzureDataFactoryPipelineRunStatusSensor
+from airflow.utils.edgemodifier import Label
 
 with DAG(
-    'azure_data_factory',
-    start_date=datetime(2019, 1, 1),
-    max_active_runs=1,
-    schedule_interval=timedelta(minutes=30),
-    default_args=default_args,
-    catchup=False
+    dag_id="example_adf_run_pipeline",
+    start_date=datetime(2021, 8, 13),
+    schedule_interval="@daily",
+    catchup=False,
+    default_args={
+        "retries": 1,
+        "retry_delay": timedelta(minutes=3),
+        "azure_data_factory_conn_id": "azure_data_factory",
+        "factory_name": "my-data-factory",  # This can also be specified in the ADF connection.
+        "resource_group_name": "my-resource-group",  # This can also be specified in the ADF connection.
+    },
+    default_view="graph",
 ) as dag:
+    begin = EmptyOperator(task_id="begin")
+    end = EmptyOperator(task_id="end")
 
-    opr_run_pipeline = PythonOperator(
-        task_id='run_pipeline',
-        python_callable=run_adf_pipeline,
-        op_kwargs={'pipeline_name': 'pipeline1', 'date': yesterday_date}
+    # [START howto_operator_adf_run_pipeline]
+    run_pipeline1: BaseOperator = AzureDataFactoryRunPipelineOperator(
+        task_id="run_pipeline1",
+        pipeline_name="pipeline1",
+        parameters={"myParam": "value"},
     )
+    # [END howto_operator_adf_run_pipeline]
+
+    # [START howto_operator_adf_run_pipeline_async]
+    run_pipeline2: BaseOperator = AzureDataFactoryRunPipelineOperator(
+        task_id="run_pipeline2",
+        pipeline_name="pipeline2",
+        wait_for_termination=False,
+    )
+
+    pipeline_run_sensor: BaseOperator = AzureDataFactoryPipelineRunStatusSensor(
+        task_id="pipeline_run_sensor",
+        run_id=run_pipeline2.output["run_id"],
+    )
+    # [END howto_operator_adf_run_pipeline_async]
+
+    begin >> Label("No async wait") >> run_pipeline1
+    begin >> Label("Do async wait with sensor") >> run_pipeline2
+    [run_pipeline1, pipeline_run_sensor] >> end
 ```
 
-There are a few important things to note about this DAG:
+![Graph View](https://assets2.astronomer.io/main/guides/azure-data-factory/multiple_adf_pipeline_graph.png)
 
-- We have used the ADF hook code from the Github link above and brought it locally, imported as `AzureDataFactoryHook`. Your import path may vary.
-- The `run_pipeline` task uses the `PythonOperator` that looks for the `pipeline_name` parameter and a date. If you have other pipelines you want to execute in the same DAG, you can add additional tasks in the same manner.
-- This DAG requires an Airflow connection (`azure_data_factory_conn`) to connect to your Azure instance and ADF factory. The connection requires your Tenant ID, Subscription ID, Resource Group, Factory, Client ID, and Client secret. They should be entered into the connection like this:
+Note that this DAG requires an Airflow connection (`azure_data_factory`) to connect to your Azure instance and ADF. The connection requires the following information:
+
+- Tenant ID 
+- Subscription ID
+- Resource Group
+- Factory
+- Client ID
+- Client secret
+
+They should be entered into the connection form like this:
 
 ![Airflow ADF Connection](https://assets2.astronomer.io/main/guides/azure-data-factory/adf_airflow_connection.png)
 
-The Client ID is the login, Client Secret is the password, and the rest are JSON-formatted extras. Note that the 'Azure Data Lake' connection type is chosen because there is not currently an ADF option; this is arbitrary, and the connection type could be anything as long as the correct fields are available.
+The Client ID is the login, Client Secret is the password, and the rest are JSON-formatted extras.
 
-Once everything is set up, executing the pipeline is as simple as triggering the DAG. We can see the successful DAG run:
-
-![ADF DAG Graph View](https://assets2.astronomer.io/main/guides/azure-data-factory/adf_dag_graph_view.png)
-
-And the pipeline run on the Azure side:
-
-![ADF Pipeline Run](https://assets2.astronomer.io/main/guides/azure-data-factory/adf_pipeline_run.png)
-
-And yesterday's file in the file storage:
-
-![Azure Blob Loaded Files](https://assets2.astronomer.io/main/guides/azure-data-factory/adf_loaded_files.png)
-
-And now that we have a DAG that can execute the ADF pipeline, we can easily add any other tasks or notifications we need leveraging Airflow's capabilities.
+For a more complex example of orchestrating dependent ADF pipelines with Airflow, check out [this example](https://registry.astronomer.io/dags/airflow-azure-data-factory) on the Astronomer Registry.
