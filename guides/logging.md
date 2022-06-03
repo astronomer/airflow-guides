@@ -151,3 +151,76 @@ ENV AIRFLOW__LOGGING__ENCRYPT_S3_LOGS=True
 ```
 
 Afterwards don't forget to restart your Airflow environment and run any task to verify that the task logs are copied to your S3 bucket.
+
+## Example Advanced configuration: Add a multiple handlers to the same logger
+
+For full control over the logging configuration including adding several handlers to the same logger for example with different formatters or filters or to different destinations; or to add your own custom handler you will need to create and modify a `log_config.py` file. 
+
+The following example adds a second S3 Bucket for logs to be sent to with a different file structure.
+
+After completing step 1 and 2 from the example above add the following commands to your Dockerfile:
+
+```dockerfile
+#### Remote logging to S3
+
+# Define the base log folder
+ENV AIRFLOW_LOGGING_BASEL_LOG_FOLDER=/usr/local/airflow/logs
+
+# create a directory for your custom log_config.py file and copy it 
+ENV PYTHONPATH=/usr/local/airflow
+RUN mkdir $PYTHONPATH/config
+COPY log_config.py $PYTHONPATH/config/
+RUN touch $PYTHONPATH/config/__init__.py
+
+# allow remote logging and provide a connection ID (the one you specified in step 2)
+ENV AIRFLOW__LOGGING__REMOTE_LOGGING=True
+ENV AIRFLOW__LOGGING__REMOTE_LOG_CONN_ID=hook_tutorial_s3_conn
+
+# specify the location of your remote logs, make sure to provide your bucket names above
+ENV AIRFLOW__LOGGING__REMOTE_BASE_LOG_FOLDER=s3://${S3BUCKET_NAME}/logs
+ENV AIRFLOW__LOGGING__REMOTE_BASE_LOG_FOLDER_2=s3://${S3BUCKET_NAME_2}/logs
+
+# set the new logging configuration as logging config class
+ENV AIRFLOW__LOGGING__LOGGING_CONFIG_CLASS=config.log_config.LOGGING_CONFIG
+
+# optional: serverside encryption for S3 logs
+ENV AIRFLOW__LOGGING__ENCRYPT_S3_LOGS=True
+```
+
+Create a `log_config.py` file outside of your /dags/ folder and use it to create and modify a deepcopy of `DEFAULT_LOGGING_CONFIG`:
+
+```python
+from copy import deepcopy
+import os
+import conf
+
+from airflow.config_templates.airflow_local_settings import DEFAULT_LOGGING_CONFIG
+
+LOGGING_CONFIG = deepcopy(DEFAULT_LOGGING_CONFIG)
+
+
+LOGGING_CONFIG['handlers']['secondary_s3_task_handler'] = {
+    # you can import your own custom handler here
+    'class': 'airflow.providers.amazon.aws.log.s3_task_handler.S3TaskHandler',
+    # you can add a custom formatter here
+    'formatter': 'airflow',
+    # the following env variables will be set in step 4
+    'base_log_folder': os.environ['AIRFLOW_LOGGING_BASE_LOG_FOLDER'],
+    's3_log_folder': os.environ['AIRFLOW__LOGGING__REMOTE_BASE_LOG_FOLDER_2'],
+    'filename_template':
+        # provide a custom structure for log directory and filename
+        "{{ ti.dag_id }}/{{ ti.task_id }}_{{ ts }}_{{ try_number }}.log",
+    # if needed, custom filters can be added here
+    "filters":[
+    "mask_secrets"
+    ]
+}
+
+# this line adds the "secondary_s3_task_handler" as a handler to airflow.task
+# airflow logic already used the location provided to AIRFLOW__LOGGING__REMOTE_BASE_LOG_FOLDER 
+# to create a handler for your s3 bucket using standard configurations and
+# replace the default "task" handler with it
+LOGGING_CONFIG['loggers']['airflow.task']['handlers'] = ["task", "secondary_s3_task_handler"]
+```
+
+Afterwards don't forget to restart your Airflow environment and run any task to verify that the task logs are copied to your S3 buckets.
