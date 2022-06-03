@@ -164,7 +164,7 @@ After completing step 1 and 2 from the example above add the following commands 
 #### Remote logging to S3
 
 # Define the base log folder
-ENV AIRFLOW_LOGGING_BASEL_LOG_FOLDER=/usr/local/airflow/logs
+ENV BASE_LOG_FOLDER=/usr/local/airflow/logs
 
 # create a directory for your custom log_config.py file and copy it 
 ENV PYTHONPATH=/usr/local/airflow
@@ -192,7 +192,6 @@ Create a `log_config.py` file outside of your /dags/ folder and use it to create
 ```python
 from copy import deepcopy
 import os
-import conf
 
 from airflow.config_templates.airflow_local_settings import DEFAULT_LOGGING_CONFIG
 
@@ -204,8 +203,8 @@ LOGGING_CONFIG['handlers']['secondary_s3_task_handler'] = {
     'class': 'airflow.providers.amazon.aws.log.s3_task_handler.S3TaskHandler',
     # you can add a custom formatter here
     'formatter': 'airflow',
-    # the following env variables will be set in step 4
-    'base_log_folder': os.environ['AIRFLOW_LOGGING_BASE_LOG_FOLDER'],
+    # the following env variables were set above
+    'base_log_folder': os.environ['BASE_LOG_FOLDER'],
     's3_log_folder': os.environ['AIRFLOW__LOGGING__REMOTE_BASE_LOG_FOLDER_2'],
     'filename_template':
         # provide a custom structure for log directory and filename
