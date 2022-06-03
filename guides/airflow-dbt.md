@@ -28,7 +28,7 @@ In this guide, we'll walk through:
 To orchestrate [dbt Cloud](https://www.getdbt.com/product/what-is-dbt/) jobs with Airflow, you can use the [dbt Cloud Provider](https://registry.astronomer.io/providers/dbt-cloud), which contains the following useful modules:
 
 - **`DbtCloudRunJobOperator`:** Executes a dbt Cloud job.
-- **`DbtCloudGetJonRunArtifactOperator`:** Downloads artifacts from a dbt Cloud job run.
+- **`DbtCloudGetJobRunArtifactOperator`:** Downloads artifacts from a dbt Cloud job run.
 - **`DbtCloudJobRunSensor`:** Waits for a dbt Cloud job run to complete.
 - **`DbtCloudHook`:** Interacts with dbt Cloud using the V2 API.
 
@@ -117,7 +117,7 @@ from airflow.utils.dates import timedelta
 
 
 with DAG(
-    'dbt_dag',
+    dag_id='dbt_dag',
     start_date=datetime(2021, 12, 23),
     description='An Airflow DAG to invoke simple dbt commands',
     schedule_interval=timedelta(days=1),
@@ -160,9 +160,9 @@ from airflow.utils.dates import timedelta
 
 
 dag = DAG(
-    'dbt_dag',
+    dag_id='dbt_dag',
     start_date=datetime(2020, 12, 23),
-    description='A dbt wrapper for airflow',
+    description='A dbt wrapper for Airflow',
     schedule_interval=timedelta(days=1),
 )
 
@@ -251,7 +251,7 @@ To add this functionality, we can take a group of models defined by some selecto
    3. Uses the `dbt ls` command to list all of the models associated with each model selector in the YAML file
    4. Turns the dbt DAG from `manifest.json` into a `Graph` object via the `networkx` library
    5. Uses the methods available on the `Graph` object to figure out the correct set of dependencies for each group of models defined in the YAML file
-   6. Writes the dependencies for each group of models (stored as a list of tuples) as a pickle file to local storage
+   6. Writes the dependencies for each group of models (stored as a list of tuples) as a pickle file to local storage.
 
     Here is what that Python script looks like in practice:
 
@@ -266,7 +266,7 @@ To add this functionality, we can take a group of models defined by some selecto
     # This file is a utility script that is run via CircleCI in the deploy
     # step. It is not run via Airflow in any way. The point of this script is
     # to generate a pickle file that contains all of the dependencies between dbt models
-    # for each dag (usually corresponding to a different schedule) that we want
+    # for each DAG (usually corresponding to a different schedule) that we want
     # to run.
 
     def load_manifest():
@@ -375,7 +375,7 @@ To add this functionality, we can take a group of models defined by some selecto
 
   ```python
     with DAG(
-       f"dbt_dag",
+       dag_id="dbt_dag",
        schedule_interval="@daily",
        max_active_runs=1,
        catchup=False,
@@ -414,6 +414,7 @@ When used as shown in the sample code below, the utility provides a shortcut to 
 with dag:
 
     start_dummy = DummyOperator(task_id='start')
+    
     dbt_seed = BashOperator(
         task_id='dbt_seed',
         bash_command=f'dbt {DBT_GLOBAL_CLI_FLAGS} seed --profiles-dir {DBT_PROJECT_DIR} --project-dir {DBT_PROJECT_DIR}'
