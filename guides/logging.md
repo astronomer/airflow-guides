@@ -11,9 +11,9 @@ tags: ["Logging", "Best Practices", "Basics"]
 
 Logging is the key to effective monitoring and debugging of any application. Airflow provides an extensive logging system to fit the observability needs of a variety of use cases. Core Airflow components such as the webserver, scheduler and metadatabase as well as individual tasks provide logging information, either to a local file, the console or to a specified remote storage solution. The Airflow UI eventually collects logs from various locations to display to the end user.
 
-In this guide we'll cover the basics of logging in Airflow, where to find the logs of different Airflow components, how to add task logs, why and how to configure logging settings and remote logging. A full step-by-step example is provided on how to set up remote logging to an S3 bucket using the Astro CLI.
+In this guide, we'll cover the basics of logging in Airflow, where to find the logs of different Airflow components, how to add task logs, why and how to configure logging settings, and remote logging. A full step-by-step example is provided on how to set up remote logging to an S3 bucket using the [Astro CLI](https://docs.astronomer.io/astro/cli/configure-cli#install-the-cli).
 
-> Additionally to standard logging there are a variety of other monitoring options when using Airflow that let you collect metrics, use tasks events to trigger callback functions, monitor Airflow health status and track errors or user activity. You can find more information on monitoring options in the [Airflow Documentation](https://airflow.apache.org/docs/apache-airflow/stable/logging-monitoring/index.html) and for Astrocloud users in the [Astro Docs](https://docs.astronomer.io/astro/deployment-metrics).
+Additionally to standard logging, there are a variety of other monitoring options when using Airflow that let you collect metrics, use tasks events to trigger callback functions, monitor Airflow health status and track errors or user activity. You can find more information on monitoring options in the [Airflow Documentation](https://airflow.apache.org/docs/apache-airflow/stable/logging-monitoring/index.html) and for Astronomer customers in the [Astro Docs](https://docs.astronomer.io/astro/deployment-metrics).
 
 ## Logging in Airflow
 
@@ -21,10 +21,10 @@ Logging in Airflow leverages the [Python stdlib logging module](https://docs.pyt
 
 The basic components of the `logging` module are the following classes:
 
-- Loggers (`logging.Logger`) which are the interface the application code directly interacts with. Airflow defines 4 loggers by default: `root`, `flask_appbuilder`, `airflow.processor` and `airflow.task`.
-- Handlers (`logging.Handler`) which send log records to their destination. Airflow by default uses `RedirectStdHandler`, `FileProcessorHandler` and `FileTaskHandler`.
-- Filters (`logging.Filter`) which are used to further configure which log records to output. Airflow uses `SecretsMasker` as a filter to prevent sensitive information from being printed into logs.
-- Formatters (`logging.Formatter`) which determine the final layout of log records. Two formatters are predefined in Airflow: `airflow_colored` and `airflow`.
+- **Loggers** (`logging.Logger`) which are the interface the application code directly interacts with. Airflow defines 4 loggers by default: `root`, `flask_appbuilder`, `airflow.processor` and `airflow.task`.
+- **Handlers** (`logging.Handler`) which send log records to their destination. Airflow by default uses `RedirectStdHandler`, `FileProcessorHandler` and `FileTaskHandler`.
+- **Filters** (`logging.Filter`) which are used to further configure which log records to output. Airflow uses `SecretsMasker` as a filter to prevent sensitive information from being printed into logs.
+- **Formatters** (`logging.Formatter`) which determine the final layout of log records. Two formatters are predefined in Airflow: `airflow_colored` and `airflow`.
 
 Please see the Python documentation for more information on [methods available for the classes above](https://docs.python.org/3/library/logging.html#logger-objects), attributes of a [LogRecord object](https://docs.python.org/3/library/logging.html#logrecord-objects) and the [6 levels of logging severity](https://docs.python.org/3/library/logging.html#logging-levels) (CRITICAL, ERROR, WARNING, INFO, DEBUG and NOTSET).
 
@@ -33,7 +33,7 @@ The four default loggers in Airflow each have a handler with a predefined log de
 - `root` (level: INFO) : uses `RedirectStdHandler` and the formatter 'airflow_colored'. It outputs to `sys.stderr/stout` and acts as a catch all for processes which have no specific logger defined.
 - `flask_appbuilder` (level: WARNING) : uses `RedirectStdHandler` and the formatter 'airflow_colored'. It outputs to `sys.stderr/stout`. This logger handles logs from the webserver.
 - `airflow.processor` (level: INFO) : uses `FileProcessorHandler` and the formatter 'airflow'. This handler writes logs from the scheduler to the local file system.
-- `airflow.task` (level: INFO) : uses `FileTaskHandlers` and the Formatter 'airflow' and writes task logs to the local file system.
+- `airflow.task` (level: INFO) : uses `FileTaskHandlers` and the Formatter `airflow` and writes task logs to the local file system.
 
 If not otherwise specified log files will be named according to the following pattern, which can be configured as `log_filename_template` in `airflow.cfg`:
 
@@ -42,10 +42,10 @@ If not otherwise specified log files will be named according to the following pa
 
 Two formatters are used in the default configuration:
 
-- 'airflow_colored': `"[%(blue)s%(asctime)s%(reset)s] {%(blue)s%(filename)s:%(reset)s%(lineno)d} %(log_color)s%(levelname)s%(reset)s - %(log_color)s%(message)s%(reset)s"`
-- 'airflow': `"[%(asctime)s] {%(filename)s:%(lineno)d} %(levelname)s - %(message)s"`
+- `airflow_colored`: `"[%(blue)s%(asctime)s%(reset)s] {%(blue)s%(filename)s:%(reset)s%(lineno)d} %(log_color)s%(levelname)s%(reset)s - %(log_color)s%(message)s%(reset)s"`
+- `airflow`: `"[%(asctime)s] {%(filename)s:%(lineno)d} %(levelname)s - %(message)s"`
 
-> The full default logging configuration can be viewed in the [Airflow source code](https://github.com/apache/airflow/blob/c0e9daa3632dc0ede695827d1ebdbd091401e94d/airflow/config_templates/airflow_local_settings.py#L59).
+> **Note:** The full default logging configuration can be viewed in the [Airflow source code](https://github.com/apache/airflow/blob/c0e9daa3632dc0ede695827d1ebdbd091401e94d/airflow/config_templates/airflow_local_settings.py#L59).
 
 The Airflow UI displays logs to the user using a `read()` method on task handlers which is not part of stdlib.
 `read()` checks for available logs to display in a predefined order:
@@ -54,23 +54,23 @@ The Airflow UI displays logs to the user using a `read()` method on task handler
 2. Logs on the local filesystem
 3. Logs from worker logs webserver
 
->If a Kubernetes Executer was used and the Worker pod still exists `read()` will display the first 100 lines from Kubernetes pod logs, if the Worker pod ceased to exists those logs will be unavailable.
+> **Note:** If a Kubernetes Executer was used and the Worker pod still exists `read()` will display the first 100 lines from Kubernetes pod logs, if the Worker pod ceased to exists those logs will be unavailable.
 
-## Log locations
+## Log Locations
 
 The default location of logs which are outputted to the file system is specified as `base_log_folder` in `airflow.cfg` which is located in the `$AIRFLOW_HOME` directory.
 
 If you run Airflow in Docker (either via [Astro CLI](https://docs.astronomer.io/software/install-cli) or [following the Airflow documentation](https://airflow.apache.org/docs/apache-airflow/stable/start/docker.html)) you will find the logs of the Airflow components in the following places by default:
 
-- **Scheduler**: logged to `/usr/local/airflow/logs/scheduler` within the docker container by default (you can enter a docker container in a bash session with `docker exec -it <container_id> /bin/bash`)
-- **Webserver**: logged to the console by default. You can access the log by running `docker logs <webserver_container_id>`.
+- **Scheduler**: logged to `/usr/local/airflow/logs/scheduler` within the Docker container by default (you can enter a docker container in a bash session with `docker exec -it <container_id> /bin/bash`)
+- **Webserver**: Is logged to the console by default. You can access the log by running `docker logs <webserver_container_id>`.
 - **Metadatabase**: Is logged to the console by default. You can access the log by running `docker logs <postgres_container_id>`.
 - **Triggerer**: Is logged to the console by default. You can access the log by running `docker logs <triggerer_container_id>`.
-- **Tasks**: From within the Docker container navigate to  `/usr/local/airflow/logs/` or navigate to your task instance in the Grid view of the Airflow UI and click on the `Log` button.
+- **Tasks**: From within the Docker container, navigate to  `/usr/local/airflow/logs/` or navigate to your task instance in the Grid or Graph views of the Airflow UI and click on the `Log` button.
 
-If you run Airflow locally the logs from your scheduler, webserver and triggerer will be printed to the console. Additionally you will find logs from your scheduler separated by DAG in `$AIRFLOW_HOME/logs/scheduler` While your task logs can be viewed either in the Airflow UI or at `$AIRFLOW_HOME/logs/`. How the logs from your metadatabase are handled depends on which database you use.
+If you run Airflow locally, the logs from your scheduler, webserver and triggerer will be printed to the console. Additionally, you will find logs from your scheduler separated by DAG in `$AIRFLOW_HOME/logs/scheduler`, while your task logs can be viewed either in the Airflow UI or at `$AIRFLOW_HOME/logs/`. How the logs from your metadatabase are handled depends on which database you use.
 
-## Adding task logs
+## Adding Task Logs
 
 More logging statements can be added from within your DAGs by accessing the `airflow.task` logger:
 
@@ -84,9 +84,9 @@ logger = logging.getLogger('airflow.task')
 logger.info('There can never be enough logs! :)')
 ```
 
-## Why to configure logging
+## Why to Configure Logging
 
-Logging in Airflow is set up to be ready to use without any configuration being necessary. However there are many use cases where customization of logging is beneficial. For example:
+Logging in Airflow is set up to be ready to use without any configuration being necessary. However, there are many use cases where customization of logging is beneficial. For example:
 
 - Lowering the threshold level of existing loggers in order to show debug logs.
 - Changing the formatting of existing logs in order to contain additional information for example the full pathname of the source file from which the logging call was made.
@@ -94,7 +94,7 @@ Logging in Airflow is set up to be ready to use without any configuration being 
 - Storing logs remotely (see the section "Logging Remotely" below).
 - Adding your own custom handlers, for example to log remotely to a destination not yet supported by existing providers.
 
-## How to configure logging
+## How to Configure Logging
 
 Logging in Airflow can be configured in `airflow.cfg` or by providing a custom `log_config.py` file. It is considered best practise to not declare configs or variables within the `.py` handler files except for testing or debugging purposes.
 
@@ -107,13 +107,13 @@ airflow config list   # shows current parameters under [logging]
 
 A full list parameters relating to logging that can be configured in `airflow.cfg` can be found in the [Airflow Documentation](https://airflow.apache.org/docs/apache-airflow/stable/configurations-ref.html#logging). They can also be configured by setting their corresponding environmental variables.
 
-For example if you wanted to change your logging level from the default (`INFO`) to only log `LogRecords` with a level of `ERROR` or above, you could set `logging_level = ERROR` in `airflow.cfg` or define an environmental variable `AIRFLOW__LOGGING__LOGGING_LEVEL=ERROR`.
+For example, if you wanted to change your logging level from the default `INFO` to only log `LogRecords` with a level of `ERROR` or above, you could set `logging_level = ERROR` in `airflow.cfg` or define an environmental variable `AIRFLOW__LOGGING__LOGGING_LEVEL=ERROR`.
 
 Advanced configuration might necessitate the logging config class to be overwritten. To enable custom logging config a configuration file `~/airflow/config/log_config.py` has to be created in which modifications to `DEFAULT_LOGGING_CONFIG` are specified. You may need to do this if you want to, for example, add a custom handler.
 
 A step-by-step explanation can be found in the [Airflow documentation](https://airflow.apache.org/docs/apache-airflow/stable/logging-monitoring/logging-tasks.html#advanced-configuration) or in the section 'Example: Remote logging of tasks to S3 using Astro CLI' below.
 
-## Logging remotely
+## Logging Remotely
 
 When scaling up your Airflow environment you may end up with many tasks producing sizeable amounts of logs for which you need a reliable, resilient and auto-scaling storage. The easiest solution is to use remote logging to a remote destination for which a community-managed provider already exists:
 
@@ -128,9 +128,9 @@ If you want different behavior or add several handlers to one logger you will ne
 
 It is important to note that logs are only sent to remote storage once a task has been completed (including in case of failure), this means you will only be able to see the logs of currently running tasks locally.
 
-## Example: Remote logging of tasks to S3 using Astro CLI
+## Remote Logging Example: Sending Task Logs to S3
 
-The following is a step-by-step guide on how to quickly set up logging of task logs to a S3 bucket using the Astro CLI ([Install instructions for the Astro CLI](https://docs.astronomer.io/astro/install-cli)).
+The following is a step-by-step guide on how to quickly set up logging of Airflow task logs to a S3 bucket using the [Astro CLI](https://docs.astronomer.io/astro/install-cli).
 
 1. Add the Amazon provider module `apache-airflow-providers-amazon` to `requirements.txt`.
 
@@ -152,13 +152,13 @@ ENV AIRFLOW__LOGGING__ENCRYPT_S3_LOGS=True
 
 Afterwards don't forget to restart your Airflow environment and run any task to verify that the task logs are copied to your S3 bucket.
 
-## Example Advanced configuration: Add a multiple handlers to the same logger
+## Advanced Configuration Example: Add Multiple Handlers to the Same Logger
 
-For full control over the logging configuration including adding several handlers to the same logger for example with different formatters or filters or to different destinations; or to add your own custom handler you will need to create and modify a `log_config.py` file. 
+For full control over the logging configuration you will need to create and modify a `log_config.py` file. This is relevant for use cases such as adding several handlers to the same logger with different formatters, filters, or destinations, or to add your own custom handler. 
 
-The following example adds a second S3 Bucket for logs to be sent to with a different file structure.
+The following example adds a second remote logging S3 bucket to receive logs with a different file structure.
 
-After completing step 1 and 2 from the example above add the following commands to your Dockerfile:
+First, complete Steps 1 and 2 from the section above to configure your Airflow environment for S3 remote logging. Then, add the following commands to your Dockerfile:
 
 ```dockerfile
 #### Remote logging to S3
