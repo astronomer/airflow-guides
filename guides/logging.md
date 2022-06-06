@@ -64,11 +64,13 @@ If you run Airflow in Docker (either via [Astro CLI](https://docs.astronomer.io/
 
 - **Scheduler**: logged to `/usr/local/airflow/logs/scheduler` within the Docker container by default (you can enter a docker container in a bash session with `docker exec -it <container_id> /bin/bash`)
 - **Webserver**: Is logged to the console by default. You can access the log by running `docker logs <webserver_container_id>`.
-- **Metadatabase**: Is logged to the console by default. You can access the log by running `docker logs <postgres_container_id>`.
+- **Metadata database**: Is logged to the console by default. You can access the log by running `docker logs <postgres_container_id>`.
 - **Triggerer**: Is logged to the console by default. You can access the log by running `docker logs <triggerer_container_id>`.
 - **Tasks**: From within the Docker container, navigate to  `/usr/local/airflow/logs/` or navigate to your task instance in the Grid or Graph views of the Airflow UI and click on the `Log` button.
 
 If you run Airflow locally, the logs from your scheduler, webserver and triggerer will be printed to the console. Additionally, you will find logs from your scheduler separated by DAG in `$AIRFLOW_HOME/logs/scheduler`, while your task logs can be viewed either in the Airflow UI or at `$AIRFLOW_HOME/logs/`. How the logs from your metadatabase are handled depends on which database you use.
+
+For Astro CLI users a command to show webserver, scheduler, triggerer and Celery worker logs from the local Airflow environment is available: `astro dev logs` ([see also the Astro documentation](https://docs.astronomer.io/astro/cli/astro-dev-logs).)
 
 ## Adding Task Logs
 
