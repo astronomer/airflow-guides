@@ -134,7 +134,7 @@ with DAG(
 
 ![Graph View](https://assets2.astronomer.io/main/guides/azure-data-factory/multiple_adf_pipeline_graph.png)
 
-Note that this DAG requires an Airflow connection (`azure_data_factory`) to connect to your Azure instance and ADF. The connection requires the following information:
+Note that this DAG requires an `azure_data_factory` [Airflow connection](https://airflow.apache.org/docs/apache-airflow/stable/concepts/connections.html. The connection requires the following information:
 
 - Tenant ID 
 - Subscription ID
