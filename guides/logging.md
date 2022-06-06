@@ -9,7 +9,7 @@ tags: ["Logging", "Best Practices", "Basics"]
 
 ## Overview
 
-Logging is the key to effective monitoring and debugging of any application. Airflow provides an extensive logging system to fit the observability needs of a variety of use cases. Core Airflow components such as the webserver, scheduler and metadatabase as well as individual tasks provide logging information, either to a local file, the console or to a specified remote storage solution. The Airflow UI eventually collects logs from various locations to display to the end user.
+Logging is the key to effective monitoring and debugging of any application. Airflow provides an extensive logging system to fit the observability needs of a variety of use cases. Core Airflow components such as the webserver, scheduler and metadata database as well as individual tasks provide logging information, either to a local file, the console or to a specified remote storage solution. The Airflow UI eventually collects logs from various locations to display to the end user.
 
 In this guide, we'll cover the basics of logging in Airflow, where to find the logs of different Airflow components, how to add task logs, why and how to configure logging settings, and remote logging. A full step-by-step example is provided on how to set up remote logging to an S3 bucket using the [Astro CLI](https://docs.astronomer.io/astro/cli/configure-cli#install-the-cli).
 
