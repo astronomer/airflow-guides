@@ -72,16 +72,73 @@ If you run Airflow locally, the logs from your scheduler, webserver and triggere
 
 ## Adding Task Logs
 
-More logging statements can be added from within your DAGs by accessing the `airflow.task` logger:
+More logging statements can be added from within your python functions by using the `airflow.task` logger. It is currently not possible to add logs from within other operators or in the top-level code. The advantage of using a logger over print statements is that you can log at different levels of severity and use the level setting of loggers and handlers to control which logs are emitted to which location. Print statements are always set at the level of `INFO`.
+
+For example, using the default Airflow logging configuration the `airflow.task` logger is set at the level of `INFO`, which means logs at the level of `DEBUG` are not logged. You may want to see these logs when debugging your python tasks, to do so you simply need to set `AIRFLOW__LOGGING__LOGGING_LEVEL=DEBUG` or change the value of `logging_level` in `airflow.cfg`.
+
 
 ```python
+from datetime import datetime, timedelta
+from airflow import DAG
+from airflow.decorators import task
+from airflow.operators.bash import BashOperator
+
+# import the logging module
 import logging
 
-# access the airflow.task logger instance
-logger = logging.getLogger('airflow.task')  
+# get the airflow.task logger
+task_logger = logging.getLogger('airflow.task')
 
-# create a logging message at the level INFO
-logger.info('There can never be enough logs! :)')
+@task.python
+def extract():
+
+    # with default airflow logging settings, DEBUG logs are ignored
+    task_logger.debug('This log is at the level of DEBUG')
+
+    # each of these lines produce a log statement
+    print('This log is created via a print statement')
+    task_logger.info('This log is informational')
+    task_logger.warning('This log is a warning')
+    task_logger.error('This log shows an error!')
+    task_logger.critical('This log shows a critical error!')
+
+    data = {'a': 19, 'b': 23, 'c': 42}
+
+    # Using the Task flow API to push to XCom by returning a value
+    return data
+
+# logs outside of tasks will not be processed
+task_logger.warning('This log will not show up!')
+
+with DAG(dag_id='more_logs_dag',
+        start_date=datetime(2022,6,5),
+        schedule_interval='@daily',
+        dagrun_timeout=timedelta(minutes=10),
+        catchup=False) as dag:
+
+    # command to create a file and write the data from the extract task into it
+    # these commands use Jinja templating within {{}}
+    commands= """
+        touch /usr/local/airflow/{{ds}}.txt
+        echo {{ti.xcom_pull(task_ids='extract')}} > /usr/local/airflow/{{ds}}.txt
+        """
+
+    write_to_file = BashOperator(task_id='write_to_file', bash_command=commands)
+
+    # logs outside of tasks will not be processed
+    task_logger.warning('This log will not show up!')
+
+    extract() >> write_to_file
+```
+
+The DAG above shows how to log at different levels of severity from within a custom python function. The logs for the `extract` task will show the following lines under the default Airflow logging configuration:
+
+```bash
+[2022-06-06, 07:25:09 UTC] {logging_mixin.py:115} INFO - This log is created via a print statement
+[2022-06-06, 07:25:09 UTC] {more_logs_dag.py:15} INFO - This log is informational
+[2022-06-06, 07:25:09 UTC] {more_logs_dag.py:16} WARNING - This log is a warning
+[2022-06-06, 07:25:09 UTC] {more_logs_dag.py:17} ERROR - This log shows an error!
+[2022-06-06, 07:25:09 UTC] {more_logs_dag.py:18} CRITICAL - This log shows a critical error!
 ```
 
 ## Why to Configure Logging
@@ -152,9 +209,11 @@ ENV AIRFLOW__LOGGING__ENCRYPT_S3_LOGS=True
 
 Afterwards don't forget to restart your Airflow environment and run any task to verify that the task logs are copied to your S3 bucket.
 
+![Logs in S3 bucket](<https://assets2.astronomer.io/main/guides/your-guide-folder/logs_s3_bucket.png>)
+
 ## Advanced Configuration Example: Add Multiple Handlers to the Same Logger
 
-For full control over the logging configuration you will need to create and modify a `log_config.py` file. This is relevant for use cases such as adding several handlers to the same logger with different formatters, filters, or destinations, or to add your own custom handler. 
+For full control over the logging configuration you will need to create and modify a `log_config.py` file. This is relevant for use cases such as adding several handlers to the same logger with different formatters, filters, or destinations, or to add your own custom handler.
 
 The following example adds a second remote logging S3 bucket to receive logs with a different file structure.
 
@@ -166,7 +225,7 @@ First, complete Steps 1 and 2 from the section above to configure your Airflow e
 # Define the base log folder
 ENV BASE_LOG_FOLDER=/usr/local/airflow/logs
 
-# create a directory for your custom log_config.py file and copy it 
+# create a directory for your custom log_config.py file and copy it
 ENV PYTHONPATH=/usr/local/airflow
 RUN mkdir $PYTHONPATH/config
 COPY log_config.py $PYTHONPATH/config/
@@ -216,10 +275,11 @@ LOGGING_CONFIG['handlers']['secondary_s3_task_handler'] = {
 }
 
 # this line adds the "secondary_s3_task_handler" as a handler to airflow.task
-# airflow logic already used the location provided to AIRFLOW__LOGGING__REMOTE_BASE_LOG_FOLDER 
+# airflow logic already used the location provided to AIRFLOW__LOGGING__REMOTE_BASE_LOG_FOLDER
 # to create a handler for your s3 bucket using standard configurations and
 # replace the default "task" handler with it
-LOGGING_CONFIG['loggers']['airflow.task']['handlers'] = ["task", "secondary_s3_task_handler"]
+LOGGING_CONFIG['loggers']['airflow.task']['handlers'] = ["task",
+                                                  "secondary_s3_task_handler"]
 ```
 
 Afterwards don't forget to restart your Airflow environment and run any task to verify that the task logs are copied to your S3 buckets.
