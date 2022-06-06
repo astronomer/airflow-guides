@@ -25,13 +25,13 @@ That's where Airflow comes in. ADF jobs can be run using an Airflow DAG, giving 
 
 ## ADF Modules in Airflow
 
-The [Microsoft Azure provider](https://registry.astronomer.io/providers/microsoft-azure) has multiple modules for orchestrating ADF pipelines from Airflow.
+The [Microsoft Azure provider](https://registry.astronomer.io/providers/microsoft-azure) has multiple modules for orchestrating ADF pipelines with Airflow.
 
-- [`AzureDataFactoryHook`](https://registry.astronomer.io/providers/microsoft-azure/modules/azuredatafactoryhook): Abstracts the ADF API and provides an easy way of connecting to ADF from Airflow.
-- [`AzureDataFactoryRunPipelineOperator`](https://registry.astronomer.io/providers/microsoft-azure/modules/azuredatafactoryrunpipelineoperator): Executes an ADF pipeline.
-- [`AzureDataFactoryPipelineRunStatusSensor`](https://registry.astronomer.io/providers/microsoft-azure/modules/azuredatafactorypipelinerunstatussensor): Waits for an ADF pipeline run to complete.
+- [`AzureDataFactoryHook`](https://registry.astronomer.io/providers/microsoft-azure/modules/azuredatafactoryhook): Abstracts the ADF API and provides an easy way of connecting to ADF from Airflow
+- [`AzureDataFactoryRunPipelineOperator`](https://registry.astronomer.io/providers/microsoft-azure/modules/azuredatafactoryrunpipelineoperator): Executes an ADF pipeline
+- [`AzureDataFactoryPipelineRunStatusSensor`](https://registry.astronomer.io/providers/microsoft-azure/modules/azuredatafactorypipelinerunstatussensor): Waits for an ADF pipeline run to complete
 
-If the existing operators or sensors are not quite right for your use case, you can use the `AzureDataFactoryHook` in your own Python function to take advantage of any ADF API functionality. Understanding how the [ADF API](https://docs.microsoft.com/en-us/rest/api/datafactory/v1/data-factory-data-factory) works can be helpful when designing your own custom functions, or for gaining a deeper understanding of how the provider modules work.
+If these modules are not quite right for your use case, you can use the `AzureDataFactoryHook` in your own Python function to take advantage of any ADF API functionality. Understanding how the [ADF API](https://docs.microsoft.com/en-us/rest/api/datafactory/v1/data-factory-data-factory) works can be helpful when designing your own custom functions or understanding of how the provider modules work.
 
 ## Example Implementation
 
@@ -43,7 +43,7 @@ Before you can orchestrate your ADF pipelines with Airflow, you have to make tho
 
 > **Note:** If you do not currently have an ADF pipeline in your Azure account and are new to ADF, check out the [ADF quick start docs](https://docs.microsoft.com/en-us/azure/data-factory/quickstart-create-data-factory-portal) for help getting started.
 
-To make your ADF pipeline accessible by Airflow you will need to register an App with Azure Active Directory to get a Client ID and Client Secret (API Key) for your Data Factory. First go to Azure Active Directory and click on 'Registered Apps' to see a list of registered apps. If you created a Resource group you should already have an app registered with the same name.
+To make your ADF pipeline accessible by Airflow you will need to register an App with Azure Active Directory to get a Client ID and Client Secret (API Key) for your Data Factory. First, go to Azure Active Directory and click on 'Registered Apps' to see a list of registered apps. If you created a Resource group, you should already have an app registered with the same name.
 
 ![ADF App Registration](https://assets2.astronomer.io/main/guides/azure-data-factory/adf_app_registration.png)
 
@@ -74,7 +74,7 @@ Additional detail on requirements for interacting with Azure Data Factory using 
 
 ### Create a DAG to Orchestrate ADF Jobs
 
-Now that we have existing ADF pipelines that should be runnable externally to Azure, we will create a DAG that will execute those pipelines using Azure provider modules. The DAG below executes two ADF pipelines in parallel (tasks `run_pipeline1` and `run_pipeline2`). It then uses an `AzureDataFactoryPipelineRunStatusSensor` to wait until "pipeline2" has completed before finishing the DAG.
+Now that our ADF pipelines are runnable, we create a DAG that executes those pipelines using Azure provider modules. The DAG below executes two ADF pipelines in parallel (tasks `run_pipeline1` and `run_pipeline2`). It then uses an `AzureDataFactoryPipelineRunStatusSensor` to wait until "pipeline2" has completed before finishing the DAG.
 
 ```python
 from datetime import datetime, timedelta
