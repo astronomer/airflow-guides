@@ -134,19 +134,10 @@ with DAG(
 
 ![Graph View](https://assets2.astronomer.io/main/guides/azure-data-factory/multiple_adf_pipeline_graph.png)
 
-Note that this DAG requires an `azure_data_factory` [Airflow connection](https://airflow.apache.org/docs/apache-airflow/stable/concepts/connections.html. The connection requires the following information:
+Note that this DAG requires an `azure_data_factory` [Airflow connection](https://www.astronomer.io/guides/connections). The connection requires the following information:
 
-- Tenant ID 
-- Subscription ID
-- Resource Group
-- Factory
-- Client ID
-- Client secret
-
-They should be entered into the connection form like this:
-
-![Airflow ADF Connection](https://assets2.astronomer.io/main/guides/azure-data-factory/adf_airflow_connection.png)
-
-The Client ID is the login, Client Secret is the password, and the rest are JSON-formatted extras.
+- **Login:** Your Azure Client ID
+- **Password:** Your Azure Client secret
+- **Extras:** `{"tenantId":"Your Tenant ID", "subscriptionId":"Your Subscription ID", "resourceGroup":"Your Resource Group", "factory":"Your Factory"}`
 
 For a more complex example of orchestrating dependent ADF pipelines with Airflow, check out [this example](https://registry.astronomer.io/dags/airflow-azure-data-factory) on the Astronomer Registry.
