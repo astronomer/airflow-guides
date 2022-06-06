@@ -39,7 +39,7 @@ Besides storing the metadata mentioned above, the Airflow metadata database is h
 
 There are many more tables in the metadata database storing data ranging from DAG tags over serialized DAG code to current states of sensors and rescheduled tasks.
 
-## Airflow Metadata Database Best Practises
+## Airflow Metadata Database Best Practices
 
 1. When up- or downgrading Airflow, which commonly includes changes to your metadata database make sure you always have a backup of your metadata database and follow the recommended steps for changing Airflow versions: backup the database, check for deprecated features, pause all DAGs and make sure no tasks are running.
 
