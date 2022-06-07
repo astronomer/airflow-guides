@@ -10,23 +10,39 @@ tags: ["Database", "SQL", "Components"]
 
 > **Note**: This guide provides an informative overview of the inner workings of the Airflow metadata database. We strongly advise against directly modifying the metadata database since this can cause dependency issues and corrupt your Airflow instance!
 
-The metadata database is a core component of Airflow, and is used to store crucial information about both the configuration of your Airflow environment as well as all metadata relevant for the scheduler regarding DAGs, tasks and individual runs.
+The metadata database is a core component of Airflow, and is used to store crucial information about both the configuration of your Airflow environment as well as all metadata relevant for the scheduler regarding past and present DAG and task runs.
 
-In this guide we will explain what kind of data Airflow saves in its metadata database, give an overview over key tables and Airflow specific database best practises, as well as talk about disaster recovery in Airflow.
+Loosing this data can not only interfere heavily with the functioning of your DAGs, for example if needed variables or connections are lost, but also cause you to be unable to access any history on past DAG runs or cause critical errors in your Airflow instance. This is why we highly recommend to have a backup and disaster recovery plan for your metadata database in place. The ideal tools and set up will depend on your organization's needs and use case.
+
+> [Astronomer customers](https://www.astronomer.io/) can profit from a comprehensive backup and recovery plan that will be configured according to your needs.
+
+In this guide we will explain Airflow metadata database specifications, what kind of content is saved, what the key best practises are when working with metadata database related commands as well as different ways you can access data of interest.
+
+## Database Specifications
+
+Airflow uses SQLAlchemy and Object Relational Mapping (ORM) in Python to connect and interact with the underlying metadata database from the application layer. Thus, any database supported by [SQLAlchemy](https://www.sqlalchemy.org/) can theoretically be configured to host Airflow's metadata. On Astronomer, each Airflow deployment is equipped with a PostgreSQL database for this purpose. PostgresSQL is both the most common choice and recommended to use for the metadata database by the Airflow community.
+
+When running Airflow locally by default a 2GB SQLite database will be spun up, which is intended for development purposes only. Astro CLI by default will start Airflow with a PostgresSQL database of 1GB. When configuring a custom database backend it is advisable to make sure [your version is fully supported](https://airflow.apache.org/docs/apache-airflow/stable/howto/set-up-database.html#choosing-database-backend) by the Airflow.
+
 
 ## Content of the Metadata Database
 
-Airflow uses SQLAlchemy and Object Relational Mapping (ORM) in Python to connect and interact with the underlying metadata database from the application layer. Thus, any database supported by [SQLAlchemy](https://www.sqlalchemy.org/) can theoretically be configured to host Airflow's metadata. On Astronomer, each Airflow deployment is equipped with PostgreSQL database for this purpose.
+> **Note**: For many use-cases you can access contents from the metadata database via the Airflow UI or the stable REST API. These points of access are always preferable to querying the metadata database directly!
 
-There are several types of metadata stored in the metadata database. One group of tables handles users' login information and permissions for a specific airflow instance, another set of tables deals with storing variables, connections and XComs while other tables contain data the scheduler uses to organize DAG and task runs.
+There are several types of metadata stored in the metadata database.
+
+- Tables related to users' login information and permissions for a specific airflow instance. The names of these tables all start with `ab_`.
+- Tables storing input like variables, connections and XComs.
+- Tables the scheduler uses to organize DAG and task runs.  
+- Other tables for example to keep track of the current [Alembic](https://alembic.sqlalchemy.org/en/latest/index.html) version or of tasks that missed their [SLA](https://www.astronomer.io/guides/error-notifications-in-airflow/#airflow-slas).
 
 Changes to the Airflow metadata database configuration and its schema are very common and happen with almost every minor update. For this reason, prior to Airflow 2.3 you could not downgrade your Airflow instance in place. With Airflow 2.3 the `db downgrade` command was added, providing an option to [downgrade Airflow](https://airflow.apache.org/docs/apache-airflow/2.3.0/usage-cli.html#downgrading-airflow).
 
-> **Note** Always backup your database before running any database operations!
+> **Note**: Always backup your database before running any database operations!
 
 While changes to the schema happen regularly, key content is stored in the same tables spanning several recent versions.
 
-A set of tables starting with `ab_*` bundles types of permissions for different sections of Airflow together to form roles which are assigned to individual users. As an admin user you can access some of the content of the tables in the Airflow UI under the **Security** tab.
+A set of tables starting with `ab_` bundles types of permissions for different sections of Airflow together to form roles which are assigned to individual users. As an admin user you can access some of the content of the tables in the Airflow UI under the **Security** tab.
 
 Metadata which can be found under the **Admin** tab in the Airflow UI such as variables, [connections](https://www.astronomer.io/guides/connections) and [XComs](https://www.astronomer.io/guides/airflow-passing-data-between-tasks) are stored in their respective tables as well as [slots assigned to pools](https://www.astronomer.io/guides/airflow-pools/) and [SLA misses](https://www.astronomer.io/guides/error-notifications-in-airflow/#airflow-slas).  
 
@@ -41,20 +57,78 @@ There are many more tables in the metadata database storing data ranging from DA
 
 ## Airflow Metadata Database Best Practices
 
-1. When up- or downgrading Airflow, which commonly includes changes to your metadata database make sure you always have a backup of your metadata database and follow the recommended steps for changing Airflow versions: backup the database, check for deprecated features, pause all DAGs and make sure no tasks are running.
+1. When up- or downgrading Airflow, which commonly includes changes to your metadata database make sure you always have a backup of your metadata database and follow the [recommended steps for changing Airflow versions](https://airflow.apache.org/docs/apache-airflow/stable/installation/upgrading.html?highlight=upgrade): backup the database, check for deprecated features, pause all DAGs and make sure no tasks are running.
 
-2. Use caution when [pruning old records](https://airflow.apache.org/docs/apache-airflow/stable/usage-cli.html#purge-history-from-metadata-database) from your database with `db clean`.
+2. Use caution when [pruning old records](https://airflow.apache.org/docs/apache-airflow/stable/usage-cli.html#purge-history-from-metadata-database) from your database with `db clean`. The `db clean` command allows you to delete records older than `--clean-before-timestamp` from all metadata database tables or a list of tables specified.
 
 3. Keep in mind that every time you access data from the metadata database from within a DAG (for example by fetching a variable, pulling from XCom or using a connection ID) you will make a connection to the metadata database which needs compute resources. It is therefore best practice to try to keep these actions within tasks, which will only create a connection to the database at run time. If they are written as top level code, connections will be created every time the scheduler parses the DAG file (every 30 seconds by default!).
 
-4. Memory in the Airflow metadata database can be limited depending on your setup. For example, local options will generally have lower memory: Astro CLI uses a Postgres database of the size of 1GB while local Airflow by default will use a 2GB SQLite database. Running low on memory in your metadata database can cause performance issues in Airflow. This is one of the many reasons why we highly advise against moving large amounts of data via XCom, and recommend using a cleanup and archiving mechanism in any production deployments.
+4. Memory in the Airflow metadata database can be limited depending on your setup and running low on memory in your metadata database can cause performance issues in Airflow. This is one of the many reasons why we highly advise against moving large amounts of data via XCom, and recommend using a cleanup and archiving mechanism in any production deployments.
 
 5. Since the metadata database is critical for the scalability and resiliency of your Airflow deployment, it is best practice at least for production Airflow deployments to use a managed database service, for example [AWS RDS](https://aws.amazon.com/rds/) or [Google Cloud SQL](https://cloud.google.com/sql).
 
-## Disaster Recovery
+## Interacting with the Metadata Database
 
-> [Astronomer customers](https://www.astronomer.io/) can profit from a comprehensive backup and recovery plan that will be configured according to your needs.
+> **Note**: For many use-cases you can access contents from the metadata database via the Airflow UI or the stable REST API. These points of access are always preferable to querying the metadata database directly!
 
-As mentioned above the metadata database contains all information about your past and current DAG runs as well as configurations of variables, roles and permissions, connections and XComs among other data. Loosing this data can interfere with the functioning of your DAGs (for example in case of loss of necessary variables or connections).
+For use cases where neither the Airflow UI nor the REST API can provide sufficient data it is recommended to use SQLAlchemy to query the metadata database.
 
-The tools and setup you use will depend on your organization's needs and use case. Astronomer recommends the open source software [Velero](https://velero.io/) for both backup and restore operations. Astronomer Documentation provides an [in-depth guide to disaster recovery using Velero](https://docs.astronomer.io/software/disaster-recovery).
+The query below retrieves the current [alembic version id](https://alembic.sqlalchemy.org/en/latest/).
+
+```python
+from sqlalchemy import create_engine
+from sqlalchemy.orm import Session
+
+conn_url = 'postgresql+psycopg2://postgres:postgres@localhost:5432/postgres'
+
+engine = create_engine(conn_url)
+
+stmt = """SELECT version_num
+        FROM alembic_version;"""
+
+with Session(engine) as session:
+    result = session.execute(stmt)
+    print(result.all()[0][0])
+```
+
+## Example: Retrieving Number of Successfully Completed Tasks
+
+A common reason users may want to access the metadata database is to get metrics like the total count of successfully completed tasks.
+
+In the Airflow UI you can navigate to **Browse** -> **Task Instances** and filter the task instances for all with a state of `success`. The `Record Count` will be on the right side of your screen.
+
+![Count successful tasks Airflow UI](<https://assets2.astronomer.io/main/guides/your-guide-folder/successful_tasks_UI.png>)
+
+Using the [stable REST API](https://airflow.apache.org/docs/apache-airflow/stable/stable-rest-api-ref.html#section/Overview) to query the metadata database is an equally valid way to get information. Make sure you have [correctly authorized API use](https://airflow.apache.org/docs/apache-airflow/stable/security/api.html) in your Airflow instance and set the `ENDPOINT_URL` (for local development: `http://localhost:8080/`).
+
+```python
+import requests
+
+ENDPOINT_URL = "http://localhost:8080/"
+user_name = "admin"
+password = "admin"
+
+# query the API for task instances from all dags and all dag runs (~)
+req = requests.get(f"{ENDPOINT_URL}/api/v1/dags/~/dagRuns/~/taskInstances?state=success",  auth=(user_name, password))
+print(req.json()['total_entries'])
+```
+
+
+Of course the same query can be performed using SQLAlchemy as well, though it is not recommended:
+
+```python
+from sqlalchemy import create_engine
+from sqlalchemy.orm import Session
+
+conn_url = 'postgresql+psycopg2://postgres:postgres@localhost:5432/postgres'
+
+engine = create_engine(conn_url)
+
+stmt = """SELECT COUNT(1)
+        FROM task_instance
+        WHERE state = 'success';"""
+
+with Session(engine) as session:
+    result = session.execute(stmt)
+    print(result.all()[0][0])
+```
