@@ -26,7 +26,7 @@ The basic components of the `logging` module are the following classes:
 - **Filters** (`logging.Filter`) which are used to further configure which log records to output. Airflow uses `SecretsMasker` as a filter to prevent sensitive information from being printed into logs.
 - **Formatters** (`logging.Formatter`) which determine the final layout of log records. Two formatters are predefined in Airflow: `airflow_colored` and `airflow`.
 
-Please see the Python documentation for more information on [methods available for the classes above](https://docs.python.org/3/library/logging.html#logger-objects), attributes of a [LogRecord object](https://docs.python.org/3/library/logging.html#logrecord-objects) and the [6 levels of logging severity](https://docs.python.org/3/library/logging.html#logging-levels) (CRITICAL, ERROR, WARNING, INFO, DEBUG and NOTSET).
+The Python documentation contains more information on [methods available for the classes above](https://docs.python.org/3/library/logging.html#logger-objects), attributes of a [LogRecord object](https://docs.python.org/3/library/logging.html#logrecord-objects), and the [6 levels of logging severity](https://docs.python.org/3/library/logging.html#logging-levels) (CRITICAL, ERROR, WARNING, INFO, DEBUG and NOTSET).
 
 The four default loggers in Airflow each have a handler with a predefined log destination as well as one of the two formatters assigned:
 
@@ -35,7 +35,7 @@ The four default loggers in Airflow each have a handler with a predefined log de
 - `airflow.processor` (level: INFO) : uses `FileProcessorHandler` and the formatter 'airflow'. This handler writes logs from the scheduler to the local file system.
 - `airflow.task` (level: INFO) : uses `FileTaskHandlers` and the Formatter `airflow` and writes task logs to the local file system.
 
-If not otherwise specified log files will be named according to the following pattern, which can be configured as `log_filename_template` in `airflow.cfg`:
+If not otherwise specified, log files will be named according to the following pattern, which can be configured as `log_filename_template` in `airflow.cfg`:
 
 - For normal tasks: `dag_id={dag_id}/run_id={run_id}/task_id={task_id}/attempt={try_number}.log`
 - For dynamically mapped tasks: `dag_id={dag_id}/run_id={run_id}/task_id={task_id}/map_index={map_index}/attempt={try_number}.log`
