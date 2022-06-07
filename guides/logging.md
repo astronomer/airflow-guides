@@ -51,8 +51,8 @@ The Airflow UI displays logs to the user using a `read()` method on task handler
 `read()` checks for available logs to display in a predefined order:
 
 1. Remote logs if remote logging is enabled.
-2. Logs on the local filesystem
-3. Logs from worker logs webserver
+2. Logs on the local filesystem.
+3. Logs from [worker specific webserver subprocesses](https://airflow.apache.org/docs/apache-airflow/stable/configurations-ref.html#worker-log-server-port).
 
 > **Note:** If a Kubernetes Executer was used and the Worker pod still exists `read()` will display the first 100 lines from Kubernetes pod logs, if the Worker pod ceased to exists those logs will be unavailable.
 
