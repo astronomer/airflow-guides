@@ -10,7 +10,7 @@ tags: ["Database", "SQL", "Components"]
 
 > **Note**: This guide provides an informative overview of the inner workings of the Airflow metadata database. We strongly advise against directly modifying the metadata database since this can cause dependency issues and corrupt your Airflow instance!
 
-The metadata database in Airflow is used to store crucial information about both the configuration of your Airflow environment as well as all metadata relevant for the scheduler regarding DAGs, tasks and individual runs.
+The metadata database is a core component of Airflow, and is used to store crucial information about both the configuration of your Airflow environment as well as all metadata relevant for the scheduler regarding DAGs, tasks and individual runs.
 
 In this guide we will explain what kind of data Airflow saves in its metadata database, give an overview over key tables and Airflow specific database best practises, as well as talk about disaster recovery in Airflow.
 
@@ -20,7 +20,7 @@ Airflow uses SQLAlchemy and Object Relational Mapping (ORM) in Python to connect
 
 There are several types of metadata stored in the metadata database. One group of tables handles users' login information and permissions for a specific airflow instance, another set of tables deals with storing variables, connections and XComs while other tables contain data the scheduler uses to organize DAG and task runs.
 
-Changes to the Airflow metadata database configuration and its schema are very common and happen with almost every minor update. This used to be the reason why you could not downgrade your Airflow instance before Airflow version 2.3. With Airflow 2.3 the `db downgrade` command was added, providing an option to [downgrade Airflow](https://airflow.apache.org/docs/apache-airflow/2.3.0/usage-cli.html#downgrading-airflow).
+Changes to the Airflow metadata database configuration and its schema are very common and happen with almost every minor update. For this reason, prior to Airflow 2.3 you could not downgrade your Airflow instance in place. With Airflow 2.3 the `db downgrade` command was added, providing an option to [downgrade Airflow](https://airflow.apache.org/docs/apache-airflow/2.3.0/usage-cli.html#downgrading-airflow).
 
 > **Note** Always backup your database before running any database operations!
 
@@ -45,11 +45,11 @@ There are many more tables in the metadata database storing data ranging from DA
 
 2. Use caution when [pruning old records](https://airflow.apache.org/docs/apache-airflow/stable/usage-cli.html#purge-history-from-metadata-database) from your database with `db clean`.
 
-3. Keep in mind that every time you access data from the metadata database from within a DAG (for example by fetching a variable, pulling from XCom or using a connection ID) you will make a connection to the metadata database which needs compute resources. It is therefore best practise to try to keep these actions within tasks so these connections are not created every time the scheduler parses the DAG file (every 30 seconds!).
+3. Keep in mind that every time you access data from the metadata database from within a DAG (for example by fetching a variable, pulling from XCom or using a connection ID) you will make a connection to the metadata database which needs compute resources. It is therefore best practice to try to keep these actions within tasks, which will only create a connection to the database at run time. If they are written as top level code, connections will be created every time the scheduler parses the DAG file (every 30 seconds by default!).
 
-4. Memory in the Airflow metadata database is limited depending on your setup. Astro CLI uses a Postgres database of the size of 1GB while local Airflow by default will use a 2GB SQLite database. This is one of the many reasons why we highly advise against moving large amounts of data via XCom.
+4. Memory in the Airflow metadata database can be limited depending on your setup. For example, local options will generally have lower memory: Astro CLI uses a Postgres database of the size of 1GB while local Airflow by default will use a 2GB SQLite database. Running low on memory in your metadata database can cause performance issues in Airflow. This is one of the many reasons why we highly advise against moving large amounts of data via XCom, and recommend using a cleanup and archiving mechanism in any production deployments.
 
-5. Because of limited memory in the metadata database it is recommended to use a cleanup and archive mechanism in deployment (for example [Amazon Redshift](https://aws.amazon.com/redshift/)).
+5. Since the metadata database is critical for the scalability and resiliency of your Airflow deployment, it is best practice at least for production Airflow deployments to use a managed database service, for example [AWS RDS](https://aws.amazon.com/rds/) or [Google Cloud SQL](https://cloud.google.com/sql).
 
 ## Disaster Recovery
 
