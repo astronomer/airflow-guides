@@ -82,10 +82,10 @@ There are additional tables in the metadata database storing data ranging from D
 
 - **Browse** -> **DAG Dependencies** shows a visual representation of DAG Dependencies
 - The source code of DAGs can be found by clicking on a DAG name from the main view and then navigating to the **Code** view
-- Import errors will show up on top of your list of dags if they occurr
+- Import errors will show up on top of your list of dags if they occur
 - DAG tags will show up underneath their respective DAG with a cyan background.
 
-Most of the information in these tables is accessible via the Airflow REST API. 
+Most of the information in these tables is accessible via the Airflow REST API.
 
 ## Airflow Metadata Database Best Practices
 
