@@ -8,15 +8,13 @@ tags: ["Database", "SQL", "Components"]
 
 ## Overview
 
-> **Note**: This guide provides an informative overview of the inner workings of the Airflow metadata database. We strongly advise against directly modifying the metadata database since this can cause dependency issues and corrupt your Airflow instance!
-
 The metadata database is a core component of Airflow, and is used to store crucial information about both the configuration of your Airflow environment as well as all metadata relevant for the scheduler regarding past and present DAG and task runs.
 
 Loosing this data can not only interfere heavily with the functioning of your DAGs, for example if needed variables or connections are lost, but also cause you to be unable to access any history on past DAG runs or cause critical errors in your Airflow instance. This is why we highly recommend to have a backup and disaster recovery plan for your metadata database in place. The ideal tools and set up will depend on your organization's needs and use case.
 
-> [Astronomer customers](https://www.astronomer.io/) can profit from a comprehensive backup and recovery plan that will be configured according to your needs.
-
 In this guide we will explain Airflow metadata database specifications, what kind of content is saved, what the key best practises are when working with metadata database related commands as well as different ways you can access data of interest.
+
+> **Note**: This guide provides an informative overview of the inner workings of the Airflow metadata database. We strongly advise against directly modifying the metadata database since this can cause dependency issues and corrupt your Airflow instance!
 
 ## Database Specifications
 
@@ -39,6 +37,20 @@ There are several types of metadata stored in the metadata database.
 Changes to the Airflow metadata database configuration and its schema are very common and happen with almost every minor update. For this reason, prior to Airflow 2.3 you could not downgrade your Airflow instance in place. With Airflow 2.3 the `db downgrade` command was added, providing an option to [downgrade Airflow](https://airflow.apache.org/docs/apache-airflow/2.3.0/usage-cli.html#downgrading-airflow).
 
 > **Note**: Always backup your database before running any database operations!
+
+### Security: Tables related to User Information
+
+tab **Security**
+
+### Admin: Tables storing Input and Configurations
+
+tab **Admin**
+
+### Browse: Tables storing Airflow History and Scheduler Information
+
+tab **Browse**
+
+### Other Tables
 
 While changes to the schema happen regularly, key content is stored in the same tables spanning several recent versions.
 
@@ -67,31 +79,9 @@ There are many more tables in the metadata database storing data ranging from DA
 
 5. Since the metadata database is critical for the scalability and resiliency of your Airflow deployment, it is best practice at least for production Airflow deployments to use a managed database service, for example [AWS RDS](https://aws.amazon.com/rds/) or [Google Cloud SQL](https://cloud.google.com/sql).
 
-## Interacting with the Metadata Database
+## Example Queries
 
-> **Note**: For many use-cases you can access contents from the metadata database via the Airflow UI or the stable REST API. These points of access are always preferable to querying the metadata database directly!
-
-For use cases where neither the Airflow UI nor the REST API can provide sufficient data it is recommended to use SQLAlchemy to query the metadata database.
-
-The query below retrieves the current [alembic version id](https://alembic.sqlalchemy.org/en/latest/).
-
-```python
-from sqlalchemy import create_engine
-from sqlalchemy.orm import Session
-
-conn_url = 'postgresql+psycopg2://postgres:postgres@localhost:5432/postgres'
-
-engine = create_engine(conn_url)
-
-stmt = """SELECT version_num
-        FROM alembic_version;"""
-
-with Session(engine) as session:
-    result = session.execute(stmt)
-    print(result.all()[0][0])
-```
-
-## Example: Retrieving Number of Successfully Completed Tasks
+### Example: Retrieving Number of Successfully Completed Tasks
 
 A common reason users may want to access the metadata database is to get metrics like the total count of successfully completed tasks.
 
@@ -113,8 +103,22 @@ req = requests.get(f"{ENDPOINT_URL}/api/v1/dags/~/dagRuns/~/taskInstances?state=
 print(req.json()['total_entries'])
 ```
 
+### Example: Unpause a list of paused DAGs
 
-Of course the same query can be performed using SQLAlchemy as well, though it is not recommended:
+
+### Example: Pause all active DAGs
+
+
+### Example: Delete a DAG
+
+
+### Example: Retrieving Alembic Version
+
+> **Note**: For many use-cases you can access contents from the metadata database via the Airflow UI or the stable REST API. These points of access are always preferable to querying the metadata database directly!
+
+For use cases where neither the Airflow UI nor the REST API can provide sufficient data it is recommended to use SQLAlchemy to query the metadata database.
+
+The query below retrieves the current [alembic version id](https://alembic.sqlalchemy.org/en/latest/).
 
 ```python
 from sqlalchemy import create_engine
@@ -124,9 +128,8 @@ conn_url = 'postgresql+psycopg2://postgres:postgres@localhost:5432/postgres'
 
 engine = create_engine(conn_url)
 
-stmt = """SELECT COUNT(1)
-        FROM task_instance
-        WHERE state = 'success';"""
+stmt = """SELECT version_num
+        FROM alembic_version;"""
 
 with Session(engine) as session:
     result = session.execute(stmt)
