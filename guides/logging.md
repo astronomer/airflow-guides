@@ -18,9 +18,9 @@ In this guide, we'll cover the basics of logging in Airflow, including:
 - When and how to configure logging settings
 - Remote logging.
 
-Lastly, we walk through a step-by-step example on how to set up remote logging to an S3 bucket using the [Astro CLI](https://docs.astronomer.io/astro/cli/get-started) and show a use case of advanced configuration in an example on how to add two handlers to the task logger in Airflow.
+Lastly, we walk through a step-by-step example on how to set up remote logging to an S3 bucket using the [Astro CLI](https://docs.astronomer.io/astro/cli/get-started) and show a use case of advanced configuration to add two handlers to the Airflow task logger.
 
-In addition to to standard logging, Airflow provides observability features that you can use to collect metrics, trigger callback functions with task events, monitor Airflow health status, and track errors or user activity. You can find more information on monitoring options in the [Airflow Documentation](https://airflow.apache.org/docs/apache-airflow/stable/logging-monitoring/index.html). Astro builds on these features, providing more detailed metrics about how your tasks run and use resources in your cloud. To learn more, see the [Astro documentation](https://docs.astronomer.io/astro/deployment-metrics).
+In addition to standard logging, Airflow provides observability features that you can use to collect metrics, trigger callback functions with task events, monitor Airflow health status, and track errors or user activity. You can find more information on monitoring options in the [Airflow Documentation](https://airflow.apache.org/docs/apache-airflow/stable/logging-monitoring/index.html). Astro builds on these features, providing more detailed metrics about how your tasks run and use resources in your cloud. To learn more, see the [Astro documentation](https://docs.astronomer.io/astro/deployment-metrics).
 
 ## Logging in Airflow
 
@@ -45,7 +45,7 @@ The four default loggers in Airflow each have a handler with a predefined log de
 By default, log file names have the following format:
 
 - For standard tasks: `dag_id={dag_id}/run_id={run_id}/task_id={task_id}/attempt={try_number}.log`
-- For dynamically mapped tasks: `dag_id={dag_id}/run_id={run_id}/task_id={task_id}/map_index={map_index}/attempt={try_number}.log`
+- For [dynamically mapped tasks](https://www.astronomer.io/guides/dynamic-tasks): `dag_id={dag_id}/run_id={run_id}/task_id={task_id}/map_index={map_index}/attempt={try_number}.log`
 
 These filename formats can be reconfigured using `log_filename_template` in `airflow.cfg`.
 
@@ -111,7 +111,7 @@ def extract():
     # with default airflow logging settings, DEBUG logs are ignored
     task_logger.debug('This log is at the level of DEBUG')
 
-    # each of these lines produce a log statement
+    # each of these lines produces a log statement
     print('This log is created via a print statement')
     task_logger.info('This log is informational')
     task_logger.warning('This log is a warning')
@@ -183,7 +183,7 @@ For example, if you wanted to change your logging level from the default `INFO` 
 
 Advanced configuration might necessitate the logging config class to be overwritten. To enable custom logging config a configuration file `~/airflow/config/log_config.py` has to be created in which modifications to `DEFAULT_LOGGING_CONFIG` are specified. You may need to do this if you want to, for example, add a custom handler.
 
-A step-by-step explanation on how to set up remote logging can be found in the in the section 'Remote Logging Example: Sending Task Logs to S3' below.
+Two step-by step explanations on how to configure logging can be found in the examples below.
 
 ## Logging Remotely
 
@@ -265,8 +265,8 @@ ENV AIRFLOW__LOGGING__LOGGING_CONFIG_CLASS=config.log_config.LOGGING_CONFIG
 ENV AIRFLOW__LOGGING__ENCRYPT_S3_LOGS=True
 ```
 
-By setting these environment variables you can configure remote logging on two S3 buckets (`S3BUCKET_NAME` and `S3BUCKET_NAME_2`).
-Additionally a second remote log folder `AIRFLOW__LOGGING__REMOTE_BASE_LOG_FOLDER_2` is set as an environment variable to be retrieved from within `log_config.py`. Importantly, the `AIRFLOW__LOGGING__LOGGING_CONFIG_CLASS` is replaced with your custom `LOGGING_CONFIG` class that you will define in the next step.
+By setting these environment variables you can configure remote logging to two S3 buckets (`S3BUCKET_NAME` and `S3BUCKET_NAME_2`).
+Additionally to the first remote log folder (`AIRFLOW__LOGGING__REMOTE_BASE_LOG_FOLDER`) a second remote log folder `AIRFLOW__LOGGING__REMOTE_BASE_LOG_FOLDER_2` is set as an environment variable to be retrieved from within `log_config.py`. Importantly, the `AIRFLOW__LOGGING__LOGGING_CONFIG_CLASS` is replaced with your custom `LOGGING_CONFIG` class that you will define in the next step.
 
 Lastly, create a `log_config.py` file. While you can put this file anywhere in your Airflow project as long as it is not within a folder listed in `.dockerignore`, it is best practise to put it outside of your `dags/` folder, such as `/include`, to prevent the scheduler wasting resources by continuously parsing the file. Make sure to adjust the COPY statement in the previous step depending on where you decide to store this file.
 
@@ -276,21 +276,22 @@ Within `log_config.py`, create and modify a deepcopy of `DEFAULT_LOGGING_CONFIG`
 from copy import deepcopy
 import os
 
+# import the default logging configuration
 from airflow.config_templates.airflow_local_settings import DEFAULT_LOGGING_CONFIG
 
 LOGGING_CONFIG = deepcopy(DEFAULT_LOGGING_CONFIG)
 
-
+# add an additional handler
 LOGGING_CONFIG['handlers']['secondary_s3_task_handler'] = {
     # you can import your own custom handler here
     'class': 'airflow.providers.amazon.aws.log.s3_task_handler.S3TaskHandler',
     # you can add a custom formatter here
     'formatter': 'airflow',
-    # the following env variables were set above
+    # the following env variables were set in the dockerfile
     'base_log_folder': os.environ['BASE_LOG_FOLDER'],
     's3_log_folder': os.environ['AIRFLOW__LOGGING__REMOTE_BASE_LOG_FOLDER_2'],
     'filename_template':
-        # provide a custom structure for log directory and filename
+        # providing a custom structure for log directory and filename
         "{{ ti.dag_id }}/{{ ti.task_id }}_{{ ts }}_{{ try_number }}.log",
     # if needed, custom filters can be added here
     "filters":[
