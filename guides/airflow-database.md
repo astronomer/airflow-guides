@@ -36,7 +36,7 @@ Sizing of the metadata database is an important consideration when setting up yo
 
 ## Content of the Metadata Database
 
-> **Note**: For many use-cases you can access contents from the metadata database via the Airflow UI or the stable REST API. These points of access are always preferable to querying the metadata database directly!
+> **Note**: For many use-cases you can access contents from the metadata database via the Airflow UI or the [stable REST API](https://airflow.apache.org/docs/apache-airflow/stable/stable-rest-api-ref.html). These points of access are always preferable to querying the metadata database directly!
 
 There are several types of metadata stored in the metadata database.
 
@@ -101,13 +101,9 @@ Most of the information in these tables is accessible via the Airflow REST API.
 
 ## Example Queries
 
-The preferred methods for retrieving data from the metadata database are using the Airflow UI or making a GET request to the [stable Airflow REST API](https://airflow.apache.org/docs/apache-airflow/stable/stable-rest-api-ref.html). Between the UI and API large parts of the metadata database can be viewed without the risk of accidentally making harmful changes to the database that direct querying would pose. For use cases where neither the Airflow UI nor the REST API can provide sufficient data it is recommended to use SQLAlchemy to query the metadata database in order to have an additional layer of abstraction on top of the tables.
+The preferred methods for retrieving data from the metadata database are using the Airflow UI or making a GET request to the [stable Airflow REST API](https://airflow.apache.org/docs/apache-airflow/stable/stable-rest-api-ref.html). Between the UI and API large parts of the metadata database can be viewed without the risk of accidentally making harmful changes to the database that direct querying would pose. For use cases where neither the Airflow UI nor the REST API can provide sufficient data it is recommended to use SQLAlchemy to query the metadata database in order to have an additional layer of abstraction on top of the tables, which makes your code less sensitive to minor schema changes.
 
-
-
-
-
-
+In this section of the guide we provide a few examples for how you can retrieve specific information from the metadata database.
 
 ## Example: Retrieving Number of Successfully Completed Tasks
 
@@ -117,69 +113,124 @@ In the Airflow UI you can navigate to **Browse** -> **Task Instances** and filte
 
 ![Count successful tasks Airflow UI](<https://assets2.astronomer.io/main/guides/your-guide-folder/successful_tasks_UI.png>)
 
-Using the [stable REST API](https://airflow.apache.org/docs/apache-airflow/stable/stable-rest-api-ref.html#section/Overview) to query the metadata database is an equally valid way to get information. Make sure you have [correctly authorized API use](https://airflow.apache.org/docs/apache-airflow/stable/security/api.html) in your Airflow instance and set the `ENDPOINT_URL` (for local development: `http://localhost:8080/`).
+Using the [stable REST API](https://airflow.apache.org/docs/apache-airflow/stable/stable-rest-api-ref.html#section/Overview) to query the metadata database is an equally valid way to get information. Make sure you have [correctly authorized API use](https://airflow.apache.org/docs/apache-airflow/stable/security/api.html) in your Airflow instance and set the `ENDPOINT_URL` to the correct location (for local development: `http://localhost:8080/`).
 
 ```python
+# import the request library
 import requests
 
+# set location and access information for your airflow instance
+# this example uses the default values for Astro CLI
 ENDPOINT_URL = "http://localhost:8080/"
 user_name = "admin"
 password = "admin"
 
-# query the API for task instances from all dags and all dag runs (~)
-req = requests.get(f"{ENDPOINT_URL}/api/v1/dags/~/dagRuns/~/taskInstances?state=success",  auth=(user_name, password))
+# query the API for successful task instances from all dags and all dag runs (~)
+req = requests.get(
+  f"{ENDPOINT_URL}/api/v1/dags/~/dagRuns/~/taskInstances?state=success",  
+  auth=(user_name, password))
+
+# from the API response print the value for "total entries"
 print(req.json()['total_entries'])
 ```
 
-### Example: Unpause a list of paused DAGs
+### Example: Pause and Unpause a DAG
 
+Pausing and unpausing DAGs is a common action when running Airflow and while you can achieve this by manually toggling DAGs in the Airflow UI, depending on your use case and the number of DAGs you want to toggle this might be tedious. The Airflow REST API offers a simple way to pause and unpause DAGs by sending a PATCH request.
 
-### Example: Pause all active DAGs
+```python
+# import the request library
+import requests
 
+# set location and access information for your airflow instance
+# this example uses the default values for Astro CLI
+ENDPOINT_URL = "http://localhost:8080/"
+user_name = "admin"
+password = "admin"
+
+# data to update, for unpausing, simply set this to False
+update= {"is_paused": True}
+# specify the dag to pause/unpause
+dag_id = example_dag_basic
+
+# query the API to patch all tasks as paused
+req = requests.patch(
+  f"{ENDPOINT_URL}/api/v1/dags/{dag_id}?update_mask=is_paused", json=update,
+  auth=(user_name, password))
+
+# print the API response
+print(req.text)
+```
 
 ### Example: Delete a DAG
 
+Deleting the metadata of a DAG can be accomplished either by clicking the trashcan icon in the Airflow UI or sending a DELETE request via the Airflow REST API. This is not possible while the DAG is still running and will not delete the python file in which the DAG is defined, meaning the DAG will appear again in your UI with no history at the next parsing of the `/dags` folder from the scheduler.
+
+```python
+# import the request library
+import requests
+
+# set location and access information for your airflow instance
+# this example uses the default values for Astro CLI
+ENDPOINT_URL = "http://localhost:8080/"
+user_name = "admin"
+password = "admin"
+
+# specify which dag to delete
+dag_id = 'dag_to_delete'
+
+# send the deletion request
+req = requests.delete(
+  f"{ENDPOINT_URL}/api/v1/dags/{dag_id}",
+  auth=(user_name, password))
+
+# print the API response
+print(req.text)
+```
 
 ### Example: Retrieve all DAG dependencies
 
-while there is a graphical interface the API does not offer this?
-use models so the code wont break with every version! this is why it makes sense to use sqlalchemy
+Inter DAG dependencies are a powerful tool to get your data orchestration to the next level, including for custom solutions to make sure downstream DAGs get adjusted when changes are made to a DAG with dependencies. These dependencies are visualized in the Airflow UI under **Browse** -> **DAG Dependencies** but currently not accessible through the Airflow REST API.
+
+In situations like these it is possible to use SQLAlchemy with [Airflow models](https://airflow.apache.org/docs/apache-airflow/stable/_api/airflow/models/index.html) to access data from the metadata database similar to how the webserver interacts with it. Querying the metadata database in this way is preferred over direct SQL statements because it adds an additional layer of abstraction that makes your code less sensitive to minor schema changes. If you are running Airflow in a dockerized setting you will have to run the script below from within your scheduler container.
 
 ```python
 from sqlalchemy import create_engine
 from sqlalchemy.orm import Session
 from airflow.models.serialized_dag import SerializedDagModel
+import os
 
-conn_url = 'postgresql+psycopg2://postgres:postgres@localhost:5432/postgres'
+# retrieving your SQL Alchemy connection
+sql_alchemy_conn = os.environ['AIRFLOW__CORE__SQL_ALCHEMY_CONN']
+
+conn_url = f'{sql_alchemy_conn}/postgres'
 
 engine = create_engine(conn_url)
 
-dag_id = "example_dag_advanced"
-
 with Session(engine) as session:
-    result = session.query(SerializedDagModel).filter(SerializedDagModel.dag_id == dag_id).first()
+    result = session.query(SerializedDagModel).first()
     print(result.get_dag_dependencies())
 ```
 
 
 ### Example: Retrieving Alembic Version
 
-> **Note**: For many use-cases you can access contents from the metadata database via the Airflow UI or the stable REST API. These points of access are always preferable to querying the metadata database directly!
+In very rare cases you may need a value from the metadata database that is not accessible in the Airflow UI, via the Airflow REST API or by using a SQLAlchemy model. In this case you can query the metadata database directly, while keeping in mind that every Airflow update may change the schema and therefore break your code and that you can corrupt your Airflow instance by directly manipulating the metadata database.
 
-For use cases where neither the Airflow UI nor the REST API can provide sufficient data it is recommended to use SQLAlchemy to query the metadata database.
-
-The query below retrieves the current [alembic version id](https://alembic.sqlalchemy.org/en/latest/).
-
-No SQLAlchemy model available -> direct querying, might break with version changes
+The query below retrieves the current [alembic version id](https://alembic.sqlalchemy.org/en/latest/), which is not accessible through any of the recommended ways of interacting with the metadata database.
 
 ```python
 from sqlalchemy import create_engine
 from sqlalchemy.orm import Session
 
-conn_url = 'postgresql+psycopg2://postgres:postgres@localhost:5432/postgres'
+# retrieving your SQL Alchemy connection
+sql_alchemy_conn = os.environ['AIRFLOW__CORE__SQL_ALCHEMY_CONN']
+
+conn_url = f'{sql_alchemy_conn}/postgres'
 
 engine = create_engine(conn_url)
 
+# this is a direct query to the metadata database use at your own risk!
 stmt = """SELECT version_num
         FROM alembic_version;"""
 
