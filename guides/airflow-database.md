@@ -222,6 +222,7 @@ The query below retrieves the current [alembic version id](https://alembic.sqlal
 ```python
 from sqlalchemy import create_engine
 from sqlalchemy.orm import Session
+import os
 
 # retrieving your SQL Alchemy connection
 sql_alchemy_conn = os.environ['AIRFLOW__CORE__SQL_ALCHEMY_CONN']
