@@ -234,7 +234,7 @@ These environment variables configure remote logging to one S3 bucket (`S3BUCKET
 
 Afterwards don't forget to restart your Airflow environment and run any task to verify that the task logs are copied to your S3 bucket.
 
-![Logs in S3 bucket](https://assets2.astronomer.io/main/guides/your-guide-folder/logs_s3_bucket.png)
+![Logs in S3 bucket](https://assets2.astronomer.io/main/guides/logging/logs_s3_bucket.png)
 
 ## Advanced Configuration Example: Add Multiple Handlers to the Same Logger
 
@@ -314,4 +314,4 @@ This modified version of `DEFAULT_LOGGING_CONFIG` creates a second S3TaskHandler
 
 Afterwards don't forget to restart your Airflow environment and run any task to verify that the task logs are copied to both of your S3 buckets.
 
-![Logs in the secondary S3 bucket](https://assets2.astronomer.io/main/guides/your-guide-folder/logs_second_s3_bucket.png)
+![Logs in the secondary S3 bucket](https://assets2.astronomer.io/main/guides/logging/logs_second_s3_bucket.png)
