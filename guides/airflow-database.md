@@ -42,11 +42,11 @@ Changes to the Airflow metadata database configuration and its schema are very c
 
 tab **Security**
 
-### Admin: Tables storing Input and Configurations
+### Admin: Tables Information used in DAGs
 
 tab **Admin**
 
-### Browse: Tables storing Airflow History and Scheduler Information
+### Browse: Tables storing Information about DAG and Task Runs
 
 tab **Browse**
 
