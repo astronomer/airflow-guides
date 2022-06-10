@@ -51,7 +51,7 @@ Changes to the Airflow metadata database configuration and its schema are very c
 
 ### Security: Tables related to User Information
 
-A set of tables starting with `ab_` bundles types of permissions for different sections of Airflow together to form roles which are assigned to individual users. As an admin user, you can access some of the content of these tables in the Airflow UI under the **Security** tab. It is also possible to query and modify users, roles and permissions via the Airflow REST API.
+A set of tables starting with `ab_` bundles types of permissions for different sections of Airflow together to form roles which are assigned to individual users. As an admin user, you can access some of the content of these tables in the Airflow UI under the **Security** tab. It is also possible to query and modify [users, roles and permissions](https://airflow.apache.org/docs/apache-airflow/1.10.6/security.html?highlight=ldap#rbac-ui-security) via the [Airflow REST API](https://airflow.apache.org/docs/apache-airflow/stable/stable-rest-api-ref.html).
 
 ### Admin: Tables storing Information used in DAGs
 
@@ -62,11 +62,11 @@ DAGs can retrieve and use a variety of information from the metadata database su
 - [XComs](https://www.astronomer.io/guides/airflow-passing-data-between-tasks)
 - [Pools](https://www.astronomer.io/guides/airflow-pools/)
 
-The information in these tables can be viewed and modified under the **Admin** tab in the Airflow UI or by using the Airflow REST API.  
+The information in these tables can be viewed and modified under the **Admin** tab in the Airflow UI or by using the [Airflow REST API](https://airflow.apache.org/docs/apache-airflow/stable/stable-rest-api-ref.html).  
 
 ### Browse: Tables storing Information about DAG and Task Runs
 
-Besides storing the metadata mentioned in the previous section, the Airflow metadata database is heavily used by the scheduler to keep track of past and current events. The majority of this data can be found under the **Browse** tab in the Airflow UI or queried via the Airflow REST API.
+Besides storing the metadata mentioned in the previous section, the Airflow metadata database is heavily used by the scheduler to keep track of past and current events. The majority of this data can be found under the **Browse** tab in the Airflow UI or queried via the [Airflow REST API](https://airflow.apache.org/docs/apache-airflow/stable/stable-rest-api-ref.html).
 
 - **DAG Runs** stores information on all past and current Dag Runs including if they were successful, scheduled or manually triggered and detailed timing information
 - **Jobs** contains data used by the scheduler to store information about past and current jobs of different types (`SchedulerJob`, `TriggererJob`, `LocalTaskJob`)
@@ -85,7 +85,7 @@ There are additional tables in the metadata database storing data ranging from D
 - Import errors will show up on top of your list of dags if they occur
 - DAG tags will show up underneath their respective DAG with a cyan background.
 
-Most of the information in these tables is accessible via the Airflow REST API.
+Most of the information in these tables is accessible via the [Airflow REST API](https://airflow.apache.org/docs/apache-airflow/stable/stable-rest-api-ref.html).
 
 ## Airflow Metadata Database Best Practices
 
@@ -118,12 +118,15 @@ Using the [stable REST API](https://airflow.apache.org/docs/apache-airflow/stabl
 ```python
 # import the request library
 import requests
+import os
 
-# set location and access information for your airflow instance
-# this example uses the default values for Astro CLI
+# provide the location of your airflow instance
 ENDPOINT_URL = "http://localhost:8080/"
-user_name = "admin"
-password = "admin"
+
+# in this example env variables were used to store login information
+# you will need to provide your own credentials
+user_name = os.environ['USERNAME_AIRFLOW_INSTANCE']
+password = os.environ['PASSWORD_AIRFLOW_INSTANCE']
 
 # query the API for successful task instances from all dags and all dag runs (~)
 req = requests.get(
@@ -141,12 +144,15 @@ Pausing and unpausing DAGs is a common action when running Airflow and while you
 ```python
 # import the request library
 import requests
+import os
 
-# set location and access information for your airflow instance
-# this example uses the default values for Astro CLI
+# provide the location of your airflow instance
 ENDPOINT_URL = "http://localhost:8080/"
-user_name = "admin"
-password = "admin"
+
+# in this example env variables were used to store login information
+# you will need to provide your own credentials
+user_name = os.environ['USERNAME_AIRFLOW_INSTANCE']
+password = os.environ['PASSWORD_AIRFLOW_INSTANCE']
 
 # data to update, for unpausing, simply set this to False
 update= {"is_paused": True}
@@ -169,12 +175,15 @@ Deleting the metadata of a DAG can be accomplished either by clicking the `trash
 ```python
 # import the request library
 import requests
+import os
 
-# set location and access information for your airflow instance
-# this example uses the default values for Astro CLI
+# provide the location of your airflow instance
 ENDPOINT_URL = "http://localhost:8080/"
-user_name = "admin"
-password = "admin"
+
+# in this example env variables were used to store login information
+# you will need to provide your own credentials
+user_name = os.environ['USERNAME_AIRFLOW_INSTANCE']
+password = os.environ['PASSWORD_AIRFLOW_INSTANCE']
 
 # specify which dag to delete
 dag_id = 'dag_to_delete'
@@ -201,6 +210,7 @@ from airflow.models.serialized_dag import SerializedDagModel
 import os
 
 # retrieving your SQL Alchemy connection
+# if you are using Astro CLI this env variable will be set up automatically
 sql_alchemy_conn = os.environ['AIRFLOW__CORE__SQL_ALCHEMY_CONN']
 
 conn_url = f'{sql_alchemy_conn}/postgres'
@@ -211,7 +221,6 @@ with Session(engine) as session:
     result = session.query(SerializedDagModel).first()
     print(result.get_dag_dependencies())
 ```
-
 
 ### Example: Retrieving Alembic Version
 
@@ -225,13 +234,14 @@ from sqlalchemy.orm import Session
 import os
 
 # retrieving your SQL Alchemy connection
+# if you are using Astro CLI this env variable will be set up automatically
 sql_alchemy_conn = os.environ['AIRFLOW__CORE__SQL_ALCHEMY_CONN']
 
 conn_url = f'{sql_alchemy_conn}/postgres'
 
 engine = create_engine(conn_url)
 
-# this is a direct query to the metadata database use at your own risk!
+# this is a direct query to the metadata database: use at your own risk!
 stmt = """SELECT version_num
         FROM alembic_version;"""
 
