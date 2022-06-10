@@ -51,7 +51,7 @@ Changes to the Airflow metadata database configuration and its schema are very c
 
 ### Security: Tables related to User Information
 
-A set of tables starting with `ab_` bundles types of permissions for different sections of Airflow together to form roles which are assigned to individual users. As an admin user you can access some of the content of these tables in the Airflow UI under the **Security** tab. It is also possible the query and modify users, roles and permissions via the Airflow REST API.
+A set of tables starting with `ab_` bundles types of permissions for different sections of Airflow together to form roles which are assigned to individual users. As an admin user, you can access some of the content of these tables in the Airflow UI under the **Security** tab. It is also possible to query and modify users, roles and permissions via the Airflow REST API.
 
 ### Admin: Tables storing Information used in DAGs
 
@@ -99,13 +99,13 @@ Most of the information in these tables is accessible via the Airflow REST API.
 
 5. Since the metadata database is critical for the scalability and resiliency of your Airflow deployment, it is best practice at least for production Airflow deployments to use a managed database service, for example [AWS RDS](https://aws.amazon.com/rds/) or [Google Cloud SQL](https://cloud.google.com/sql).
 
-## Example Queries
+## Examples Methods for Accessing Data of Interest
 
 The preferred methods for retrieving data from the metadata database are using the Airflow UI or making a GET request to the [stable Airflow REST API](https://airflow.apache.org/docs/apache-airflow/stable/stable-rest-api-ref.html). Between the UI and API large parts of the metadata database can be viewed without the risk of accidentally making harmful changes to the database that direct querying would pose. For use cases where neither the Airflow UI nor the REST API can provide sufficient data it is recommended to use SQLAlchemy to query the metadata database in order to have an additional layer of abstraction on top of the tables, which makes your code less sensitive to minor schema changes.
 
 In this section of the guide we provide a few examples for how you can retrieve specific information from the metadata database.
 
-## Example: Retrieving Number of Successfully Completed Tasks
+### Example: Retrieving Number of Successfully Completed Tasks
 
 A common reason users may want to access the metadata database is to get metrics like the total count of successfully completed tasks.
 
@@ -164,7 +164,7 @@ print(req.text)
 
 ### Example: Delete a DAG
 
-Deleting the metadata of a DAG can be accomplished either by clicking the trashcan icon in the Airflow UI or sending a DELETE request via the Airflow REST API. This is not possible while the DAG is still running and will not delete the python file in which the DAG is defined, meaning the DAG will appear again in your UI with no history at the next parsing of the `/dags` folder from the scheduler.
+Deleting the metadata of a DAG can be accomplished either by clicking the `trashcan` icon in the Airflow UI or sending a `DELETE` request via the Airflow REST API. This is not possible while the DAG is still running, and will not delete the Python file in which the DAG is defined, meaning the DAG will appear again in your UI with no history at the next parsing of the `/dags` folder from the scheduler.
 
 ```python
 # import the request library
@@ -190,7 +190,7 @@ print(req.text)
 
 ### Example: Retrieve all DAG dependencies
 
-Inter DAG dependencies are a powerful tool to get your data orchestration to the next level, including for custom solutions to make sure downstream DAGs get adjusted when changes are made to a DAG with dependencies. These dependencies are visualized in the Airflow UI under **Browse** -> **DAG Dependencies** but currently not accessible through the Airflow REST API.
+Cross-DAG dependencies are a powerful tool to take your data orchestration to the next level. Retrieving data about cross-DAG dependencies from the metadata database can be useful for programmatically implementing custom solutions, for example to make sure downstream DAGs are paused if an upstream DAG is paused. These dependencies can be visualized in the Airflow UI under **Browse** -> **DAG Dependencies**, but are currently not accessible through the Airflow REST API.
 
 In situations like these it is possible to use SQLAlchemy with [Airflow models](https://airflow.apache.org/docs/apache-airflow/stable/_api/airflow/models/index.html) to access data from the metadata database similar to how the webserver interacts with it. Querying the metadata database in this way is preferred over direct SQL statements because it adds an additional layer of abstraction that makes your code less sensitive to minor schema changes. If you are running Airflow in a dockerized setting you will have to run the script below from within your scheduler container.
 
