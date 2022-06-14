@@ -144,6 +144,8 @@ It is also possible to navigate to **Browse** -> **Task Instances** in the Airfl
 
 Pausing and unpausing DAGs is a common action when running Airflow and while you can achieve this by manually toggling DAGs in the Airflow UI, depending on your use case and the number of DAGs you want to toggle this might be tedious. The Airflow REST API offers a simple way to pause and unpause DAGs by sending a PATCH request.
 
+The Python script below sends a PATCH request to the Airflow API to update the entry for the DAG with a specific ID (here `example_dag_basic`), which is paused (`update_mask=is_paused`) with a json that will set the `is_paused` property to `True` therefore unpausing the DAG.
+
 ```python
 # import the request library
 import requests
@@ -174,6 +176,8 @@ print(req.text)
 ### Example: Delete a DAG
 
 Deleting the metadata of a DAG can be accomplished either by clicking the `trashcan` icon in the Airflow UI or sending a `DELETE` request via the Airflow REST API. This is not possible while the DAG is still running, and will not delete the Python file in which the DAG is defined, meaning the DAG will appear again in your UI with no history at the next parsing of the `/dags` folder from the scheduler.
+
+The Python script below sends a DELETE request to a DAG with a specific ID (here: `dag_to_delete`).
 
 ```python
 # import the request library
