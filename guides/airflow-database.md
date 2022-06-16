@@ -53,11 +53,11 @@ There are several types of metadata stored in the metadata database.
 
 Most of this data can be queried using the [Airflow REST API](https://airflow.apache.org/docs/apache-airflow/stable/stable-rest-api-ref.html).
 
-### Security (User Information)
+### User Information (Security)
 
 A set of tables store information about Airflow users, including their [permissions](https://airflow.apache.org/docs/apache-airflow/stable/security/index.html) to various Airflow features. As an admin user, you can access some of the content of these tables in the Airflow UI under the **Security** tab.
 
-### Admin (DAG Configurations and Variables)
+### DAG Configurations and Variables (Admin)
 
 DAGs can retrieve and use a variety of information from the metadata database such as:
 
@@ -68,7 +68,7 @@ DAGs can retrieve and use a variety of information from the metadata database su
 
 The information in these tables can be viewed and modified under the **Admin** tab in the Airflow UI.
 
-### Browse (DAG and Task Runs)
+### DAG and Task Runs (Browse)
 
 The scheduler depends on the Airflow metadata database to keep track of past and current events. The majority of this data can be found under the **Browse** tab in the Airflow UI.
 
