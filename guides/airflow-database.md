@@ -10,7 +10,7 @@ tags: ["Database", "SQL", "Components"]
 
 The metadata database is a core component of Airflow. It stores crucial information like the configuration of your Airflow environment's roles and permissions, as well as all metadata for past and present DAG and task runs.
 
-A healthy metadata database is critical for your Airflow environment. Losing data stored in the metadata database can can both interfere with running DAGs and prevent you from accessing data for past DAG runs. As with any core Airflow component, having a backup and disaster recovery plan in place for the metadata database is essential.
+A healthy metadata database is critical for your Airflow environment. Losing data stored in the metadata database can both interfere with running DAGs and prevent you from accessing data for past DAG runs. As with any core Airflow component, having a backup and disaster recovery plan in place for the metadata database is essential.
 
 In this guide, we will explain everything you need to know about the Airflow metadata database to ensure a healthy Airflow environment, including:
 
@@ -53,11 +53,11 @@ There are several types of metadata stored in the metadata database.
 
 Most of this data can be queried using the [Airflow REST API](https://airflow.apache.org/docs/apache-airflow/stable/stable-rest-api-ref.html).
 
-### UI Tab Security: Tables related to User Information
+### Security (User Information)
 
 A set of tables store information about Airflow users, including their [permissions](https://airflow.apache.org/docs/apache-airflow/1.10.6/security.html?highlight=ldap#rbac-ui-security) to various Airflow features. As an admin user, you can access some of the content of these tables in the Airflow UI under the **Security** tab.
 
-### UI Tab Admin: Tables storing Information used in DAGs
+### Admin (DAG Configurations and Variables)
 
 DAGs can retrieve and use a variety of information from the metadata database such as:
 
@@ -68,7 +68,7 @@ DAGs can retrieve and use a variety of information from the metadata database su
 
 The information in these tables can be viewed and modified under the **Admin** tab in the Airflow UI.
 
-### UI Tab Browse: Tables storing Information about DAG and Task Runs
+### Browse (DAG and Task Runs)
 
 The scheduler depends on the Airflow metadata database to keep track of past and current events. The majority of this data can be found under the **Browse** tab in the Airflow UI.
 
@@ -92,7 +92,7 @@ There are additional tables in the metadata database storing data ranging from D
 
 1. When upgrading or downgrading Airflow, always follow the [recommended steps for changing Airflow versions](https://airflow.apache.org/docs/apache-airflow/stable/installation/upgrading.html?highlight=upgrade): back up the metadata database, check for deprecated features, pause all DAGs, and make sure no tasks are running.
 
-2. Use caution when [pruning old records](https://airflow.apache.org/docs/apache-airflow/stable/usage-cli.html#purge-history-from-metadata-database) from your database with `db clean`, avoid pruning records that future runs might depend on e.g. via the `depends_on_past` argument. The `db clean` command allows you to delete records older than `--clean-before-timestamp` from all metadata database tables or a list of tables specified.
+2. Use caution when [pruning old records](https://airflow.apache.org/docs/apache-airflow/stable/usage-cli.html#purge-history-from-metadata-database) from your database with `db clean`. For example, avoid pruning records could affect future runs for tasks that use the `depends_on_past` argument. The `db clean` command allows you to delete records older than `--clean-before-timestamp` from all metadata database tables or a list of tables specified.
 
 3. Accessing the metadata database from within a DAG (for example by fetching a variable, pulling from XCom, or using a connection ID) requires compute resources. It is therefore best practice to keep these actions within tasks, which creates a connection to the database only for the run time of the task. If these connections are written as top level code, connections are created every time the scheduler parses the DAG file, which is every 30 seconds by default!
 
@@ -233,7 +233,7 @@ with Session(engine) as session:
 
 In very rare cases, you might need a value from the metadata database which is not accessible through any of the methods we've discussed. In this case, you can query the metadata database directly. Before you do so, remember that you can corrupt your Airflow instance by directly manipulating the metadata database, especially if the schema changes between upgrades.
 
-The query below retrieves the current [alembic version id](https://alembic.sqlalchemy.org/en/latest/), which is not accessible through any of the recommended ways of interacting with the metadata database. Database administrators might need the version id for complex data migration operations.
+The query below retrieves the current [alembic version ID](https://alembic.sqlalchemy.org/en/latest/), which is not accessible through any of the recommended ways of interacting with the metadata database. Database administrators might need the version ID for complex data migration operations.
 
 ```python
 from sqlalchemy import create_engine
