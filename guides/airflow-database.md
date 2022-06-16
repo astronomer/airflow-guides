@@ -55,7 +55,7 @@ Most of this data can be queried using the [Airflow REST API](https://airflow.ap
 
 ### Security (User Information)
 
-A set of tables store information about Airflow users, including their [permissions](https://airflow.apache.org/docs/apache-airflow/1.10.6/security.html?highlight=ldap#rbac-ui-security) to various Airflow features. As an admin user, you can access some of the content of these tables in the Airflow UI under the **Security** tab.
+A set of tables store information about Airflow users, including their [permissions](https://airflow.apache.org/docs/apache-airflow/stable/security/index.html) to various Airflow features. As an admin user, you can access some of the content of these tables in the Airflow UI under the **Security** tab.
 
 ### Admin (DAG Configurations and Variables)
 
@@ -92,7 +92,7 @@ There are additional tables in the metadata database storing data ranging from D
 
 1. When upgrading or downgrading Airflow, always follow the [recommended steps for changing Airflow versions](https://airflow.apache.org/docs/apache-airflow/stable/installation/upgrading.html?highlight=upgrade): back up the metadata database, check for deprecated features, pause all DAGs, and make sure no tasks are running.
 
-2. Use caution when [pruning old records](https://airflow.apache.org/docs/apache-airflow/stable/usage-cli.html#purge-history-from-metadata-database) from your database with `db clean`. For example, avoid pruning records could affect future runs for tasks that use the `depends_on_past` argument. The `db clean` command allows you to delete records older than `--clean-before-timestamp` from all metadata database tables or a list of tables specified.
+2. Use caution when [pruning old records](https://airflow.apache.org/docs/apache-airflow/stable/usage-cli.html#purge-history-from-metadata-database) from your database with `db clean`. For example, pruning records could affect future runs for tasks that use the `depends_on_past` argument. The `db clean` command allows you to delete records older than `--clean-before-timestamp` from all metadata database tables or a list of tables specified.
 
 3. Accessing the metadata database from within a DAG (for example by fetching a variable, pulling from XCom, or using a connection ID) requires compute resources. It is therefore best practice to keep these actions within tasks, which creates a connection to the database only for the run time of the task. If these connections are written as top level code, connections are created every time the scheduler parses the DAG file, which is every 30 seconds by default!
 
