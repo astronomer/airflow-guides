@@ -8,640 +8,251 @@ tags: ["Database", "SQL", "Components"]
 
 ## Overview
 
-> Note: This guide has been written and tested with Airflow Airflow 1.10.10. New tables may be introduced in newer versions. 
+The metadata database is a core component of Airflow. It stores crucial information like the configuration of your Airflow environment's roles and permissions, as well as all metadata for past and present DAG and task runs.
 
-We at Astronomer often get asked about the structure of the underlying Airflow metadata database. The Airflow metadata database stores configurations, such as variables and connections, user information, roles, and policies. It is also the Airflow Scheduler's source of truth for all metadata regarding DAGs, schedule intervals, statistics from each run, and tasks. 
+A healthy metadata database is critical for your Airflow environment. Losing data stored in the metadata database can both interfere with running DAGs and prevent you from accessing data for past DAG runs. As with any core Airflow component, having a backup and disaster recovery plan in place for the metadata database is essential.
 
-Airflow uses SQLAlchemy and Object Relational Mapping (ORM) in Python to connect and interact with the underlying metadata database from the application layer. Thus, any database supported by [SQLAlchemy](https://www.sqlalchemy.org/) can theoretically be configured to host Airflow's metadata. On Astronomer, each Airflow deployment is equipped with PostgreSQL database for this purpose. The following guide details all of the tables available in the database repository including dependencies and the complete ERD. 
+In this guide, we will explain everything you need to know about the Airflow metadata database to ensure a healthy Airflow environment, including:
 
-Even though we don't recommend modifying the values directly on the database, as doing so might affect dependencies, understanding the underlying structure can be very useful when it comes to building your own reports or querying directly against the database. You can find some useful queries that go directly against these tables in our [Useful SQL queries for Apache Airflow](https://www.astronomer.io/guides/airflow-queries/) guide. 
+- Database specifications.
+- Important content stored in the database.
+- Best practices for using the metadata database.
+- Different methods for accessing data of interest.
 
+> **Note**: We strongly advise against directly modifying the metadata database, as this can cause dependency issues and corrupt your Airflow instance.
 
-## ERD Diagram
+## Database Specifications
 
-The following diagram displays all the tables from the Airflow database. 
+Airflow uses SQLAlchemy and Object Relational Mapping (ORM) in Python to connect with the metadata database from the application layer. Any database supported by [SQLAlchemy](https://www.sqlalchemy.org/) can theoretically be configured to host Airflow's metadata. The most common databases used are:
 
-![Airflow DB](https://assets2.astronomer.io/main/guides/airflow_db.png)
+- Postgres
+- MySQL
+- MSSQL
+- SQLite
 
-------------------------------------------------------------------------
+While SQLite is the default on Apache Airflow, Postgres is by far the most common choice and is recommended for most use cases by the Airflow community. Astronomer uses Postgres for all of its Airflow environments, including local environments running with the Astro CLI and deployed environments on the cloud.
 
-## Tables
+> **Note:** When configuring a database backend, make sure your version is fully supported by checking the [Airflow documentation](https://airflow.apache.org/docs/apache-airflow/stable/howto/set-up-database.html#choosing-database-backend).
 
-The Airflow metadata database has a total of 30 tables  tables are stored on the public schema by default. The following describe the table structure and reference for the Airflow metadata tables. 
+You should also consider the size of your metadata database when setting up your Airflow environment. Production environments typically use a managed database service, which includes features like autoscaling and automatic backups. The size you need will depend heavily on the workloads running in your Airflow instance. For reference, Apache Airflow uses a 2GB SQLite database by default, but this is intended for development purposes only. The Astro CLI starts Airflow environments with a 1GB Postgres database.
 
-### public.ab_permission
- 
-**Table Structure:**
+Changes to the Airflow metadata database configuration and its schema are very common and happen with almost every minor update. For this reason, prior to Airflow 2.3 you should not downgrade your Airflow instance in place. With Airflow 2.3 the `db downgrade` command was added, providing an option to [downgrade Airflow](https://airflow.apache.org/docs/apache-airflow/2.3.0/usage-cli.html#downgrading-airflow).
 
-------------------------------------------------------------------------
+> **Note**: Always backup your database before running any database operations!
 
-|  F-Key   | Name  |Type | Description |
-|----------|-------|--------|------------------|
-|          | id    |integer | *PRIMARY KEY*    |
-|          | name  |character varying(100)  | *UNIQUE NOT NULL* |
+## Content of the Metadata Database
 
-**Tables referencing this one via Foreign Key Constraints:**
+> **Note**: For many use cases you can access contents from the metadata database via the Airflow UI or the [stable REST API](https://airflow.apache.org/docs/apache-airflow/stable/stable-rest-api-ref.html). These points of access always beat querying the metadata database directly!
 
--   [public.ab\_permission\_view](#public.ab\_permission\_view)
+There are several types of metadata stored in the metadata database.
 
-------------------------------------------------------------------------
+- User login information and permissions.
+- Information used in DAGs, like variables, connections and XComs.
+- Data about DAG and task runs which are generated by the scheduler.
+- Other minor tables, such as tables which store DAG code in different formats or information about import errors.
 
-### public.ab\_permission\_view
+Most of this data can be queried using the [Airflow REST API](https://airflow.apache.org/docs/apache-airflow/stable/stable-rest-api-ref.html).
 
-**Table Structure:**
+### User Information (Security)
 
-------------------------------------------------------------------------
+A set of tables store information about Airflow users, including their [permissions](https://airflow.apache.org/docs/apache-airflow/stable/security/index.html) to various Airflow features. As an admin user, you can access some of the content of these tables in the Airflow UI under the **Security** tab.
 
-|F-Key                                                 |Name            |Type      |Description   |
-|-------------------|---------------|---------|-------------|
-|                                                      |id              |integer   |*PRIMARY KEY*|
-|  [public.ab\_permission.id](#public.ab\_permission)   |permission\_id   |integer   |*UNIQUE\#1*|
-|  [public.ab\_view\_menu.id](#public.ab\_view\_menu)    |view\_menu\_id    |integer   |*UNIQUE\#1*|
+### DAG Configurations and Variables (Admin)
 
-**Tables referencing this one via Foreign Key Constraints:**
+DAGs can retrieve and use a variety of information from the metadata database such as:
 
--   [public.ab\_permission\_view\_role](#public.ab\_permission\_view\_role)
+- [Variables](https://airflow.apache.org/docs/apache-airflow/stable/howto/variable.html).
+- [Connections](https://www.astronomer.io/guides/connections).
+- [XComs](https://www.astronomer.io/guides/airflow-passing-data-between-tasks).
+- [Pools](https://www.astronomer.io/guides/airflow-pools/).
 
-------------------------------------------------------------------------
+The information in these tables can be viewed and modified under the **Admin** tab in the Airflow UI.
 
-### public.ab\_permission\_view\_role
+### DAG and Task Runs (Browse)
 
-**Table Structure:**
+The scheduler depends on the Airflow metadata database to keep track of past and current events. The majority of this data can be found under the **Browse** tab in the Airflow UI.
 
-------------------------------------------------------------------------
+- **DAG Runs** stores information on all past and current DAG runs including whether they were successful, whether they were scheduled or manually triggered, and detailed timing information.
+- **Jobs** contains data used by the scheduler to store information about past and current jobs of different types (`SchedulerJob`, `TriggererJob`, `LocalTaskJob`).
+- **Audit logs** shows events of various types that were logged to the metadata database (for example, DAGs being paused or tasks being run).
+- **Task Instances** contains a record of every task run with a variety of attributes such as the priority weight, duration, or the URL to the task log.
+- **Task Reschedule** lists tasks that have been rescheduled.
+- **Triggers** shows all currently running [triggers](https://www.astronomer.io/guides/deferrable-operators).
+- **SLA Misses** keeps track of tasks that missed their [SLA](https://www.astronomer.io/guides/error-notifications-in-airflow/#airflow-slas).
 
-|F-Key  |Name |Type |Description|
-|------|----|----|----------|
-|       |id   |integer |   *PRIMARY KEY*|
-|[public.ab\_permission\_view.id](#public.ab\_permission\_view)   |permission\_view\_id   |integer   |*UNIQUE\#1*|
-|[public.ab\_role.id](#public.ab\_role)                         |role\_id              |integer   |*UNIQUE\#1*|
+### Other Tables
 
-------------------------------------------------------------------------
+There are additional tables in the metadata database storing data ranging from DAG tags over serialized DAG code, import errors to current states of sensors. Some of the information in these tables will be visible in the Airflow UI in various places:
 
-### public.ab\_register\_user
+- The source code of DAGs can be found by clicking on a DAG name from the main view and then going to the **Code** view.
+- Import errors appear at the top of the **DAGs** view in the UI.
+- DAG tags will appear underneath their respective DAG with a cyan background.
 
-**Table Structure:**
+## Airflow Metadata Database Best Practices
 
-------------------------------------------------------------------------
+1. When upgrading or downgrading Airflow, always follow the [recommended steps for changing Airflow versions](https://airflow.apache.org/docs/apache-airflow/stable/installation/upgrading.html?highlight=upgrade): back up the metadata database, check for deprecated features, pause all DAGs, and make sure no tasks are running.
 
-|  F-Key  |Name                |Type                          |Description|
-|------- |-------------------|-----------------------------|------------------|
-||          id                  |integer                       |*PRIMARY KEY*
-||          first_name          |character varying(64)         |*NOT NULL*
-||          last_name           |character varying(64)         |*NOT NULL*
-||          username            |character varying(64)         |*UNIQUE NOT NULL*
-||          password            |character varying(256)        |
-||          email               |character varying(64)         |*NOT NULL*
-||          registration_date   |timestamp without time zone   |
-||          registration_hash   |character varying(256)        |
+2. Use caution when [pruning old records](https://airflow.apache.org/docs/apache-airflow/stable/usage-cli.html#purge-history-from-metadata-database) from your database with `db clean`. For example, pruning records could affect future runs for tasks that use the `depends_on_past` argument. The `db clean` command allows you to delete records older than `--clean-before-timestamp` from all metadata database tables or a list of tables specified.
 
-------------------------------------------------------------------------
+3. Accessing the metadata database from within a DAG (for example by fetching a variable, pulling from XCom, or using a connection ID) requires compute resources. It is therefore best practice to keep these actions within tasks, which creates a connection to the database only for the run time of the task. If these connections are written as top level code, connections are created every time the scheduler parses the DAG file, which is every 30 seconds by default!
 
-### public.ab_role
+4. Memory in the Airflow metadata database can be limited depending on your setup, and running low on memory in your metadata database can cause performance issues in Airflow. This is one of the many reasons why we highly advise against moving large amounts of data via XCom, and recommend using a cleanup and archiving mechanism in any production deployments.
 
-**Table Structure:**
+5. Since the metadata database is critical for the scalability and resiliency of your Airflow deployment, it is best practice to use a managed database service for production environments, for example [AWS RDS](https://aws.amazon.com/rds/) or [Google Cloud SQL](https://cloud.google.com/sql).
 
-------------------------------------------------------------------------
+## Examples: Programmatically Access the Metadata Database
 
-|F-Key     |Name   |Type                    |Description|
-|-------  |------|-----------------------|-------------------|
-|          |id     |integer                 |*PRIMARY KEY*|
-|          |name   |character varying(64)   |*UNIQUE NOT NULL*|
+When possible, the best methods for retrieving data from the metadata database are using the Airflow UI or making a GET request to the [stable Airflow REST API](https://airflow.apache.org/docs/apache-airflow/stable/stable-rest-api-ref.html). Between the UI and API, much of the metadata database can be viewed without the risk inherent in direct querying. For use cases where neither the Airflow UI nor the REST API can provide sufficient data, we recommended using SQLAlchemy to query the metadata database. This provides an additional layer of abstraction on top of the tables, which makes your code less sensitive to minor schema changes.
 
-**Tables referencing this one via Foreign Key Constraints:**
+In this section of the guide we provide a few examples for how you can retrieve specific information from the metadata database.
 
--   [public.ab\_permission\_view\_role](#public.ab-permission\_view\_role)
--   [public.ab\_user\_role](#public.ab\_user\_role)
+### Example: Retrieving Number of Successfully Completed Tasks
 
-------------------------------------------------------------------------
+A common reason users may want to access the metadata database is to get metrics like the total count of successfully completed tasks.
 
-### public.ab_user
+Using the [stable REST API](https://airflow.apache.org/docs/apache-airflow/stable/stable-rest-api-ref.html#section/Overview) to query the metadata database is the recommended way to programmatically retrieve this information. Make sure you have [correctly authorized API use](https://airflow.apache.org/docs/apache-airflow/stable/security/api.html) in your Airflow instance and set the `ENDPOINT_URL` to the correct location (for local development: `http://localhost:8080/`).
 
-**Table Structure:**
+The Python script below uses the `requests` library to make a GET request to the Airflow API for all successful (`state=success`) Task Instances of all (shorthand: `~`) DAG runs of all (`~`) DAGs in the Airflow instance. Authentication is provided via a user name and password stored as environment variables. By printing the `total_entries` property of the API response json one can get a count of all successfully completed tasks.
 
-------------------------------------------------------------------------
+```python
+# import the request library
+import requests
+import os
 
-|F-Key                                        |Name                 |Type                          |Description
-|--------------------------------------------|--------------------|-----------------------------|-------------------
-|                                             |  id                 |integer                       |*PRIMARY KEY*
-|                                             |  first_name         |character varying(64)         |*NOT NULL*
-|                                             |  last_name          |character varying(64)         |*NOT NULL*
-|                                             |  username           |character varying(64)         |*UNIQUE NOT NULL*
-|                                             |  password           |character varying(256)        |
-|                                             |  active             |boolean                       |
-|                                             |  email              |character varying(64)         |*UNIQUE NOT NULL*
-|                                             |  last_login         |timestamp without time zone   |
-|                                             |  login_count        |integer                       |
-|                                             |  fail\_login\_count   |integer                       |
-|                                             |  created_on         |timestamp without time zone   |
-|                                             |  changed_on         |timestamp without time zone   |
-|  [public.ab\_user.id](#public.ab\_user) |  created\_by\_fk      |integer                       |
-|  [public.ab\_user.id](#public.ab\_user) |  changed\_by\_fk      |integer                       |
+# provide the location of your airflow instance
+ENDPOINT_URL = "http://localhost:8080/"
 
-**Tables referencing this one via Foreign Key Constraints:**
+# in this example env variables were used to store login information
+# you will need to provide your own credentials
+user_name = os.environ['USERNAME_AIRFLOW_INSTANCE']
+password = os.environ['PASSWORD_AIRFLOW_INSTANCE']
 
--   [public.ab\_user](#public.ab\_user)
--   [public.ab\_user\_role](#public.ab\_user\_role)
+# query the API for successful task instances from all dags and all dag runs (~)
+req = requests.get(
+  f"{ENDPOINT_URL}/api/v1/dags/~/dagRuns/~/taskInstances?state=success",  
+  auth=(user_name, password))
 
-------------------------------------------------------------------------
+# from the API response print the value for "total entries"
+print(req.json()['total_entries'])
+```
 
-### public.ab\_user\_role
+It is also possible to navigate to **Browse** -> **Task Instances** in the Airflow UI and filter the task instances for all with a state of `success`. The `Record Count` will be on the right side of your screen.
 
-**Table Structure:**
+![Count successful tasks Airflow UI](https://assets2.astronomer.io/main/guides/airflow-database/successful_tasks_UI.png)
 
-------------------------------------------------------------------------
+### Example: Pause and Unpause a DAG
 
-|F-Key                                        |Name      |Type      |Description
-|------------------------------------------- |-------- |-------- |--------------
-|                                             |id        |integer   |*PRIMARY KEY*
-|[public.ab\_user.id](#public.ab\_user)   |user\_id   |integer   |*UNIQUE\#1*
-|[public.ab\_role.id](#public.ab\_role)   |role\_id   |integer   |*UNIQUE\#1*
+Pausing and unpausing DAGs is a common action when running Airflow and while you can achieve this by manually toggling DAGs in the Airflow UI, depending on your use case and the number of DAGs you want to toggle this might be tedious. The Airflow REST API offers a simple way to pause and unpause DAGs by sending a PATCH request.
 
-------------------------------------------------------------------------
-
-### public.ab\_view\_menu
- 
-**Table Structure:**
+The Python script below sends a PATCH request to the Airflow API to update the entry for the DAG with a specific ID (here `example_dag_basic`), which is paused (`update_mask=is_paused`) with a json that will set the `is_paused` property to `True` therefore unpausing the DAG.
 
-------------------------------------------------------------------------
+```python
+# import the request library
+import requests
+import os
 
-|F-Key   |Name   |Type                     |Description
-|------ |----- |----------------------- |-------------------
-|        |id     |integer                  |*PRIMARY KEY*
-|        |name   |character varying(100)   |*UNIQUE NOT NULL*
+# provide the location of your airflow instance
+ENDPOINT_URL = "http://localhost:8080/"
 
-**Tables referencing this one via Foreign Key Constraints:**
+# in this example env variables were used to store login information
+# you will need to provide your own credentials
+user_name = os.environ['USERNAME_AIRFLOW_INSTANCE']
+password = os.environ['PASSWORD_AIRFLOW_INSTANCE']
 
--   [public.ab\_permission\_view](#public.ab\_permission\_view)
+# data to update, for unpausing, simply set this to False
+update= {"is_paused": True}
+# specify the dag to pause/unpause
+dag_id = example_dag_basic
 
-------------------------------------------------------------------------
+# query the API to patch all tasks as paused
+req = requests.patch(
+  f"{ENDPOINT_URL}/api/v1/dags/{dag_id}?update_mask=is_paused", json=update,
+  auth=(user_name, password))
 
-### public.alembic_version
- 
-**Table Structure:**
+# print the API response
+print(req.text)
+```
 
-------------------------------------------------------------------------
+### Example: Delete a DAG
 
-|F-Key   |Name          |Type                    |Description
-|------- |------------ |---------------------- |--------------
-|        |version_num   |character varying(32)   |*PRIMARY KEY*
+Deleting the metadata of a DAG can be accomplished either by clicking the `trashcan` icon in the Airflow UI or sending a `DELETE` request via the Airflow REST API. This is not possible while the DAG is still running, and will not delete the Python file in which the DAG is defined, meaning the DAG will appear again in your UI with no history at the next parsing of the `/dags` folder from the scheduler.
 
-------------------------------------------------------------------------
+The Python script below sends a DELETE request to a DAG with a specific ID (here: `dag_to_delete`).
 
-### public.chart
- 
-**Table Structure:**
+```python
+# import the request library
+import requests
+import os
 
-------------------------------------------------------------------------
+# provide the location of your airflow instance
+ENDPOINT_URL = "http://localhost:8080/"
 
-|F-Key                                    |Name              |Type                       |Description
-|---------------------------------------- |---------------- |------------------------- |--------------
-|                                         |id                |serial                     |*PRIMARY KEY*
-|                                         |label             |character varying(200)     |
-|                                         |conn_id           |character varying(250)     |*NOT NULL*
-|[public.users.id](#public.users)   |user_id           |integer                    |
-|                                         |chart_type        |character varying(100)     |
-|                                         |sql_layout        |character varying(50)      |
-|                                         |sql               |text                       |
-|                                         |y\_log\_scale       |boolean                    |
-|                                         |show_datatable    |boolean                    |
-|                                         |show_sql          |boolean                    |
-|                                         |height            |integer                    |
-|                                         |default_params    |character varying(5000)    |
-|                                         |x\_is\_date         |boolean                    |
-|                                         |iteration_no      |integer                    |
-|                                         |last_modified     |timestamp with time zone   |
+# in this example env variables were used to store login information
+# you will need to provide your own credentials
+user_name = os.environ['USERNAME_AIRFLOW_INSTANCE']
+password = os.environ['PASSWORD_AIRFLOW_INSTANCE']
 
-------------------------------------------------------------------------
+# specify which dag to delete
+dag_id = 'dag_to_delete'
 
-### public.connection
+# send the deletion request
+req = requests.delete(
+  f"{ENDPOINT_URL}/api/v1/dags/{dag_id}",
+  auth=(user_name, password))
 
-**Table Structure:**
+# print the API response
+print(req.text)
+```
 
-------------------------------------------------------------------------
+### Example: Retrieve all DAG dependencies
 
-|F-Key   |Name                 |Type                      |Description
-|------ |------------------- |------------------------ |--------------
-|        |id                   |serial                    |*PRIMARY KEY*
-|        |conn_id              |character varying(250)    |
-|        |conn_type            |character varying(500)    |
-|        |host                 |character varying(500)    |
-|        |schema               |character varying(500)    |
-|        |login                |character varying(500)    |
-|        |password             |character varying(500)    |
-|        |port                 |integer                   |
-|        |extra                |character varying(5000)   |
-|        |is_encrypted         |boolean                   |
-|        |is\_extra\_encrypted   |boolean                   |
+Cross-DAG dependencies are a powerful tool to take your data orchestration to the next level. Retrieving data about cross-DAG dependencies from the metadata database can be useful for programmatically implementing custom solutions, for example to make sure downstream DAGs are paused if an upstream DAG is paused. These dependencies can be visualized in the Airflow UI under **Browse** -> **DAG Dependencies**, but they are not accessible through the Airflow REST API.
 
-------------------------------------------------------------------------
+To programmatically access this information, you can use SQLAlchemy with [Airflow models](https://airflow.apache.org/docs/apache-airflow/stable/_api/airflow/models/index.html) to access data from the metadata database. Note that if you are running Airflow in a Dockerized setting, you have to run the script below from within your scheduler container.
 
-### public.dag
+```python
+from sqlalchemy import create_engine
+from sqlalchemy.orm import Session
+from airflow.models.serialized_dag import SerializedDagModel
+import os
 
-**Table Structure:**
+# retrieving your SQL Alchemy connection
+# if you are using Astro CLI this env variable will be set up automatically
+sql_alchemy_conn = os.environ['AIRFLOW__CORE__SQL_ALCHEMY_CONN']
 
-------------------------------------------------------------------------
+conn_url = f'{sql_alchemy_conn}/postgres'
 
-|F-Key   |Name                 |Type                       |Description
-|------- |------------------- |------------------------- |--------------
-|        |dag_id               |character varying(250)     |*PRIMARY KEY*
-|        |is_paused            |boolean                    |
-|        |is_subdag            |boolean                    |
-|        |is_active            |boolean                    |
-|        |last\_scheduler\_run   |timestamp with time zone   |
-|        |last_pickled         |timestamp with time zone   |
-|        |last_expired         |timestamp with time zone   |
-|        |scheduler_lock       |boolean                    |
-|        |pickle_id            |integer                    |
-|        |fileloc              |character varying(2000)    |
-|        |owners               |character varying(2000)    |
-|        |description          |text                       |
-|        |default_view         |character varying(25)      |
-|        |schedule_interval    |text                       |
-|        |root\_dag\_id          |character varying(250)     |
+engine = create_engine(conn_url)
 
-**Indexes:**
+with Session(engine) as session:
+    result = session.query(SerializedDagModel).first()
+    print(result.get_dag_dependencies())
+```
 
--   **idx\_root\_dag\_id** root\_dag\_id
+### Example: Retrieving Alembic Version
 
-------------------------------------------------------------------------
+In very rare cases, you might need a value from the metadata database which is not accessible through any of the methods we've discussed. In this case, you can query the metadata database directly. Before you do so, remember that you can corrupt your Airflow instance by directly manipulating the metadata database, especially if the schema changes between upgrades.
 
-### public.dag_pickle
- 
-**Table Structure:**
+The query below retrieves the current [alembic version ID](https://alembic.sqlalchemy.org/en/latest/), which is not accessible through any of the recommended ways of interacting with the metadata database. Database administrators might need the version ID for complex data migration operations.
 
-------------------------------------------------------------------------
+```python
+from sqlalchemy import create_engine
+from sqlalchemy.orm import Session
+import os
 
-|F-Key   |Name           |Type                       |Description
-|------ |------------- |------------------------- |--------------
-|        |id             |serial                     |*PRIMARY KEY*
-|        |pickle         |bytea                      |
-|        |created_dttm   |timestamp with time zone   |
-|        |pickle_hash    |bigint                     |
+# retrieving your SQL Alchemy connection
+# if you are using Astro CLI this env variable will be set up automatically
+sql_alchemy_conn = os.environ['AIRFLOW__CORE__SQL_ALCHEMY_CONN']
 
-------------------------------------------------------------------------
+conn_url = f'{sql_alchemy_conn}/postgres'
 
-### public.dag_run
- 
-**Table Structure:**
+engine = create_engine(conn_url)
 
-------------------------------------------------------------------------
+# this is a direct query to the metadata database: use at your own risk!
+stmt = """SELECT version_num
+        FROM alembic_version;"""
 
-|F-Key   |Name               |Type                       |Description
-|------ |----------------- |------------------------- |----------------------
-|        |id                 |serial                     |*PRIMARY KEY*
-|        |dag_id             |character varying(250)     |*UNIQUE\#2 UNIQUE\#1*
-|        |execution_date     |timestamp with time zone   |*UNIQUE\#2*
-|        |state              |character varying(50)      |
-|        |run_id             |character varying(250)     |*UNIQUE\#1*
-|        |external_trigger   |boolean                    |
-|        |conf               |bytea                      |
-|        |end_date           |timestamp with time zone   |
-|        |start_date         |timestamp with time zone   |
-
-**Indexes:**
-
--   **dag\_id\_state** dag_id, state
-
-------------------------------------------------------------------------
-
-### public.import_error
-
-**Table Structure:**
-
-------------------------------------------------------------------------
-
-|F-Key   |Name         |Type                       |Description
-|------- |----------- |------------------------- |--------------
-|        |id           |serial                     |*PRIMARY KEY*
-|        |timestamp    |timestamp with time zone   |
-|        |filename     |character varying(1024)    |
-|        |stacktrace   |text                       |
-
-------------------------------------------------------------------------
-
-### public.job
- 
-**Table Structure:**
-
-------------------------------------------------------------------------
-
-|F-Key   |Name               |Type                       |Description
-|------ |----------------- |------------------------- |---------------
-|        |id                 |serial                     |*PRIMARY KEY*
-|        |dag_id             |character varying(250)     |
-|        |state              |character varying(20)      |
-|        |job_type           |character varying(30)      |
-|        |start_date         |timestamp with time zone   |
-|        |end_date           |timestamp with time zone   |
-|        |latest_heartbeat   |timestamp with time zone   |
-|        |executor_class     |character varying(500)     |
-|        |hostname           |character varying(500)     |
-|        |unixname           |character varying(1000)    |
-
-**Indexes:**
-
--   **idx\_job\_state\_heartbeat** state, latest\_heartbeat
--   **job\_type\_heart** job\_type, latest\_heartbeat
-
-------------------------------------------------------------------------
-
-### public.known_event
-
-**Table Structure:**
-
-------------------------------------------------------------------------
-
-|F-Key                                                          |Name                  |Type                          |Description
-|------------------------------------------------------------- |-------------------- |---------------------------- |--------------
-|                                                               |id                    |serial                        |*PRIMARY KEY*
-|                                                               |label                 |character varying(200)        |
-|                                                               |start_date            |timestamp without time zone   |
-|                                                               |end_date              |timestamp without time zone   |
-|[public.users.id](#public.users)                         |user_id               |integer                       |
-|[public.known\_event\_type.id](#public.known-event-type)   |known\_event\_type\_id   |integer                       |
-|                                                               |description           |text                          |
-
-------------------------------------------------------------------------
-
-### public.known\_event\_type
-
-**Table Structure:**
-
-------------------------------------------------------------------------
-
-|F-Key   |Name              |Type                     |Description
-|------ |---------------- |----------------------- |--------------
-|        |id                |serial                   |*PRIMARY KEY*
-|        |know\_event\_type   |character varying(200)   |
-
-**Tables referencing this one via Foreign Key Constraints:**
-
--   [public.known_event](#public.known-event)
-
-------------------------------------------------------------------------
-
-### public.kube\_resource\_version
-
-**Table Structure:**
-
-------------------------------------------------------------------------
-
-|F-Key   |Name               |Type                     |Description
-|------ |----------------- |----------------------- |---------------------------
-|        |one\_row\_id         |boolean                  |*PRIMARY KEY DEFAULT true*
-|        |resource_version   |character varying(255)   |
-
-**Constraints:**
-
-|Name                                |Constraint
-|---------------------------------- |--------------------
-|kube\_resource\_version\_one\_row\_id    |CHECK (one\_row\_id)
-
-------------------------------------------------------------------------
-
-### public.kube\_worker\_uuid
- 
-**Table Structure:**
-
-------------------------------------------------------------------------
-
-|F-Key   |Name          |Type                     |Description
-|------ |------------ |----------------------- |---------------------------
-|        |one\_row\_id    |boolean                  |*PRIMARY KEY DEFAULT true*
-|        |worker_uuid   |character varying(255)   |
-
-**Constraints:**
-
-|Name                     |Constraint
-|----------------------- |-------------------
-|kube\_worker\_one\_row\_id   |CHECK (one\_row\_id)
-
-------------------------------------------------------------------------
-
-### public.log
- 
-**Table Structure:**
-
-------------------------------------------------------------------------
-
-|F-Key   |Name             |Type                       |Description
-|------ |--------------- |------------------------- |--------------
-|        |id               |serial                     |*PRIMARY KEY*
-|        |dttm             |timestamp with time zone   |
-|        |dag_id           |character varying(250)     |
-|        |task_id          |character varying(250)     |
-|        |event            |character varying(30)      |
-|        |execution_date   |timestamp with time zone   |
-|        |owner            |character varying(500)     |
-|        |extra            |text                       |
-
-**Indexes:**
-
--   **idx\_log\_dag** dag\_id
-
-------------------------------------------------------------------------
-
-### public.serialized_dag
-
-**Table Structure:**
-
-------------------------------------------------------------------------
-
-|F-Key   |Name           |Type                       |Description
-|------ |------------- |------------------------- |--------------
-|        |dag_id         |character varying(250)     |*PRIMARY KEY*
-|        |fileloc        |character varying(2000)    |*NOT NULL*
-|        |fileloc_hash   |integer                    |*NOT NULL*
-|        |data           |json                       |*NOT NULL*
-|        |last_updated   |timestamp with time zone   |*NOT NULL*
-
-**Indexes:**
-
--   **idx\_filelo\_hash** fileloc_hash
-
-------------------------------------------------------------------------
-
-### public.sla_miss 
-
-**Table Structure:**
-
-------------------------------------------------------------------------
-
-|F-Key   |Name                |Type                       |Description
-|------ |------------------ |------------------------- |--------------
-|        |task_id             |character varying(250)     |*PRIMARY KEY*
-|        |dag_id              |character varying(250)     |*PRIMARY KEY*
-|        |execution_date      |timestamp with time zone   |*PRIMARY KEY*
-|        |email_sent          |boolean                    |
-|        |timestamp           |timestamp with time zone   |
-|        |description         |text                       |
-|        |notification_sent   |boolean                    |
-
-**Indexes:**
-
--   **sm_dag** dag_id
-
-------------------------------------------------------------------------
-
-### public.slot_pool
- 
-**Table Structure:**
-
-------------------------------------------------------------------------
-
-|F-Key   |Name          |Type                    |Description
-|------- |------------- |----------------------- |---------------
-|        |id            |serial                  |*PRIMARY KEY*
-|        |pool          |character varying(50)   |*UNIQUE*
-|        |slots         |integer                 |
-|        |description   |text                    |
-
-------------------------------------------------------------------------
-
-### public.task_fail
- 
-**Table Structure:**
-
-------------------------------------------------------------------------
-
-|F-Key   |Name             |Type                       |Description
-|------- |---------------- |-------------------------- |---------------
-|        |id               |serial                     |*PRIMARY KEY*
-|        |task_id          |character varying(250)     |*NOT NULL*
-|        |dag_id           |character varying(250)     |*NOT NULL*
-|        |execution_date   |timestamp with time zone   |*NOT NULL*
-|        |start_date       |timestamp with time zone   |
-|        |end_date         |timestamp with time zone   |
-|        |duration         |integer                    |
-
-**Indexes:**
-
--   **idx\_task\_fail\_dag\_task\_date** dag\_id, task\_id, execution\_date
-
-------------------------------------------------------------------------
-
-### public.task_instance 
-
-**Table Structure:**
-
-------------------------------------------------------------------------
-
-|F-Key   |Name              |Type                       |Description
-|------- |----------------- |-------------------------- |---------------------------
-|        |task_id           |character varying(250)     |*PRIMARY KEY*
-|        |dag_id            |character varying(250)     |*PRIMARY KEY*
-|        |execution_date    |timestamp with time zone   |*PRIMARY KEY*
-|        |start_date        |timestamp with time zone   |
-|        |end_date          |timestamp with time zone   |
-|        |duration          |double precision           |
-|        |state             |character varying(20)      |
-|        |try_number        |integer                    |
-|        |hostname          |character varying(1000)    |
-|        |unixname          |character varying(1000)    |
-|        |job_id            |integer                    |
-|        |pool              |character varying(50)      |*NOT NULL*
-|        |queue             |character varying(256)     |
-|        |priority_weight   |integer                    |
-|        |operator          |character varying(1000)    |
-|        |queued_dttm       |timestamp with time zone   |
-|        |pid               |integer                    |
-|        |max_tries         |integer                    |*DEFAULT \'-1\'::integer*
-|        |executor_config   |bytea                      |
-
-**Tables referencing this one via Foreign Key Constraints:**
-
--   [public.task_reschedule](#table-public.task-reschedule)
-
-**Indexes:**
-
--   **ti\_dag\_date** dag\_id, execution\_date
--   **ti\_dag\_state** dag\_id, state
--   **ti\_job\_id** job\_id
--   **ti\_pool** pool, state, priority\_weight
--   **ti_state** state
--   **ti\_state\_lkp** dag\_id, task\_id, execution\_date, state
-
-------------------------------------------------------------------------
-
-### Table public.task_reschedule
- 
-**Table Structure:**
-
-------------------------------------------------------------------------
-
-|F-Key                                                                   |Name              |Type                       |Description
-|----------------------------------------------------------------------- |----------------- |-------------------------- |---------------
-|                                                                        |id                |serial                     |*PRIMARY KEY*
-|[public.task\_instance.task\_id\#1](#public.task-instance)          |task_id           |character varying(250)     |*NOT NULL*
-|[public.task\_instance.dag\_id\#1](#public.task-instance)           |dag_id            |character varying(250)     |*NOT NULL*
-|[public.task\_instance.execution\_date\#1](#public.task-instance)   |execution_date    |timestamp with time zone   |*NOT NULL*
-|                                                                        |try_number        |integer                    |*NOT NULL*
-|                                                                        |start_date        |timestamp with time zone   |*NOT NULL*
-|                                                                        |end_date          |timestamp with time zone   |*NOT NULL*
-|                                                                        |duration          |integer                    |*NOT NULL*
-|                                                                        |reschedule_date   |timestamp with time zone   |*NOT NULL*
-
-**Indexes:**
-
--   **idx\_task\_reschedule\_dag\_task\_date** dag\_id, task\_id, execution\_date
-
-------------------------------------------------------------------------
-
-### public.users
-
-**Table Structure:**
-
-------------------------------------------------------------------------
-
-|F-Key   |Name        |Type                     |Description
-|-------|-----------|------------------------|---------------
-|        |id          |serial                   |*PRIMARY KEY*
-|        |username    |character varying(250)   |*UNIQUE*
-|        |email       |character varying(500)   |
-|        |password    |character varying(255)   |
-|        |superuser   |boolean                  |
-
-**Tables referencing this one via Foreign Key Constraints:**
-
--   [public.chart](#public.chart)
--   [public.known_event](#public.known-event)
-
-------------------------------------------------------------------------
-
-### public.variable
- 
-**Table Structure:**
-
-------------------------------------------------------------------------
-
-|F-Key   |Name           |Type                     |Description
-|------- |--------------|------------------------|---------------
-|        |id             |serial                   |*PRIMARY KEY*
-|        |key            |character varying(250)   |*UNIQUE*
-|        |val            |text                     |
-|        |is_encrypted   |boolean                  |
-
-------------------------------------------------------------------------
-
-### public.xcom
-
-**Table Structure:**
-
-------------------------------------------------------------------------
-
-|F-Key  | Name            | Type                      |Description|
-|------|----------------|--------------------------|---|
-|       |id               |serial                     |*PRIMARY KEY*|
-|       |key              |character varying(512)     ||
-|       |value            |bytea                      ||
-|       |timestamp        |timestamp with time zone   |*NOT NULL*|
-|       |execution_date   |timestamp with time zone   |*NOT NULL*|
-|       |task_id          |character varying(250)     |*NOT NULL*|
-|       |dag_id           |character varying(250)     |*NOT NULL*|
-
-**Indexes:**
-
--   **idx\_xcom\_dag\_task\_date** dag\_id, task\_id, execution\_date
-
-------------------------------------------------------------------------
+with Session(engine) as session:
+    result = session.execute(stmt)
+    print(result.all()[0][0])
+```
