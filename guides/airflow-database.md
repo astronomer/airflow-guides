@@ -138,7 +138,7 @@ print(req.json()['total_entries'])
 
 It is also possible to navigate to **Browse** -> **Task Instances** in the Airflow UI and filter the task instances for all with a state of `success`. The `Record Count` will be on the right side of your screen.
 
-![Count successful tasks Airflow UI](<https://assets2.astronomer.io/main/guides/your-guide-folder/successful_tasks_UI.png>)
+![Count successful tasks Airflow UI](https://assets2.astronomer.io/main/guides/airflow-database/successful_tasks_UI.png)
 
 ### Example: Pause and Unpause a DAG
 
