@@ -19,9 +19,19 @@ In this guide, we'll cover everything you need to know to make the most out of y
 
 ## Using Snowflake Providers
 
-There are multiple open source packages with modules available to implement various Snowflake orchestration use cases in Airflow. The [Snowflake provider package](https://registry.astronomer.io/providers/snowflake) contains hooks, operators, and transfer operators maintained by the Airflow community. Additionally, [Astronomer Providers](https://github.com/astronomer/astronomer-providers) contains deferrable operators built and maintained by Astronomer, including a deferrable version of the `SnowflakeOperator`. 
+There are multiple open source packages with modules available to implement various Snowflake orchestration use cases in Airflow: 
 
-To leverage all of the Snowflake modules available in Airflow, we recommend installing both `apache-airflow-providers-snowflake` and `astronomer-providers[snowflake]` in your Airflow environment.
+- The [Snowflake provider package](https://registry.astronomer.io/providers/snowflake) contains hooks, operators, and transfer operators for Snowflake maintained by the Airflow community.
+- The [Astronomer Providers](https://github.com/astronomer/astronomer-providers) package contains deferrable operators built and maintained by Astronomer, including a deferrable version of the `SnowflakeOperator`.
+- The [Core SQL provider package](LINK) contains SQL check operators that can be used to perform data quality checks against data in Snowflake. 
+
+To leverage all of the Snowflake modules available in Airflow, we recommend installing all three packages in your Airflow environment.
+
+```bash
+apache-airflow-providers-snowflake
+apache-airflow-providers-core-sql
+astronomer-providers[snowflake]
+```
 
 Modules for orchestrating basic queries and functions in Snowflake include:
 
@@ -34,23 +44,54 @@ Modules for orchestrating basic queries and functions in Snowflake include:
 
 Modules for orchestrating **data quality checks** in Snowflake include:
 
-- [`SnowflakeCheckOperator`](https://registry.astronomer.io/providers/snowflake/modules/snowflakecheckoperator): Performs a check against Snowflake. The SQL provided should return a single row, and if any value in that row is `False`, the task will fail. This operator is used to implement data quality checks in Snowflake.
-- [`SnowflakeValueCheckOperator`](https://registry.astronomer.io/providers/snowflake/modules/snowflakecheckoperator): Performs a check against a specific value in Snowflake, within a given tolerance. 
-- [`SnowflakeIntervalCheckOperator`](https://registry.astronomer.io/providers/snowflake/modules/snowflakeintervalcheckoperator): Performs a check against the value of metrics compared to the same metrics a given number of days before. 
+- [`SQLColumnCheckOperator`](LINK): Performs a data quality check against columns of a given table. Using this operator with Snowflake requires a Snowflake connection ID, the name of the table to run checks on, and a `column_mapping` describing the relationship between columns and tests to run.
+- [`SQLTableCheckOperator`](LINK): Performs a data quality check against a given table. Using this operator with Snowflake requires a Snowflake connection ID, the name of the table to run checks on, and a checks dictionary describing the relationship between the table and the tests to run.  
 
-Below we show an example of how to use some of these modules in an ELT DAG with data quality checks.
+Note that the `apache-airflow-providers-snowflake` package also contains operators that can be used to run data quality checks in Snowflake, including the `SnowflakeCheckOperator`, `SnowflakeValueCheckOperator`, and `SnowflakeIntervalCheckOperator`. However, these operators are not as flexible as the operators in `apache-airflow-providers-core-sql` and will likely be deprecated in a future version of Airflow. We recommend using `apache-airflow-providers-core-sql` for the most up to date data quality check operators.
 
-#### Example Implementation
+Below we show an example of how to use some of these modules in a DAG that implements a write, audit, publish pattern with data quality checks.
 
-DAG using deferrable operators and data quality checks
+### Example Implementation
 
-Include setting up connection.
+> **Note:** All of the code for this example can be found on the [Astronomer Registry](LINK). 
+
+The exmaple DAG below implements a write, audit, publish pattern to showcase loading and data quality checking with Snowflake. The following steps are completed:
+
+- Simultaneously create tables in Snowflake for the production data and the raw data that needs to be audited, using the `SnowflakeOperator`. Note that these tasks are not implemented with the deferrable version of the `SnowflakeOperator`, because `CREATE TABLE` statements typically run very quickly.
+- Load data into the audit table using the `SnowflakeOperatorAsync`. This task *is* deferred to save on compute, because loading data can take some time if the dataset is large.
+- Run data quality checks on the audit table to ensure that no erroneous data is moved to production. This Task Group includes column checks using the `SQLColumnCheckOperator` and table checks using the `SQLTableCheckOperator`. 
+- Assuming the data quality checks passed, meaning those tasks were successful, copy data from the audit table into the production table using the `SnowflakeOperatorAsync`.
+- Finally, delete the audit table since it only contained temporary data.
 
 > **Note:** To make use of deferrable operators you must have a Triggerer running in your Airflow environment. For more on how to use deferrable operators, check out [this guide](https://www.astronomer.io/guides/deferrable-operators).
 
+All of these tasks rely on SQL scripts that are stored in the `include/sql/` directory. 
+
+The DAG looks like this:
+
+```python
+#add dag code here
+```
+
+GRAPH VIEW SCREENSHOT
+
+Note that to run this DAG, you will need a connection to your Snowflake instance in your Airflow environment. This DAG uses a connection called `snowflake_default`. Your connection should be the `Snowflake` type, and should include the following information:
+
+```yaml
+Host: Your Snowflake Host, e.g. `account.region.snowflakecomputing.com`
+Schema: Your Schema
+Login: Your login
+Password: Your password
+Account: Your Snowflake account
+Database: Your database
+Region: Your account region
+Role: Your role
+Warehouse: Your warehouse
+```
+
 ## Enhanced Observability with OpenLineage
 
-The [OpenLineage project](https://openlineage.io/) maintains an integration with Airflow that allows users to obtain and view lineage data from their tasks. As long as an extractor exists for the operator being used, lineage data will be generated automatically from each task instance. For introductory information on how OpenLineage works with Airflow, check out [this guide](https://www.astronomer.io/guides/airflow-openlineage).
+The [OpenLineage project](https://openlineage.io/) maintains an integration with Airflow that allows users to obtain and view lineage data from their Airflow tasks. As long as an extractor exists for the operator being used, lineage data will be generated automatically from each task instance. For introductory information on how OpenLineage works with Airflow, check out [this guide](https://www.astronomer.io/guides/airflow-openlineage).
 
 Users of the `SnowflakeOperator`, which does have an extractor, will be able to use lineage metadata to answer questions across DAGs such as:
 
@@ -62,9 +103,9 @@ At a high level, the OpenLineage - Airflow - Snowflake interaction works like th
 
 SCREENSHOT
 
-Note that to view lineage data from your DAGs you need to have OpenLineage installed in your Airflow environment, and a lineage front end running. For [Astro customers](https://docs.astronomer.io/astro/data-lineage), lineage is enabled automatically. For users working with open source tools, you can run Marquez locally and connect it to your Airflow environment following the instructions in [this guide](https://www.astronomer.io/guides/airflow-openlineage). 
+Note that to view lineage data from your DAGs you need to have OpenLineage installed in your Airflow environment and a lineage front end running. For [Astro customers](https://docs.astronomer.io/astro/data-lineage), lineage is enabled automatically. For users working with open source tools, you can run Marquez locally and connect it to your Airflow environment following the instructions in [this guide](https://www.astronomer.io/guides/airflow-openlineage). 
 
-To show an example of lineage resulting from Snowflake orchestration, we'll look at the lineage graph generated by the example DAG above. Note that screenshots below are from the Datakin UI integrated with Astro, but Marquez will show similar information.
+To show an example of lineage resulting from Snowflake orchestration, we'll look at the write, audit, publish DAG from the example above. Note that screenshots below are from the Datakin UI integrated with Astro, but Marquez will show similar information.
 
 SCREENSHOT
 
@@ -80,9 +121,9 @@ There are a few things to note about this lineage graph:
 
 ## Best Practices and Considerations
 
-Below are some best practices and considerations to keep in mind when orchestrating Snowflake queries from Airflow, based on the many implementations we've seen.
+Below are some best practices and considerations to keep in mind when orchestrating Snowflake queries from Airflow, based on the many implementations we've seen:
 
 - Wherever possible, use the deferrable version of operators to save on compute. This will result in costs savings and greater scalability for your Airflow environment.
 - Set your default Snowflake query specifications like Warehouse, Role, Schema, etc. in the Airflow connection. Then overwrite those parameters for specific tasks as necessary in your operator definitions. This is cleaner and easier to read than adding `USE Warehouse XYZ;` statements within your queries.
-- Pay attention to which Snowflake compute resources your tasks are using, as overtaxing your assigned resources can cause unnecessary slowdowns in your Airflow tasks. It is generally recommended to have different warehouses devoted to your different Airflow environments to ensure DAG development and testing does not interfere with DAGs running in production.
+- Pay attention to which Snowflake compute resources your tasks are using, as overtaxing your assigned resources can cause slowdowns in your Airflow tasks. It is generally recommended to have different warehouses devoted to your different Airflow environments to ensure DAG development and testing does not interfere with DAGs running in production.
 - Make use of [Snowflake stages](https://docs.snowflake.com/en/sql-reference/sql/create-stage.html) when loading data from an external system using Airflow. Transfer operators like the `S3ToSnowflake` operator will require a Snowflake stage be set up. Stages generally make it much easier to repeatedly load data of a particular format.
