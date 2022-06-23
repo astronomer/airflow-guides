@@ -113,7 +113,7 @@ The `kubernetes_conn_id` is the preferred way of setting up your Kubernetes conn
 
 ### Example: Using KubernetesPodOperator to run a script in Haskell
 
-A frequent use case for the KubernetesPodOperator is to run scripts in languages other than Python. For this purpose a custom Docker Image has to be build and either run a public or private [DockerHub repository]((https://docs.docker.com/docker-hub/repos/).
+A frequent use case for the KubernetesPodOperator is to run scripts in languages other than Python. For this purpose a custom Docker Image has to be build and either run a public or private [DockerHub repository](https://docs.docker.com/docker-hub/repos/).
 
 > **Note**: Astro provides documentation on [how to run images from private repositories](https://docs.astronomer.io/astro/kubernetespodoperator).
 
@@ -553,14 +553,4 @@ with DAG(
     # setting the dependencies
     create_gpu_nodegroup >> check_nodegroup_status >> run_on_EKS
     run_on_EKS >> delete_gpu_nodegroup >> check_nodegroup_termination
-```
-
-troubleshoot KPO  
-added
-```
-      - --profile
-      - default
-      command: aws
-      interactiveMode: IfAvailable
-      provideClusterInfo: false
 ```
