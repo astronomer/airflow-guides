@@ -313,18 +313,20 @@ with DAG(
 
 If some of your tasks require specific resources like a GPU you may want to run them in a different cluster than your Airflow Instance. In setups where both clusters are used by the same AWS or GCP account this can be managed with roles and permissions. There is also the possibility to use a CI account and enable [cross-account access to AWS EKS cluster resources](https://aws.amazon.com/blogs/containers/enabling-cross-account-access-to-amazon-eks-cluster-resources/).  
 
+However you may want to use a specific AWS or GCP account that you keep separate from your Airflow environment. Or you are currently running Airflow on a local setup not using Kubernetes but still want to run some tasks in a Kubernetes Pod on a remote cluster, these are possible use cases for this example.
+
 The example below shows the steps to take to set up an EKS cluster on AWS and run a Pod on it from an Airflow instance if cross-account access is not feasible. After setup of the EKS cluster the `KubeConfig` as well as the `AWS Profile` have to be provided to Airflow to make the connection to the remote cluster.  
 
 > **Note**: If you are using [Google Kubernetes Engine](https://cloud.google.com/kubernetes-engine/) consider using [GKEStartPodOperator](https://registry.astronomer.io/providers/google/modules/gkestartPodoperator).
 
-> **Note**: In the example we are using the KubernetesPodOperator to connect to an EKS Cluster to demonstrate the general use case. The [EksPodOperator](https://airflow.apache.org/docs/apache-airflow-providers-amazon/stable/_api/airflow/providers/amazon/aws/operators/eks/index.html#module-airflow.providers.amazon.aws.operators.eks) is an operator directly derived form the KPO that can be used in this specific use case.
+> **Note**: In the example we are using the KubernetesPodOperator to connect to an EKS Cluster to demonstrate the general use case. The [EksPodOperator](https://airflow.apache.org/docs/apache-airflow-providers-amazon/stable/_api/airflow/providers/amazon/aws/operators/eks/index.html#module-airflow.providers.amazon.aws.operators.eks) is an operator directly derived form the KPO that could also be used for this specific use case.
 
 ### Step 1: Set up an EKS cluster on AWS
 
 To set up a new EKS cluster on AWS you first need to create an IAM role with suitable permissions.
 On AWS navigate to **Identity and Access Management (IAM)** -> **Roles** -> **Create role**. Select AWS service and `EKS` from the dropdown menu as well as `EKS - Cluster`. Make sure to give the role a unique name and to add the permission policies `AmazonEKSWorkerNodePolicy`, `AmazonEKS_CNI_Policy` and `AmazonEC2ContainerRegistryReadOnly`.
 
-Edit the trust policy (**IAM** -> **Roles** -> role name) of this new role to include your account and necessary AWS Services:
+Edit the trust policy (**IAM** -> **Roles** -> role name) of this new role to include your user and necessary AWS Services. This step ensures that the role can be assumed by your user.
 
 ```json
 {
@@ -333,7 +335,7 @@ Edit the trust policy (**IAM** -> **Roles** -> role name) of this new role to in
     {
       "Effect": "Allow",
       "Principal": {
-        "AWS": "arn:aws:iam::<aws account id>:root",
+        "AWS": "arn:aws:iam::<aws account id>:<your user>",
         "Service": [
               "ec2.amazonaws.com",
               "eks.amazonaws.com"
@@ -345,18 +347,18 @@ Edit the trust policy (**IAM** -> **Roles** -> role name) of this new role to in
 }
 ```
 
-Add the new role to your local AWS credentials file by default found at `~/.aws/config`.
+Add the new role to your local AWS credentials file which by default can be found at `~/.aws/config`.
 
 ```text
 [default]
 region = <your region>
 
-[profile eksClusterRole]
+[profile <name of the new role>]
 role_arn = <EKS role arn>
-source_profile = <your username>
+source_profile = <your user>
 ```
 
-Make sure your credentials in `~/.aws/credentials` are using a valid and active key for your username (keys can be generated at **IAM** -> **Users** -> your user -> **Security Credentials**).
+Make sure your default credentials in `~/.aws/credentials` are using a valid and active key for your username (keys can be generated at **IAM** -> **Users** -> your user -> **Security Credentials**).
 
 Make a copy of `~/.aws` available to your Airflow environment (for Astro users: copy it into the `include` folder).
 
@@ -364,21 +366,21 @@ Lastly, create a new EKS cluster (**EKS** -> **Clusters** -> **Add cluster**) an
 
 ### Step 2 Retrieve the KubeConfig file from the EKS cluster
 
-To be able to remotely connect to the newly created EKS cluster the KubeConfig file is needed. It can be retrieved by running:
+To be able to remotely connect to the newly created EKS cluster the `KubeConfig` file is needed. It can be retrieved by running:
 
 ```bash
 aws eks --region region update-kubeconfig --name cluster_name
 ```
 
-The command above will copy information into your existing `KubeConfig` file at `~/.kube/config`. Select the information pertaining to your EKS cluster and make it available to your Airflow environment (for Astro users: copy it into the `include` folder). It should have the following structure:
+The command above will copy information relating to the new cluster into your existing `KubeConfig` file at `~/.kube/config`. Select the information pertaining to your EKS cluster and make it available to your Airflow environment (for Astro users: copy it into the `include` folder). It is likely that you will have to add the last 5 lines to get to the following structure:
 
 ```text
 apiVersion: v1
 clusters:
 - cluster:
-    certificate-authority-data: < certificate >
-    server: https://237894071AC2BE7FA91A58A6BF02570F.gr7.eu-central-1.eks.amazonaws.com
-  name: arn:aws:eks:eu-central-1:897696225347:cluster/example-cluster-airflow-2
+    certificate-authority-data: <your certificate>
+    server: <your AWS server address>
+  name: <arn of your cluster>
 contexts:
 - context:
     cluster: <arn of your cluster>
@@ -406,17 +408,20 @@ users:
       provideClusterInfo: false
 ```
 
+The `KubeConfig` file is how the KPO will connect to a Kubernetes cluster by running the awscli with the default profile, using the credentials you provided in step 1.
+
 ### Step 3 Add a namespace and service account to the EKS Cluster
 
 It is best practice to use a new namespace for all Pods sent to the EKS cluster from the Airflow environment and a separate service account.  
 
 ```bash
 # create a new namespace on the EKS cluster
-kubectl create namespace airflow-kpo-default
+kubectl create namespace <your namespace name>
 
-# create a new service account in your namespace using the namespace of
-# your Airflow Data Plane Cluster
-kubectl create serviceaccount <your-namespace>-kpo -n airflow-kpo-default
+# if you are using a service account other than default in the Kubernetes
+# environment your Airflow instance is running it you will have to add a
+# service account of the same name to your remote cluster
+kubectl create serviceaccount <service account name> -n <your namespace name>
 ```
 
 ### Step 4 Adjust Airflow configuration files
@@ -424,13 +429,13 @@ kubectl create serviceaccount <your-namespace>-kpo -n airflow-kpo-default
 This step will differ depending on the Airflow setup. When running Airflow locally it is just necessary to make sure `awscli`, `apache-airflow-providers-cncf-kubernetes`,
 and `apache-airflow-providers-amazon` are installed correctly on the local machine.
 
-For dockerized settings add the following line to your Dockerfile to copy your aws credentials :
+For dockerized settings add the following line to your Dockerfile to copy your aws credentials from `/include` (or any other location) into the container:
 
 ```dockerfile
 COPY --chown=astro:astro include/.aws /home/astro/.aws
 ```
 
-Next you can add the AWS command line to your `packages.txt`, and the necessary provider packages to `requirements.txt`:
+To be able to correctly authenticate yourself to the remote cluster it is also important to add the AWS command line tool (`awscli`) to your `packages.txt`, and the necessary provider packages to `requirements.txt` (these will differ depending on what cloud you are connecting to):
 
 ```text
 awscli
@@ -445,9 +450,15 @@ apache-airflow-providers-amazon
 
 In the Airflow UI navigate to **Admin** -> **Connections** to set up the connection to the AWS account running the EKS. Chose a unique connection ID and use your `aws_access_key_id` as login and your `aws_secret_access_key` as password.
 
+![Adding AWS connection](https://assets2.astronomer.io/main/guides/your-guide-folder/aws_connection.png)
+
 ### Step 6 Add the DAG interacting with EKS  
 
-If dynamic behavior of the EKS cluster is desired, e.g. Nodes get created with specifications for a task and deleted after the task has run, it is necessary to use several classes from the Amazon provider package. The DAG below has 5 tasks. The first one creates a Nodegroup according to the users' specifications and afterwards a sensor checks that the cluster is running correctly. The third tasks is the actual KubernetesPodOperator running any valid Docker image. Lastly the Nodegroup gets deleted and the deletion gets verified.
+If dynamic behavior of the EKS cluster is desired, e.g. Nodes get created with specifications for a task and deleted after the task has run, it is necessary to use several classes from the Amazon provider package as shown in the example DAG below. If your remote Kubernetes cluster has Nodes already available you will only need the KubernetesPodOperator itself (task number 3 in the example).
+
+The example DAG contains 5 consecutive tasks. The first one creates a Nodegroup according to the users' specifications and afterwards a sensor checks that the cluster is running correctly. The third tasks is the actual KubernetesPodOperator running any valid Docker image in a Pod on the newly created Nodegroup on the remote cluster. The example below uses the standard `Ubuntu` image to print "hello" to the console using a `bash` command. Lastly the Nodegroup gets deleted and the deletion gets verified.
+
+> **Note**: The argument `labels={"kubernetes_pod_operator": "external-cluster"}` in the KPO of the example DAG is specific to behavior of the Astro Cloud and not needed for other implementations.
 
 ```python
 # import DAG object and utility packages
@@ -563,7 +574,6 @@ with DAG(
         timeout=60 * 30,
         target_state=NodegroupStates.NONEXISTENT
     )
-
 
     # setting the dependencies
     create_gpu_nodegroup >> check_nodegroup_status >> run_on_EKS
