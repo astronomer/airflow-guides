@@ -113,11 +113,99 @@ There are a few things to note about this lineage graph:
 
 - 
 
-## DAG Authoring with the Astro SDK
+## DAG Authoring with the Astro SDK Python
+
+The Astro SDK Python is an open source DAG authoring tool maintained by Astronomer that allows you to write DAGs based on how you want your data to move by simplifying the data transformation process between different environments. It allows you to focus solely on writing execution logic, without having to worry about Airflow execution logic. Details like creating dataframes, storing intermediate results, passing context and data between tasks, and creating Airflow task dependencies are all managed automatically.
 
 > **Note:** The Astro SDK is currently in a **preview release** state. It is not yet production-ready, and interfaces may change. We welcome users to try out the interface and [provide us with feedback](https://github.com/astronomer/astro-sdk).
 
+The Astro SDK Python supports Snowflake as a data warehouse, and can be used to simplify ETL workflows with Snowflake. For example, the following DAG moves data from S3 into Snowflake, performs some data transformations, and loads the resulting data into a reporting table.
 
+```python
+from datetime import datetime
+
+from airflow.models import DAG
+from pandas import DataFrame
+
+from astro import sql as aql
+from astro.files import File
+from astro.sql.table import Table
+
+S3_FILE_PATH = "s3://<aws-bucket-name>"
+S3_CONN_ID = "aws_default"
+SNOWFLAKE_CONN_ID = "snowflake_default"
+SNOWFLAKE_ORDERS = "orders_table"
+SNOWFLAKE_FILTERED_ORDERS = "filtered_table"
+SNOWFLAKE_JOINED = "joined_table"
+SNOWFLAKE_CUSTOMERS = "customers_table"
+SNOWFLAKE_REPORTING = "reporting_table"
+
+
+@aql.transform
+def filter_orders(input_table: Table):
+    return "SELECT * FROM {{input_table}} WHERE amount > 150"
+
+
+@aql.transform
+def join_orders_customers(filtered_orders_table: Table, customers_table: Table):
+    return """SELECT c.customer_id, customer_name, order_id, purchase_date, amount, type
+    FROM {{filtered_orders_table}} f JOIN {{customers_table}} c
+    ON f.customer_id = c.customer_id"""
+
+
+@aql.dataframe
+def transform_dataframe(df: DataFrame):
+    purchase_dates = df.loc[:, "purchase_date"]
+    print("purchase dates:", purchase_dates)
+    return purchase_dates
+
+
+dag = DAG(
+    dag_id="astro_orders",
+    start_date=datetime(2019, 1, 1),
+    schedule_interval="@daily",
+    catchup=False,
+)
+
+with dag:
+    # Extract a file with a header from S3 into a Table object
+    orders_data = aql.load_file(
+        # data file needs to have a header row
+        input_file=File(
+            path=S3_FILE_PATH + "/orders_data_header.csv", conn_id=S3_CONN_ID
+        ),
+        output_table=Table(conn_id=SNOWFLAKE_CONN_ID),
+    )
+
+    # create a Table object for customer data in our Snowflake database
+    customers_table = Table(
+        name=SNOWFLAKE_CUSTOMERS,
+        conn_id=SNOWFLAKE_CONN_ID,
+    )
+
+    # filter the orders data and then join with the customer table
+    joined_data = join_orders_customers(filter_orders(orders_data), customers_table)
+
+    # merge the joined data into our reporting table, based on the order_id .
+    # If there's a conflict in the customer_id or customer_name then use the ones from
+    # the joined data
+    reporting_table = aql.merge(
+        target_table=Table(
+            name=SNOWFLAKE_REPORTING,
+            conn_id=SNOWFLAKE_CONN_ID,
+        ),
+        source_table=joined_data,
+        target_conflict_columns=["order_id"],
+        columns=["customer_id", "customer_name"],
+        if_conflicts="update",
+    )
+
+    purchase_dates = transform_dataframe(reporting_table)
+```
+
+Using Astro SDK `aql` functions, we are able to seamlessly transition between SQL transformations (`filter_orders` and `join_orders_customers`) to Python dataframe transformations (`transform_dataframe`). All intermediary data created by each task is automatically stored in Snowflake and made available to downstream tasks.
+
+For more detailed instructions on running this example DAG, check out the [Astro SDK tutorial](https://github.com/astronomer/astro-sdk/blob/main/TUTORIAL.md).
 
 ## Best Practices and Considerations
 
