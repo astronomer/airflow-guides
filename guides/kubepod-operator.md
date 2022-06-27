@@ -2,46 +2,48 @@
 title: "KubernetesPodOperator on Astronomer"
 description: "Use the KubernetesPodOperator on Astronomer"
 date: 2018-07-17T00:00:00.000Z
-slug: "kubePod-operator"
+slug: "kubepod-operator"
 heroImagePath: null
 tags: ["Kubernetes", "Operators"]
 ---
 
 ## Overview
 
-The [KubernetesPodOperator](https://registry.astronomer.io/providers/kubernetes/modules/kubernetesPodoperator) (KPO) is an operator from the Kubernetes provider package designed to provide a straightforward way to execute a task in a Kubernetes pod from your Airflow environment. In a nutshell, the KPO is an abstraction over a call to the Kubernetes API to launch a pod.
+The [`KubernetesPodOperator`](https://registry.astronomer.io/providers/kubernetes/modules/kubernetespodoperator) (KPO) is an operator from the Kubernetes provider package designed to provide a straightforward way to execute a task in a Kubernetes pod from your Airflow environment. In a nutshell, the KPO is an abstraction over a call to the Kubernetes API to launch a pod.
 
-In this guide, we list the requirements to run the KubernetesPodOperator, explain when to use it and cover its most important arguments, as well as the difference between the KPO and KubernetesExecutor. We also provide concrete examples on how to use the KPO to run a task in a language other than Python, how to use the KPO with XComs, and how to launch a pod in a remote AWS EKS Cluster.  
+In this guide, we list the requirements to run the `KubernetesPodOperator`, explain when to use it and cover its most important arguments, as well as the difference between the KPO and `KubernetesExecutor`. We also provide concrete examples on how to use the KPO to run a task in a language other than Python, how to use the KPO with XComs, and how to launch a pod in a remote AWS EKS Cluster.  
 
 > **Note**: Kubernetes is a powerful tool for Container Orchestration with complex functionality. If you are unfamiliar with Kubernetes we recommend taking a look at the [Kubernetes 101 Guide](https://www.astronomer.io/guides/intro-to-kubernetes/) to get a general overview. For in-depth information check out the [Kubernetes Documentation](https://kubernetes.io/docs/home/).  
 
-## Requirements For Using the KubernetesPodOperator
+## Requirements For Using the `KubernetesPodOperator`
 
-To use the KubernetesPodOperator it is necessary to install the Kubernetes provider package.
+To use the `KubernetesPodOperator` it is necessary to install the Kubernetes provider package.
 
 ```bash
 pip install apache-airflow-providers-cncf-kubernetes==<version>
 ```
 
-Required versions of the `apache-airflow`, `cryptography` and `kubernetes` packages for specific versions of the Kubernetes provider package are listed in the [Airflow Documentation](https://airflow.apache.org/docs/apache-airflow-providers-cncf-kubernetes/stable/index.html#requirements).
+To double check which version of the Kubernetes provider package is compatible with your version of Airflow and to view dependencies that will be installed automatically please refer to the [Airflow Kubernetes provider Documentation](https://airflow.apache.org/docs/apache-airflow-providers-cncf-kubernetes/stable/index.html#requirements).
 
-You will also need an existing Kubernetes cluster to connect to. It is _not_ necessary to use the Kubernetes Executor in order to use the KPO. You may use any of the following executors: `CeleryExecutor`, `KubernetesExecutor`, [`CeleryKubernetesExecutor`](https://airflow.apache.org/docs/apache-airflow/2.0.0/executor/celery_kubernetes.html). When using Celery remember to install its [provider](https://registry.astronomer.io/providers/celery).
+You will also need an existing Kubernetes cluster to connect to, which commonly but not necessarily is the same cluster that Airflow is running on. It is _not_ necessary to use the Kubernetes Executor in order to use the KPO. You may use any of the following executors: `CeleryExecutor`, `KubernetesExecutor`, [`CeleryKubernetesExecutor`](https://airflow.apache.org/docs/apache-airflow/2.0.0/executor/celery_kubernetes.html). When using Celery remember to install its [provider](https://registry.astronomer.io/providers/celery).
 
-> **Note**: On Astro, the infrastructure needed to run KPO with CeleryExecutor is pre-built into every cluster. Astronomer provides [comprehensive documentation on using the KPO on Astro](https://docs.astronomer.io/astro/kubernetesPodoperator).  
+> **Note**: On Astro, the infrastructure needed to run KPO with CeleryExecutor is pre-built into every cluster. Astronomer provides [comprehensive documentation on using the KPO on Astro](https://docs.astronomer.io/astro/kubernetespodoperator).  
 
-### Running the KubernetesPodOperator Locally
+### Running the `KubernetesPodOperator` Locally
 
-There are several ways in which the KubernetesPodOperator can be run in local development. For users of the Astro CLI there is a [step-by-step tutorial](https://docs.astronomer.io/software/kubePodoperator-local) available in the Astro Documentation, which can also be adapted for other dockerized Airflow setups.
+When developing and testing changes it can be tedious to deploy to a remote environment, which is why many users set up their local dev environment to support usage of the KPO. This can be accomplished in several ways.
+
+For users of the Astro CLI there is a [step-by-step tutorial](https://docs.astronomer.io/software/kubePodoperator-local) available in the Astro Documentation, which can also be adapted for other dockerized Airflow setups.
 
 It is also possible to run open source Airflow within a local Kubernetes cluster using the [Helm Chart for Apache Airflow](https://airflow.apache.org/docs/helm-chart/stable/index.html). For a walkthrough of this setup you can refer to the recording of the [Getting Started With the Official Airflow Helm Chart Webinar](https://www.youtube.com/watch?v=39k2Sz9jZ2c&ab_channel=Astronomer).
 
-When running Airflow within a Kubernetes cluster, using the KPO does not require further configuration beyond leaving the setting `in_cluster` on `True` to run a new pod within the same cluster. An example on how to run a pod on a remote cluster, including in the case of not running local Airflow on Kubernetes, is presented at the end of this guide.
+When running Airflow within a Kubernetes cluster, using the KPO does not require further configuration beyond leaving the `KubernetesPodOperator` parameter `in_cluster` on its default setting (`True`) to run a new pod within the same cluster. An example on how to run a pod on a remote cluster, including in the case of not running local Airflow on Kubernetes, is presented at the end of this guide.
 
-## When to use the KubernetesPodOperator
+## When to use the `KubernetesPodOperator`
 
-The KubernetesPodOperator runs any Docker image provided to it, whether they are pulled from [DockerHub](https://hub.docker.com/) or from private repositories. Frequent use cases are:
+The `KubernetesPodOperator` runs any Docker image provided to it, whether they are pulled from [DockerHub](https://hub.docker.com/) or from private repositories. Frequent use cases are:
 
-- Running a task better described in a language other than Python. For an example see the section 'Example: Using the KubernetesPodOperator to run a script in Haskell' below.
+- Running a task better described in a language other than Python. For an example see the section 'Example: Using the `KubernetesPodOperator` to run a script in Haskell' below.
 - Having full control over how much compute resources and memory a single task can use.
 - Executing tasks in an separate environment with individual packages and dependencies.
 - Running tasks that necessitate using a version of Python not supported by your Airflow environment.
@@ -51,76 +53,71 @@ Sometimes you may want to run pods on different clusters, for example if only so
 
 > **Note**: A simple way to execute tasks in different clusters with different compute resources using worker queues is an upcoming feature on Astro!
 
-### KubernetesPodOperator vs KubernetesExecutor
+### `KubernetesPodOperator` vs `KubernetesExecutor`
 
 In Airflow you have the option to choose between a variety of [executors](https://www.astronomer.io/guides/airflow-executors-explained) which determine how your Airflow tasks will be executed.
 
-The [KubernetesExecutor](https://airflow.apache.org/docs/apache-airflow/stable/executor/kubernetes.html) and the KubernetesPodOperator both dynamically launch and terminate pods to run Airflow tasks. As the names suggest, KubernetesExecutor is an executor, which means it affects how all tasks in an Airflow instance are executed, while the KubernetesPodOperator is an operator defining that a single task is to be launched in a Kubernetes Pod with the given configuration and does not affect any other tasks in the Airflow instance.
+The [KubernetesExecutor](https://airflow.apache.org/docs/apache-airflow/stable/executor/kubernetes.html) and the `KubernetesPodOperator` both dynamically launch and terminate pods to run Airflow tasks. As the names suggest, `KubernetesExecutor` is an executor, which means it affects how all tasks in an Airflow instance are executed, while the `KubernetesPodOperator` is an operator defining that a single task is to be launched in a Kubernetes pod with the given configuration and does not affect any other tasks in the Airflow instance.
 
-Compared to the KPO, the KubernetesExecutor:
+Compared to the KPO, the `KubernetesExecutor`:
 
-- Runs Airflow tasks in a Kubernetes pod without needing to build a Docker image.
+- Runs Airflow tasks in a Kubernetes pod without the user needing to specify a Docker image.
 - Is implemented at the configuration level of the Airflow instance, which means _all_ tasks will each be run in their own Kubernetes pod. This may be desired in some use cases to leverage auto-scaling, but is generally not ideal for environments with a high volume of shorter running tasks.
-- Has less abstraction over pod configuration. All task-level configurations have to be passed in as a dictionary via the `BaseOperator` argument `executor_config`.
-- creates a new field in the view of individual task instances in the Airflow UI `K8s Pod Spec` which shows the specifications of the Pod that was run.
-- If a custom Docker image is passed to the KubernetesExecutor, it needs to have Airflow installed, otherwise the task will not run. This is not the case with the KPO, which can run any valid Docker image.
+- Has less abstraction over pod configuration. All task-level configurations have to be passed in as a dictionary via the `BaseOperator` argument `executor_config`, which is available to all operators. Details on configuring the `KubernetesExecutor` can be found in the [Airflow documentation](https://airflow.apache.org/docs/apache-airflow/stable/executor/kubernetes.html).
+- If a custom Docker image is passed to the `KubernetesExecutor`, it needs to have Airflow installed, otherwise the task will not run. This is not the case with the KPO, which can run any valid Docker image.
 
-Both the KubernetesPodOperator and the KubernetesExecutor can use the entire Kubernetes API with regards to pod creation. Which one to use is an individual choice based on the user's requirements and preferences. You can think of the KPO as "Docker image first" and the KubernetesExecutor as "operator first" implementations. The KPO is generally ideal for controlling the environment the task is run in, while the KubernetesExecutor is ideal for controlling resource optimization.
+Both the `KubernetesPodOperator` and the `KubernetesExecutor` can use the entire Kubernetes API with regards to pod creation. Which one to use is an individual choice based on the user's requirements and preferences. You can think of the KPO as "Docker image first" and the `KubernetesExecutor` as "operator first" implementations. The KPO is generally ideal for controlling the environment the task is run in, while the `KubernetesExecutor` is ideal for controlling resource optimization. Frequently the KPO is used in an Airflow environment using the `KubernetesExecutor` to run some tasks where the focus is on environment control while the other tasks are run in pods via the `KubernetesExecutor`.
 
-## How to configure the KubernetesPodOperator
+## How to configure the `KubernetesPodOperator`
 
-The KPO launches any valid Docker Image provided to it (passed via the `image` parameter) in a new Kubernetes pod on an existing Kubernetes cluster. The operator has many other parameters which specify the pod configuration which the KPO translates into a call to the [Kubernetes API](https://kubernetes.io/docs/reference/kubernetes-api/). The KubernetesPodOperator offers full access to Kubernetes API functionality relating to pod creation.    
+The KPO launches any valid Docker Image provided to it (passed via the `image` parameter) in a new Kubernetes pod on an existing Kubernetes cluster. The operator has many other parameters which specify the pod configuration which the KPO translates into a call to the [Kubernetes API](https://kubernetes.io/docs/reference/kubernetes-api/). The `KubernetesPodOperator` offers full access to Kubernetes API functionality relating to pod creation.    
 
-The KubernetesPodOperator can be instantiated like any other operator within the context of a DAG. The following are some of the arguments that can be passed to the operator.
+The `KubernetesPodOperator` can be instantiated like any other operator within the context of a DAG. The following are some of the arguments that can be passed to the operator.
 
 **Mandatory arguments** are:
 
 - `task_id`: a unique string identifying the task within Airflow.
-- `namespace`: the namespace within your Kubernetes cluster the new Pod should be assigned to.
-- `name`: the name of the Pod created. This name needs to be unique for each Pod within a namespace.
+- `namespace`: the namespace within your Kubernetes cluster the new pod should be assigned to.
+- `name`: the name of the pod created. This name needs to be unique for each pod within a namespace.
 - `image`: a Docker image to launch. Images from [hub.docker.com](https://hub.docker.com/) can be passed in with just the image name, custom repositories have to be given as full URLs.
 
 Commonly used **optional arguments** include:
 
-- `random_name_suffix`: generates a random suffix for the Pod name if set to `True`. Avoids naming conflicts when running a large number of Pods.
-- `labels`: add key:value pairs to the Pod which can be used to logically group decoupled objects together.
-- `ports`: provides the possibility to override default ports for the Pod.
-- `reattach_on_restart`: defines how to handle losing the worker while the Pod is running, by default (`True`) the existing Pod will reattach to the worker on the next try. `False` creates a new Pod for each try.
-- `is_delete_operator_pod`: `True` by default, will delete the Pod when it reaches its final state or when the execution is interrupted.
+- `random_name_suffix`: generates a random suffix for the pod name if set to `True`. Avoids naming conflicts when running a large number of pods.
+- `labels`: add key:value pairs to the pod which can be used to logically group decoupled objects together.
+- `ports`: provides the possibility to override default ports for the pod.
+- `reattach_on_restart`: defines how to handle losing the worker while the pod is running, by default (`True`) the existing pod will reattach to the worker on the next try. `False` creates a new pod for each try.
+- `is_delete_operator_pod`: `True` by default, will delete the pod when it reaches its final state or when the execution is interrupted.
 - `get_logs`: provides the `stdout` of the container as task-logs to the Airflow logging system.
-- `log_events_on_failure`: if set to `True` events will be logged in case the Pod fails (default: `False`).
-
-There are also many other arguments that can be used to configure the pod and pass information to the Docker image. For example, the 'Spinning up a Pod in EKS from Airflow' section below shows how to define an entrypoint (`cmds`) and its arguments (`arguments`) for your container.
-
-> **Note**: The following KPO arguments can be used with Jinja templates: `image`, `cmds`, `arguments`, `env_vars`, `labels`, `config_file`, `Pod_template_file`, and `namespace`.
-
-To specify environment variables for a Pod it is possible to use the argument `env_vars` for individual variables or pass in a [ConfigMap](https://kubernetes.io/docs/concepts/configuration/configmap/) via `volumes`.
-
-Management of distributed resources and balancing of workloads are some of the core functionalities of Kubernetes. The [Kubernetes Scheduler](https://kubernetes.io/docs/concepts/scheduling-eviction/kube-scheduler/) on the Kubernetes Control Plane matches each Pod to the best physical or virtual machine (called Node in Kubernetes) possible. When using the KPO there are multiple ways to add information configuring this process:
-
+- `log_events_on_failure`: if set to `True` events will be logged in case the pod fails (default: `False`).
+- `env_vars`: allows the user to specify individual environment variables for a pod.
 - `resources`: allows the user to pass a dictionary with resource requests (keys: `request_memory`, `request_cpu`) and limits (keys: `limit_memory`, `limit_cpu`, `limit_gpu`). See the [Kubernetes Documentation on Resource Management for Pods and Containers](https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/) for more information.
-- `node_selectors`, `affinity` and `tolerations` are ways to further specify rules for [Pod to node assignment](https://kubernetes.io/docs/concepts/scheduling-eviction/assign-Pod-node/).
+- `volumes`: can be used to pass in a modified `k8s.V1Volume`, see also the [Kubernetes example DAG from the Airflow documentation](https://airflow.apache.org/docs/apache-airflow-providers-cncf-kubernetes/stable/_modules/tests/system/providers/cncf/kubernetes/example_kubernetes.html).
+- `affinity` and `tolerations` are ways to further specify rules for [pod to node assignment](https://kubernetes.io/docs/concepts/scheduling-eviction/assign-Pod-node/). Like the `volumes` parameter they also require their input as a `k8s` object.
 
-To pass small amounts of information between tasks Airflow uses [XComs](https://airflow.apache.org/docs/apache-airflow/stable/concepts/xcoms.html). It is possible to push content from the container within a Pod, specifically from the file `/airflow/xcom/return.json`, by setting the KPO argument `do_xcom_push` to `True`. Please remember that the `return.json` file does not exist and `do_xcom_push` to `True` will cause a task to fail if the file has not been created by the user via the Docker image.
+There are also many other arguments that can be used to configure the pod and pass information to the Docker image. For example, the 'Spinning up a pod in EKS from Airflow' section below shows how to define an entrypoint (`cmds`) and its arguments (`arguments`) for your container.
 
-> **Note**: Many more arguments are available to customize the KubernetesPodOperator further. For a complete and up to date list see the [KubernetesPodOperator source code](https://github.com/apache/airflow/blob/main/airflow/providers/cncf/kubernetes/operators/kubernetes_Pod.py).
+> **Note**: The following KPO arguments can be used with Jinja templates: `image`, `cmds`, `arguments`, `env_vars`, `labels`, `config_file`, `pod_template_file`, and `namespace`.
+
+> **Note**: Many more arguments are available to customize the `KubernetesPodOperator` further. For a complete and up to date list see the [`KubernetesPodOperator` source code](https://github.com/apache/airflow/blob/main/airflow/providers/cncf/kubernetes/operators/kubernetes_pod.py).
 
 ### Configuring Kubernetes Connection
 
-The KubernetesPodOperator uses the [Kubernetes Hook](https://registry.astronomer.io/providers/kubernetes/modules/kuberneteshook) to connect to the [Kubernetes API](https://kubernetes.io/docs/reference/kubernetes-api/) of a Kubernetes cluster. The KPO has 4 parameters pertaining to the Kubernetes Connection:
+When leaving the `in_cluster` parameter on its default setting (`True`) it is not necessary to further configure the Kubernetes connection, the pod specified by the `KubernetesPodOperator` will be run on the same Kubernetes cluster as your Airflow instance is running on.
+
+If you are not running Airflow on Kubernetes or want to send the pod to a different cluster than the one currently hosting your Airflow instance the three arguments below will be necessary to specify how the KPO will use the [Kubernetes Hook](https://registry.astronomer.io/providers/kubernetes/modules/kuberneteshook) to connect to the [Kubernetes API](https://kubernetes.io/docs/reference/kubernetes-api/) of a different Kubernetes cluster.
 
 - `kubernetes_conn_id`: uses a [connection](https://www.astronomer.io/guides/connections) stored in the [Airflow metadata database](https://www.astronomer.io/guides/airflow-database), which can be configured in the Airflow UI under **Admin** -> **Connections**.
-- `in_cluster`: by default set to `True`, which means the new Pod will be spun up in the same cluster, you are running your Airflow instance in.
-- `config_file`: The path to the Kubernetes config file. If not specified, default value is `~/.kube/config`.
-- `cluster_context`: is used to specify a context that points to a Kubernetes cluster when `in_cluster` is set to `False`. This parameter is used to select a specific cluster if several are defined within your config file.
+- `config_file`: sets the path to the `KubeConfig` file. If not specified, the default value is `~/.kube/config`.
+- `cluster_context`: is used to select a specific cluster if several are defined within the `KubeConfig` file.
 
 The `kubernetes_conn_id` is the preferred way of setting up your Kubernetes connection. `in_cluster`, `cluster_context` and the path to the `config_file` can be set within your connection and overwritten by using the parameters in the KPO. Setting these parameters at the level of `airflow.cfg` has been deprecated.
 
 ### Example: Using the KPO to Run a Script in Another Language
 
-A frequent use case for the KubernetesPodOperator is to run scripts for tasks better described in a language other than Python. For this purpose a custom Docker image has to be built and either run from either a public or private [DockerHub repository](https://docs.docker.com/docker-hub/repos/).
+A frequent use case for the `KubernetesPodOperator` is to run scripts for tasks better described in a language other than Python. For this purpose a custom Docker image has to be built and either run from a public or private [DockerHub repository](https://docs.docker.com/docker-hub/repos/).
 
-> **Note**: Astro provides documentation on [how to run images from private repositories](https://docs.astronomer.io/astro/kubernetesPodoperator).
+> **Note**: Astro provides documentation on [how to run images from private repositories](https://docs.astronomer.io/astro/kubernetespodoperator).
 
 The code below shows a Haskell script which takes the environment variable `NAME_TO_GREET` and prints a message containing it to the console:
 
@@ -145,12 +142,12 @@ RUN cabal install
 CMD ["haskell_example"]
 ```
 
-After making the Docker image available it can be run from the KPO via the `image` argument. The example DAG below showcases a variety of arguments of the KubernetesPodOperator, including how to pass the environment variable `NAME_TO_GREET` which is used from within the Haskell code.
+After making the Docker image available it can be run from the KPO via the `image` argument. The example DAG below showcases a variety of arguments of the `KubernetesPodOperator`, including how to pass the environment variable `NAME_TO_GREET` which is used from within the Haskell code.
 
 ```python
 from airflow import DAG
 from datetime import datetime
-from airflow.providers.cncf.kubernetes.operators.kubernetes_Pod import (
+from airflow.providers.cncf.kubernetes.operators.kubernetes_pod import (
                                                         KubernetesPodOperator)
 from airflow.configuration import conf
 
@@ -177,33 +174,33 @@ with DAG(
         # the Docker image to launch
         image='<image location>',
 
-        ## arguments pertaining to where the Pod is launched
-        # launch the Pod on the same cluster as Airflow is running on
+        ## arguments pertaining to where the pod is launched
+        # launch the pod on the same cluster as Airflow is running on
         in_cluster=True,
-        # launch the Pod in the same namespace as Airflow is running in
+        # launch the pod in the same namespace as Airflow is running in
         namespace=namespace,
 
-        ## Pod configuration
-        # name the Pod
-        name='my_Pod',
-        # give the Pod name a random suffix, ensure uniqueness in the namespace
+        ## pod configuration
+        # name the pod
+        name='my_pod',
+        # give the pod name a random suffix, ensure uniqueness in the namespace
         random_name_suffix=True,
-        # attach labels to the Pod, can be used for grouping
+        # attach labels to the pod, can be used for grouping
         labels={'app':'backend', 'env':'dev'},
-        # reattach to worker instead of creating a new Pod on worker failure
+        # reattach to worker instead of creating a new pod on worker failure
         reattach_on_restart=True,
-        # delete Pod after the task is finished
+        # delete pod after the task is finished
         is_delete_operator_pod=True,
         # get log stdout of the container as task logs
         get_logs=True,
-        # log events in case of Pod failure
+        # log events in case of pod failure
         log_events_on_failure=True,
         # pass your name as an environment var
         env_vars={"NAME_TO_GREET": f"{name}"}
         )
 ```
 
-## KubernetesPodOperator best practices
+## `KubernetesPodOperator` best practices
 
 SECTION INCOMPLETE
 
@@ -214,19 +211,20 @@ Suggestions from issues:
 Some advice on where to store the images such that they can be retrieved on Astro
 - how to best set env variables
 
-## Example: Using the KubernetesPodOperator with XComs
+## Example: Using the `KubernetesPodOperator` with XComs
 
 [XCom](https://airflow.apache.org/docs/apache-airflow/stable/concepts/xcoms.html) is a commonly used Airflow feature for passing small amounts of data between tasks. It is possible to use this feature with the KPO to both receive values stored in XCom and push values to XCom.
 
 The DAG below shows a straightforward ETL pipeline with an `extract_data` task that runs a query on a database and returns a value; the return value is automatically pushed to XComs thanks to the [TaskFlow API](https://airflow.apache.org/docs/apache-airflow/stable/tutorial_taskflow_api.html#tutorial-on-the-taskflow-api).  
 
-The `transform` task is a KubernetesPodOperator which requires the XCom data pushed from the upstream task before it, and launches an image having been built with the following Dockerfile:
+The `transform` task is a `KubernetesPodOperator` which requires the XCom data pushed from the upstream task before it, and launches an image having been built with the following Dockerfile:
 
 ```dockerfile
 FROM python
 
 WORKDIR /
 
+# creating the file to write XComs to
 RUN mkdir -p airflow/xcom         
 RUN echo "" > airflow/xcom/return.json
 
@@ -235,7 +233,7 @@ COPY multiply_by_23.py ./
 CMD ["python", "./multiply_by_23.py"]
 ```
 
-When using XComs with the KPO, it is very important to create the file `airflow/xcom/return.json`, because Airflow will only look for XComs to pull at that specific location. The image also contains a simple Python script to multiply an environment variable by 23, package the result into a json and write that json to the correct file to be retrieved as an XCom.
+When using XComs with the KPO, it is very important to create the file `airflow/xcom/return.json` in your Docker container (ideally from within your Dockerfile as seen above), because Airflow will only look for XComs to pull at that specific location. The image also contains a simple Python script to multiply an environment variable by 23, package the result into a json and write that json to the correct file to be retrieved as an XCom. The XComs from the KPO will only be pushed if the task itself was marked as successful.  
 
 ```python
 import os
@@ -262,7 +260,7 @@ Below you can find the full DAG code. Remember to only turn on `do_xcom_push` if
 ```python
 from airflow import DAG
 from datetime import datetime
-from airflow.providers.cncf.kubernetes.operators.kubernetes_Pod import KubernetesPodOperator
+from airflow.providers.cncf.kubernetes.operators.kubernetes_pod import KubernetesPodOperator
 from airflow.configuration import conf
 from airflow.decorators import task
 
@@ -281,6 +279,7 @@ with DAG(
 
     @task
     def extract_data():
+        # simulating querying from a database
         data_point = random.randint(0,100)
         return data_point
 
@@ -291,14 +290,14 @@ with DAG(
         # arguments pertaining to the image and commands executed
         image='< image location >', # the Docker Image to launch
 
-        # arguments pertaining to where the Pod is launched
-        in_cluster=True, # launch the Pod on the same cluster as Airflow is running on
-        namespace=namespace, # launch the Pod in the same namespace as Airflow is running in
+        # arguments pertaining to where the pod is launched
+        in_cluster=True, # launch the pod on the same cluster as Airflow is running on
+        namespace=namespace, # launch the pod in the same namespace as Airflow is running in
 
-        # Pod configuration
-        name='my_Pod', # naming the Pod
+        # pod configuration
+        name='my_pod', # naming the pod
         get_logs=True, # log stdout of the container as task logs
-        log_events_on_failure=True, #log events in case of Pod failure
+        log_events_on_failure=True, #log events in case of pod failure
         env_vars={"DATA_POINT": "{{ ti.xcom_pull(task_ids='extract_data', key='return_value') }}"},
         do_xcom_push=True #push the contents from xcom.json to xcoms
         )
@@ -321,7 +320,7 @@ The example below shows the steps to take to set up an EKS cluster on AWS and ru
 
 > **Note**: If you are using [Google Kubernetes Engine](https://cloud.google.com/kubernetes-engine/) consider using [GKEStartPodOperator](https://registry.astronomer.io/providers/google/modules/gkestartPodoperator).
 
-> **Note**: In the example we are using the KubernetesPodOperator to connect to an EKS Cluster to demonstrate the general use case. The [EksPodOperator](https://airflow.apache.org/docs/apache-airflow-providers-amazon/stable/_api/airflow/providers/amazon/aws/operators/eks/index.html#module-airflow.providers.amazon.aws.operators.eks) is an operator directly derived form the KPO that could also be used for this specific use case.
+> **Note**: In the example we are using the `KubernetesPodOperator` to connect to an EKS Cluster to demonstrate the general use case. The [EksPodOperator](https://airflow.apache.org/docs/apache-airflow-providers-amazon/stable/_api/airflow/providers/amazon/aws/operators/eks/index.html#module-airflow.providers.amazon.aws.operators.eks) is an operator directly derived form the KPO that could also be used for this specific use case.
 
 ### Step 1: Set up an EKS cluster on AWS
 
@@ -454,11 +453,17 @@ In the Airflow UI navigate to **Admin** -> **Connections** to set up the connect
 
 ![Adding AWS connection](https://assets2.astronomer.io/main/guides/your-guide-folder/aws_connection.png)
 
-### Step 6: Create the DAG with the KPO 
+### Step 6: Create the DAG with the KPO
 
-If dynamic behavior of the EKS cluster is desired, e.g. Nodes get created with specifications for a task and deleted after the task has run, it is necessary to use several classes from the Amazon provider package as shown in the example DAG below. If your remote Kubernetes cluster has Nodes already available you will only need the KubernetesPodOperator itself (task number 3 in the example).
+If dynamic behavior of the EKS cluster is desired, e.g. Nodes get created with specifications for a task and deleted after the task has run, it is necessary to use several classes from the Amazon provider package as shown in the example DAG below. If your remote Kubernetes cluster has Nodes already available you will only need the `KubernetesPodOperator` itself (task number 3 in the example).
 
-The example DAG contains 5 consecutive tasks. The first one creates a Nodegroup according to the users' specifications and afterwards a sensor checks that the cluster is running correctly. The third tasks is the actual KubernetesPodOperator running any valid Docker image in a Pod on the newly created Nodegroup on the remote cluster. The example below uses the standard `Ubuntu` image to print "hello" to the console using a `bash` command. Lastly the Nodegroup gets deleted and the deletion gets verified.
+The example DAG contains 5 consecutive tasks:
+
+- Create a nodegroup according to the users' specifications.
+- Use a sensor to check that the cluster is running correctly.
+- Use the `KubernetesPodOperator` to run any valid Docker image in a pod on the newly created nodegroup on the remote cluster. The example DAG uses the standard `Ubuntu` image to print "hello" to the console using a `bash` command.
+- Delete the nodegroup.
+- Verify that the nodegroup has been deleted.
 
 > **Note**: The argument `labels={"kubernetes_pod_operator": "external-cluster"}` in the KPO of the example DAG is specific to behavior of the Astro Cloud and not needed for other implementations.
 
@@ -469,7 +474,7 @@ from datetime import datetime
 from airflow.configuration import conf
 
 # import the KPO
-from airflow.providers.cncf.kubernetes.operators.kubernetes_Pod import (
+from airflow.providers.cncf.kubernetes.operators.kubernetes_pod import (
                                                         KubernetesPodOperator)
 
 # import EKS related packages from the Amazon Provider
@@ -543,12 +548,12 @@ with DAG(
         task_id="run_on_EKS",
         cluster_context='<arn of your cluster>',
         namespace="airflow-kpo-default",
-        name="example_Pod",
+        name="example_pod",
         image='ubuntu',
         cmds=['bash', '-cx'],
         arguments=["echo hello"],
         get_logs=True,
-        is_delete_operator_Pod=False,
+        is_delete_operator_pod=False,
         in_cluster=False,
         config_file='/usr/local/airflow/include/config',
         startup_timeout_seconds=240,
