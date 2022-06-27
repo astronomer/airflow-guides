@@ -9,7 +9,7 @@ tags: ["Kubernetes", "Operators"]
 
 ## Overview
 
-The [KubernetesPodOperator](https://registry.astronomer.io/providers/kubernetes/modules/kubernetesPodoperator) (KPO) is an operator from the Kubernetes provider package designed to provide a straightforward way to execute a task in a Kubernetes Pod from your Airflow environment. In a nutshell the KPO is an abstraction over a call to the Kubernetes API to launch a Pod.
+The [KubernetesPodOperator](https://registry.astronomer.io/providers/kubernetes/modules/kubernetesPodoperator) (KPO) is an operator from the Kubernetes provider package designed to provide a straightforward way to execute a task in a Kubernetes pod from your Airflow environment. In a nutshell, the KPO is an abstraction over a call to the Kubernetes API to launch a pod.
 
 In this guide, we list the requirements to run the KubernetesPodOperator, explain when to use it and cover its most important arguments, as well as the difference between the KPO and KubernetesExecutor. We also provide concrete examples on how to use the KPO to run a task in a language other than Python, how to use the KPO with XComs, and how to launch a pod in a remote AWS EKS Cluster.  
 
@@ -412,7 +412,7 @@ users:
 
 The `KubeConfig` file is how the KPO will connect to a Kubernetes cluster by running the `awscli` with the default profile, using the credentials you provided in Step 1.
 
-### Step 3 Add a namespace and service account to the EKS Cluster
+### Step 3: Add a namespace and service account to the EKS Cluster
 
 It is best practice to use a new namespace and separate service account for all pods sent to the EKS cluster from the Airflow environment.  
 
