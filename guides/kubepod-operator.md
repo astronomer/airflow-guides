@@ -47,7 +47,7 @@ The `KubernetesPodOperator` runs any Docker image provided to it, whether they a
 - Having full control over how much compute resources and memory a single task can use.
 - Executing tasks in an separate environment with individual packages and dependencies.
 - Running tasks that necessitate using a version of Python not supported by your Airflow environment.
-- Running tasks with specific Node (a virtual or physical machine in Kubernetes) constrains such as only running on Nodes located in the European Union.
+- Running tasks with specific Node (a virtual or physical machine in Kubernetes) constraints such as only running on Nodes located in the European Union.
 
 Sometimes you may want to run Pods on different clusters, for example if only some need GPU resources while others do not. This is also possible with the KPO and a step-by-step example is provided at the end of this guide.
 
@@ -103,9 +103,9 @@ There are also many other arguments that can be used to configure the Pod and pa
 
 ### Configuring Kubernetes Connection
 
-When leaving the `in_cluster` parameter on its default setting (`True`) it is not necessary to further configure the Kubernetes connection, the Pod specified by the `KubernetesPodOperator` will be run on the same Kubernetes cluster as your Airflow instance is running on.
+When leaving the `in_cluster` parameter on its default setting (`True`) it is not necessary to further configure the Kubernetes connection. The Pod specified by the `KubernetesPodOperator` will be run on the same Kubernetes cluster as your Airflow instance is running on.
 
-If you are not running Airflow on Kubernetes or want to send the Pod to a different cluster than the one currently hosting your Airflow instance the three arguments below will be necessary to specify how the KPO will use the [Kubernetes Hook](https://registry.astronomer.io/providers/kubernetes/modules/kuberneteshook) to connect to the [Kubernetes API](https://kubernetes.io/docs/reference/kubernetes-api/) of a different Kubernetes cluster.
+If you are not running Airflow on Kubernetes or want to send the Pod to a different cluster than the one currently hosting your Airflow instance, the three arguments below will be necessary to specify how the KPO will use the [Kubernetes Hook](https://registry.astronomer.io/providers/kubernetes/modules/kuberneteshook) to connect to the [Kubernetes API](https://kubernetes.io/docs/reference/kubernetes-api/) of a different Kubernetes cluster.
 
 - `kubernetes_conn_id`: uses a [connection](https://www.astronomer.io/guides/connections) stored in the [Airflow metadata database](https://www.astronomer.io/guides/airflow-database), which can be configured in the Airflow UI under **Admin** -> **Connections**.
 - `config_file`: sets the path to the `KubeConfig` file. If not specified, the default value is `~/.kube/config`.
