@@ -13,9 +13,9 @@ The [`KubernetesPodOperator`](https://registry.astronomer.io/providers/kubernete
 
 In this guide, we list the requirements to run the `KubernetesPodOperator`, explain when to use it and cover its most important arguments, as well as the difference between the KPO and `KubernetesExecutor`. We also provide concrete examples on how to use the KPO to run a task in a language other than Python, how to use the KPO with XComs, and how to launch a Pod in a remote AWS EKS Cluster.  
 
-> **Note**: Kubernetes is a powerful tool for Container Orchestration with complex functionality. If you are unfamiliar with Kubernetes we recommend taking a look at the [Kubernetes 101 Guide](https://www.astronomer.io/guides/intro-to-kubernetes/) to get a general overview. For in-depth information check out the [Kubernetes Documentation](https://kubernetes.io/docs/home/).  
+> **Note**: Kubernetes is a powerful tool for Container Orchestration with complex functionality. If you are unfamiliar with Kubernetes we recommend taking a look at the [Kubernetes Documentation](https://kubernetes.io/docs/home/).  
 
-## Requirements For Using the `KubernetesPodOperator`
+## Requirements For Using the KubernetesPodOperator
 
 To use the `KubernetesPodOperator` it is necessary to install the Kubernetes provider package.
 
@@ -29,7 +29,7 @@ You will also need an existing Kubernetes cluster to connect to, which commonly 
 
 > **Note**: On Astro, the infrastructure needed to run KPO with CeleryExecutor is pre-built into every cluster. Astronomer provides [comprehensive documentation on using the KPO on Astro](https://docs.astronomer.io/astro/kubernetespodoperator).  
 
-### Running the `KubernetesPodOperator` Locally
+### Running the KubernetesPodOperator Locally
 
 When developing and testing changes it can be tedious to deploy to a remote environment, which is why many users set up their local dev environment to support usage of the KPO. This can be accomplished in several ways.
 
@@ -39,7 +39,7 @@ It is also possible to run open source Airflow within a local Kubernetes cluster
 
 When running Airflow within a Kubernetes cluster, using the KPO does not require further configuration beyond leaving the `KubernetesPodOperator` parameter `in_cluster` on its default setting (`True`) to run a new Pod within the same cluster. An example on how to run a Pod on a remote cluster, including in the case of not running local Airflow on Kubernetes, is presented at the end of this guide.
 
-## When to use the `KubernetesPodOperator`
+## When to use the KubernetesPodOperator
 
 The `KubernetesPodOperator` runs any Docker image provided to it, whether they are pulled from [DockerHub](https://hub.docker.com/) or from private repositories. Frequent use cases are:
 
@@ -53,7 +53,7 @@ Sometimes you may want to run Pods on different clusters, for example if only so
 
 > **Note**: A simple way to execute tasks in different clusters with different compute resources using worker queues is an upcoming feature on Astro!
 
-### `KubernetesPodOperator` vs `KubernetesExecutor`
+### KubernetesPodOperator vs KubernetesExecutor
 
 In Airflow you have the option to choose between a variety of [executors](https://www.astronomer.io/guides/airflow-executors-explained) which determine how your Airflow tasks will be executed.
 
@@ -103,15 +103,18 @@ There are also many other arguments that can be used to configure the Pod and pa
 
 ### Configuring Kubernetes Connection
 
-When leaving the `in_cluster` parameter on its default setting (`True`) it is not necessary to further configure the Kubernetes connection. The Pod specified by the `KubernetesPodOperator` will be run on the same Kubernetes cluster as your Airflow instance is running on.
+When leaving the `in_cluster` parameter on its default setting (`True`) it is not necessary to further configure the Kubernetes connection, beyond specifying the required parameter `namespace`. The Pod specified by the `KubernetesPodOperator` will be run on the same Kubernetes cluster as your Airflow instance is running on.
 
-If you are not running Airflow on Kubernetes or want to send the Pod to a different cluster than the one currently hosting your Airflow instance, the three arguments below will be necessary to specify how the KPO will use the [Kubernetes Hook](https://registry.astronomer.io/providers/kubernetes/modules/kuberneteshook) to connect to the [Kubernetes API](https://kubernetes.io/docs/reference/kubernetes-api/) of a different Kubernetes cluster.
+If you are not running Airflow on Kubernetes or want to send the Pod to a different cluster than the one currently hosting your Airflow instance, you can set up a Kubernetes Cluster [Connection](https://www.astronomer.io/guides/connections) in the Airflow UI under **Admin** -> **Connections**, which will use the [Kubernetes Hook](https://registry.astronomer.io/providers/kubernetes/modules/kuberneteshook) to connect to the [Kubernetes API](https://kubernetes.io/docs/reference/kubernetes-api/) of a different Kubernetes cluster. This connection can be passed to the `KubernetesPodOperator` via the `kubernetes_conn_id` argument and needs two components to work:
 
-- `kubernetes_conn_id`: uses a [connection](https://www.astronomer.io/guides/connections) stored in the [Airflow metadata database](https://www.astronomer.io/guides/airflow-database), which can be configured in the Airflow UI under **Admin** -> **Connections**.
-- `config_file`: sets the path to the `KubeConfig` file. If not specified, the default value is `~/.kube/config`.
-- `cluster_context`: is used to select a specific cluster if several are defined within the `KubeConfig` file.
+- a `KubeConfig` file, provided as either a path to the file or in JSON format.
+- the cluster context to select a specific cluster from the provided `KubeConfig` file.
 
-The `kubernetes_conn_id` is the preferred way of setting up your Kubernetes connection. `in_cluster`, `cluster_context` and the path to the `config_file` can be set within your connection and overwritten by using the parameters in the KPO. Setting these parameters at the level of `airflow.cfg` has been deprecated.
+The picture below shows how to set up a Kubernetes Cluster Connection in the Airflow UI.
+
+![Kubernetes Cluster Connection](https://assets2.astronomer.io/main/guides/kubepod-operator/kubernetes_cluster_connection.png)
+
+The components of the connection can also be set or overwritten at the task level by using the arguments `config_file` (to specify the path to the `KubeConfig` file) and `cluster_context`. Setting these parameters at the level of `airflow.cfg` has been deprecated.
 
 ### Example: Using the KPO to Run a Script in Another Language
 
@@ -200,18 +203,7 @@ with DAG(
         )
 ```
 
-## `KubernetesPodOperator` best practices
-
-SECTION INCOMPLETE
-
-Suggestions from issues:  
-
-- CI/CD guidelines (such as you need to be pushing updates to the KPO image)
-- make sure each KPO image update has a unique tag
-Some advice on where to store the images such that they can be retrieved on Astro
-- how to best set env variables
-
-## Example: Using the `KubernetesPodOperator` with XComs
+## Example: Using the KubernetesPodOperator with XComs
 
 [XCom](https://airflow.apache.org/docs/apache-airflow/stable/concepts/xcoms.html) is a commonly used Airflow feature for passing small amounts of data between tasks. It is possible to use this feature with the KPO to both receive values stored in XCom and push values to XCom.
 
@@ -318,9 +310,7 @@ However, you may want to use a specific AWS or GCP account that you keep separat
 
 The example below shows the steps to take to set up an EKS cluster on AWS and run a Pod on it from an Airflow instance where cross-account access is not feasible. After setup of the EKS cluster, the `KubeConfig` as well as the `AWS Profile` have to be provided to Airflow to make the connection to the remote cluster. Note that the same general steps are applicable to other Kubernetes services (e.g. GKE).  
 
-> **Note**: If you are using [Google Kubernetes Engine](https://cloud.google.com/kubernetes-engine/) consider using [GKEStartPodOperator](https://registry.astronomer.io/providers/google/modules/gkestartPodoperator).
-
-> **Note**: In the example we are using the `KubernetesPodOperator` to connect to an EKS Cluster to demonstrate the general use case. The [EksPodOperator](https://airflow.apache.org/docs/apache-airflow-providers-amazon/stable/_api/airflow/providers/amazon/aws/operators/eks/index.html#module-airflow.providers.amazon.aws.operators.eks) is an operator directly derived form the KPO that could also be used for this specific use case.
+> **Note**: Some platforms which can host Kubernetes clusters have their own specialised operators available like the [GKEStartPodOperator](https://registry.astronomer.io/providers/google/modules/gkestartPodoperator) and the [EksPodOperator](https://airflow.apache.org/docs/apache-airflow-providers-amazon/stable/_api/airflow/providers/amazon/aws/operators/eks/index.html#module-airflow.providers.amazon.aws.operators.eks).
 
 ### Step 1: Set up an EKS cluster on AWS
 
@@ -413,16 +403,11 @@ The `KubeConfig` file is how the KPO will connect to a Kubernetes cluster by run
 
 ### Step 3: Add a namespace and service account to the EKS Cluster
 
-It is best practice to use a new namespace and separate service account for all Pods sent to the EKS cluster from the Airflow environment.  
+It is best practice to use a new namespace for all Pods sent to the EKS cluster from the Airflow environment.  
 
 ```bash
 # create a new namespace on the EKS cluster
 kubectl create namespace <your namespace name>
-
-# if you are using a service account other than default in the Kubernetes
-# environment your Airflow instance is running it you will have to add a
-# service account of the same name to your remote cluster
-kubectl create serviceaccount <service account name> -n <your namespace name>
 ```
 
 ### Step 4: Adjust the Airflow configuration files
@@ -449,23 +434,21 @@ apache-airflow-providers-amazon
 
 ### Step 5: Add AWS connection ID
 
-In the Airflow UI navigate to **Admin** -> **Connections** to set up the connection to the AWS account running the target EKS cluster. Chose a unique connection ID and use your `aws_access_key_id` as login and your `aws_secret_access_key` as password.
-
-![Adding AWS connection](https://assets2.astronomer.io/main/guides/kubepod-operator/aws_connection.png)
+In the Airflow UI navigate to **Admin** -> **Connections** to set up the connection to the AWS account running the target EKS cluster. Chose a unique connection ID, the Connection Type 'Amazon Web Services' and use your `aws_access_key_id` as login and your `aws_secret_access_key` as password.
 
 ### Step 6: Create the DAG with the KPO
+
+> **Note**: When creating new deployments, users of the Astro cloud will need to set one additional argument in the KPO: `labels={"airflow_kpo_in_cluster": "False"}` to connect to a remote cluster. If you are trying to set up the KPO connecting to a remote cluster in an existing deployment please contact Customer Support.
 
 If dynamic behavior of the EKS cluster is desired, e.g. Nodes get created with specifications for a task and deleted after the task has run, it is necessary to use several classes from the Amazon provider package as shown in the example DAG below. If your remote Kubernetes cluster has Nodes already available you will only need the `KubernetesPodOperator` itself (task number 3 in the example).
 
 The example DAG contains 5 consecutive tasks:
 
-- Create a node group according to the users' specifications.
+- Create a node group according to the users' specifications (in the example using GPU resources).
 - Use a sensor to check that the cluster is running correctly.
 - Use the `KubernetesPodOperator` to run any valid Docker image in a Pod on the newly created node group on the remote cluster. The example DAG uses the standard `Ubuntu` image to print "hello" to the console using a `bash` command.
 - Delete the node group.
 - Verify that the node group has been deleted.
-
-> **Note**: The argument `labels={"kubernetes_pod_operator": "external-cluster"}` in the KPO of the example DAG is specific to behavior of the Astro Cloud and not needed for other implementations.
 
 ```python
 # import DAG object and utility packages
@@ -544,6 +527,9 @@ with DAG(
     )
 
     # task 3 the KPO running a task
+    # here, cluster_context and the config_file are defined at the task level
+    # it is of course also possible to abstract these values
+    # in a Kubernetes Cluster Connection
     run_on_EKS=KubernetesPodOperator(
         task_id="run_on_EKS",
         cluster_context='<arn of your cluster>',
@@ -557,8 +543,6 @@ with DAG(
         in_cluster=False,
         config_file='/usr/local/airflow/include/config',
         startup_timeout_seconds=240,
-        # this line is specific to users of Astro and not needed in OSS Airflow
-        labels={"kubernetes_pod_operator": "external-cluster"}
     )
 
     # task 4 deleting the node group
