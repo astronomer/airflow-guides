@@ -115,7 +115,7 @@ There are a few things to note about this lineage graph:
 
 ## DAG Authoring with the Astro SDK Python
 
-The Astro SDK Python is an open source DAG authoring tool maintained by Astronomer that allows you to write DAGs based on how you want your data to move by simplifying the data transformation process between different environments. It allows you to focus solely on writing execution logic, without having to worry about Airflow execution logic. Details like creating dataframes, storing intermediate results, passing context and data between tasks, and creating Airflow task dependencies are all managed automatically.
+The Astro SDK Python is an open source DAG authoring tool maintained by Astronomer that allows you to write DAGs based on how you want your data to move by simplifying the data transformation process between different environments. It allows you to focus solely on writing execution logic, without having to worry about Airflow orchestration logic. Details like creating dataframes, storing intermediate results, passing context and data between tasks, and creating Airflow task dependencies are all managed automatically.
 
 > **Note:** The Astro SDK is currently in a **preview release** state. It is not yet production-ready, and interfaces may change. We welcome users to try out the interface and [provide us with feedback](https://github.com/astronomer/astro-sdk).
 
