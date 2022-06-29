@@ -39,8 +39,8 @@ Modules for orchestrating basic queries and functions in Snowflake include:
 - [`SnowflakeOperator`](https://registry.astronomer.io/providers/snowflake/modules/snowflakeoperator): Executes a SQL query in Snowflake. This operator is part of `apache-airflow-providers-snowflake`.
 - [`S3ToSnowflakeOperator`](https://registry.astronomer.io/providers/snowflake/modules/s3tosnowflakeoperator): Executes a COPY command to transfer data from S3 into Snowflake.
 - [`SnowflakeToSlackOperator`](https://registry.astronomer.io/providers/snowflake/modules/snowflaketoslackoperator): Executes a SQL query in Snowflake and sends the results to Slack.
-- `SnowflakeOperatorAsync`: The deferrable version of the `SnowflakeOperator`, executes a SQL query in Snowflake.
-- `SnowflakeHookAsync`: The deferrable version of the `SnowflakeHook`, abstracts the Snowflake API.
+- `SnowflakeOperatorAsync`: The [deferrable](https://www.astronomer.io/guides/deferrable-operators) version of the `SnowflakeOperator`, executes a SQL query in Snowflake.
+- `SnowflakeHookAsync`: The [deferrable](https://www.astronomer.io/guides/deferrable-operators) version of the `SnowflakeHook`, abstracts the Snowflake API.
 
 Modules for orchestrating **data quality checks** in Snowflake include:
 
@@ -53,27 +53,137 @@ Below we show an example of how to use some of these modules in a DAG that imple
 
 ### Example Implementation
 
-> **Note:** All of the code for this example can be found on the [Astronomer Registry](LINK). 
+> **Note:** All of the code for this example can be found in the [Astronomer Registry](LINK). 
 
 The exmaple DAG below implements a write, audit, publish pattern to showcase loading and data quality checking with Snowflake. The following steps are completed:
 
 - Simultaneously create tables in Snowflake for the production data and the raw data that needs to be audited, using the `SnowflakeOperator`. Note that these tasks are not implemented with the deferrable version of the `SnowflakeOperator`, because `CREATE TABLE` statements typically run very quickly.
-- Load data into the audit table using the `SnowflakeOperatorAsync`. This task *is* deferred to save on compute, because loading data can take some time if the dataset is large.
+- Load data into the audit table using the `SnowflakeOperatorAsync`. This task *is* deferred to save on compute, because loading data can take some time if the dataset is large. Note that to use the deferrable operator, you must have a [triggerer running](https://www.astronomer.io/guides/deferrable-operators#running-deferrable-tasks-in-your-airflow-environment) in your Airflow environment.
 - Run data quality checks on the audit table to ensure that no erroneous data is moved to production. This Task Group includes column checks using the `SQLColumnCheckOperator` and table checks using the `SQLTableCheckOperator`. 
 - Assuming the data quality checks passed, meaning those tasks were successful, copy data from the audit table into the production table using the `SnowflakeOperatorAsync`.
 - Finally, delete the audit table since it only contained temporary data.
 
 > **Note:** To make use of deferrable operators you must have a Triggerer running in your Airflow environment. For more on how to use deferrable operators, check out [this guide](https://www.astronomer.io/guides/deferrable-operators).
 
-All of these tasks rely on SQL scripts that are stored in the `include/sql/` directory. 
+All of these tasks rely on parameterized SQL scripts that are stored in the `include/sql/` directory and can be found in the Astronomer Registry link above. 
 
 The DAG looks like this:
 
 ```python
-#add dag code here
+import json
+
+from pathlib import Path
+
+from airflow import DAG
+from airflow.models.baseoperator import chain
+from airflow.operators.dummy_operator import DummyOperator
+from airflow.providers.snowflake.operators.snowflake import SnowflakeOperator
+from astronomer.providers.snowflake.operators.sensors.snowflake import SnowflakeOperatorAsync
+from airflow.utils.dates import datetime
+from airflow.utils.task_group import TaskGroup
+
+from include.common.sql.operators.sql import (
+    SQLColumnCheckOperator, SQLTableCheckOperator
+)
+from include.libs.schema_reg.base_schema_transforms import snowflake_load_column_string
+
+
+SNOWFLAKE_FORESTFIRE_TABLE = "forestfires"
+SNOWFLAKE_AUDIT_TABLE = f"{SNOWFLAKE_FORESTFIRE_TABLE}_AUDIT"
+SNOWFLAKE_CONN_ID = "snowflake_default"
+
+base_path = Path(__file__).parents[2]
+table_schema_path = (
+    f"{base_path}/include/sql/snowflake_examples/table_schemas/"
+)
+
+with DAG(
+    "snowflake_write_audit_publish",
+    description="Example DAG showcasing loading and data quality checking with Snowflake.",
+    start_date=datetime(2021, 1, 1),
+    schedule_interval=None,
+    template_searchpath="/usr/local/airflow/include/sql/snowflake_examples/",
+    catchup=False,
+    default_args={"conn_id": SNOWFLAKE_CONN_ID, "snowflake_conn_id": SNOWFLAKE_CONN_ID}
+) as dag:
+
+    create_forestfire_audit_table = SnowflakeOperator(
+        task_id="create_forestfire_audit_table",
+        sql="create_forestfire_table.sql",
+        params={"table_name": SNOWFLAKE_AUDIT_TABLE},
+    )
+
+    create_forestfire_production_table = SnowflakeOperator(
+        task_id="create_forestfire_production_table",
+        sql="create_forestfire_table.sql",
+        params={"table_name": SNOWFLAKE_FORESTFIRE_TABLE}
+    )
+
+    load_data = SnowflakeOperatorAsync(
+        task_id="insert_query",
+        sql="load_snowflake_forestfire_data.sql",
+        params={"table_name": SNOWFLAKE_AUDIT_TABLE}
+    )
+
+    with TaskGroup(group_id="quality_checks") as quality_check_group:
+
+        column_checks = SQLColumnCheckOperator(
+            task_id="column_checks",
+            table=SNOWFLAKE_AUDIT_TABLE,
+            column_mapping={"id": {"null_check": {"equal_to": 0}}}
+        )
+
+        table_checks = SQLTableCheckOperator(
+            task_id="table_checks",
+            table=SNOWFLAKE_AUDIT_TABLE,
+            checks={"row_count_check": {"check_statement": "COUNT(*) = 9"}}
+        )
+
+    with open(
+        f"{table_schema_path}/forestfire_schema.json",
+        "r",
+    ) as f:
+        table_schema = json.load(f).get("forestfire")
+        table_props = table_schema.get("properties")
+        table_dimensions = table_schema.get("dimensions")
+        table_metrics = table_schema.get("metrics")
+
+        col_string = snowflake_load_column_string(table_props)
+
+        copy_snowflake_audit_to_production_table = SnowflakeOperator(
+            task_id="copy_snowflake_audit_to_production_table",
+            sql="copy_forestfire_snowflake_audit.sql",
+            params={
+                "table_name": SNOWFLAKE_FORESTFIRE_TABLE,
+                "audit_table_name": f"{SNOWFLAKE_FORESTFIRE_TABLE}_AUDIT",
+                "table_schema": table_props,
+                "col_string": col_string,
+            },
+            trigger_rule="all_success"
+        )
+
+    delete_audit_table = SnowflakeOperator(
+        task_id="delete_audit_table",
+        sql="delete_forestfire_table.sql",
+        params={"table_name": f"{SNOWFLAKE_FORESTFIRE_TABLE}_AUDIT"},
+        trigger_rule="all_success"
+    )
+
+    begin = DummyOperator(task_id="begin")
+    end = DummyOperator(task_id="end")
+
+    chain(
+        begin,
+        [create_forestfire_production_table, create_forestfire_audit_table],
+        load_data,
+        quality_check_group,
+        copy_snowflake_audit_to_production_table,
+        delete_audit_table,
+        end
+    )
 ```
 
-GRAPH VIEW SCREENSHOT
+![Snowflake DAG Graph](https://assets2.astronomer.io/main/guides/airflow-snowflake/snowflake_dag_graph.png)
 
 Note that to run this DAG, you will need a connection to your Snowflake instance in your Airflow environment. This DAG uses a connection called `snowflake_default`. Your connection should be the `Snowflake` type, and should include the following information:
 
@@ -93,7 +203,7 @@ Warehouse: Your warehouse
 
 The [OpenLineage project](https://openlineage.io/) maintains an integration with Airflow that allows users to obtain and view lineage data from their Airflow tasks. As long as an extractor exists for the operator being used, lineage data will be generated automatically from each task instance. For introductory information on how OpenLineage works with Airflow, check out [this guide](https://www.astronomer.io/guides/airflow-openlineage).
 
-Users of the `SnowflakeOperator`, which does have an extractor, will be able to use lineage metadata to answer questions across DAGs such as:
+Users of the `SnowflakeOperator` and `SnowflakeOperatorAsync`, which does have an extractor, will be able to use lineage metadata to answer questions across DAGs such as:
 
 - How does data stored in Snowflake flow through my DAGs? Are there any upstream dependencies?
 - What downstream data does a task failure impact?
@@ -101,7 +211,7 @@ Users of the `SnowflakeOperator`, which does have an extractor, will be able to 
 
 At a high level, the OpenLineage - Airflow - Snowflake interaction works like this:
 
-SCREENSHOT
+![Snowflake Openlineage](https://assets2.astronomer.io/main/guides/airflow-snowflake/snowflake_openlineage_architecture.png)
 
 Note that to view lineage data from your DAGs you need to have OpenLineage installed in your Airflow environment and a lineage front end running. For [Astro customers](https://docs.astronomer.io/astro/data-lineage), lineage is enabled automatically. For users working with open source tools, you can run Marquez locally and connect it to your Airflow environment following the instructions in [this guide](https://www.astronomer.io/guides/airflow-openlineage). 
 
