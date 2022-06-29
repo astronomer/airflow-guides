@@ -57,9 +57,9 @@ In the Airflow UI, Task Groups look like tasks with blue shading. When we expand
 
 ## Using the Task Group Decorator
 
-Another way of defining Task Groups in your DAGs is by using the Task Group decorator. Note that this feature requires Airflow 2.1+. The Task Group decorator works like other [decorators in Airflow](https://www.astronomer.io/guides/airflow-decorators) by allowing you to define your Task Group with less boilerplate code using the TaskFlow API. The functionality of Task Groups does not change when defining them with a decorator, but for DAG authors who use the `@task` Python task decorator in their DAGs, it may be a more stylistically consistent option.
+Another way of defining Task Groups in your DAGs is by using the Task Group decorator. Note that this feature requires Airflow 2.1+. The Task Group decorator works like other [decorators in Airflow](https://www.astronomer.io/guides/airflow-decorators) by allowing you to define your Task Group with less boilerplate code using the TaskFlow API. Using Task Group decorators doesn't change the functionality of Task Groups, but if you already use task decorators in your DAGs then they can make your code formatting more consistent.
 
-At a high level, to use the decorator you must use `@task_group` before a Python function which calls the functions of tasks that should go in the Task Group. For example:
+To use the decorator, add `@task_group` before a Python function which calls the functions of tasks that should go in the Task Group. For example:
 
 ```python
 @task_group(group_id="tasks")
@@ -69,9 +69,9 @@ def my_independent_tasks():
     task_c()
 ```
 
-This function will create a Task Group with three independent tasks that should be defined elsewhere in the DAG.
+This function creates a Task Group with three independent tasks that are defined elsewhere in the DAG.
 
-You can also create a Task Group containing dependent tasks, like this:
+You can also create a Task Group of dependent tasks:
 
 ```python
 @task_group(group_id="tasks")
@@ -132,10 +132,10 @@ The resulting DAG looks like this:
 
 ![Decorated Task Group](https://assets2.astronomer.io/main/guides/task-groups/decorated_task_group.png)
 
-There are a few things to note about this DAG and when using the Task Group decorator:
+There are a few things to consider when using the Task Group decorator:
 
-- If downstream tasks require the output of tasks that are in the Task Group, then the Task Group function must return a result. In this example, we return a dictionary with two values, one from each of the tasks in the Task Group, that are then passed to the downstream `load()` task.
-- If your Task Group function does not return any output, you will need to use bitshift operators (`<<` or `>>`) to define dependencies, rather than calling the function with the TaskFlow API.
+- If downstream tasks require the output of tasks that are in the Task Group decorator, then the Task Group function must return a result. In the previous example, we return a dictionary with two values, one from each of the tasks in the Task Group, that are then passed to the downstream `load()` task.
+- If your Task Group function returns an output, you can simply call the function from your DAG with the TaskFlow API like in the previous example. If your Task Group function does not return any output, you must use bitshift operators (`<<` or `>>`) to define dependencies to the Task Group like you would with a standard task.
 
 
 ## Dynamically Generating Task Groups
