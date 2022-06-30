@@ -16,7 +16,7 @@ In this guide, we cover:
 - The requirements for running the `KubernetesPodOperator`.
 - When to use the `KubernetesPodOperator`.
 - How to configure the `KubernetesPodOperator`.
-- The differences between the `KubernetesPodOperator` and the Kubernetes executor. 
+- The differences between the `KubernetesPodOperator` and the Kubernetes executor.
 
 We also provide examples of how to use the KPO to run a task in a language other than Python, how to use the KPO with XComs, and how to launch a Pod in a remote AWS EKS Cluster.  
 
@@ -32,14 +32,14 @@ pip install apache-airflow-providers-cncf-kubernetes==<version>
 
 Make sure you install the right version of the provider package for your version of Airflow by checking the [Airflow Kubernetes provider Documentation](https://airflow.apache.org/docs/apache-airflow-providers-cncf-kubernetes/stable/index.html#requirements).
 
-You also need an existing Kubernetes cluster to connect to. This is commonly the same cluster that Airflow is running on, but it doesn't have to be. 
+You also need an existing Kubernetes cluster to connect to. This is commonly the same cluster that Airflow is running on, but it doesn't have to be.
 
-You don't need to use the Kubernetes executor to use the KPO. You can use any of the following executors: 
+You don't need to use the Kubernetes executor to use the KPO. You can use any of the following executors:
 - Local executor
 - LocalKubernetes executor
 - Celery executor
 - Kubernetes executor
-- CeleryKubernetes executor 
+- CeleryKubernetes executor
 
 When using Celery, remember to install its [provider](https://registry.astronomer.io/providers/celery).
 
@@ -329,7 +329,7 @@ This example shows how to set up an EKS cluster on AWS and run a Pod on it from 
 
 ### Step 1: Set up an EKS cluster on AWS
 
-To set up a new EKS cluster on AWS, first [create an EKS cluster IAM role](https://docs.aws.amazon.com/eks/latest/userguide/service_IAM_role.html#create-service-role) with a unique name and to the following permission policies: 
+To set up a new EKS cluster on AWS, first [create an EKS cluster IAM role](https://docs.aws.amazon.com/eks/latest/userguide/service_IAM_role.html#create-service-role) with a unique name and to the following permission policies:
 
 - `AmazonEKSWorkerNodePolicy`
 - `AmazonEKS_CNI_Policy`
@@ -369,9 +369,9 @@ source_profile = <your user>
 
 Make sure your default credentials include a valid and active key for your username (see the [AWS docs](https://docs.aws.amazon.com/kms/latest/developerguide/create-keys.html) for more information).
 
-Make a copy of `~/.aws/credentials` available to your Airflow environment. If you run Airflow using the Astro CLI, copy this file into the `include` folder of your Astro project. 
+Make a copy of `~/.aws/credentials` available to your Airflow environment. If you run Airflow using the Astro CLI, copy this file into the `include` folder of your Astro project.
 
-Lastly, [create a new EKS cluster](https://docs.aws.amazon.com/eks/latest/userguide/create-cluster.html) and assign the the newly created role to it. 
+Lastly, [create a new EKS cluster](https://docs.aws.amazon.com/eks/latest/userguide/create-cluster.html) and assign the the newly created role to it.
 
 ### Step 2: Retrieve the KubeConfig file from the EKS cluster
 
@@ -381,9 +381,9 @@ Use a `KubeConfig` file to remotely connect to your new EKS cluster. Retrieve it
 aws eks --region <your-region> update-kubeconfig --name <cluster-name>
 ```
 
-This command copies information relating to the new cluster into your existing `KubeConfig` file at `~/.kube/config`. 
+This command copies information relating to the new cluster into your existing `KubeConfig` file at `~/.kube/config`.
 
-Check this file before making it available to Airflow. It should look like the following configuration. If any of the configurations listed here are missing, add them to the file. 
+Check this file before making it available to Airflow. It should look like the following configuration. If any of the configurations listed here are missing, add them to the file.
 
 ```text
 apiVersion: v1
@@ -432,9 +432,9 @@ kubectl create namespace <your-namespace-name>
 
 ### Step 4: Adjust the Airflow configuration files
 
-This step will differ depending on the Airflow setup. 
+This step will differ depending on the Airflow setup.
 
-#### Local Apache Airflow 
+#### Local Apache Airflow
 
 To access your cluster from local instance of Apache Airflow, install `awscli`, `apache-airflow-providers-cncf-kubernetes`, and `apache-airflow-providers-amazon` on the machine running Airflow.
 
@@ -461,9 +461,9 @@ apache-airflow-providers-amazon
 
 ### Step 5: Add AWS connection ID
 
-In the Airflow UI, go to **Admin** -> **Connections** to set up the connection to the AWS account running the target EKS cluster. Set the following configurations for the connection: 
+In the Airflow UI, go to **Admin** -> **Connections** to set up the connection to the AWS account running the target EKS cluster. Set the following configurations for the connection:
 - **Connection ID**: Any
-- **Connection Type**: Amazon Web Services 
+- **Connection Type**: Amazon Web Services
 - **Login**: Your AWS access key ID
 - **Password**: Your AWS secret access key
 
