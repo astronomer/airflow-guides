@@ -85,7 +85,6 @@ For this example, we'll define a Python file with serialization/deserialization 
 ```python
 from typing import Any
 from airflow.models.xcom import BaseXCom
-from airflow.providers.amazon.aws.hooks.s3 import S3Hook
 
 import pandas as pd
 import uuid
@@ -96,6 +95,9 @@ class S3XComBackend(BaseXCom):
 
     @staticmethod
     def serialize_value(value: Any):
+       
+        from airflow.providers.amazon.aws.hooks.s3 import S3Hook
+
         if isinstance(value, pd.DataFrame):
 
             hook        = S3Hook()
@@ -114,6 +116,9 @@ class S3XComBackend(BaseXCom):
 
     @staticmethod
     def deserialize_value(result) -> Any:
+       
+        from airflow.providers.amazon.aws.hooks.s3 import S3Hook
+
         result = BaseXCom.deserialize_value(result)
         if isinstance(result, str) and result.startswith(S3XComBackend.PREFIX):
             hook    = S3Hook()
@@ -180,7 +185,6 @@ For this example, we have created serialization and deserialization methods that
 ```python
 from typing import Any
 from airflow.models.xcom import BaseXCom
-from airflow.providers.amazon.aws.hooks.s3 import S3Hook
 
 import json
 import uuid
@@ -191,6 +195,9 @@ class S3XComBackend(BaseXCom):
 
     @staticmethod
     def serialize_value(value: Any):
+       
+        from airflow.providers.amazon.aws.hooks.s3 import S3Hook
+
         if not isinstance(value, (str, dict, list)):
             hook        = S3Hook()
             key         = "data_" + str(uuid.uuid4())
@@ -210,6 +217,9 @@ class S3XComBackend(BaseXCom):
 
     @staticmethod
     def deserialize_value(result) -> Any:
+       
+        from airflow.providers.amazon.aws.hooks.s3 import S3Hook
+
         result = BaseXCom.deserialize_value(result)
         if isinstance(result, str) and result.startswith(S3XComBackend.PREFIX):
             hook    = S3Hook()
