@@ -53,7 +53,6 @@ If you use the Astro CLI, follow the [Astro docs](https://docs.astronomer.io/ast
 
 It is also possible to run open source Airflow within a local Kubernetes cluster using the [Helm Chart for Apache Airflow](https://airflow.apache.org/docs/helm-chart/stable/index.html). For a walkthrough of this setup, see the [Getting Started With the Official Airflow Helm Chart Webinar](https://www.youtube.com/watch?v=39k2Sz9jZ2c&ab_channel=Astronomer).
 
-When running Airflow within a Kubernetes cluster, using the KPO does not require further configuration beyond leaving the `KubernetesPodOperator` parameter `in_cluster` on its default setting (`True`) to run a new Pod within the same cluster. An example on how to run a Pod on a remote cluster, including in the case of not running local Airflow on Kubernetes, is presented at the end of this guide.
 
 ## When to use the KubernetesPodOperator
 
