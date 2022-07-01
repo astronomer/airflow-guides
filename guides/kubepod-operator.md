@@ -34,7 +34,7 @@ Make sure you install the right version of the provider package for your version
 
 You also need an existing Kubernetes cluster to connect to. This is commonly the same cluster that Airflow is running on, but it doesn't have to be.
 
-You don't need to use the Kubernetes executor to use the KubernetesPodOperator. You can use any of the following executors:
+You don't need to use the Kubernetes executor to use the KubernetesPodOperator. You can choose any of the following executors:
 
 - Local executor
 - LocalKubernetes executor
@@ -182,7 +182,7 @@ with DAG(
     start_date=datetime(2022,6,1),
     catchup=False,
     schedule_interval='@daily',
-    dag_id='KPO_different_language_example'
+    dag_id='KPO_different_language_example_dag'
 ) as dag:
 
     say_hello_name_in_haskell = KubernetesPodOperator(
@@ -242,20 +242,19 @@ COPY multiply_by_23.py ./
 CMD ["python", "./multiply_by_23.py"]
 ```
 
-When using XComs with the KubernetesPodOperator, you must create the file `airflow/xcom/return.json` in your Docker container (ideally from within your Dockerfile as seen above), because Airflow can only look for XComs to pull at that specific location. The Docker image also contains a simple Python script to multiply an environment variable by 23, package the result into JSON, and write that JSON to the correct file to be retrieved as an XCom. The XComs from the KubernetesPodOperator are pushed only if the task itself was marked as successful.  
+When using XComs with the KubernetesPodOperator, you must create the file `airflow/xcom/return.json` in your Docker container (ideally from within your Dockerfile as seen above), because Airflow can only look for XComs to pull at that specific location. The Docker image also contains a simple Python script (shown below) to multiply an environment variable by 23, package the result into JSON, and write that JSON to the correct file to be retrieved as an XCom. The XComs from the KubernetesPodOperator are pushed only if the task itself was marked as successful.  
 
 ```python
 import os
 
 # import the result of the previous task as an environment variable
 data_point = os.environ['DATA_POINT']
-multiplied_data_point = 23 * int(data_point)
 
 # multiply the data point by 23 and package the result into a json
 multiplied_data_point = str(23 * int(data_point))
 return_json = {"return_value":f"{multiplied_data_point}"}
 
-# write to the file checked by airflow for XComs
+# write to the file checked by Airflow for XComs
 f = open('./airflow/xcom/return.json', 'w')
 f.write(f"{return_json}")
 f.close()
@@ -284,7 +283,7 @@ with DAG(
     start_date=datetime(2022,6,1),
     catchup=False,
     schedule_interval='@daily',
-    dag_id='KPO_example_DAG'
+    dag_id='KPO_XComs_example_dag'
 ) as dag:
 
     @task
@@ -298,7 +297,7 @@ with DAG(
         task_id='transform',
 
         ## arguments pertaining to the image and commands executed
-        image='< image location >', # the Docker Image to launch
+        image='<image location>', # the Docker Image to launch
 
         ## arguments pertaining to where the Pod is launched
         # launch the Pod on the same cluster as Airflow is running on
@@ -310,6 +309,8 @@ with DAG(
         name='my_pod', # naming the Pod
         get_logs=True, # log stdout of the container as task logs
         log_events_on_failure=True, #log events in case of Pod failure
+        # pull a variable from XComs using Jinja templating and provide it
+        # to the Pod as an environment variable
         env_vars={"DATA_POINT": """{{ ti.xcom_pull(task_ids='extract_data',
                                                  key='return_value') }}"""},
         # push the contents from xcom.json to Xcoms. Remember to only set this
@@ -326,12 +327,13 @@ with DAG(
                                                key='return_value')
         print(transformed_data_point)
 
+    # set dependencies (tasks defined using Decorators need to be called)
     extract_data() >> transform >> load_data()
 ```
 
 ## Example: Using KubernetesPodOperator to Run a Pod in a Separate Cluster
 
-If some of your tasks require specific resources like a GPU, you might want to run them in a different cluster than your Airflow Instance. In setups where both clusters are used by the same AWS or GCP account, this can be managed with roles and permissions. There is also the possibility to use a CI account and enable [cross-account access to AWS EKS cluster resources](https://aws.amazon.com/blogs/containers/enabling-cross-account-access-to-amazon-eks-cluster-resources/).  
+If some of your tasks require specific resources like a GPU, you might want to run them in a different cluster than your Airflow instance. In setups where both clusters are used by the same AWS or GCP account, this can be managed with roles and permissions. There is also the possibility to use a CI account and enable [cross-account access to AWS EKS cluster resources](https://aws.amazon.com/blogs/containers/enabling-cross-account-access-to-amazon-eks-cluster-resources/).  
 
 However, you might want to use a specific AWS or GCP account that you keep separate from your Airflow environment. Or you might run Airflow on a local setup without Kubernetes, but you still want to run some tasks in a Kubernetes Pod on a remote cluster.
 
@@ -544,7 +546,7 @@ with DAG(
     start_date=datetime(2022,6,1),
     catchup=False,
     schedule_interval='@daily',
-    dag_id='a_dag_in_k8s'
+    dag_id='KPO_remote_EKS_cluster_example_dag'
 ) as dag:
 
     # task 1 creates the node group
