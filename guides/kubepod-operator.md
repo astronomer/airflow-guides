@@ -9,7 +9,7 @@ tags: ["Kubernetes", "Operators"]
 
 ## Overview
 
-The KubernetesPodOperator (KPO) runs an Airflow task as a Docker image in a dedicated Kubernetes Pod. By abstracting calls to the Kubernetes API, the KubernetesPodOperator enables you to start and run Pods from Airflow using DAG code.
+The KubernetesPodOperator (KPO) runs a Docker image in a dedicated Kubernetes Pod. By abstracting calls to the Kubernetes API, the KubernetesPodOperator enables you to start and run Pods from Airflow using DAG code.
 
 In this guide, we cover:
 
@@ -77,8 +77,8 @@ The Kubernetes executor and the KubernetesPodOperator both dynamically launch an
 The main differences between the KubernetesPodOperator and the Kubernetes executor are:
 
 - The KubernetesPodOperator requires a Docker image to be specified, while the Kubernetes executor doesn't.
-- The KubernetesPodOperator defines one isolated Airflow task. In contrast, the Kubernetes executor is implemented at the configuration level of the Airflow instance, which means _all_ tasks run in their own Kubernetes Pod. This might be desired in some use cases to that require auto-scaling, but it's not ideal for environments with a high volume of shorter running tasks.
-- In comparison to the KubernetesPodOperator, the Kubernetes executor has less abstraction over Pod configuration. All task-level configurations have to be passed in to the executor as a dictionary using the `BaseOperator's` `executor_config` argument, which is available to all operators.
+- The KubernetesPodOperator defines one isolated Airflow task. In contrast, the Kubernetes executor is implemented at the configuration level of the Airflow instance, which means _all_ tasks run in their own Kubernetes Pod. This might be desired in some use cases that require auto-scaling, but it's not ideal for environments with a high volume of shorter running tasks.
+- In comparison to the KubernetesPodOperator, the Kubernetes executor has less abstraction over Pod configuration. All task-level configurations have to be passed to the executor as a dictionary using the `BaseOperator's` `executor_config` argument, which is available to all operators.
 - If a custom Docker image is passed to the Kubernetes executor's `base` container by providing it to either the `pod_template_file` or the `pod_override` key in the dictionary for the `executor_config` argument, it needs to have Airflow installed, otherwise the task will not run. A possible reason for customizing this Docker image would be to run a task in an environment with different versions of packages than other tasks running in your Airflow instance. This is not the case with the KubernetesPodOperator, which can run any valid Docker image.
 
 Both the KubernetesPodOperator and the Kubernetes executor can use the Kubernetes API to create Pods for running tasks. Which one you should use is based on your requirements and preferences. The KubernetesPodOperator is generally ideal for controlling the environment the task is run in, while the Kubernetes executor is ideal for controlling resource optimization. It's common to use both the Kubernetes executor and the KubernetesPodOperator in the same Airflow environment, where all tasks need to run on Kubernetes but only some tasks need the KubernetesPodOperator's fine-grained environment configurations.
@@ -104,8 +104,8 @@ The KubernetesPodOperator can be instantiated like any other operator within the
 - `reattach_on_restart`: Defines how to handle losing the worker while the Pod is running.  When set to `True`, the existing Pod reattaches to the worker on the next try. When set to `False`, a new Pod will be created for each try. The default is `True`.
 - `is_delete_operator_pod`: Determines whether to delete the Pod when it reaches its final state or when the execution is interrupted. The default is `True`.
 - `get_logs`: Determines whether to use the `stdout` of the container as task-logs to the Airflow logging system.
-- `log_events_on_failure`: Determines whether are logged in case the Pod fails. The default is `False`.
-- `env_vars`: A list of environment variables for the Pod.
+- `log_events_on_failure`: Determines whether events are logged in case the Pod fails. The default is `False`.
+- `env_vars`: A dictionary of environment variables for the Pod.
 - `resources`: A dictionary with resource requests (keys: `request_memory`, `request_cpu`) and limits (keys: `limit_memory`, `limit_cpu`, `limit_gpu`). See the [Kubernetes Documentation on Resource Management for Pods and Containers](https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/) for more information.
 - `volumes`: A list of `k8s.V1Volumes`, see also the [Kubernetes example DAG from the Airflow documentation](https://airflow.apache.org/docs/apache-airflow-providers-cncf-kubernetes/stable/_modules/tests/system/providers/cncf/kubernetes/example_kubernetes.html).
 - `affinity` and `tolerations`: Dictionaries of rules for [Pod to Node assignments](https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/). Like the `volumes` parameter, these also require a `k8s` object.
@@ -269,7 +269,8 @@ Below you can find the full DAG code. Remember to turn on `do_xcom_push` only if
 ```python
 from airflow import DAG
 from datetime import datetime
-from airflow.providers.cncf.kubernetes.operators.kubernetes_pod import KubernetesPodOperator
+from airflow.providers.cncf.kubernetes.operators.kubernetes_pod import (
+                                                          KubernetesPodOperator)
 from airflow.configuration import conf
 from airflow.decorators import task
 
@@ -296,24 +297,33 @@ with DAG(
         # operator specific argument
         task_id='transform',
 
-        # arguments pertaining to the image and commands executed
+        ## arguments pertaining to the image and commands executed
         image='< image location >', # the Docker Image to launch
 
-        # arguments pertaining to where the Pod is launched
-        in_cluster=True, # launch the Pod on the same cluster as Airflow is running on
-        namespace=namespace, # launch the Pod in the same namespace as Airflow is running in
+        ## arguments pertaining to where the Pod is launched
+        # launch the Pod on the same cluster as Airflow is running on
+        in_cluster=True,
+        # launch the Pod in the same namespace as Airflow is running in
+        namespace=namespace,
 
-        # Pod configuration
+        ## Pod configuration
         name='my_pod', # naming the Pod
         get_logs=True, # log stdout of the container as task logs
         log_events_on_failure=True, #log events in case of Pod failure
-        env_vars={"DATA_POINT": "{{ ti.xcom_pull(task_ids='extract_data', key='return_value') }}"},
-        do_xcom_push=True #push the contents from xcom.json to xcoms
+        env_vars={"DATA_POINT": """{{ ti.xcom_pull(task_ids='extract_data',
+                                                 key='return_value') }}"""},
+        # push the contents from xcom.json to Xcoms. Remember to only set this
+        # argument to True if you have created the `airflow/xcom/return.json`
+        # file within the Docker container run by the KubernetesPodOperator.
+        do_xcom_push=True
         )
 
     @task
     def load_data(**context):
-        transformed_data_point = context['ti'].xcom_pull(task_ids='extract_data', key='return_value')
+        # pull the XCom value that has been pushed by the KubernetesPodOperator
+        transformed_data_point = context['ti'].xcom_pull(
+                                               task_ids='transform',
+                                               key='return_value')
         print(transformed_data_point)
 
     extract_data() >> transform >> load_data()
