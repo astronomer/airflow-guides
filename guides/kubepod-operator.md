@@ -171,13 +171,13 @@ from airflow.providers.cncf.kubernetes.operators.kubernetes_pod import (
                                                         KubernetesPodOperator)
 from airflow.configuration import conf
 
-## get the current Kubernetes namespace Airflow is running in
+# get the current Kubernetes namespace Airflow is running in
 namespace = conf.get("kubernetes", "NAMESPACE")
 
-## set the name that will be printed
+# set the name that will be printed
 name = 'your_name'
 
-## instantiate the DAG
+# instantiate the DAG
 with DAG(
     start_date=datetime(2022,6,1),
     catchup=False,
@@ -186,21 +186,16 @@ with DAG(
 ) as dag:
 
     say_hello_name_in_haskell = KubernetesPodOperator(
-        ## operator specific argument
         # unique id of the task within the DAG
         task_id='say_hello_name_in_haskell',
-
-        ## arguments pertaining to the image and commands executed
         # the Docker image to launch
         image='<image location>',
-
-        ## arguments pertaining to where the Pod is launched
         # launch the Pod on the same cluster as Airflow is running on
         in_cluster=True,
         # launch the Pod in the same namespace as Airflow is running in
         namespace=namespace,
 
-        ## Pod configuration
+        # Pod configuration
         # name the Pod
         name='my_pod',
         # give the Pod name a random suffix, ensure uniqueness in the namespace
@@ -293,22 +288,23 @@ with DAG(
         return data_point
 
     transform = KubernetesPodOperator(
-        # operator specific argument
+        # set task id
         task_id='transform',
+        # specify the Docker image to launch
+        image='<image location>',
 
-        ## arguments pertaining to the image and commands executed
-        image='<image location>', # the Docker Image to launch
-
-        ## arguments pertaining to where the Pod is launched
         # launch the Pod on the same cluster as Airflow is running on
         in_cluster=True,
         # launch the Pod in the same namespace as Airflow is running in
         namespace=namespace,
 
-        ## Pod configuration
-        name='my_pod', # naming the Pod
-        get_logs=True, # log stdout of the container as task logs
-        log_events_on_failure=True, #log events in case of Pod failure
+        # Pod configuration
+        # naming the Pod
+        name='my_pod',
+        # log stdout of the container as task logs
+        get_logs=True,
+        # log events in case of Pod failure
+        log_events_on_failure=True,
         # pull a variable from XComs using Jinja templating and provide it
         # to the Pod as an environment variable
         env_vars={"DATA_POINT": """{{ ti.xcom_pull(task_ids='extract_data',
