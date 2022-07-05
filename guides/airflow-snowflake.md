@@ -8,24 +8,24 @@ tags: ["Integrations", "ETL", "Database"]
 
 ## Overview
 
-[Snowflake](https://www.snowflake.com/) is one of the most commonly used data warehouses, and features heavily in data engineering, data science, and data analytics workflows. As such, orchestrating Snowflake queries as part of a data pipeline is one of the most common use cases we see for Airflow. Using Airflow with Snowflake is straight forward, and there are multiple open source packages, tools, and integrations that can help you take your Snowflake query orchestration to the next level.
+[Snowflake](https://www.snowflake.com/) is one of the most commonly used data warehouses and features heavily in data engineering, data science, and data analytics workflows. Orchestrating Snowflake queries as part of a data pipeline is one of the most common use cases we see for Airflow. Using Airflow with Snowflake is straightforward, and there are multiple open source packages, tools, and integrations that can help you take your Snowflake query orchestration to the next level.
 
-In this guide, we'll cover everything you need to know to make the most out of your "Airflow + Snowflake" experience, including:
+In this guide, we cover everything you need to know to make the most out of Airflow and Snowflake, including:
 
-- Using Snowflake providers, including what modules are out there and how to implement deferrable versions of common operators
-- Leveraging the OpenLineage Airflow integration to get data lineage and enhanced observability from your Snowflake jobs
-- Using the Astro SDK for the next generation of DAG authoring for Snowflake query tasks
-- General best practices and considerations when interacting with Snowflake from Airflow
+- Using Snowflake providers, including what modules are out there and how to implement deferrable versions of common operators.
+- Leveraging the OpenLineage Airflow integration to get data lineage and enhanced observability from your Snowflake jobs.
+- Using the Astro SDK for the next generation of DAG authoring for Snowflake query tasks.
+- General best practices and considerations when interacting with Snowflake from Airflow.
 
 ## Using Snowflake Providers
 
-There are multiple open source packages with modules available to implement various Snowflake orchestration use cases in Airflow: 
+There are multiple open source packages that you can use to orchestrate Snowflake in Airflow: 
 
 - The [Snowflake provider package](https://registry.astronomer.io/providers/snowflake) contains hooks, operators, and transfer operators for Snowflake maintained by the Airflow community.
 - The [Astronomer Providers](https://github.com/astronomer/astronomer-providers) package contains deferrable operators built and maintained by Astronomer, including a deferrable version of the `SnowflakeOperator`.
 - The [Core SQL provider package](LINK) contains SQL check operators that can be used to perform data quality checks against data in Snowflake. 
 
-To leverage all of the Snowflake modules available in Airflow, we recommend installing all three packages in your Airflow environment.
+To leverage all of the Snowflake modules available in Airflow, we recommend installing all three packages in your Airflow environment. If you use the Astro CLI, you can do this by adding the following three lines to your `requirements.txt` file:
 
 ```bash
 apache-airflow-providers-snowflake
@@ -35,7 +35,7 @@ astronomer-providers[snowflake]
 
 Modules for orchestrating basic queries and functions in Snowflake include:
 
-- [`SnowflakeHook`](https://registry.astronomer.io/providers/snowflake/modules/snowflakehook): A hook abstracting the Snowflake API. Generally the hook would only be used by a DAG author when creating a custom operator or function. This hook is part of `apache-airflow-providers-snowflake`. 
+- [`SnowflakeHook`](https://registry.astronomer.io/providers/snowflake/modules/snowflakehook): A hook abstracting the Snowflake API. Generally, you only need to use this hook when creating a custom operator or function. This hook is part of `apache-airflow-providers-snowflake`. 
 - [`SnowflakeOperator`](https://registry.astronomer.io/providers/snowflake/modules/snowflakeoperator): Executes a SQL query in Snowflake. This operator is part of `apache-airflow-providers-snowflake`.
 - [`S3ToSnowflakeOperator`](https://registry.astronomer.io/providers/snowflake/modules/s3tosnowflakeoperator): Executes a COPY command to transfer data from S3 into Snowflake.
 - [`SnowflakeToSlackOperator`](https://registry.astronomer.io/providers/snowflake/modules/snowflaketoslackoperator): Executes a SQL query in Snowflake and sends the results to Slack.
@@ -49,19 +49,19 @@ Modules for orchestrating **data quality checks** in Snowflake include:
 
 Note that the `apache-airflow-providers-snowflake` package also contains operators that can be used to run data quality checks in Snowflake, including the `SnowflakeCheckOperator`, `SnowflakeValueCheckOperator`, and `SnowflakeIntervalCheckOperator`. However, these operators are not as flexible as the operators in `apache-airflow-providers-core-sql` and will likely be deprecated in a future version of Airflow. We recommend using `apache-airflow-providers-core-sql` for the most up to date data quality check operators.
 
-Below we show an example of how to use some of these modules in a DAG that implements a write, audit, publish pattern with data quality checks.
+Let's walk through an example of how to use some of these modules in a DAG that implements a write, audit, publish pattern with data quality checks.
 
 ### Example Implementation
 
 > **Note:** All of the code for this example can be found in the [Astronomer Registry](LINK). 
 
-The exmaple DAG below implements a write, audit, publish pattern to showcase loading and data quality checking with Snowflake. The following steps are completed:
+The example DAG below runs a write, audit, publish pattern to showcase loading and data quality checking with Snowflake. The following steps are completed:
 
-- Simultaneously create tables in Snowflake for the production data and the raw data that needs to be audited, using the `SnowflakeOperator`. Note that these tasks are not implemented with the deferrable version of the `SnowflakeOperator`, because `CREATE TABLE` statements typically run very quickly.
+- Simultaneously create tables in Snowflake for the production data and the raw data that needs to be audited using the `SnowflakeOperator`. Note that these tasks are not implemented with the deferrable version of the `SnowflakeOperator` because `CREATE TABLE` statements typically run very quickly.
 - Load data into the audit table using the `SnowflakeOperatorAsync`. This task *is* deferred to save on compute, because loading data can take some time if the dataset is large. Note that to use the deferrable operator, you must have a [triggerer running](https://www.astronomer.io/guides/deferrable-operators#running-deferrable-tasks-in-your-airflow-environment) in your Airflow environment.
-- Run data quality checks on the audit table to ensure that no erroneous data is moved to production. This Task Group includes column checks using the `SQLColumnCheckOperator` and table checks using the `SQLTableCheckOperator`. 
-- Assuming the data quality checks passed, meaning those tasks were successful, copy data from the audit table into the production table using the `SnowflakeOperatorAsync`.
-- Finally, delete the audit table since it only contained temporary data.
+- Run data quality checks on the audit table to ensure that no erroneous data is moved to production. This task group includes column checks using the `SQLColumnCheckOperator` and table checks using the `SQLTableCheckOperator`. 
+- If the data quality checks are passed, copy data from the audit table into the production table using the `SnowflakeOperatorAsync`.
+- Delete the audit table since it only contained temporary data.
 
 > **Note:** To make use of deferrable operators you must have a Triggerer running in your Airflow environment. For more on how to use deferrable operators, check out [this guide](https://www.astronomer.io/guides/deferrable-operators).
 
@@ -185,25 +185,25 @@ with DAG(
 
 ![Snowflake DAG Graph](https://assets2.astronomer.io/main/guides/airflow-snowflake/snowflake_dag_graph.png)
 
-Note that to run this DAG, you will need a connection to your Snowflake instance in your Airflow environment. This DAG uses a connection called `snowflake_default`. Your connection should be the `Snowflake` type, and should include the following information:
+Note that to run this DAG, you need an Airflow connection to your Snowflake instance. This DAG uses a connection called `snowflake_default`. Your connection should have a type of `Snowflake` include the following information:
 
 ```yaml
-Host: Your Snowflake Host, e.g. `account.region.snowflakecomputing.com`
-Schema: Your Schema
-Login: Your login
-Password: Your password
-Account: Your Snowflake account
-Database: Your database
-Region: Your account region
-Role: Your role
-Warehouse: Your warehouse
+Host: <Your Snowflake host, e.g. `account.region.snowflakecomputing.com`>
+Schema: <Your schema>
+Login: <Your login>
+Password: <Your password>
+Account: <Your Snowflake account>
+Database: <Your database>
+Region: <Your account region>
+Role: <Your role>
+Warehouse: <Your warehouse>
 ```
 
 ## Enhanced Observability with OpenLineage
 
 The [OpenLineage project](https://openlineage.io/) maintains an integration with Airflow that allows users to obtain and view lineage data from their Airflow tasks. As long as an extractor exists for the operator being used, lineage data will be generated automatically from each task instance. For introductory information on how OpenLineage works with Airflow, check out [this guide](https://www.astronomer.io/guides/airflow-openlineage).
 
-Users of the `SnowflakeOperator` and `SnowflakeOperatorAsync`, which does have an extractor, will be able to use lineage metadata to answer questions across DAGs such as:
+Because `SnowflakeOperator` and `SnowflakeOperatorAsync` have an extractor, you can use lineage metadata to answer questions across DAGs such as:
 
 - How does data stored in Snowflake flow through my DAGs? Are there any upstream dependencies?
 - What downstream data does a task failure impact?
@@ -213,7 +213,7 @@ At a high level, the OpenLineage - Airflow - Snowflake interaction works like th
 
 ![Snowflake Openlineage](https://assets2.astronomer.io/main/guides/airflow-snowflake/snowflake_openlineage_architecture.png)
 
-Note that to view lineage data from your DAGs you need to have OpenLineage installed in your Airflow environment and a lineage front end running. For [Astro customers](https://docs.astronomer.io/astro/data-lineage), lineage is enabled automatically. For users working with open source tools, you can run Marquez locally and connect it to your Airflow environment following the instructions in [this guide](https://www.astronomer.io/guides/airflow-openlineage). 
+Note that to view lineage data from your DAGs you need to have OpenLineage installed in your Airflow environment and a lineage front end running. For [Astro users](https://docs.astronomer.io/astro/data-lineage), lineage is enabled automatically. For users working with open source tools, you can run Marquez locally and connect it to your Airflow environment following the instructions in [this guide](https://www.astronomer.io/guides/airflow-openlineage). 
 
 To show an example of lineage resulting from Snowflake orchestration, we'll look at the write, audit, publish DAG from the example above. Note that screenshots below are from the Datakin UI integrated with Astro, but Marquez will show similar information.
 
@@ -225,11 +225,11 @@ There are a few things to note about this lineage graph:
 
 ## DAG Authoring with the Astro SDK Python
 
-The Astro SDK Python is an open source DAG authoring tool maintained by Astronomer that allows you to write DAGs based on how you want your data to move by simplifying the data transformation process between different environments. It allows you to focus solely on writing execution logic, without having to worry about Airflow orchestration logic. Details like creating dataframes, storing intermediate results, passing context and data between tasks, and creating Airflow task dependencies are all managed automatically.
+The Astro SDK Python is an open source DAG authoring tool maintained by Astronomer simplifies the data transformation process between different environments, such that you can focus solely on writing execution logic without worrying about Airflow orchestration logic. Details like creating dataframes, storing intermediate results, passing context and data between tasks, and creating Airflow task dependencies are all managed automatically.
 
-> **Note:** The Astro SDK is currently in a **preview release** state. It is not yet production-ready, and interfaces may change. We welcome users to try out the interface and [provide us with feedback](https://github.com/astronomer/astro-sdk).
+> **Note:** The Astro SDK is currently in a preview release state. It is not yet production-ready, and interfaces may change. We welcome users to try out the interface and [provide us with feedback](https://github.com/astronomer/astro-sdk).
 
-The Astro SDK Python supports Snowflake as a data warehouse, and can be used to simplify ETL workflows with Snowflake. For example, the following DAG moves data from S3 into Snowflake, performs some data transformations, and loads the resulting data into a reporting table.
+The Astro SDK Python supports Snowflake as a data warehouse and can be used to simplify ETL workflows with Snowflake. For example, the following DAG moves data from S3 into Snowflake, performs some data transformations, and loads the resulting data into a reporting table.
 
 ```python
 from datetime import datetime
