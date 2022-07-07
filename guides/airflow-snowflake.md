@@ -35,11 +35,11 @@ astronomer-providers[snowflake]
 
 Modules for orchestrating basic queries and functions in Snowflake include:
 
-- [`SnowflakeHook`](https://registry.astronomer.io/providers/snowflake/modules/snowflakehook): A hook abstracting the Snowflake API. Generally, you only need to use this hook when creating a custom operator or function. This hook is part of `apache-airflow-providers-snowflake`. 
 - [`SnowflakeOperator`](https://registry.astronomer.io/providers/snowflake/modules/snowflakeoperator): Executes a SQL query in Snowflake. This operator is part of `apache-airflow-providers-snowflake`.
 - [`S3ToSnowflakeOperator`](https://registry.astronomer.io/providers/snowflake/modules/s3tosnowflakeoperator): Executes a COPY command to transfer data from S3 into Snowflake.
 - [`SnowflakeToSlackOperator`](https://registry.astronomer.io/providers/snowflake/modules/snowflaketoslackoperator): Executes a SQL query in Snowflake and sends the results to Slack.
 - `SnowflakeOperatorAsync`: The [deferrable](https://www.astronomer.io/guides/deferrable-operators) version of the `SnowflakeOperator`, executes a SQL query in Snowflake.
+- [`SnowflakeHook`](https://registry.astronomer.io/providers/snowflake/modules/snowflakehook): A hook abstracting the Snowflake API. Generally, you only need to use this hook when creating a custom operator or function. This hook is part of `apache-airflow-providers-snowflake`. 
 - `SnowflakeHookAsync`: The [deferrable](https://www.astronomer.io/guides/deferrable-operators) version of the `SnowflakeHook`, abstracts the Snowflake API.
 
 Modules for orchestrating **data quality checks** in Snowflake include:
@@ -219,9 +219,7 @@ To show an example of lineage resulting from Snowflake orchestration, we'll look
 
 ![Lineage Graph](https://assets2.astronomer.io/main/guides/airflow-snowflake/lineage_graph.png)
 
-There are a few things to note about this lineage graph:
-
-- 
+Looking at the lineage graph, we can see the flow of data from the creation of the table, to the insertion of data, to the data quality checks. If any failures were to happen, particularly in the data quality checks, the lineage graph would quickly tell us which datasets were impacted. If our work on this dataset expanded into other DAGs in Airflow, we would see those connections here as well, all in one place.
 
 ## DAG Authoring with the Astro SDK Python
 
