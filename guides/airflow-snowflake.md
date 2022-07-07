@@ -217,7 +217,7 @@ Note that to view lineage data from your DAGs you need to have OpenLineage insta
 
 To show an example of lineage resulting from Snowflake orchestration, we'll look at the write, audit, publish DAG from the example above. Note that screenshots below are from the Datakin UI integrated with Astro, but Marquez will show similar information.
 
-SCREENSHOT
+![Lineage Graph](https://assets2.astronomer.io/main/guides/airflow-snowflake/lineage_graph.png)
 
 There are a few things to note about this lineage graph:
 
