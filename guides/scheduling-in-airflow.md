@@ -135,7 +135,7 @@ def next_dagrun_info(
         if last_start.hour == 6: # If previous period started at 6:00, next period will start at 16:30 and end at 6:00 following day
             next_start = last_start.set(hour=16, minute=30).replace(tzinfo=UTC)
             next_end = (last_start+delta).replace(tzinfo=UTC)
-        else: # If previous period started at 14:30, next period will start at 6:00 next day and end at 14:30
+        else: # If previous period started at 16:30, next period will start at 6:00 next day and end at 16:30
             next_start = (last_start+delta).set(hour=6, minute=0).replace(tzinfo=UTC)
             next_end = (last_start+delta).replace(tzinfo=UTC)
     else:  # This is the first ever run on the regular schedule. First data interval will always start at 6:00 and end at 16:30
