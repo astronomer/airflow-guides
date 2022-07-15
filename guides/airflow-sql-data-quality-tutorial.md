@@ -6,7 +6,7 @@ slug: "airflow-sql-data-quality-tutorial"
 tags: ["Database", "SQL", "DAGs", "Data Quality"]
 ---
 
-> Note: All code in this guide can be found in [this Github repo](https://github.com/astronomer/airflow-data-quality-demo/).
+> Note: More example code for data quality checks can be found in [this Github repo](https://github.com/astronomer/airflow-data-quality-demo/).
 
 ## Overview
 
@@ -26,8 +26,8 @@ Airflow currently supports the following SQL Check Operators:
 - **[SQLValueCheckOperator](https://airflow.apache.org/docs/apache-airflow/stable/_api/airflow/operators/sql/index.html#airflow.operators.sql.SQLValueCheckOperator)**: A simpler operator that is useful when a specific, known value is being checked either as an exact value or within a percentage threshold
 - **[SQLIntervalCheckOperator](https://airflow.apache.org/docs/apache-airflow/stable/_api/airflow/operators/sql/index.html#airflow.operators.sql.SQLIntervalCheckOperator)**: A time-based operator. Useful for checking current data against historical data
 - **[SQLThresholdCheckOperator](https://airflow.apache.org/docs/apache-airflow/stable/_api/airflow/operators/sql/index.html#airflow.operators.sql.SQLThresholdCheckOperator)**: An operator with flexible upper and lower thresholds, where the threshold bounds may also be described as SQL queries that return a numeric value
-- **SQLColumnCheckOperator**: An operator capable of running multiple pre-defined data quality checks on multiple columns.
-- **SQLTableCheckOperator**: An operator to run checks involving aggregate functions over one or more columns.
+- **SQLColumnCheckOperator**: An operator capable of running multiple pre-defined data quality checks on multiple columns within the same task.
+- **SQLTableCheckOperator**: An operator to run checks involving aggregate functions for one or more columns.
 
 ## Examples
 
@@ -149,7 +149,7 @@ SQLThresholdCheckOperator(
 
 ### Example 5 - `SQLColumnCheckOperator`
 
-The `SQLColumnCheckOperator` like the `SQLIntervalCheckOperator` uses a dictionary to define checks via the parameter `column_mapping`. The strength of this operator is the ability to run a multitude of checks within one task but still have observability on which checks passed and which failed within the Airflow logs.
+The `SQLColumnCheckOperator` uses a dictionary to define checks via the parameter `column_mapping`. The strength of this operator is the ability to run a multitude of checks within one task but still have observability on which checks passed and which failed within the Airflow logs.
 
 This check is useful for:
 
@@ -194,11 +194,11 @@ The `SQLColumnCheckOperator` offers 5 options for column checks which are abstra
 - "distinct_check" `"COUNT(DISTINCT(column)) AS column_distinct_check"`
 - "null_check": `"SUM(CASE WHEN column IS NULL THEN 1 ELSE 0 END) AS column_null_check"`
 
-The resulting values then can be compared to a value input by the dag author by using the qualifiers: `greater_than`, `geq_than`, `equal_to`, `leq_than` or `less_than`. If the resulting boolean value is `True` the check passes, otherwise it fails.
+The resulting values then can be compared to a value input by the DAG author by using the qualifiers: `greater_than`, `geq_than`, `equal_to`, `leq_than` or `less_than`. If the resulting boolean value is `True` the check passes, otherwise it fails.
 
 ### Example 6 - SQLTableCheckOperator
 
-The `SQLTableCheckOperator` provides a way to check the validity of SQL statements containing aggregates over the whole table. There is no limit to the amount of columns these statements can involve or to their complexity and they are provided to the operator as dictionary via the `checks` parameter.
+The `SQLTableCheckOperator` provides a way to check the validity of SQL statements containing aggregates over the whole table. There is no limit to the amount of columns these statements can involve or to their complexity. They are provided to the operator as a dictionary via the `checks` parameter.
 
 The `SQLTableCheckOperator` is useful for:
 
