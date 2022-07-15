@@ -39,7 +39,7 @@ You should modify environment-level settings if you want to tune performance acr
 
 Core settings control the number of processes running concurrently and how long those processes can run. The associated environment variables for all parameters in this section are formatted as `AIRFLOW__CORE__PARAMETER_NAME`.
 
-- **`parallelism`:** This is the maximum number of tasks that can run concurrently within a single Airflow environment. For example, if this setting is set to 32 then no more than 32 tasks can run at once across all DAGs. Think of this as "maximum active tasks anywhere." If you notice that tasks are stuck queued for extended periods of time, this is a value you may want to increase. By default, this is set to 32.
+- **`parallelism`:** This is the maximum number of tasks that can run concurrently per scheduler within a single Airflow environment. For example, if this setting is set to 32, and there are two schedulers, then no more than 64 tasks can be in the running or queued states at once across all DAGs. Think of this as "maximum active tasks anywhere." If you notice that tasks are stuck in scheduled for extended periods of time, this is a value you may want to increase. By default, this is set to 32.
 
 - **`max_active_tasks_per_dag`:** (formerly `dag_concurrency`) This determines the maximum number of tasks that can be scheduled at once, per DAG." Use this setting to prevent any one DAG from taking up too many of the available slots from parallelism or your pools, which helps DAGs be good neighbors to one another. By default, this is set to 16.
 
