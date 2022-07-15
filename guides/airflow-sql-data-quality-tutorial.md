@@ -26,6 +26,8 @@ Airflow currently supports the following SQL Check Operators:
 - **[SQLValueCheckOperator](https://airflow.apache.org/docs/apache-airflow/stable/_api/airflow/operators/sql/index.html#airflow.operators.sql.SQLValueCheckOperator)**: A simpler operator that is useful when a specific, known value is being checked either as an exact value or within a percentage threshold
 - **[SQLIntervalCheckOperator](https://airflow.apache.org/docs/apache-airflow/stable/_api/airflow/operators/sql/index.html#airflow.operators.sql.SQLIntervalCheckOperator)**: A time-based operator. Useful for checking current data against historical data
 - **[SQLThresholdCheckOperator](https://airflow.apache.org/docs/apache-airflow/stable/_api/airflow/operators/sql/index.html#airflow.operators.sql.SQLThresholdCheckOperator)**: An operator with flexible upper and lower thresholds, where the threshold bounds may also be described as SQL queries that return a numeric value
+- **SQLColumnCheckOperator**: An operator capable of running multiple pre-defined data quality checks on multiple columns.
+- **SQLTableCheckOperator**: An operator to run checks involving aggregate functions over one or more columns.
 
 ## Examples
 
@@ -37,8 +39,7 @@ The `SQLCheckOperator` returns a single row from a provided SQL query and checks
 
 - A specific, single column value.
 - Part of or an entire row compared to a known set of values.
-- NULLs and types.
-- Specific calculations like `SUM`s or `AGG`s.
+- Options for categorical variables and data types.
 - The results of any other function that can be written as a SQL query.
 
 The following code snippet shows you how to use the operator in a DAG:
@@ -93,7 +94,7 @@ For a production pipeline, data could first be loaded from S3 to a temporary sta
 
 The `SQLValueCheckOperator` is simpler than the `SQLCheckOperator` but equally useful. It checks the results of a query against a specific pass value, and ensures the checked value is within a percentage threshold of the pass value. The pass value can be any type, but the threshold can only be used with numeric types. This check is useful for:
 
-- Checking the row count of a table.
+- Checking the row count of a table within a tolerance threshold.
 - Ensuring all text values in a record or set of records are correct (for example, checking text country codes against numeric ones).
 
 The task below shows how to use this operator to check the row count of a table within a tolerance threshold:
@@ -146,6 +147,85 @@ SQLThresholdCheckOperator(
 )
 ```
 
+### Example 5 - `SQLColumnCheckOperator`
+
+The `SQLColumnCheckOperator` like the `SQLIntervalCheckOperator` uses a dictionary to define checks via the parameter `column_mapping`. The strength of this operator is the ability to run a multitude of checks within one task but still have observability on which checks passed and which failed within the Airflow logs.
+
+This check is useful for:
+
+- Ensuring all values in a column are above a minimum, below a maximum or within a certain range (with or without a tolerance threshold).
+- Null checks.
+- Checking primary key columns for uniqueness.
+- Checking the number of distinct values of a column.
+
+In the example below 6 checks on 3 different columns are performed by the `SQLColumnCheckOperator`:
+
+- "MY_DATE_COL" is checked to contain only _unique_ dates between 2017-01-01 and 2022-01-01.
+- "MY_TEXT_COL" is checked to have at least 10 distinct values and no `NULL` values present.
+- "MY_NUM_COL" is checked to contain a maximum value between 90 and 110 (100 with a tolerance of 10).
+
+```python
+SQLColumnCheckOperator(
+        task_id="check_columns",
+        conn_id=<your database connection id>,
+        table=<your table>,
+        column_mapping={
+            "MY_DATE_COL": {
+                "min": {"greater_than": datetime.date(2017, 1, 1)},
+                "max": {"less_than": datetime.date(2022, 1, 1)},
+                "unique_check": {"equal_to": 0}
+            },
+            "MY_TEXT_COL": {
+                "distinct_check": {"geq_than": 10},
+                "null_check": {"equal_to": 0}
+            },
+            "MY_NUM_COL": {
+                "max": {"equal_to": 100, "tolerance": 10}
+            },
+        }
+    )
+```
+
+The `SQLColumnCheckOperator` offers 5 options for column checks which are abstractions over SQL statements:
+
+- "min": `"MIN(column) AS column_min"`
+- "max" `"MAX(column) AS column_max"`
+- "unique_check": `"COUNT(column) - COUNT(DISTINCT(column)) AS column_unique_check"`
+- "distinct_check" `"COUNT(DISTINCT(column)) AS column_distinct_check"`
+- "null_check": `"SUM(CASE WHEN column IS NULL THEN 1 ELSE 0 END) AS column_null_check"`
+
+The resulting values then can be compared to a value input by the dag author by using the qualifiers: `greater_than`, `geq_than`, `equal_to`, `leq_than` or `less_than`. If the resulting boolean value is `True` the check passes, otherwise it fails.
+
+### Example 6 - SQLTableCheckOperator
+
+The `SQLTableCheckOperator` provides a way to check the validity of SQL statements containing aggregates over the whole table. There is no limit to the amount of columns these statements can involve or to their complexity and they are provided to the operator as dictionary via the `checks` parameter.
+
+The `SQLTableCheckOperator` is useful for:
+
+- Checks that include aggregate values using the whole table.
+- Row sum checks.
+- Comparisons between multiple columns.
+
+In the example below two checks are defined `my_row_count_check` and `my_column_sum_comparison_check` (the names can be freely chosen). The first check runs a SQL statement asserting that the table contains at least 1000 rows, while the second check compares the sum of two columns.
+
+```python
+SQLTableCheckOperator(
+    task_id="table_checks",
+    conn_id=<your database connection id>,
+    table=<your table>,
+    checks={
+        "my_row_count_check": {
+            "check_statement": "COUNT(*) >= 1000"
+            },
+        "my_column_sum_comparison_check": {
+            "check_statement": "SUM(MY_COL_1) < SUM(MY_COL_2)"
+            }
+    }
+)
+```
+
+Under the hood the operator performs a `CASE WHEN` statement on each of the checks assinging `1` to the checks that passed and `0` to the checks that did not. Afterwards the operator looks for the minimum of these results and marks the task as failed if the minimum is `0`.
+
 ## Conclusion
 
-After reading this guide, you should feel comfortable using any of the SQL Check Operators, understanding how each one works, and getting a sense of when each one would be useful in practice. With just these four operators, you have the foundation for a robust data quality suite right in your pipelines. If you are looking for more examples, or want to see how to use backend-specific operators like Redshift, BigQuery, or Snowflake, check out Astronomer's [data quality demo repository](https://github.com/astronomer/airflow-data-quality-demo/).
+After reading this guide, you should feel comfortable using any of the SQL Check Operators, understanding how each one works, and getting a sense of when each one would be useful in practice. With just these six operators, you have the foundation for a robust data quality suite right in your pipelines. If you are looking for more examples, or want to see how to use backend-specific operators like Redshift, BigQuery, or Snowflake, check out Astronomer's [data quality demo repository](https://github.com/astronomer/airflow-data-quality-demo/).
