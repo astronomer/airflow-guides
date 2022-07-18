@@ -69,9 +69,9 @@ This check is useful for:
 
 In the example below 6 checks on 3 different columns are performed by the `SQLColumnCheckOperator`:
 
-- "MY_DATE_COL" is checked to contain only _unique_ dates between 2017-01-01 and 2022-01-01.
-- "MY_TEXT_COL" is checked to have at least 10 distinct values and no `NULL` values present.
-- "MY_NUM_COL" is checked to contain a maximum value between 90 and 110 (100 with a tolerance of 10).
+- Check that "MY_DATE_COL" contains only _unique_ dates between 2017-01-01 and 2022-01-01.
+- Check that "MY_TEXT_COL" has at least 10 distinct values and no `NULL` values present.
+- Check that "MY_NUM_COL" contains a maximum value between 90 and 110 (100 with a tolerance of 10).
 
 ```python
 SQLColumnCheckOperator(
@@ -115,7 +115,7 @@ The `SQLTableCheckOperator` is useful for:
 - Row sum checks.
 - Comparisons between multiple columns.
 
-In the example below two checks are defined `my_row_count_check` and `my_column_sum_comparison_check` (the names can be freely chosen). The first check runs a SQL statement asserting that the table contains at least 1000 rows, while the second check compares the sum of two columns.
+In the example below, two checks are defined `my_row_count_check` and `my_column_sum_comparison_check` (the names can be freely chosen). The first check runs a SQL statement asserting that the table contains at least 1000 rows, while the second check compares the sum of two columns.
 
 ```python
 SQLTableCheckOperator(
@@ -133,7 +133,7 @@ SQLTableCheckOperator(
 )
 ```
 
-Under the hood the operator performs a `CASE WHEN` statement on each of the checks assinging `1` to the checks that passed and `0` to the checks that did not. Afterwards the operator looks for the minimum of these results and marks the task as failed if the minimum is `0`.
+Under the hood, the operator performs a `CASE WHEN` statement on each of the checks, assigning `1` to the checks that passed and `0` to the checks that failed. Afterwards, the operator looks for the minimum of these results and marks the task as failed if the minimum is `0`.
 
 ### Example 3 - `SQLCheckOperator`
 
