@@ -21,11 +21,11 @@ We'll give the Sequential Executor an honorable mention, too.
 
 Once a DAG is defined (perhaps with the help of an _Operator_), the following needs to happen in order for a single or set of "tasks" within that DAG to execute and be completed from start to finish:
 
-1. The _Metadata Database_ (in Astronomer, that's PostgreSQL) keeps a record of all tasks within a DAG and their corresponding status (`queued`, `scheduled`, `running`, `success`, `failed`, etc) behind the scenes.
+1. The [Metadata Database](https://www.astronomer.io/guides/airflow-database)  keeps a record of all tasks within a DAG and their corresponding status (`queued`, `scheduled`, `running`, `success`, `failed`, etc) behind the scenes.
 
-1. The _Scheduler_ reads from the Metadatabase to check on the status of each task and decide what needs to get done (and in what order).
+1. The Scheduler reads from the Metadata database to check on the status of each task and decide what needs to get done (and in what order).
 
-1. The _Executor_ works closely with the _Scheduler_ to figure out what resources will actually complete those tasks (via a worker process or otherwise) as they're queued.
+1. The Executor works closely with the Scheduler to figure out what resources will actually complete those tasks (via a worker process or otherwise) as they're queued.
 
 The difference between executors comes down to the resources they have at hand and how they choose to utilize those resources to distribute work (or not distribute it at all).
 
@@ -33,7 +33,7 @@ The difference between executors comes down to the resources they have at hand a
 
 When we're talking about task execution, you'll want to be familiar with these [somewhat confusing](https://issues.apache.org/jira/browse/AIRFLOW-57) terms, all of which we call "Environment Variables." The terms themselves have changed a bit over Airflow versions, but this list is compatible with 1.10.
 
-- **Environment Variables**: Env variables are a set of configurable values that allow you to dynamically fine tune your Airflow deployment. They're defined in your `airflow.cfg` (or directly through Astronomer's UI) and encompass everything from [email alerts](https://docs.astronomer.io/software/airflow-alerts) to DAG concurrency (see below).
+- **Environment Variables**: Env variables are a set of configurable values that allow you to dynamically fine tune your Airflow deployment. They're defined in your `airflow.cfg` (or directly through the Astro UI) and encompass everything from [email alerts](https://docs.astronomer.io/software/airflow-alerts) to DAG concurrency (see below).
 
 - **Parallelism:** This determines how many task instances can be _actively_ running in parallel across DAGs given the resources available at any given time at the deployment level. Think of this as "maximum active tasks anywhere." `ENV AIRFLOW__CORE__PARALLELISM=18`
 
@@ -86,13 +86,13 @@ At its core, Airflow's CeleryExecutor is built for horizontal scaling.
 
 If a worker node is ever down or goes offline, the CeleryExecutor quickly adapts and is able to assign that allocated task or tasks to another worker.
 
-If you're running native Airflow, adopting a CeleryExecutor means you'll have to set up an underlying database to support it (RabbitMQ/Redis). If you're running on Astronomer, the switch really just means your deployment will be a bit heavier on resources (and price) - and that you'll likely have to keep a closer eye on your workers.
+If you're running native Airflow, adopting a CeleryExecutor means you'll have to set up an underlying database to support it (RabbitMQ/Redis).
 
 > Note: When running Celery on top of a managed Kubernetes service, if a node that contains an Celery Worker goes down, Kubernetes will reschedule the work. When the pod comes back up, it'll reconnect to [Redis](https://redis.io/) and continue processing tasks.
 
 **Worker Termination Grace Period**
 
-An Airflow deployment on Astronomer running with Celery Workers has a setting called "Worker Termination Grace Period" (otherwise known as the "Celery Flush Period") that helps minimize task disruption upon deployment by continuing to run tasks for an x number of minutes (configurable via the Astro UI) after you push up a deploy.
+An Airflow deployment on Astronomer Software running with Celery Workers has a setting called "Worker Termination Grace Period" (otherwise known as the "Celery Flush Period") that helps minimize task disruption upon deployment by continuing to run tasks for an x number of minutes after you push up a deploy.
 
 Conversely, under LocalExecutor, tasks will start immediately upon deployment regardless of whether or not tasks were mid-execution, which could be disruptive.
 
@@ -100,7 +100,7 @@ Conversely, under LocalExecutor, tasks will start immediately upon deployment re
 
 *   High availability
 *   Built for horizontal scaling
-*   Worker Termination Grace Period (on Astronomer)
+*   Worker Termination Grace Period
 
 **Cons**
 
@@ -127,13 +127,11 @@ This means a few things:
     *   Service accounts
     *   Airflow image
 
-> **Note:** The Kubernetes Executor is available on Astronomer and does not require that you have your own Kubernetes environment. To try it out, [get in touch with us](https://www.astronomer.io/get-astronomer).
-
 **Scale to Near-Zero**
 
 With the Local and Celery Executors, a deployment whose DAGs run once a day will operate with a fixed set of resources for the full 24 hours - only 1 hour of which actually puts those resources to use. That's 23 hours of resources you're paying for but don't deliver.
 
-On Astronomer, your Webserver and Scheduler costs will remain fixed even if you use the KubernetesExecutor, but the dynamic scaling of the actual pods will allow you to shed the fixed cost that comes with having a Celery Worker up 24 hours a day.
+With the KubernetesExecutor, your Webserver and Scheduler costs will remain fixed, but the dynamic scaling of the actual pods will allow you to shed the fixed cost that comes with having a Celery Worker up 24 hours a day.
 
 **Less work for your Scheduler**
 
