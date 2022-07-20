@@ -46,10 +46,10 @@ If you are working with lineage data from Airflow, that integration will be buil
 The following terms are used frequently when discussing data lineage and OpenLineage in particular. We define them here specifically in the context of using OpenLineage with Airflow.
 
 - **Integration:** A means of gathering lineage data from a source system (e.g. a scheduler or data platform). For example, the OpenLineage Airflow integration allows lineage data to be collected from Airflow DAGs. Existing integrations automatically gather lineage data from the source system every time a job runs, preparing and transmitting OpenLineage events to a lineage backend. A full list of OpenLineage integrations can be found [here](https://openlineage.io/integration).
-- **Extractor:** An extractor is a module that gathers lineage metadata from a specific hook or operator. For example, in the openlineage-airflow package, extractors exist for the `PostgresOperator` and `SnowflakeOperator`, meaning that if `openlineage-airflow` is installed and running in your Airflow environment, lineage data will be generated automatically from those operators when your DAG runs. An extractor must exist for a specific operator to get lineage data from it.
+- **Extractor:** An extractor is a module that gathers lineage metadata from a specific hook or operator. For example, in the `openlineage-airflow` package, extractors exist for the `PostgresOperator` and `SnowflakeOperator`, meaning that if `openlineage-airflow` is installed and running in your Airflow environment, lineage data will be generated automatically from those operators when your DAG runs. An extractor must exist for a specific operator to get lineage data from it.
 - **Job:** A process which consumes or produces datasets. Jobs can be viewed on your lineage graph. In the context of the Airflow integration, an OpenLineage job corresponds to a task in your DAG. Note that only tasks that come from operators with extractors will have input and output metadata; other tasks in your DAG will show as orphaned on the lineage graph.
 - **Dataset:** A representation of a set of data in your lineage data and graph. For example, it might correspond to a table in your database or a set of data you run a Great Expectations check on. Typically a dataset is registered as part of your lineage data when a job writing to the dataset is completed (e.g. data is inserted into a table).
-- **Run:** An instance of a job where lineage data is generated. In the context of the Airflow integration, an OpenLineage run will be generated with each DAG run.
+- **Run:** An instance of a job where lineage data is generated. In the context of the Airflow integration, an OpenLineage run will be generated with each DAG Run.
 - **Facet:** A piece of lineage metadata about a job, dataset, or run (e.g. you might hear “job facet”).
 
 ## Why OpenLineage with Airflow?
@@ -77,7 +77,7 @@ In this example, we’ll show how to run OpenLineage with Airflow locally using 
 For this example, we’ll run Airflow with OpenLineage and Marquez locally. You will need to install Docker and the [Astro CLI](https://docs.astronomer.io/cloud/install-cli) before starting.
 
 1. Run Marquez locally using the quickstart in the [Marquez README](https://github.com/MarquezProject/marquez#quickstart).
-2. Start an Astro project using the CLI by creating a new directory and running `astrocloud dev init`. In this example we use `openlineage` as our directory name.
+2. Start an Astro project using the CLI by creating a new directory and running `astro dev init`. In this example we use `openlineage` as our directory name.
 3. Add `openlineage-airflow` to your `requirements.txt` file. Note if you are using Astro Runtime 4.2.1 or greater, this package is already included.
 4. Add the environment variables below to your `.env` file. These will allow Airflow to connect with the OpenLineage API and send your lineage data to Marquez.
     
@@ -89,7 +89,7 @@ For this example, we’ll run Airflow with OpenLineage and Marquez locally. You 
     
     By default, Marquez uses port 5000 when you run it using Docker. If you are using a different OpenLineage front end instead of Marquez, or you are running Marquez remotely, you can modify the `OPENLINEAGE_URL` as needed.
     
-5. Modify your `config.yaml` in the `.astrocloud/` directory to choose a different port for Postgres. Marquez also uses Postgres, so you will need to have Airflow use a different port than the default 5432, which will already be allocated.
+5. Modify your `config.yaml` in the `.astro/` directory to choose a different port for Postgres. Marquez also uses Postgres, so you will need to have Airflow use a different port than the default 5432, which will already be allocated.
     
     ```yaml
     project:
@@ -98,12 +98,12 @@ For this example, we’ll run Airflow with OpenLineage and Marquez locally. You 
       port: 5435
     ```
     
-6. Run Airflow locally using `astrocloud dev start`.
+6. Run Airflow locally using `astro dev start`.
 7. Confirm Airflow is running by going to `http://localhost:8080`, and Marquez is running by going to `http://localhost:3000`.
 
 ### Generating and Viewing Lineage Data
 
-To show the lineage data that can result from Airflow DAG runs, we'll use an example of two DAGs that process data in Postgres. To run this example in your own environment, you will first need to complete the following steps:
+To show the lineage data that can result from Airflow DAG Runs, we'll use an example of two DAGs that process data in Postgres. To run this example in your own environment, you will first need to complete the following steps:
 
 1. Ensure you have a running Postgres database (separate from the Airflow and Marquez metastores). If you are working with the Astro CLI, you can create a database locally in the same container as the Airflow metastore using `psql`:
 
@@ -239,9 +239,9 @@ Then, if we click on one of the jobs from our DAGs, we see the full lineage grap
 
 The lineage graph shows:
 
-- Two origin datasets that are used to populate the combined data table
-- The two jobs (tasks) from our DAGs that result in new datasets: `combine` and `reporting`
-- Two new datasets that are created by those jobs
+- Two origin datasets that are used to populate the combined data table;
+- The two jobs (tasks) from our DAGs that result in new datasets: `combine` and `reporting`;
+- Two new datasets that are created by those jobs.
 
 The lineage graph shows us how these two DAGs are connected and how data flows through the entire pipeline, giving us insight we wouldn't have if we were to view these DAGs in the Airflow UI alone.
 
@@ -260,6 +260,9 @@ OpenLineage is rapidly evolving, and new functionality and integrations are bein
     - `PostgresOperator`
     - `SnowflakeOperator`
     - `BigQueryOperator`
+    - `MySqlOperator`
+    - `GreatExpectationsOperator`
+    - `PythonOperator`
     
     To get lineage data from other operators, you can create your own custom extractor.
 - To get lineage from an external system connected to Airflow, such as [Apache Spark](https://openlineage.io/integration/apache-spark/), you will need to configure an [OpenLineage integration](https://openlineage.io/integration) with that system in addition to Airflow.
