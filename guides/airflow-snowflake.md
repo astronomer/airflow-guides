@@ -1,7 +1,7 @@
 ---
 title: "Orchestrating Snowflake Queries with Airflow"
 description: "How to use Airflow to get enhanced observability and compute savings while orchestrating your Snowflake jobs."
-date: 2022-06-17T00:00:00.000Z
+date: 2022-07-20T00:00:00.000Z
 slug: "airflow-snowflake"
 tags: ["Integrations", "ETL", "Database"]
 ---
@@ -23,13 +23,13 @@ There are multiple open source packages that you can use to orchestrate Snowflak
 
 - The [Snowflake provider package](https://registry.astronomer.io/providers/snowflake) contains hooks, operators, and transfer operators for Snowflake maintained by the Airflow community.
 - The [Astronomer Providers](https://github.com/astronomer/astronomer-providers) package contains deferrable operators built and maintained by Astronomer, including a deferrable version of the `SnowflakeOperator`.
-- The [Core SQL provider package](LINK) contains SQL check operators that can be used to perform data quality checks against data in Snowflake. 
+- The [Common SQL provider package](https://registry.astronomer.io/providers/common-sql) contains SQL check operators that can be used to perform data quality checks against data in Snowflake. 
 
 To leverage all of the Snowflake modules available in Airflow, we recommend installing all three packages in your Airflow environment. If you use the Astro CLI, you can do this by adding the following three lines to your `requirements.txt` file:
 
 ```bash
 apache-airflow-providers-snowflake
-apache-airflow-providers-core-sql
+apache-airflow-providers-common-sql
 astronomer-providers[snowflake]
 ```
 
@@ -44,16 +44,16 @@ Modules for orchestrating basic queries and functions in Snowflake include:
 
 Modules for orchestrating **data quality checks** in Snowflake include:
 
-- [`SQLColumnCheckOperator`](LINK): Performs a data quality check against columns of a given table. Using this operator with Snowflake requires a Snowflake connection ID, the name of the table to run checks on, and a `column_mapping` describing the relationship between columns and tests to run.
-- [`SQLTableCheckOperator`](LINK): Performs a data quality check against a given table. Using this operator with Snowflake requires a Snowflake connection ID, the name of the table to run checks on, and a checks dictionary describing the relationship between the table and the tests to run.  
+- [`SQLColumnCheckOperator`](https://registry.astronomer.io/providers/common-sql/modules/sqlcolumncheckoperator): Performs a data quality check against columns of a given table. Using this operator with Snowflake requires a Snowflake connection ID, the name of the table to run checks on, and a `column_mapping` describing the relationship between columns and tests to run.
+- [`SQLTableCheckOperator`](https://registry.astronomer.io/providers/common-sql/modules/sqltablecheckoperator): Performs a data quality check against a given table. Using this operator with Snowflake requires a Snowflake connection ID, the name of the table to run checks on, and a checks dictionary describing the relationship between the table and the tests to run.  
 
-Note that the `apache-airflow-providers-snowflake` package also contains operators that can be used to run data quality checks in Snowflake, including the `SnowflakeCheckOperator`, `SnowflakeValueCheckOperator`, and `SnowflakeIntervalCheckOperator`. However, these operators are not as flexible as the operators in `apache-airflow-providers-core-sql` and will likely be deprecated in a future version of Airflow. We recommend using `apache-airflow-providers-core-sql` for the most up to date data quality check operators.
+Note that the `apache-airflow-providers-snowflake` package also contains operators that can be used to run data quality checks in Snowflake, including the `SnowflakeCheckOperator`, `SnowflakeValueCheckOperator`, and `SnowflakeIntervalCheckOperator`. However, these operators are not as flexible as the operators in `apache-airflow-providers-common-sql` and will likely be deprecated in a future version of Airflow. We recommend using `apache-airflow-providers-common-sql` for the most up to date data quality check operators. For more details on using the SQL check operators, check out [this guide](https://www.astronomer.io/guides/airflow-sql-data-quality-tutorial).
 
 Let's walk through an example of how to use some of these modules in a DAG that implements a write, audit, publish pattern with data quality checks.
 
 ### Example Implementation
 
-> **Note:** All of the code for this example can be found in the [Astronomer Registry](LINK). 
+> **Note:** Example code using various Snowflake operators can be found on the [Astronomer Registry](https://registry.astronomer.io/dags/complex-snowflake-transform). 
 
 The example DAG below runs a write, audit, publish pattern to showcase loading and data quality checking with Snowflake. The following steps are completed:
 
@@ -79,12 +79,10 @@ from airflow.models.baseoperator import chain
 from airflow.operators.dummy_operator import DummyOperator
 from airflow.providers.snowflake.operators.snowflake import SnowflakeOperator
 from astronomer.providers.snowflake.operators.sensors.snowflake import SnowflakeOperatorAsync
+from airflow.providers.common.sql.operators import SQLColumnCheckOperator, SQLTableCheckOperator
 from airflow.utils.dates import datetime
 from airflow.utils.task_group import TaskGroup
 
-from include.common.sql.operators.sql import (
-    SQLColumnCheckOperator, SQLTableCheckOperator
-)
 from include.libs.schema_reg.base_schema_transforms import snowflake_load_column_string
 
 
