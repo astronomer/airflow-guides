@@ -19,7 +19,7 @@ We'll give the Sequential Executor an honorable mention, too.
 
 ## What is an Executor?
 
-Once a DAG is defined (perhaps with the help of an _Operator_), the following needs to happen in order for a single or set of "tasks" within that DAG to execute and be completed from start to finish:
+Once a DAG is defined the following needs to happen in order for the tasks within that DAG to execute and be completed from start to finish:
 
 1. The [Metadata Database](https://www.astronomer.io/guides/airflow-database)  keeps a record of all tasks within a DAG and their corresponding status (`queued`, `scheduled`, `running`, `success`, `failed`, etc) behind the scenes.
 
