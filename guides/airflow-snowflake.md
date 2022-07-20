@@ -311,7 +311,7 @@ with dag:
 
 Using Astro SDK `aql` functions, we are able to seamlessly transition between SQL transformations (`filter_orders` and `join_orders_customers`) to Python dataframe transformations (`transform_dataframe`). All intermediary data created by each task is automatically stored in Snowflake and made available to downstream tasks.
 
-For more detailed instructions on running this example DAG, check out the [Astro SDK tutorial](https://github.com/astronomer/astro-sdk/blob/main/TUTORIAL.md).
+For more detailed instructions on running this example DAG, check out the [Astro SDK Getting Started doc](https://github.com/astronomer/astro-sdk/blob/main/docs/getting-started/GETTING_STARTED.md).
 
 ## Best Practices and Considerations
 
