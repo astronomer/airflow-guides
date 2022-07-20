@@ -20,13 +20,13 @@ In this guide, we'll highlight three SQL Check Operators and show examples how e
 
 The SQL Check Operators are versions of the `SQLOperator` that offer different abstractions over SQL queries to streamline data quality checks. One main difference between the SQL Check Operators and the standard [`BaseSQLOperator`](https://airflow.apache.org/docs/apache-airflow/stable/_api/airflow/operators/sql/index.html#airflow.operators.sql.BaseSQLOperator) is that the Check Operators ultimately respond with a boolean, meaning the task will fail if any of the resulting queries fail. This is particularly helpful in stopping a data pipeline before bad data makes it to a given destination. With Airflow's logging capabilities, the lines of code (and even specific values in lines) which fail the check are highly observable (see the section 'Observability' at the end of the guide).
 
-The following SQL Check Operators are recommended for this use case:
+The following SQL Check Operators are recommended for implementing data quality checks:
 
 - **SQLColumnCheckOperator**: An operator capable of running multiple pre-defined data quality checks on multiple columns within the same task.
 - **SQLTableCheckOperator**: An operator to run multiple checks involving aggregate functions for one or more columns.
 - **[SQLCheckOperator](https://airflow.apache.org/docs/apache-airflow/stable/_api/airflow/operators/sql/index.html#airflow.operators.sql.SQLCheckOperator)**: A flexible operator that takes any SQL query. This operator is useful for more complicated checks (e.g. including `WHERE` statements or spanning several tables of your database).
 
-The newly added SQLColumnCheckOperator and SQLTableCheckOperator are set to replace three legacy operators with more narrow functionality:  
+The newly added SQLColumnCheckOperator and SQLTableCheckOperator are set to replace the following three legacy operators with more narrow functionality. We recommend against using these legacy operators if the ones listed above work for your use case. 
 
 - [SQLValueCheckOperator](https://airflow.apache.org/docs/apache-airflow/stable/_api/airflow/operators/sql/index.html#airflow.operators.sql.SQLValueCheckOperator): A simpler operator that can be used when a specific, known value is being checked either as an exact value or within a percentage threshold.
 - [SQLIntervalCheckOperator](https://airflow.apache.org/docs/apache-airflow/stable/_api/airflow/operators/sql/index.html#airflow.operators.sql.SQLIntervalCheckOperator): A time-based operator. Used for checking current data against historical data.
@@ -34,13 +34,13 @@ The newly added SQLColumnCheckOperator and SQLTableCheckOperator are set to repl
 
 ### Requirements
 
-The SQLColumnCheckOperator and the SQLTableCheckOperator are available in the [common SQL provider package](https://pypi.org/project/apache-airflow-providers-common-sql/) available with:
+The SQLColumnCheckOperator and the SQLTableCheckOperator are available in the [common SQL provider package](https://pypi.org/project/apache-airflow-providers-common-sql/) which can be installed with:
 
 ```bash
 pip install apache-airflow-providers-common-sql
 ```
 
-The SQLCheckOperator and legacy SQL Check Operators are built into the Airflow core.
+The SQLCheckOperator and legacy SQL Check Operators are built into core Airflow and do not require a separate package installation.
 
 ### Database Connection
 
@@ -48,7 +48,7 @@ The SQL Check Operators work with any database that can be queried using SQL. Yo
 
 > **Note**: Currently the operators cannot support BigQuery `job_id`s.
 
-The target table can be specified as a string using the `table` parameter for the SQLColumnCheckOperator and SQLTableCheckOperator. When using the SQLCheckOperator you can override the database defined in your Airflow connection by passing a different value to the `database` argument. The target table for the SQLCheckOperator has to be given within the SQL statement.
+The target table can be specified as a string using the `table` parameter for the SQLColumnCheckOperator and SQLTableCheckOperator. When using the SQLCheckOperator, you can override the database defined in your Airflow connection as needed by passing a different value to the `database` argument. The target table for the SQLCheckOperator has to be given within the SQL statement.
 
 Under the hood the operators use the information provided in the Airflow connection to get a [DbApiHook](https://airflow.apache.org/docs/apache-airflow/stable/_api/airflow/hooks/dbapi/index.html#module-airflow.hooks.dbapi).
 
@@ -67,7 +67,7 @@ This check is useful for:
 - Checking primary key columns for uniqueness.
 - Checking the number of distinct values of a column.
 
-In the example below 6 checks on 3 different columns are performed by the `SQLColumnCheckOperator`:
+In the example below, we perform 6 checks on 3 different columns using the `SQLColumnCheckOperator`:
 
 - Check that "MY_DATE_COL" contains only _unique_ dates between 2017-01-01 and 2022-01-01.
 - Check that "MY_TEXT_COL" has at least 10 distinct values and no `NULL` values present.
@@ -115,7 +115,7 @@ The `SQLTableCheckOperator` is useful for:
 - Row sum checks.
 - Comparisons between multiple columns.
 
-In the example below, two checks are defined `my_row_count_check` and `my_column_sum_comparison_check` (the names can be freely chosen). The first check runs a SQL statement asserting that the table contains at least 1000 rows, while the second check compares the sum of two columns.
+In the example below, two checks are defined: `my_row_count_check` and `my_column_sum_comparison_check` (the names can be freely chosen). The first check runs a SQL statement asserting that the table contains at least 1000 rows, while the second check compares the sum of two columns.
 
 ```python
 SQLTableCheckOperator(
