@@ -141,7 +141,7 @@ Scaling your Airflow environment can be more of an art than a science, and it's 
     - Try changing: `worker_concurrency` (if using Celery), or `parallelism`.
 - **Issue:** DAGs are stuck in queued state, but not running
     - Potential cause: The number of tasks being scheduled may be beyond the capacity of your Airflow infrastructure.
-    - Try changing: If using the Kubernetes Executor, check that there are available resources in the namespace and check if `worker_pods_creation_batch_size` can be increased. If using the Celery Executor, check if `worker_concurrency` can be increased.
+    - Try changing: If using the Kubernetes executor, check that there are available resources in the namespace and check if `worker_pods_creation_batch_size` can be increased. If using the Celery executor, check if `worker_concurrency` can be increased.
 - **Issue:** An individual DAG is having trouble running tasks in parallel, while other DAGs seem unaffected
     - Potential cause: Possible DAG-level bottleneck.
     - Try changing: `max_active_task_per_dag`, pools (if using them), or overall `parallelism`.
