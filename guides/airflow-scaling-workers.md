@@ -128,7 +128,7 @@ You can also tune your **`worker_concurrency`** (environment variable: `AIRFLOW_
 
 The [Kubernetes executor](https://airflow.apache.org/docs/apache-airflow/stable/executor/kubernetes.html) launches a pod in a Kubernetes cluster for each task. Since each task runs in its own pod, resources can be specified on an individual task level.
 
-When performance tuning with the Kubernetes Executor, it is important to consider the supporting infrastructure of your Kubernetes cluster. Many users will enable auto-scaling on their cluster to ensure they get the benefit of Kubernetes' elasticity.
+When performance tuning with the Kubernetes executor, it is important to consider the supporting infrastructure of your Kubernetes cluster. Many users will enable auto-scaling on their cluster to ensure they get the benefit of Kubernetes' elasticity.
 
 You can also tune your **`worker_pods_creation_batch_size`** (environment variable: `AIRFLOW__KUBERNETES__WORKER_PODS_CREATION_BATCH_SIZE`), which determines how many pods can be created per scheduler loop. The default is 1, but most users will want to increase this number for better performance, especially if you have concurrent tasks. How high you can increase the value depends on the tolerance of your Kubernetes cluster.
 
