@@ -1,6 +1,6 @@
 ---
-title: "KubernetesPodOperator on Astronomer"
-description: "Use the KubernetesPodOperator on Astronomer"
+title: "Using the KubernetesPodOperator"
+description: "Use the KubernetesPodOperator in Airflow to run tasks in Kubernetes Pods"
 date: 2018-07-17T00:00:00.000Z
 slug: "kubepod-operator"
 heroImagePath: null
