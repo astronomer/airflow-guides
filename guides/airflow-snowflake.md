@@ -65,7 +65,7 @@ The example DAG below runs a write, audit, publish pattern to showcase loading a
 
 > **Note:** To make use of deferrable operators you must have a Triggerer running in your Airflow environment. For more on how to use deferrable operators, check out [this guide](https://www.astronomer.io/guides/deferrable-operators).
 
-All of these tasks rely on parameterized SQL scripts that are stored in the `include/sql/` directory and can be found in the Astronomer Registry link above. 
+All of these tasks rely on parameterized SQL scripts that are stored in the `include/sql/` directory and can be found on the [Astronomer Registry](https://registry.astronomer.io/dags/complex-snowflake-transform). 
 
 The DAG looks like this:
 
@@ -219,13 +219,13 @@ To show an example of lineage resulting from Snowflake orchestration, we'll look
 
 Looking at the lineage graph, we can see the flow of data from the creation of the table, to the insertion of data, to the data quality checks. If any failures were to happen, particularly in the data quality checks, the lineage graph would quickly tell us which datasets were impacted. If our work on this dataset expanded into other DAGs in Airflow, we would see those connections here as well, all in one place.
 
-## DAG Authoring with the Astro SDK Python
+## DAG Authoring with the Astro Python SDK
 
-The Astro SDK Python is an open source DAG authoring tool maintained by Astronomer that simplifies the data transformation process between different environments, so you can focus solely on writing execution logic without worrying about Airflow orchestration logic. Details like creating dataframes, storing intermediate results, passing context and data between tasks, and creating Airflow task dependencies are all managed automatically.
+The Astro Python SDK is an open source DAG authoring tool maintained by Astronomer that simplifies the data transformation process between different environments, so you can focus solely on writing execution logic without worrying about Airflow orchestration logic. Details like creating dataframes, storing intermediate results, passing context and data between tasks, and creating Airflow task dependencies are all managed automatically.
 
 > **Note:** The Astro SDK is currently in a preview release state. It is not yet production-ready, and interfaces may change. We welcome users to try out the interface and [provide us with feedback](https://github.com/astronomer/astro-sdk).
 
-The Astro SDK Python supports Snowflake as a data warehouse and can be used to simplify ETL workflows with Snowflake. For example, the following DAG moves data from S3 into Snowflake, performs some data transformations, and loads the resulting data into a reporting table.
+The Astro Python SDK supports Snowflake as a data warehouse and can be used to simplify ETL workflows with Snowflake. For example, the following DAG moves data from S3 into Snowflake, performs some data transformations, and loads the resulting data into a reporting table.
 
 ```python
 from datetime import datetime
