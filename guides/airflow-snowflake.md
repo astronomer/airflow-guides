@@ -25,7 +25,7 @@ There are multiple open source packages that you can use to orchestrate Snowflak
 - The [Astronomer Providers](https://github.com/astronomer/astronomer-providers) package contains deferrable operators built and maintained by Astronomer, including a deferrable version of the `SnowflakeOperator`.
 - The [Common SQL provider package](https://registry.astronomer.io/providers/common-sql) contains SQL check operators that can be used to perform data quality checks against data in Snowflake. 
 
-To leverage all of the Snowflake modules available in Airflow, we recommend installing all three packages in your Airflow environment. If you use the Astro CLI, you can do this by adding the following three lines to your `requirements.txt` file:
+To leverage all of available Snowflake modules, we recommend installing all three packages in your Airflow environment. If you use the Astro CLI, you can do this by adding the following three lines to your `requirements.txt` file of your Astro project:
 
 ```bash
 apache-airflow-providers-snowflake
@@ -42,7 +42,7 @@ Modules for orchestrating basic queries and functions in Snowflake include:
 - [`SnowflakeHook`](https://registry.astronomer.io/providers/snowflake/modules/snowflakehook): A hook abstracting the Snowflake API. Generally, you only need to use this hook when creating a custom operator or function. This hook is part of `apache-airflow-providers-snowflake`. 
 - `SnowflakeHookAsync`: The [deferrable](https://www.astronomer.io/guides/deferrable-operators) version of the `SnowflakeHook`, abstracts the Snowflake API.
 
-Modules for orchestrating **data quality checks** in Snowflake include:
+Modules for orchestrating data quality checks in Snowflake include:
 
 - [`SQLColumnCheckOperator`](https://registry.astronomer.io/providers/common-sql/modules/sqlcolumncheckoperator): Performs a data quality check against columns of a given table. Using this operator with Snowflake requires a Snowflake connection ID, the name of the table to run checks on, and a `column_mapping` describing the relationship between columns and tests to run.
 - [`SQLTableCheckOperator`](https://registry.astronomer.io/providers/common-sql/modules/sqltablecheckoperator): Performs a data quality check against a given table. Using this operator with Snowflake requires a Snowflake connection ID, the name of the table to run checks on, and a checks dictionary describing the relationship between the table and the tests to run.  
@@ -207,7 +207,7 @@ Because `SnowflakeOperator` and `SnowflakeOperatorAsync` have an extractor, you 
 - What downstream data does a task failure impact?
 - Where did a change in data format originate?
 
-At a high level, the OpenLineage - Airflow - Snowflake interaction works like this:
+At a high level, the interaction between OpenLineage,Airflow, and Snowflake works like this:
 
 ![Snowflake Openlineage](https://assets2.astronomer.io/main/guides/airflow-snowflake/snowflake_openlineage_architecture.png)
 
@@ -221,7 +221,7 @@ Looking at the lineage graph, we can see the flow of data from the creation of t
 
 ## DAG Authoring with the Astro SDK Python
 
-The Astro SDK Python is an open source DAG authoring tool maintained by Astronomer simplifies the data transformation process between different environments, such that you can focus solely on writing execution logic without worrying about Airflow orchestration logic. Details like creating dataframes, storing intermediate results, passing context and data between tasks, and creating Airflow task dependencies are all managed automatically.
+The Astro SDK Python is an open source DAG authoring tool maintained by Astronomer that simplifies the data transformation process between different environments, so you can focus solely on writing execution logic without worrying about Airflow orchestration logic. Details like creating dataframes, storing intermediate results, passing context and data between tasks, and creating Airflow task dependencies are all managed automatically.
 
 > **Note:** The Astro SDK is currently in a preview release state. It is not yet production-ready, and interfaces may change. We welcome users to try out the interface and [provide us with feedback](https://github.com/astronomer/astro-sdk).
 
