@@ -45,7 +45,7 @@ Core settings control the number of processes running concurrently and how long 
 
   If you increase the amount of resources available to Airflow (such as Celery workers or Kubernetes resources) and notice that tasks are still not running as expected, you might have to increase the values of both `parallelism` and `max_active_tasks_per_dag`.
 
-- **`max_active_runs_per_dag`:** This determines the maximum number of active DAG Runs (per DAG) that the Airflow Scheduler can create at any given time. In Airflow, a [DAG Run](https://airflow.apache.org/docs/apache-airflow/stable/dag-run.html) represents an instantiation of a DAG in time, much like a task instance represents an instantiation of a task. This parameter is most relevant if Airflow has to catch up from missed DAG Runs, also known as backfilling. Consider how you want to handle these scenarios when setting this parameter.  By default, it's set to 16. 
+- **`max_active_runs_per_dag`:** This determines the maximum number of active DAG runs (per DAG) that the Airflow Scheduler can create at any given time. In Airflow, a [DAG run](https://airflow.apache.org/docs/apache-airflow/stable/dag-run.html) represents an instantiation of a DAG in time, much like a task instance represents an instantiation of a task. This parameter is most relevant if Airflow has to catch up from missed DAG runs, also known as backfilling. Consider how you want to handle these scenarios when setting this parameter.  By default, it's set to 16. 
 
 - **`dag_file_processor_timeout`:** This is how long a `DagFileProcessor`, which processes a DAG file, can run before timing out. By default, it's set to 50 seconds.
 
