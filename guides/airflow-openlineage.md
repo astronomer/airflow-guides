@@ -103,7 +103,7 @@ For this example, we’ll run Airflow with OpenLineage and Marquez locally. You 
 
 ### Generating and Viewing Lineage Data
 
-To show the lineage data that can result from Airflow DAG Runs, we'll use an example of two DAGs that process data in Postgres. To run this example in your own environment, you will first need to complete the following steps:
+To show the lineage data that can result from Airflow DAG runs, we'll use an example of two DAGs that process data in Postgres. To run this example in your own environment, you will first need to complete the following steps:
 
 1. Ensure you have a running Postgres database (separate from the Airflow and Marquez metastores). If you are working with the Astro CLI, you can create a database locally in the same container as the Airflow metastore using `psql`:
 
