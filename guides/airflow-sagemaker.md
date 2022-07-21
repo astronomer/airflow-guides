@@ -279,7 +279,7 @@ training_config = {
       }
    ],
    "OutputDataConfig": { 
-      "S3OutputPath": "s3://{0}/{1}/results.csv".format(s3_bucket, output_s3_key)
+      "S3OutputPath": "s3://{0}/{1}/".format(s3_bucket, output_s3_key)
    },
    "ResourceConfig": { 
       "InstanceCount": 1,
