@@ -41,13 +41,13 @@ Core settings control the number of processes running concurrently and how long 
 
 - **`parallelism`:** This is the maximum number of tasks that can run concurrently per scheduler within a single Airflow environment. For example, if this setting is set to 32, and there are two schedulers, then no more than 64 tasks can be in the running or queued states at once across all DAGs. Think of this as "maximum active tasks anywhere." If you notice that tasks are stuck in scheduled for extended periods of time, this is a value you may want to increase. By default, this is set to 32.
 
-- **`max_active_tasks_per_dag`:** (formerly `dag_concurrency`) This determines the maximum number of tasks that can be scheduled at once, per DAG." Use this setting to prevent any one DAG from taking up too many of the available slots from parallelism or your pools, which helps DAGs be good neighbors to one another. By default, this is set to 16.
+- **`max_active_tasks_per_dag`** (formerly `dag_concurrency`): This determines the maximum number of tasks that can be scheduled at once, per DAG. Use this setting to prevent any one DAG from taking up too many of the available slots from parallelism or your pools, which helps DAGs be good neighbors to one another. By default, this is set to 16.
 
   If you increase the amount of resources available to Airflow (such as Celery workers or Kubernetes resources) and notice that tasks are still not running as expected, you might have to increase the values of both `parallelism` and `max_active_tasks_per_dag`.
 
-- **`max_active_runs_per_dag`:** This determines the maximum number of active DAG Runs (per DAG) that the Airflow Scheduler can create at any given time. In Airflow, a [DAG Run](https://airflow.apache.org/docs/apache-airflow/stable/dag-run.html) represents an instantiation of a DAG in time, much like a task instance represents an instantiation of a task. This parameter is most relevant if Airflow has to catch up from missed DAG runs, also known as backfilling. Consider how you want to handle these scenarios when setting this parameter.  By default, it's set to 16. 
+- **`max_active_runs_per_dag`:** This determines the maximum number of active DAG runs (per DAG) that the Airflow Scheduler can create at any given time. In Airflow, a [DAG run](https://airflow.apache.org/docs/apache-airflow/stable/dag-run.html) represents an instantiation of a DAG in time, much like a task instance represents an instantiation of a task. This parameter is most relevant if Airflow has to catch up from missed DAG runs, also known as backfilling. Consider how you want to handle these scenarios when setting this parameter.  By default, it's set to 16. 
 
-- **`dag_file_processor_timeout`:**: Default 50 seconds. This is how long a `DagFileProcessor`, which processes a DAG file, can run before timing out.
+- **`dag_file_processor_timeout`:** This is how long a `DagFileProcessor`, which processes a DAG file, can run before timing out. By default, it's set to 50 seconds.
 
 - **`dagbag_import_timeout`:** This is how long the `dagbag` can import DAG objects before timing out in seconds, which must be lower than the value set for `dag_file_processor_timeout`. If your DAG processing logs show timeouts, or if your DAG is showing up in neither the list of DAGs nor the import errors, try increasing this value. You can also try increasing this value if your tasks aren't executing, since workers need to fill up the `dagbag` when tasks execute. By default, it's set to 30 seconds.
 
@@ -61,13 +61,13 @@ Scheduler settings control how the scheduler parses DAG files and creates DAG ru
 
   It is helpful to know how long it takes to parse your DAGs (`dag_processing.total_parse_time`) to know what values to choose for `min_file_process_interval` and `dag_dir_list_interval`. If your `dag_dir_list_interval` is less than the amount of time it takes to parse each DAG, you might see performance issues.
 
-- **`parsing_processes`:** (formerly `max_threads`) The scheduler can run multiple processes in parallel to parse DAGs. This setting defines how many processes can run in parallel. We recommend setting a value of 2x your available vCPUs. Increasing this value can help serialize DAGs more efficiently if you have a large number of them. Note that if you are running multiple schedulers, this value will apply to *each* of them. By default, this value is set to 2. 
+- **`parsing_processes`** (formerly `max_threads`): The scheduler can run multiple processes in parallel to parse DAGs. This setting defines how many processes can run in parallel. We recommend setting a value of 2x your available vCPUs. Increasing this value can help serialize DAGs more efficiently if you have a large number of them. Note that if you are running multiple schedulers, this value will apply to *each* of them. By default, this value is set to 2. 
 
 - **`file_parsing_sort_mode`:** This determines how the scheduler will list and sort DAG files to decide the parsing order. Set to one of: `modified_time`, `random_seeded_by_host` and `alphabetical`. The default setting is `modified_time`. 
 
 - **`scheduler_heartbeat_sec`:** This setting defines how often the scheduler should run (in seconds) to trigger new tasks. The default value is 5 seconds. 
 
-- **`max_dagruns_to_create_per_loop`:** This is the max number of DAGs to create Dag runs for per scheduler loop. You can use this option to free up resources for scheduling tasks by decreasing the value. The default value is 10 seconds. 
+- **`max_dagruns_to_create_per_loop`:** This is the max number of DAGs to create DAG runs for per scheduler loop. You can use this option to free up resources for scheduling tasks by decreasing the value. The default value is 10 seconds. 
 
 - **`max_tis_per_query`:** This parameter changes the batch size of queries to the metastore in the main scheduling loop. If the value is higher, you can process more `tis` per query, but your query may become too complex and create a performance bottleneck. The default value is 512 queries. 
 
@@ -85,7 +85,7 @@ DAG-level settings apply only to specific DAGs and are defined in your DAG code.
 
 There are three primary DAG-level Airflow settings that users can define in code:
 
-- **`max_active_runs`:** This is the maximum number of active DAG Runs allowed for the DAG in question. Once this limit is hit, the Scheduler will not create new active DAG Runs. If this setting is not defined, the value of the environment-level setting `max_active_runs_per_dag` is assumed.
+- **`max_active_runs`:** This is the maximum number of active DAG runs allowed for the DAG in question. Once this limit is hit, the Scheduler will not create new active DAG runs. If this setting is not defined, the value of the environment-level setting `max_active_runs_per_dag` is assumed.
 
   If you are utilizing `catchup` or `backfill` for your DAG, consider defining this parameter to ensure that you don't accidentally trigger a high number of DAG runs.
 - **`max_active_tasks`:** This is the total number of tasks that can run at the same time for a given DAG run. It essentially controls the parallelism within your DAG. If this setting is not defined, the value of the environment-level setting `max_active_tasks_per_dag` is assumed.
@@ -104,13 +104,13 @@ Task-level settings are defined in a task's operators and can be used to impleme
 
 There are two primary task-level Airflow settings users can define in code:
 
-- **`max_active_tis_per_dag`:** (Formerly `task_concurrency`) This is the maximum number of times that the same task can run concurrently across all DAG Runs. For instance, if a task reaches out to an external resource, such as a data table, that should not be modified by multiple tasks at once, then you can set this value to 1.
+- **`max_active_tis_per_dag`** (formerly `task_concurrency`): This is the maximum number of times that the same task can run concurrently across all DAG runs. For instance, if a task reaches out to an external resource, such as a data table, that should not be modified by multiple tasks at once, then you can set this value to 1.
 - **`pool`:** This setting defines the amount of pools available for a task. Pools are a way to limit the number of concurrent instances of an arbitrary group of tasks. This setting is useful if you have a lot of workers or DAG runs in parallel, but you want to avoid an API rate limit or otherwise don't want to overwhelm a data source or destination. For more information, read our [Airflow Pools Guide](https://www.astronomer.io/guides/airflow-pools).
 
 The parameters above are inherited from the `BaseOperator`, so you can set them in any operator definition like this:
 
   ```python
-  t1 = PythonOperator(pool='my_custom_pool', max_active_tis_per_dag=14)
+  t1 = PythonOperator(task_id='t1', pool='my_custom_pool', max_active_tis_per_dag=14)
   ```
 
 
@@ -138,12 +138,12 @@ Scaling your Airflow environment can be more of an art than a science, and it's 
 
 - **Issue:** Tasks scheduling latency is high
     - Potential cause: The scheduler may not have enough resources to parse DAGs in order to then schedule tasks.
-    - Try changing: `worker_concurrency` (if using Celery), `parallelism`
+    - Try changing: `worker_concurrency` (if using Celery), or `parallelism`.
 - **Issue:** DAGs are stuck in queued state, but not running
     - Potential cause: The number of tasks being scheduled may be beyond the capacity of your Airflow infrastructure.
     - Try changing: If using the Kubernetes executor, check that there are available resources in the namespace and check if `worker_pods_creation_batch_size` can be increased. If using the Celery executor, check if `worker_concurrency` can be increased.
 - **Issue:** An individual DAG is having trouble running tasks in parallel, while other DAGs seem unaffected
-    - Potential cause: Possible DAG-level bottleneck
-    - Try changing: `max_active_task_per_dag`, pools (if using them), or overall `parallelism`
+    - Potential cause: Possible DAG-level bottleneck.
+    - Try changing: `max_active_task_per_dag`, pools (if using them), or overall `parallelism`.
 
 For help with other scaling issues, consider joining the [Apache Airflow Slack](https://airflow.apache.org/community/) or [reach out to Astronomer](https://www.astronomer.io/get-astronomer/).
