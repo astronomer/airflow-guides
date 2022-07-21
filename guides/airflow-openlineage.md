@@ -262,7 +262,6 @@ OpenLineage is rapidly evolving, and new functionality and integrations are bein
     - `BigQueryOperator`
     - `MySqlOperator`
     - `GreatExpectationsOperator`
-    - `PythonOperator`
     
     To get lineage data from other operators, you can create your own custom extractor.
 - To get lineage from an external system connected to Airflow, such as [Apache Spark](https://openlineage.io/integration/apache-spark/), you will need to configure an [OpenLineage integration](https://openlineage.io/integration) with that system in addition to Airflow.
