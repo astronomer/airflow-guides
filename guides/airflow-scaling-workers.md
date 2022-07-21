@@ -85,7 +85,7 @@ DAG-level settings apply only to specific DAGs and are defined in your DAG code.
 
 There are three primary DAG-level Airflow settings that users can define in code:
 
-- **`max_active_runs`:** This is the maximum number of active DAG Runs allowed for the DAG in question. Once this limit is hit, the Scheduler will not create new active DAG Runs. If this setting is not defined, the value of the environment-level setting `max_active_runs_per_dag` is assumed.
+- **`max_active_runs`:** This is the maximum number of active DAG runs allowed for the DAG in question. Once this limit is hit, the Scheduler will not create new active DAG runs. If this setting is not defined, the value of the environment-level setting `max_active_runs_per_dag` is assumed.
 
   If you are utilizing `catchup` or `backfill` for your DAG, consider defining this parameter to ensure that you don't accidentally trigger a high number of DAG runs.
 - **`max_active_tasks`:** This is the total number of tasks that can run at the same time for a given DAG run. It essentially controls the parallelism within your DAG. If this setting is not defined, the value of the environment-level setting `max_active_tasks_per_dag` is assumed.
@@ -104,8 +104,8 @@ Task-level settings are defined in a task's operators and can be used to impleme
 
 There are two primary task-level Airflow settings users can define in code:
 
-- **`max_active_tis_per_dag`** (formerly `task_concurrency`): This is the maximum number of times that the same task can run concurrently across all DAG Runs. For instance, if a task reaches out to an external resource, such as a data table, that should not be modified by multiple tasks at once, then you can set this value to 1.
-- **`pool`:** This setting defines the amount of pools available for a task. Pools are a way to limit the number of concurrent instances of an arbitrary group of tasks. This setting is useful if you have a lot of workers or DAG Runs in parallel, but you want to avoid an API rate limit or otherwise don't want to overwhelm a data source or destination. For more information, read our [Airflow Pools Guide](https://www.astronomer.io/guides/airflow-pools).
+- **`max_active_tis_per_dag`** (formerly `task_concurrency`): This is the maximum number of times that the same task can run concurrently across all DAG runs. For instance, if a task reaches out to an external resource, such as a data table, that should not be modified by multiple tasks at once, then you can set this value to 1.
+- **`pool`:** This setting defines the amount of pools available for a task. Pools are a way to limit the number of concurrent instances of an arbitrary group of tasks. This setting is useful if you have a lot of workers or DAG runs in parallel, but you want to avoid an API rate limit or otherwise don't want to overwhelm a data source or destination. For more information, read our [Airflow Pools Guide](https://www.astronomer.io/guides/airflow-pools).
 
 The parameters above are inherited from the `BaseOperator`, so you can set them in any operator definition like this:
 
