@@ -122,7 +122,7 @@ Depending on which executor you choose for your Airflow environment, there are a
 
 The [Celery executor](https://airflow.apache.org/docs/apache-airflow/stable/executor/celery.html) utilizes standing workers to run tasks. Scaling with the Celery executor involves choosing both the number and size of the workers available to Airflow. The more workers you have available in your environment, or the larger your workers are, the more capacity you have to run tasks concurrently.
 
-You can also tune your **`worker_concurrency`** (environment variable: `AIRFLOW__CELERY__WORKER_CONCURRENCY`), which determines how many tasks each Celery worker can run at any given time. By default, the Celery Executor will run a maximum of 16 tasks concurrently. If you increase `worker_concurrency`, you might also need to provision additional CPU and/or memory for your workers.   
+You can also tune your **`worker_concurrency`** (environment variable: `AIRFLOW__CELERY__WORKER_CONCURRENCY`), which determines how many tasks each Celery worker can run at any given time. By default, the Celery executor will run a maximum of 16 tasks concurrently. If you increase `worker_concurrency`, you might also need to provision additional CPU and/or memory for your workers.   
 
 ### Kubernetes Executor
 
