@@ -49,7 +49,7 @@ The following terms are used frequently when discussing data lineage and OpenLin
 - **Extractor:** An extractor is a module that gathers lineage metadata from a specific hook or operator. For example, in the `openlineage-airflow` package, extractors exist for the `PostgresOperator` and `SnowflakeOperator`, meaning that if `openlineage-airflow` is installed and running in your Airflow environment, lineage data will be generated automatically from those operators when your DAG runs. An extractor must exist for a specific operator to get lineage data from it.
 - **Job:** A process which consumes or produces datasets. Jobs can be viewed on your lineage graph. In the context of the Airflow integration, an OpenLineage job corresponds to a task in your DAG. Note that only tasks that come from operators with extractors will have input and output metadata; other tasks in your DAG will show as orphaned on the lineage graph.
 - **Dataset:** A representation of a set of data in your lineage data and graph. For example, it might correspond to a table in your database or a set of data you run a Great Expectations check on. Typically a dataset is registered as part of your lineage data when a job writing to the dataset is completed (e.g. data is inserted into a table).
-- **Run:** An instance of a job where lineage data is generated. In the context of the Airflow integration, an OpenLineage run will be generated with each DAG Run.
+- **Run:** An instance of a job where lineage data is generated. In the context of the Airflow integration, an OpenLineage run will be generated with each DAG run.
 - **Facet:** A piece of lineage metadata about a job, dataset, or run (e.g. you might hear “job facet”).
 
 ## Why OpenLineage with Airflow?
