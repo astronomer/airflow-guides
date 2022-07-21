@@ -67,7 +67,7 @@ Scheduler settings control how the scheduler parses DAG files and creates DAG ru
 
 - **`scheduler_heartbeat_sec`:** This setting defines how often the scheduler should run (in seconds) to trigger new tasks. The default value is 5 seconds. 
 
-- **`max_dagruns_to_create_per_loop`:** This is the max number of DAGs to create DAG Runs for per scheduler loop. You can use this option to free up resources for scheduling tasks by decreasing the value. The default value is 10 seconds. 
+- **`max_dagruns_to_create_per_loop`:** This is the max number of DAGs to create DAG runs for per scheduler loop. You can use this option to free up resources for scheduling tasks by decreasing the value. The default value is 10 seconds. 
 
 - **`max_tis_per_query`:** This parameter changes the batch size of queries to the metastore in the main scheduling loop. If the value is higher, you can process more `tis` per query, but your query may become too complex and create a performance bottleneck. The default value is 512 queries. 
 
