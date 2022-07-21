@@ -89,7 +89,7 @@ There are three primary DAG-level Airflow settings that users can define in code
 
   If you are utilizing `catchup` or `backfill` for your DAG, consider defining this parameter to ensure that you don't accidentally trigger a high number of DAG runs.
 - **`max_active_tasks`:** This is the total number of tasks that can run at the same time for a given DAG run. It essentially controls the parallelism within your DAG. If this setting is not defined, the value of the environment-level setting `max_active_tasks_per_dag` is assumed.
-- **`concurrency`:** This is the maximum number of task instances allowed to run concurrently across all active DAG Runs for a given DAG. This allows you to set 1 DAG to be able to run 32 tasks at once, while another DAG might only be able to run 16 tasks at once. If this setting is not defined, the value of the environment-level setting `max_active_tasks_per_dag` is assumed.
+- **`concurrency`:** This is the maximum number of task instances allowed to run concurrently across all active DAG runs for a given DAG. This allows you to set 1 DAG to be able to run 32 tasks at once, while another DAG might only be able to run 16 tasks at once. If this setting is not defined, the value of the environment-level setting `max_active_tasks_per_dag` is assumed.
 
 You can define any DAG-level settings within your DAG definition. For example:
 
