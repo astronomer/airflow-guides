@@ -325,7 +325,7 @@ The json file below shows a GreatExpectations Expectations Suite containing all 
 
 > **Note** More information can be found in the ['Integrating Airflow and dbt'](https://www.astronomer.io/guides/airflow-dbt/) guide.
 
-### sodaSQL
+### SodaCore
 
 ### Comparison
 Compare runtimes (if you can see something significant) ? have a table?
