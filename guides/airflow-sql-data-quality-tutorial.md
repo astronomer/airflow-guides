@@ -22,14 +22,14 @@ The SQL Check Operators are versions of the `SQLOperator` that offer different a
 
 The following SQL Check Operators are recommended for implementing data quality checks:
 
-- **`SQLColumnCheckOperator`**: An operator capable of running multiple pre-defined data quality checks on multiple columns within the same task.
-- **`SQLTableCheckOperator`**: An operator to run multiple checks involving aggregate functions for one or more columns.
-- **[`SQLCheckOperator`](https://airflow.apache.org/docs/apache-airflow/stable/_api/airflow/operators/sql/index.html#airflow.operators.sql.SQLCheckOperator)**: A flexible operator that takes any SQL query. This operator is useful for more complicated checks (e.g. including `WHERE` statements or spanning several tables of your database).
+- **[`SQLColumnCheckOperator`](https://registry.astronomer.io/providers/common-sql/modules/sqlcolumncheckoperator)**: An operator capable of running multiple pre-defined data quality checks on multiple columns within the same task.
+- **[`SQLTableCheckOperator`](https://registry.astronomer.io/providers/common-sql/modules/sqltablecheckoperator)**: An operator to run multiple checks involving aggregate functions for one or more columns.
+- **[`SQLCheckOperator`](https://airflow.apache.org/docs/apache-airflow/stable/_api/airflow/operators/sql/index.html#airflow.operators.sql.SQLCheckOperator)**: A flexible operator that takes any SQL query and returns a single row that will be evaluated to booleans. This operator is useful for more complicated checks (e.g. including `WHERE` statements or spanning several tables of your database).
+- **[`SQLIntervalCheckOperator`](https://airflow.apache.org/docs/apache-airflow/stable/_api/airflow/operators/sql/index.html#airflow.operators.sql.SQLIntervalCheckOperator)**: A time-based operator. Used for checking current data against historical data.
 
-The newly added `SQLColumnCheckOperator` and `SQLTableCheckOperator` are set to replace the following three legacy operators with more narrow functionality. We recommend against using these legacy operators if the ones listed above work for your use case.
+The functionality of the older `SQLValueCheckOperator` and `SQLThresholdCheckOperator` are being replaced by the newer `SQLColumnCheckOperator` and `SQLTableCheckOperator`.
 
 - [`SQLValueCheckOperator`](https://airflow.apache.org/docs/apache-airflow/stable/_api/airflow/operators/sql/index.html#airflow.operators.sql.SQLValueCheckOperator): A simpler operator that can be used when a specific, known value is being checked either as an exact value or within a percentage threshold.
-- [`SQLIntervalCheckOperator`](https://airflow.apache.org/docs/apache-airflow/stable/_api/airflow/operators/sql/index.html#airflow.operators.sql.SQLIntervalCheckOperator): A time-based operator. Used for checking current data against historical data.
 - [`SQLThresholdCheckOperator`](https://airflow.apache.org/docs/apache-airflow/stable/_api/airflow/operators/sql/index.html#airflow.operators.sql.SQLThresholdCheckOperator): An operator with flexible upper and lower thresholds, where the threshold bounds may also be described as SQL queries that return a numeric value.
 
 ### Requirements
@@ -40,7 +40,7 @@ The `SQLColumnCheckOperator` and the `SQLTableCheckOperator` are available in th
 pip install apache-airflow-providers-common-sql
 ```
 
-The `SQLCheckOperator` and legacy SQL Check Operators are built into core Airflow and do not require a separate package installation.
+The `SQLCheckOperator`, `SQLIntervalCheckOperator`, `SQLValueCheckOperator` and `SQLThresholdCheckOperator` are built into core Airflow and do not require a separate package installation.
 
 ### Database Connection
 
@@ -52,7 +52,7 @@ The target table can be specified as a string using the `table` parameter for th
 
 ## Example - `SQLColumnCheckOperator`
 
-The `SQLColumnCheckOperator` uses a dictionary to define checks via the parameter `column_mapping`. The strength of this operator is the ability to run a multitude of checks within one task but still have observability on which checks passed and which failed within the Airflow logs.
+The `SQLColumnCheckOperator` uses a dictionary to define checks via the parameter `column_mapping`. The strength of this operator is the ability to run a multitude of checks within one task and still have observability on which checks passed and which failed within the Airflow logs.
 
 This check is useful for:
 
@@ -65,13 +65,13 @@ In the example below, we perform 6 checks on 3 different columns using the `SQLC
 
 - Check that "MY_DATE_COL" contains only _unique_ dates between 2017-01-01 and 2022-01-01.
 - Check that "MY_TEXT_COL" has at least 10 distinct values and no `NULL` values present.
-- Check that "MY_NUM_COL" contains a maximum value between 90 and 110 (100 with a tolerance of 10).
+- Check that "MY_NUM_COL" contains a maximum value of 100 with a 10% tolerance, i.e. accepting values between 90 and 110.
 
 ```python
 check_columns = SQLColumnCheckOperator(
         task_id="check_columns",
-        conn_id=<your database connection id>,
-        table=<your table>,
+        conn_id=example_conn,
+        table=example_table,
         column_mapping={
             "MY_DATE_COL": {
                 "min": {"greater_than": datetime.date(2017, 1, 1)},
@@ -83,7 +83,7 @@ check_columns = SQLColumnCheckOperator(
                 "null_check": {"equal_to": 0}
             },
             "MY_NUM_COL": {
-                "max": {"equal_to": 100, "tolerance": 10}
+                "max": {"equal_to": 100, "tolerance": 0.1}
             },
         }
     )
@@ -105,40 +105,56 @@ The resulting values then can be compared to a value input by the DAG author by 
 - `leq_to` (lesser or equal than)
 - `less_than`
 
-If the resulting boolean value is `True` the check passes, otherwise it fails. Each individual check and its result will get logged into the Airflow [task logs](https://www.astronomer.io/guides/logging/).
+> **Note**: If you are dealing with floats or integers you can add a tolerance to the comparisons in form of a fraction (0.1 = 10% tolerance) as shown in the example above.
+
+If the resulting boolean value is `True` the check passes, otherwise it fails. [Airflow logs](https://www.astronomer.io/guides/logging/) the set of returned records for every check that passes and the full query and result for checks that failed.
 
 The screenshot below shows the output of 3 successful checks that ran on the `DATE` column of a table in Snowflake using `SQLColumnCheckOperator`. The checks concerned the minimum value, the maximum value and the amount of null values in the column.
 The logged line `INFO - Record: (datetime.date(2021, 4, 9), datetime.date(2022, 7, 17), 0)` lists the results of the query: the minimum date was 2021-09-04, the maximum date 2022-07-17 and there were zero null values, which satisfied the conditions of the check.
 
 ![SQLColumnCheckOperator logging of passing checks](https://assets2.astronomer.io/main/guides/sql-data-quality-tutorial/column_checks_passed.png)
 
-All checks that fail will be listed at the end of the task log with their full SQL query and specific check that failed. The screenshot shows how the `TASK_DURATION` column failed the check to have a minimum of greater than or equal 0 by having a minimum of -1251 instead.
+All checks that fail will be listed at the end of the task log with their full SQL query and specific check that failed. The screenshot shows how the `TASK_DURATION` column failed the check. Instead of a minimum that is greater than or equal to 0, it had a minimum of -1251.
 
 ![SQLColumnCheckOperator logging of failed checks](https://assets2.astronomer.io/main/guides/sql-data-quality-tutorial/column_checks_failed.png)
 
 ## Example - `SQLTableCheckOperator`
 
-The `SQLTableCheckOperator` provides a way to check the validity of SQL statements containing aggregates over the whole table. There is no limit to the amount of columns these statements can involve or to their complexity. They are provided to the operator as a dictionary via the `checks` parameter.
+The `SQLTableCheckOperator` provides a way to check the validity of SQL statements containing aggregates over the whole table. There is no limit to the amount of columns these statements can involve or to their complexity. The statements are provided to the operator as a dictionary via the `checks` parameter.
 
 The `SQLTableCheckOperator` is useful for:
 
 - Checks that include aggregate values using the whole table (e.g. comparing the average of one column to the average of another using the SQL `AVG()` function).
-- Row sum checks.
-- Comparisons between multiple columns.
+- Row count checks.
+- Schema checks.
+- Comparisons between multiple columns, both aggregated and not aggregated.
 
-In the example below, two checks are defined: `my_row_count_check` and `my_column_sum_comparison_check` (the names can be freely chosen). The first check runs a SQL statement asserting that the table contains at least 1000 rows, while the second check compares the sum of two columns.
+> **Note**: In the provider version 1.0.0 you should non-fully aggregated statements into their own operator, separate from the fully aggregated ones! How to do this is shown in the example below.
+
+In the example below, three checks are defined: `my_row_count_check`, `my_column_sum_comparison_check` and  `my_column_addition_check` (the names can be freely chosen). The first check runs a SQL statement asserting that the table contains at least 1000 rows, the second check compares the sum of two columns and the third check confirms that for each row `MY_COL_1 + MY_COL_2 = MY_COL_3` is true.
 
 ```python
-table_checks = SQLTableCheckOperator(
-    task_id="table_checks",
-    conn_id=<your database connection id>,
-    table=<your table>,
+table_checks_aggregated = SQLTableCheckOperator(
+    task_id="table_checks_aggregated",
+    conn_id=example_conn,
+    table=example_table,
     checks={
         "my_row_count_check": {
             "check_statement": "COUNT(*) >= 1000"
             },
         "my_column_sum_comparison_check": {
             "check_statement": "SUM(MY_COL_1) < SUM(MY_COL_2)"
+            }
+    }
+)
+
+table_checks_not_aggregated = SQLTableCheckOperator(
+    task_id="table_checks_not_aggregated",
+    conn_id=example_conn,
+    table=example_table,
+    checks={
+        "my_column_addition_check": {
+            "check_statement": "MY_COL_1 + MY_COL_2 = MY_COL_3"
             }
     }
 )
@@ -159,7 +175,7 @@ The following code snippet shows you how to use the operator in a DAG:
 
 ```python
 yellow_tripdata_row_quality_check = SQLCheckOperator(
-    conn_id="<your connection id>"
+    conn_id=example_conn,
     task_id="yellow_tripdata_row_quality_check",
     sql="row_quality_yellow_tripdata_check.sql",
     params={"pickup_datetime": "2021-01-01"},
