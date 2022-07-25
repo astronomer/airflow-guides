@@ -15,7 +15,7 @@ In this guide, we'll cover some alternatives to SubDAGs and provide links to res
 
 ## Alternatives to SubDAGs
 
-Since SubDAGs have been deprecated, best practice is to use other Airflow features to implement your use case. The following alternatives cover most common use cases:
+Since SubDAGs have been deprecated, the best practice is to use other Airflow features to implement your use case. The following alternatives cover most common use cases:
 
 - [TaskGroups](https://www.astronomer.io/guides/task-groups): These are UI grouping concept released in Airflow 2.0 that can be used to organize tasks in the DAG's Graph View. TaskGroups are ideal if you need to simplify and organize viewing and monitoring of a complex DAG. Astronomer's academy course on [grouping in Airflow](https://academy.astronomer.io/airflow-grouping) also covers how TaskGroups can replace SubDAGs.
 - [Cross-DAG dependencies](https://www.astronomer.io/guides/cross-dag-dependencies): These are dependencies implemented between different DAGs either in the same Airflow environment or across separate environments. Cross-DAG dependencies are ideal if you have task dependencies that cannot be implemented within a single DAG. There are multiple methods of implementing cross-DAG dependencies based on your use case.
