@@ -6,100 +6,23 @@ slug: "subdags"
 heroImagePath: null
 tags: ["DAGs", "Subdags"]
 ---
-<!-- markdownlint-disable-file -->
-> **Note:** Astronomer highly recommends avoiding SubDAGs if the intended use of the SubDAG is to simply group tasks within a DAG's Graph View.  Airflow 2.0 introduces [Task Groups](https://airflow.apache.org/docs/apache-airflow/stable/concepts.html#taskgroup) which is a UI grouping concept that satisfies this purpose without the performance and functional issues of SubDAGs.  While the `SubDagOperator` will continue to be supported, Task Groups are intended to replace it long-term.
 
+## Overview
 
-Most DAGs consist of patterns that often repeat themselves. ETL DAGs that are written to best practice usually all share the pattern of grabbing data from a source, loading it to an intermediary file store or _staging_ table, and then pushing it into production data.
+SubDAGs were a legacy feature in Airflow that allowed users to implement reusable patterns of tasks in their DAGs. SubDAGs caused performance and functional issues for many users, and they have been [deprecated](https://github.com/apache/airflow/issues/12292) as of Airflow 2.0 and will be removed entirely in a future release. As such, Astronomer highly recommends against using SubDAGs and instead using an alternative supported Airflow feature.
 
-Depending on your set up, using a [SubDagOperator](https://registry.astronomer.io/providers/apache-airflow/modules/subdagoperator) could make your DAG cleaner.
+In this guide, we'll cover some alternatives to SubDAGs and provide links to resources for implementing those features. We'll also briefly touch on some of the issues that occurred with SubDAGs so you can be sure to avoid them.
 
+## Alternatives to SubDAGs
 
-Suppose the DAG looks like:
+Since SubDAGs have been deprecated, the best practice is to use other Airflow features to implement your use case. The following alternatives cover most common use cases:
 
-![no_subdag](https://assets.astronomer.io/website/img/guides/workflow_no_subdag.png)
+- [TaskGroups](https://www.astronomer.io/guides/task-groups): These are UI grouping concept released in Airflow 2.0 that can be used to organize tasks in the DAG's Graph View. TaskGroups are ideal if you need to simplify and organize viewing and monitoring of a complex DAG. Astronomer's academy course on [grouping in Airflow](https://academy.astronomer.io/airflow-grouping) also covers how TaskGroups can replace SubDAGs.
+- [Cross-DAG dependencies](https://www.astronomer.io/guides/cross-dag-dependencies): These are dependencies implemented between different DAGs either in the same Airflow environment or across separate environments. Cross-DAG dependencies are ideal if you have task dependencies that cannot be implemented within a single DAG. There are multiple methods of implementing cross-DAG dependencies based on your use case.
 
-The pattern between extracting and loading the data is clear. The same workflow can be generated through SubDAGs:
+## Issues with SubDAGs
 
-![subdag](https://assets.astronomer.io/website/img/guides/subdag_dag.png)
+SubDAGs are really just DAGs embedded in other DAGs. This can cause both performance and functional issues:
 
-Each of the SubDAGs can be zoomed in on:
-
-![zoom](https://assets.astronomer.io/website/img/guides/zoomed_in.png)
-
-The zoomed view reveals a granular view of the task:
-
-![tasks](https://assets.astronomer.io/website/img/guides/subdag_tasks.png)
-
-SubDAGs should be generated through a "DAG factory" - an external file that returns DAG objects.
-
-```python
-def load_subdag(parent_dag_name, child_dag_name, args):
-    dag_subdag = DAG(
-        dag_id='{0}.{1}'.format(parent_dag_name, child_dag_name),
-        default_args=args,
-        schedule_interval="@daily",
-    )
-    with dag_subdag:
-        for i in range(5):
-            t = DummyOperator(
-                task_id='load_subdag_{0}'.format(i),
-                default_args=args,
-                dag=dag_subdag,
-            )
-
-    return dag_subdag
-
-```
-
-This object should then be called when instantiating the `SubDagOperator`:
-
-```python
-load_tasks = SubDagOperator(
-    task_id="load_tasks",
-    subdag=load_subdag(
-        parent_dag_name="example_subdag_operator",
-        child_dag_name="load_tasks",
-        args=default_args
-    ),
-    default_args=default_args,
-    dag=dag,
-)
-
-```
-
-- The SubDAG should be named with a `parent.child` style or Airflow will throw an error.
-- The state of the `SubDagOperator` and the tasks themselves are independent - a `SubDagOperator` marked as success (or failed) will not affect the underlying tasks. _This can be dangerous._
-- SubDAGs should be scheduled the same as their parent DAGs or unexpected behavior might occur.
-
-## Avoiding Deadlock
-
-_Greedy subdags_
-
-SubDAGs are not currently first-class citizens in Airflow. Although it is in the community's roadmap to fix this, many organizations using Airflow have outright banned them because of how they are executed.
-
-Airflow 1.10 has changed the default SubDAG execution method to use the Sequential Executor to work around deadlocks caused by SubDAGs.
-
-
-### Slots on the worker pool
-
-The `SubDagOperator` kicks off an entire DAG when it is put on a worker slot. Each task in the child DAG takes up a slot until the entire SubDAG has completed. The parent operator will take up a worker slot until each child task has completed. This could cause delays in other task processing
-
-In mathematical terms, each SubDAG is behaving like a _vertex_ (a single point in a graph) instead of a _graph_.
-
-Depending on the scale and infrastructure, a specialized queue can be added just for SubDAGs (assuming a `CeleryExecutor`), but a cleaner workaround is to avoid SubDAGs entirely.
-
-## Additional Resources: Grouping
-
-<!-- markdownlint-disable MD033 -->
-<iframe src="https://fast.wistia.net/embed/iframe/nb88lb9jza" title="branchpythonoperator Video" allow="autoplay; fullscreen" allowtransparency="true" frameborder="0" scrolling="no" class="wistia_embed" name="wistia_embed" allowfullscreen msallowfullscreen width="100%" height="100%" style="aspect-ratio:16/9"></iframe>
-
-It's not uncommon to find yourself with hundreds of tasks in a DAG. Chances are, that's what you have right now. The problem is, the more tasks you have, the more difficult it becomes to maintain your DAG. This is where the concept of "grouping" comes in.
-
-- What are the limitations of the SubDAGs?
-- Should I still use them?
-- Is there another way of grouping tasks in Airflow?
-
-Find out by taking [Astronomer's Grouping Course](https://academy.astronomer.io/airflow-grouping) for FREE today!
-
-See you there!
+- When a SubDAG is triggered, the SubDAG and child tasks take up worker slots until the entire SubDAG is complete. This can delay other task processing and, depending on your number of worker slots, can lead to deadlocking.
+- SubDAGs have their own parameters, schedule, and enabled settings. When these are not consistent with their parent DAG, unexpected behavior can occur.
