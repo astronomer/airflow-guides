@@ -14,13 +14,13 @@ Data quality is key to the success of an organization's data systems. In Airflow
 
 Executing SQL queries is one of the most common use cases for data pipelines, and it's a simple and effective way to implement data quality checks. Using Airflow, you can quickly put together a pipeline specifically for checking data quality, or you can add quality checks to existing ETL/ELT with just a few lines of boilerplate code.
 
-In this guide, we'll highlight three SQL Check Operators and show examples how each of them can be used to build a robust data quality suite for your DAGs. If you aren't familiar with SQL Operators in general, check out Astronomer's [SQL tutorial](https://www.astronomer.io/guides/airflow-sql-tutorial) first.
+In this guide, we'll highlight three SQL Check operators and show examples how each of them can be used to build a robust data quality suite for your DAGs. If you aren't familiar with SQL operators in general, check out Astronomer's [SQL tutorial](https://www.astronomer.io/guides/airflow-sql-tutorial) first.
 
 ## SQL Check Operators
 
 The SQL Check operators are versions of the `SQLOperator` that abstract SQL queries to streamline data quality checks. One difference between the SQL Check operators and the standard [`BaseSQLOperator`](https://airflow.apache.org/docs/apache-airflow/stable/_api/airflow/operators/sql/index.html#airflow.operators.sql.BaseSQLOperator) is that the SQL Check operators respond with a boolean, meaning the task will fail if any of the resulting queries fail. This is particularly helpful in stopping a data pipeline before bad data makes it to a given destination. With Airflow's logging capabilities, the lines of code and values which fail the check are highly observable.
 
-The following SQL Check Operators are recommended for implementing data quality checks:
+The following SQL Check operators are recommended for implementing data quality checks:
 
 - **[`SQLColumnCheckOperator`](https://registry.astronomer.io/providers/common-sql/modules/sqlcolumncheckoperator)**: Runs multiple pre-defined data quality checks on multiple columns within the same task.
 - **[`SQLTableCheckOperator`](https://registry.astronomer.io/providers/common-sql/modules/sqltablecheckoperator)**: Runs multiple checks involving aggregate functions for one or more columns.
@@ -260,4 +260,4 @@ For a production pipeline, data could first be loaded from S3 to a temporary sta
 
 ## Conclusion
 
-After reading this guide, you should feel comfortable using the SQL Check Operators, understanding how each one works, and getting a sense of when each one would be useful in practice. With just these three operators, you have the foundation for a robust data quality suite right in your pipelines. If you are looking for more examples, or want to see how to use backend-specific operators like Redshift, BigQuery, or Snowflake, check out Astronomer's [data quality demo repository](https://github.com/astronomer/airflow-data-quality-demo/).
+After reading this guide, you should feel comfortable using the SQL Check operators, understanding how each one works, and getting a sense of when each one would be useful in practice. With just these three operators, you have the foundation for a robust data quality suite right in your pipelines. If you are looking for more examples, or want to see how to use backend-specific operators like Redshift, BigQuery, or Snowflake, check out Astronomer's [data quality demo repository](https://github.com/astronomer/airflow-data-quality-demo/).
