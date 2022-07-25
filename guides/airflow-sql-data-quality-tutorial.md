@@ -27,7 +27,7 @@ The following SQL Check Operators are recommended for implementing data quality 
 - **[`SQLCheckOperator`](https://airflow.apache.org/docs/apache-airflow/stable/_api/airflow/operators/sql/index.html#airflow.operators.sql.SQLCheckOperator)**: Takes any SQL query and returns a single row that is evaluated to booleans. This operator is useful for more complicated checks (e.g. including `WHERE` statements or spanning several tables of your database).
 - **[`SQLIntervalCheckOperator`](https://airflow.apache.org/docs/apache-airflow/stable/_api/airflow/operators/sql/index.html#airflow.operators.sql.SQLIntervalCheckOperator)**: Checks current data against historical data.
 
-The functionality of the older `SQLValueCheckOperator` and `SQLThresholdCheckOperator` are being replaced by the newer `SQLColumnCheckOperator` and `SQLTableCheckOperator`.
+> **Note**: We recommend the use of the `SQLColumnCheckOperator` and `SQLTableCheckOperator` over the `SQLValueCheckOperator` and `SQLThresholdCheckOperator` whenever possible to improve code readability.
 
 - [`SQLValueCheckOperator`](https://airflow.apache.org/docs/apache-airflow/stable/_api/airflow/operators/sql/index.html#airflow.operators.sql.SQLValueCheckOperator): A simpler operator that can be used when a specific, known value is being checked either as an exact value or within a percentage threshold.
 - [`SQLThresholdCheckOperator`](https://airflow.apache.org/docs/apache-airflow/stable/_api/airflow/operators/sql/index.html#airflow.operators.sql.SQLThresholdCheckOperator): An operator with flexible upper and lower thresholds, where the threshold bounds may also be described as SQL queries that return a numeric value.
@@ -113,11 +113,30 @@ The screenshot below shows the output of 3 successful checks that ran on the `DA
 
 The logged line `INFO - Record: (datetime.date(2021, 4, 9), datetime.date(2022, 7, 17), 0)` lists the results of the query: the minimum date was 2021-09-04, the maximum date 2022-07-17 and there were zero null values, which satisfied the conditions of the check.
 
-![SQLColumnCheckOperator logging of passing checks](https://assets2.astronomer.io/main/guides/sql-data-quality-tutorial/column_checks_passed.png)
+```text
+[2022-07-18, 10:54:58 UTC] {cursor.py:710} INFO - query: [SELECT MIN(DATE) AS DATE_min,MAX(DATE) AS DATE_max,SUM(CASE WHEN DATE IS NULL TH...]
+[2022-07-18, 10:54:58 UTC] {cursor.py:734} INFO - query: execution my_column_addition_check
+[2022-07-18, 10:54:58 UTC] {connection.py:507} INFO - closed
+[2022-07-18, 10:54:59 UTC] {connection.py:510} INFO - No async queries seem to be running, deleting session
+[2022-07-18, 10:54:59 UTC] {sql.py:124} INFO - Record: (datetime.date(2021, 4, 9), datetime.date(2022, 7, 17), 0)
+```
 
-All checks that fail will be listed at the end of the task log with their full SQL query and specific check that failed. The screenshot shows how the `TASK_DURATION` column failed the check. Instead of a minimum that is greater than or equal to 0, it had a minimum of -1251.
+All checks that fail will be listed at the end of the task log with their full SQL query and specific check that failed. The screenshot shows how the `TASK_DURATION` column failed the check. Instead of a minimum that is greater than or equal to 0, it had a minimum of -12.
 
-![SQLColumnCheckOperator logging of failed checks](https://assets2.astronomer.io/main/guides/sql-data-quality-tutorial/column_checks_failed.png)
+```text
+[2022-07-18, 17:05:19 UTC] {taskinstance.py:1889} ERROR - Task failed with exception
+Traceback (most recent call last):
+  File "/usr/local/python3.9/site-packages/airflow/providers/common/sql/operators/sql.py", line 126, in execute
+    raise AirflowException(
+airflow.exceptions.AirflowException: Test failed
+Query:
+SELECT MIN(TASK_DURATION) AS TASK_DURATION_min,MAX(TASK_DURATION) AS TASK_DURATION_max,SUM(CASE WHEN TASK_DURATION IS NULL THEN 1 ELSE 0 END) AS TASK_DURATION_null_check FROM DB.SCHEMA.TABLE;
+Results:
+(-12, 1000, 0)
+The following tests have failed:
+    Check: min,
+    Check Values: {'geq_to': 0, 'result': -12, 'success': False}
+```
 
 ## Example - `SQLTableCheckOperator`
 
