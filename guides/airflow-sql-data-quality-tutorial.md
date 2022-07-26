@@ -27,10 +27,12 @@ The following SQL Check operators are recommended for implementing data quality 
 - **[`SQLCheckOperator`](https://airflow.apache.org/docs/apache-airflow/stable/_api/airflow/operators/sql/index.html#airflow.operators.sql.SQLCheckOperator)**: Takes any SQL query and returns a single row that is evaluated to booleans. This operator is useful for more complicated checks (e.g. including `WHERE` statements or spanning several tables of your database).
 - **[`SQLIntervalCheckOperator`](https://airflow.apache.org/docs/apache-airflow/stable/_api/airflow/operators/sql/index.html#airflow.operators.sql.SQLIntervalCheckOperator)**: Checks current data against historical data.
 
-We recommend the use of the `SQLColumnCheckOperator` and `SQLTableCheckOperator` over the `SQLValueCheckOperator` and `SQLThresholdCheckOperator` whenever possible to improve code readability.
+Additionally, two older SQL Check operators exist that can run one check at a time against a defined value or threshold:
 
 - [`SQLValueCheckOperator`](https://airflow.apache.org/docs/apache-airflow/stable/_api/airflow/operators/sql/index.html#airflow.operators.sql.SQLValueCheckOperator): A simpler operator that can be used when a specific, known value is being checked either as an exact value or within a percentage threshold.
 - [`SQLThresholdCheckOperator`](https://airflow.apache.org/docs/apache-airflow/stable/_api/airflow/operators/sql/index.html#airflow.operators.sql.SQLThresholdCheckOperator): An operator with flexible upper and lower thresholds, where the threshold bounds may also be described as SQL queries that return a numeric value.
+
+We recommend the use of the `SQLColumnCheckOperator` and `SQLTableCheckOperator` over the `SQLValueCheckOperator` and `SQLThresholdCheckOperator` whenever possible to improve code readability.
 
 ### Requirements
 
