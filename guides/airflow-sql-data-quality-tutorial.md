@@ -151,7 +151,7 @@ The `SQLTableCheckOperator` is useful for:
 - Schema checks.
 - Comparisons between multiple columns, both aggregated and not aggregated.
 
-> **Note**: You should partially aggregated statements into their own operator, separate from the fully aggregated ones. See the next example for how to do this.
+> **Note**: You should put partially aggregated statements into their own operator, separate from the fully aggregated ones. See the next example for how to do this.
 
 In the example below, three checks are defined: `my_row_count_check`, `my_column_sum_comparison_check` and  `my_column_addition_check` (the names can be freely chosen). The first check runs a SQL statement asserting that the table contains at least 1000 rows, the second check compares the sum of two columns and the third check confirms that for each row `MY_COL_1 + MY_COL_2 = MY_COL_3` is true.
 
