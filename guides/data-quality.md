@@ -103,7 +103,16 @@ There are currently 6 different SQL Check Operators available and they work with
 - SQLIntervalCheckOperator: To check current against historical data.
 - SQLThresholdOperator: Allows to define upper and lower thresholds
 
-> **Note**: The SQLColumnCheckOperator and the SQLTableCheckOperator are currently available in a [release candidate](https://pypi.org/project/apache-airflow-providers-common-sql/1.0.0rc1/).
+> **Note**: The SQLColumnCheckOperator and the SQLTableCheckOperator are available in the [Common SQL provider](https://pypi.org/project/apache-airflow-providers-common-sql/1.0.0/).
+
+Reasons to use SQL Check operators:
+
+- Implementation like regular operators without the need to install additional software.
+- Full observability directly in the Airflow task logs.
+- All checks are defined as SQL and all SQL statements can be turned into checks as long as the return a boolean.
+- The SQLColumnCheckOperator offers the possibility to write common checks in a declarative way without having to write SQL.
+- The SQLTableCheckOperator abstracts away much of the SQL code necessary to conduct a check.
+
 
 The example dag below consists of 3 tasks:
 
@@ -203,123 +212,122 @@ with DAG(
                 "schema": <your schema>,
                 "table": <your table name>,
                 "col": "MY_COL_3",
-                "options_tuple": """('<your option_1>', '<your option_2>',
-                                     '<your option_3>', '<your option 4>')"""
+                "options_tuple": "('val1', 'val2', 'val3', 'val4')"
                 }
     )
 ```
-
-
 
 ### GreatExpectations
 
 GreatExpectations is an open source data validation framework. It requires a few additional setup steps which are detailed in the ['Integrating Airflow and Great Expectations'](https://www.astronomer.io/guides/airflow-great-expectations/) guide.
 
-Most of the data quality checks from the SQL Check Operators can be translated into expectations for a Expectations Suite file. The Check that the sum of COL_1 is below the sum of COL_2 would require writing a custom expectation.
+Most of the data quality checks from the SQL Check Operators can be translated into expectations for a Expectations Suite file. The Check that the sum of COL_1 is below the sum of COL_2 would require writing a [custom expectation](https://docs.greatexpectations.io/docs/guides/expectations/creating_custom_expectations/overview). Currently available expectations can be discovered on the [GreatExpectations website](https://greatexpectations.io/expectations).
+
+Reasons to use GreatExpectations:
+
+- If an expectation exists for your use case it is possible to implement it in a declarative way without needing to write any SQL.
+- Useful when many checks are run against different databases to collect all results in human readable central place.
+- Abstracts checks away from the dag code.
 
 The json file below shows a GreatExpectations Expectations Suite containing all but one of the same checks as shown above. In your dag you just have to instantiate a task with the GreatExpectationsOperator pointing to the checkpoint corresponding to the this collection of Expectations.
 
+> **Note**: When using GreatExpectations Airflow will only log whether the suite passed or failed, to get a detailed report on the checks that were run and their results you can refer to the html files in `great_expecations/uncommitted/data_docs/local_site/validations`.
+
 ```json
-  {
-    "data_asset_type": null,
-    "expectation_suite_name": "my_expectation_suite",
-    "expectations": [
+{
+  "data_asset_type": null,
+  "expectation_suite_name": "my_suite",
+  "expectations": [
       {
-        "expectation_context": {
-          "description": """checking that MY_DATE_COL has values between
-                            2017-01-01 and 2022-01-01"""
-        },
-        "expectation_type": "expect_column_values_to_be_between",
-        "ge_cloud_id": null,
-        "kwargs": {
-          "max_value": "2022-01-01",
-          "min_value": "2017-01-01"
-        },
-        "meta": {}
+      "expectation_context": {
+        "description": "MY_DATE_COL has values between 2017-01-01 - 2022-01-01"
       },
-      {
-        "expectation_context": {
-          "description": "checking that MY_DATE_COL's values are unique"
-        },
-        "expectation_type": "expect_column_values_to_be_unique",
-        "ge_cloud_id": null,
-        "kwargs": {
-          "column": "MY_DATE_COL",
-        },
-        "meta": {}
+      "expectation_type": "expect_column_values_to_be_between",
+      "ge_cloud_id": null,
+      "kwargs": {
+        "column": "MY_DATE_COL",
+        "max_value": "2022-01-01",
+        "min_value": "2017-01-01"
       },
-      {
-        "expectation_context": {
-          "description": """checking that MY_TEXT_COL has at least
-                            10 distinct values"""
-        },
-        "expectation_type": "expect_column_unique_value_count_to_be_between",
-        "ge_cloud_id": null,
-        "kwargs": {
-          "column": "MY_TEXT_COL",
-          "min_value": 10
-        },
-        "meta": {}
+      "meta": {}
+    },
+    {
+      "expectation_context": {
+        "description": "MY_DATE_COL's values are all unique"
       },
-      {
-        "expectation_context": {
-          "description": "checking that MY_TEXT_COL has no NULL values"
-        },
-        "expectation_type": "expect_column_values_to_not_be_null",
-        "ge_cloud_id": null,
-        "kwargs": {
-          "column": "MY_TEXT_COL"
-        },
-        "meta": {}
+      "expectation_type": "expect_column_values_to_be_unique",
+      "ge_cloud_id": null,
+      "kwargs": {
+        "column": "MY_DATE_COL"
       },
-      {
-        "expectation_context": {
-          "description": """checking that MY_NUM_COL has a maximum
-                            between 90 and 110"""
-        },
-        "expectation_type": "expect_column_max_to_be_between",
-        "ge_cloud_id": null,
-        "kwargs": {
-          "column": "MY_NUM_COL",
-          "min_value": 90,
-          "max_value": 110
-        },
-        "meta": {}
+      "meta": {}
+    },
+    {
+      "expectation_context": {
+        "description": "MY_TEXT_COL has at least 10 distinct values"
       },
-      {
-        "expectation_context": {
-          "description": "checking that the table at least 1000 rows"
-        },
-        "expectation_type": "expect_table_row_count_to_be_between",
-        "ge_cloud_id": null,
-        "kwargs": {
-          "min_value": 1000
-        },
-        "meta": {}
+      "expectation_type": "expect_column_unique_value_count_to_be_between",
+      "ge_cloud_id": null,
+      "kwargs": {
+        "column": "MY_TEXT_COL",
+        "min_value": 10
       },
-
-
-      {
-        "expectation_context": {
-          "description": "checking that "
-        },
-        "expectation_type": "expect_column_values_to_be_in_set",
-        "ge_cloud_id": null,
-        "kwargs": {
-          "column": "MY_COL_3",
-          "value_set": ["<your option_1>", "<your option_2>",
-                        "<your option_3>", "<your option 4>"]
-        },
-        "meta": {}
-      }
-    ],
-    "ge_cloud_id": null,
-    "meta": {
-      "great_expectations_version": "0.13.49"
+      "meta": {}
+    },
+    {
+      "expectation_context": {
+        "description": "MY_TEXT_COL has no NULL values"
+      },
+      "expectation_type": "expect_column_values_to_not_be_null",
+      "ge_cloud_id": null,
+      "kwargs": {
+        "column": "MY_TEXT_COL"
+      },
+      "meta": {}
+    },
+    {
+      "expectation_context": {
+        "description": "MY_NUM_COL has a maximum val between 90 and 110"
+      },
+      "expectation_type": "expect_column_max_to_be_between",
+      "ge_cloud_id": null,
+      "kwargs": {
+        "column": "MY_NUM_COL",
+        "min_value": 90,
+        "max_value": 110
+      },
+      "meta": {}
+    },
+    {
+      "expectation_context": {
+        "description": "the table has at least 1000 rows"
+      },
+      "expectation_type": "expect_table_row_count_to_be_between",
+      "ge_cloud_id": null,
+      "kwargs": {
+        "min_value": 1000
+      },
+      "meta": {}
+    },
+    {
+      "expectation_context": {
+        "description": "MY_COL_3 only contains values from a defined set"
+      },
+      "expectation_type": "expect_column_values_to_be_in_set",
+      "ge_cloud_id": null,
+      "kwargs": {
+        "column": "MY_COL_3",
+        "value_set": ["val1", "val2", "val3", "val4"]
+      },
+      "meta": {}
     }
+  ],
+  "ge_cloud_id": null,
+  "meta": {
+    "great_expectations_version": "0.15.14"
   }
+}
 ```
-
 
 ### dbt test
 
