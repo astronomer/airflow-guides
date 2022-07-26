@@ -22,12 +22,12 @@ The SQL Check operators are versions of the `SQLOperator` that abstract SQL quer
 
 The following SQL Check operators are recommended for implementing data quality checks:
 
-- **[`SQLColumnCheckOperator`](https://registry.astronomer.io/providers/common-sql/modules/sqlcolumncheckoperator)**: Runs multiple pre-defined data quality checks on multiple columns within the same task.
+- **[`SQLColumnCheckOperator`](https://registry.astronomer.io/providers/common-sql/modules/sqlcolumncheckoperator)**: Runs multiple predefined data quality checks on multiple columns within the same task.
 - **[`SQLTableCheckOperator`](https://registry.astronomer.io/providers/common-sql/modules/sqltablecheckoperator)**: Runs multiple checks involving aggregate functions for one or more columns.
 - **[`SQLCheckOperator`](https://airflow.apache.org/docs/apache-airflow/stable/_api/airflow/operators/sql/index.html#airflow.operators.sql.SQLCheckOperator)**: Takes any SQL query and returns a single row that is evaluated to booleans. This operator is useful for more complicated checks (e.g. including `WHERE` statements or spanning several tables of your database).
 - **[`SQLIntervalCheckOperator`](https://airflow.apache.org/docs/apache-airflow/stable/_api/airflow/operators/sql/index.html#airflow.operators.sql.SQLIntervalCheckOperator)**: Checks current data against historical data.
 
-> **Note**: We recommend the use of the `SQLColumnCheckOperator` and `SQLTableCheckOperator` over the `SQLValueCheckOperator` and `SQLThresholdCheckOperator` whenever possible to improve code readability.
+We recommend the use of the `SQLColumnCheckOperator` and `SQLTableCheckOperator` over the `SQLValueCheckOperator` and `SQLThresholdCheckOperator` whenever possible to improve code readability.
 
 - [`SQLValueCheckOperator`](https://airflow.apache.org/docs/apache-airflow/stable/_api/airflow/operators/sql/index.html#airflow.operators.sql.SQLValueCheckOperator): A simpler operator that can be used when a specific, known value is being checked either as an exact value or within a percentage threshold.
 - [`SQLThresholdCheckOperator`](https://airflow.apache.org/docs/apache-airflow/stable/_api/airflow/operators/sql/index.html#airflow.operators.sql.SQLThresholdCheckOperator): An operator with flexible upper and lower thresholds, where the threshold bounds may also be described as SQL queries that return a numeric value.
@@ -105,7 +105,7 @@ The resulting values can be compared to an expected value using any of the follo
 - `leq_to` (lesser or equal than)
 - `less_than`
 
-> **Note**: If you are dealing with floats or integers you can add a tolerance to the comparisons in form of a fraction (0.1 = 10% tolerance) as shown in the previous example.
+> **Note**: If you are dealing with floats or integers you can add a tolerance to the comparisons in the form of a fraction (0.1 = 10% tolerance) as shown in the previous example.
 
 If the resulting boolean value is `True` the check passes, otherwise it fails. [Airflow generates logs](https://www.astronomer.io/guides/logging/) that show the set of returned records for every check that passes and the full query and result for checks that failed.
 
@@ -149,7 +149,7 @@ The `SQLTableCheckOperator` is useful for:
 - Schema checks.
 - Comparisons between multiple columns, both aggregated and not aggregated.
 
-> **Note**: In the provider version 1.0.0 you should non-fully aggregated statements into their own operator, separate from the fully aggregated ones! How to do this is shown in the example below.
+> **Note**: You should partially aggregated statements into their own operator, separate from the fully aggregated ones. See the next example for how to do this.
 
 In the example below, three checks are defined: `my_row_count_check`, `my_column_sum_comparison_check` and  `my_column_addition_check` (the names can be freely chosen). The first check runs a SQL statement asserting that the table contains at least 1000 rows, the second check compares the sum of two columns and the third check confirms that for each row `MY_COL_1 + MY_COL_2 = MY_COL_3` is true.
 
