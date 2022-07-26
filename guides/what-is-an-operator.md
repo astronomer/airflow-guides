@@ -147,7 +147,6 @@ with DAG(
         postgres_conn_id="redshift_default",
     )
 
-
     #### Second load task
     load_to_redshift = S3ToRedshiftOperator(
         task_id="load_to_redshift",
