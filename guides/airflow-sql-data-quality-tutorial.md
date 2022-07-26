@@ -24,8 +24,8 @@ The following SQL Check operators are recommended for implementing data quality 
 
 - **[`SQLColumnCheckOperator`](https://registry.astronomer.io/providers/common-sql/modules/sqlcolumncheckoperator)**: Runs multiple predefined data quality checks on multiple columns within the same task.
 - **[`SQLTableCheckOperator`](https://registry.astronomer.io/providers/common-sql/modules/sqltablecheckoperator)**: Runs multiple checks involving aggregate functions for one or more columns.
-- **[`SQLCheckOperator`](https://airflow.apache.org/docs/apache-airflow/stable/_api/airflow/operators/sql/index.html#airflow.operators.sql.SQLCheckOperator)**: Takes any SQL query and returns a single row that is evaluated to booleans. This operator is useful for more complicated checks (e.g. including `WHERE` statements or spanning several tables of your database).
-- **[`SQLIntervalCheckOperator`](https://airflow.apache.org/docs/apache-airflow/stable/_api/airflow/operators/sql/index.html#airflow.operators.sql.SQLIntervalCheckOperator)**: Checks current data against historical data.
+- **[`SQLCheckOperator`](https://registry.astronomer.io/providers/apache-airflow/modules/sqlcheckoperator)**: Takes any SQL query and returns a single row that is evaluated to booleans. This operator is useful for more complicated checks (e.g. including `WHERE` statements or spanning several tables of your database).
+- **[`SQLIntervalCheckOperator`](https://registry.astronomer.io/providers/apache-airflow/modules/sqlintervalcheckoperator)**: Checks current data against historical data.
 
 Additionally, two older SQL Check operators exist that can run one check at a time against a defined value or threshold:
 
