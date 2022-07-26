@@ -52,7 +52,7 @@ The SQL Check operators work with any database that can be queried using SQL. Yo
 
 The target table can be specified as a string using the `table` parameter for the `SQLColumnCheckOperator` and `SQLTableCheckOperator`. When using the `SQLCheckOperator`, you can override the database defined in your Airflow connection as needed by passing a different value to the `database` argument. The target table for the `SQLCheckOperator` has to be given within the SQL statement.
 
-## Example - `SQLColumnCheckOperator`
+## Example `SQLColumnCheckOperator`
 
 The `SQLColumnCheckOperator` has a `column_mapping` parameter which stores a dictionary of checks. Using this dictionary, it can run many checks within one task and still provide observability in the Airflow logs over which checks passed and which failed.
 
@@ -140,7 +140,7 @@ The following tests have failed:
     Check Values: {'geq_to': 0, 'result': -12, 'success': False}
 ```
 
-## Example - `SQLTableCheckOperator`
+## Example `SQLTableCheckOperator`
 
 The `SQLTableCheckOperator` provides a way to check the validity of SQL statements containing aggregates over the whole table. There is no limit to the amount of columns these statements can involve or to their complexity. The statements are provided to the operator as a dictionary via the `checks` parameter.
 
@@ -184,7 +184,7 @@ table_checks_not_aggregated = SQLTableCheckOperator(
 
 Under the hood, the operator performs a `CASE WHEN` statement on each of the checks, assigning `1` to the checks that passed and `0` to the checks that failed. Afterwards, the operator looks for the minimum of these results and marks the task as failed if the minimum is `0`. The `SQLTableCheckOperator` will produce observable logs like the ones shown above for the `SQLColumnCheckOperator`.
 
-### Example 3 - `SQLCheckOperator`
+## Example `SQLCheckOperator`
 
 The `SQLCheckOperator` returns a single row from a provided SQL query and checks to see if any of the returned values in that row are `False`. If any values are `False`, the task fails. This operator allows a great deal of flexibility in checking:
 
