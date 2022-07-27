@@ -1,95 +1,61 @@
 ---
-title: "Intro to Apache Airflow DAGs"
-description: "What are DAGs and how they are constructed in Apache Airflow?"
+title: "Introduction to Airflow DAGs"
+description: "How to write your first DAG in Apache Airflow"
 date: 2018-05-21T00:00:00.000Z
 slug: "dags"
 heroImagePath: "https://assets.astronomer.io/website/img/guides/IntroToDAG_preview.png"
 tags: ["Airflow UI", "DAGs", "Basics"]
 ---
-<!-- markdownlint-disable-file -->
-## Overview
 
-_Core definitions._
+In Airflow, a DAG is a data pipeline defined in Python code. DAG stands for "directed, acyclic, graph". In that graph, each node represents a task which completes a unit of work, and each edge represents a dependency between tasks. There is no limit to what a DAG can do so long as tasks remain acyclic (tasks cannot create data that goes on to self-reference).
 
-Data pipeline as a term is pretty straightforward. It leverages a common occurrence (i.e. plumbing) to illustrate what would otherwise be an unviewable process.
+In this guide, we'll cover everything you need to know to get started writing your first DAG, including how to define a DAG in Python, how to run the DAG on your local computer using the Astro CLI, and how to view and monitor the DAG in the Airflow UI.
 
-In practice, this analogy is a bit misleading, and if anything, fits for streaming architectures more than batch architectures.
+## Creating DAGs
 
-Data isn’t literally in a single tube starting on one side and coming out of the other but it is isolated from other data during this time (as if in a physical pipe). Unlike water through a pipe data is transformed through a workflow and produces valuable metadata.
 
-[In Airflow, pipelines are _directed acyclic graphs_ (DAGs)](https://airflow.apache.org/concepts.html?highlight=what%20dag#dags)
+Most DAGs will follow this flow within a Python script:
 
-### Mathematical Background
+- Imports: 
+- DAG instantiation:
+- Task instantiation:
+- Dependencies: 
 
-Directed Graph: A directed graph is any graph where the vertices and edges have some sort of order or direction associated with them.
 
-Directed Acyclic Graph: Finally, a directed acyclic graph is a directed graph without any cycles. A cycle is just a series of vertices that connect back to each other in a closed chain.
+DAG params
+Operators and tasks
+Dependencies
+Providers/registry
 
-![title](https://assets.astronomer.io/website/img/guides/dag_example.png)
+## Running DAGs
 
-In Airflow, each node in a DAG (soon to be known as a task) represents some form of data processing:
+## Viewing DAGs
 
-> Node A could be the code for pulling data out of an API.
->
-> Node B could be the code for anonymizing the data and dropping any IP address.
->
-> Node D could be the code for checking that no duplicate record ids exist.
->
-> Node E could be putting that data into a database.
->
-> Node F could be running a SQL query on the new tables to update a dashboard.
+Airflow UI
+States
 
-## Dependencies
+One of the key pieces of data stored in Airflow’s metadata database is **State**. States are used to keep track of what condition task instances and DAG Runs are in. In the screenshot below, we can see how states are represented in the Airflow UI:
 
-Each of the vertices have a specific direction showing the relationship between nodes - data can only follow the direction of the vertices (from the example above, the IP addresses cannot be anonymized until the data has been pulled).
+![Status view in the Airflow UI](https://assets2.astronomer.io/main/docs/airflow-ui/status-view.png)
 
-Node B is  _downstream_ from Node A - it won't execute until Node A finishes.
+DAG Runs and tasks can have the following states:
 
-## DAGs are Acyclic
+### DAG States
 
-Workflows, particularly around those processing data, have to have a point of "completion." This especially holds true in batch architectures to be able to say that a certain "batch" ran successfully.
+- **Running (Lime):** DAG is currently being executed.
+- **Success (Green):** DAG was executed successfully.
+- **Failed (Red):** The task or DAG failed.
 
-![title](https://assets.astronomer.io/website/img/guides/cycle_example.png)
+### Task States
 
-### Recap
-
-DAGs are a natural fit for batch architecture - they allow you to model natural dependencies that come up in data processing without and force you to architect your workflow with a sense of "completion."
-
-**Directed** - If multiple tasks exist, each must have at least one defined upstream (previous) or downstream (subsequent) tasks, although they could easily have both.
-
-**Acyclic** - No task can create data that goes on to reference itself. This could cause an infinite loop that would be, um, it’d be bad. Don’t do that.
-
-**Graph** - All tasks are laid out in a clear structure with discrete processes occurring at set points and clear relationships made to other tasks.
-
-## DAGs as Functional Programming
-
-`https://medium.com/@maximebeauchemin/functional-data-engineering-a-modern-paradigm-for-batch-data-processing-2327ec32c42a`
-
-_Repeatable inputs for repeatable output_
-
-Best practices emerging around data engineering are pointing towards concepts found in functional programming. Ideas around immutability, isolation, and idempotency that are defining characteristics of good functional programming are very natural fits into good ETL architecture.
-
-### Idempotency, Idempotency, Idempotency
-
-This concept will be stressed throughout everything - idempotency is one of, if not the most, important characteristic of good ETL architecture.
-
-Something is idempotent if it will produce the same result regardless of how many times it is run. In mathematical terms:
-
-`$f(x) = f(f(x)) = f(f(f(x)))...$`
-
-Idempotency usually hand in hand with **reproducibility** - a set of inputs always produces the same set of outputs
-
-Making ETL jobs idempotent can be easier for workflows  more than others - if it's just a SQL load for a days data, implementing upsert logic is pretty easy. If it's a file that's dropped on an externally controlled FTP that is not there for long, it is a little more difficult.
-
-However, the initial investment is usually worth it for safety, operability, and modularity.
-
-### Direct Association
-
-There should be a clear and intuitive association between tables, intermediate files, and all other _levels_ of your data. DAGs are a natural fit here, as every task can have an exclusive target that does not propagate into another tasks target without a direct dependency being set.
-
-Furthermore, this association should filter down into all metadata - logs, runtimes,
-
-Mathematically, this idea of clarity and directness is intuitive:
-
-`$f(x) = y$`
- 
+- **None (Light Blue):** No associated state. Syntactically - set as Python None.
+- **Queued (Gray):** The task is waiting to be executed, set as queued.
+- **Scheduled (Tan):** The task has been scheduled to run.
+- **Running (Lime):** The task is currently being executed.
+- **Failed (Red):** The task failed.
+- **Success (Green):** The task was executed successfully.
+- **Skipped (Pink):** The task has been skipped due to an upstream condition.
+- **Shutdown (Blue):** The task is up for retry.
+- **Removed (Light Grey):** The task has been removed.
+- **Retry (Gold):** The task is up for retry.
+- **Upstream Failed (Orange):** The task will not run because of a failed upstream dependency.
