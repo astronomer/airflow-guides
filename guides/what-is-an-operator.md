@@ -11,7 +11,7 @@ tags: ["Operators", "Tasks", "Basics"]
 
 Operators are the building blocks of Airflow DAGs. They contain the logic of how data is processed in a pipeline. Each task in a DAG is defined by instantiating an operator.
 
-There are many different operators available in Airflow, from operators that generically execute code provided by the user, like a Python function, to operators that perform very specific actions, like transferring data from one system to another.
+There are many different types of operators available in Airflow. Some operators execute general code provided by the user, like a Python function, while other operators perform very specific actions such as transferring data from one system to another.
 
 In this guide, we'll cover the basics of using operators in Airflow and show an example of how to implement them in a DAG.
 
@@ -20,9 +20,9 @@ In this guide, we'll cover the basics of using operators in Airflow and show an 
 
 ## Operator Basics
 
-Under the hood, operators are Python classes that encapsulate logic to do a unit of work. They can be thought of as a wrapper around each unit of work that defines the actions that will be completed and abstracts away most of the code you would otherwise have to write yourself. When you create an instance of an operator in a DAG and provide it with it's required parameters, it becomes a task.
+Under the hood, operators are Python classes that encapsulate logic to do a unit of work. They can be thought of as a wrapper around each unit of work that defines the actions that will be completed and abstracts away a lot of code you would otherwise have to write yourself. When you create an instance of an operator in a DAG and provide it with its required parameters, it becomes a task.
 
-All operators inherit from the abstract [BaseOperator class](https://airflow.apache.org/docs/apache-airflow/stable/_api/airflow/models/baseoperator/index.html), which contains the logic to execute the work of the operator as well as turn the instance of the operator into a node in the DAG and manage its execution. 
+All operators inherit from the abstract [BaseOperator class](https://airflow.apache.org/docs/apache-airflow/stable/_api/airflow/models/baseoperator/index.html), which contains the logic to execute the work of the operator within the context of a DAG.
 
 The work each operator does varies widely. Some of the most frequently used operators in Airflow are:
 
@@ -31,15 +31,15 @@ The work each operator does varies widely. Some of the most frequently used oper
 - [KubernetesPodOperator](https://registry.astronomer.io/providers/kubernetes/modules/kubernetespodoperator): Executes a task defined as a Docker image in a Kubernetes Pod.
 - [SnowflakeOperator](https://registry.astronomer.io/providers/snowflake/modules/snowflakeoperator): Executes a query against a Snowflake database.
 
-Operators are easy to use and typically only a few parameters are required. While each individual operator works a bit differently, there are a few things that every Airflow user should know about operators generally:
+Operators are easy to use and typically only a few parameters are required. There are a few details that every Airflow user should know about operators:
 
 - The [Astronomer Registry](https://registry.astronomer.io/modules?types=operators) is the best place to go to learn about what operators are out there and how to use them.
-- The core Airflow package contains basic operators such as the PythonOperator and BashOperator, which will be automatically available in your Airflow environment. All other operators are part of provider packages, which must be installed separately. For example, the SnowflakeOperator is part of the [Snowflake provider](https://registry.astronomer.io/providers/snowflake).
-- If an operator exists for your specific use case, you should use it. This will make your DAGs easier to read and maintain, and is preferable to writing your own logic in a Python function or using [hooks](https://www.astronomer.io/guides/what-is-a-hook) directly.
-- However, if an operator does not exist for your use case or you need to extend an existing operator, you may do so. For more on how to customize operators, check out our previous [Anatomy of an Operator webinar](https://www.astronomer.io/events/webinars/anatomy-of-an-operator).
+- The core Airflow package that contains basic operators such as the PythonOperator and BashOperator. These operators are automatically available in your Airflow environment. All other operators are part of provider packages, which must be installed separately. For example, the SnowflakeOperator is part of the [Snowflake provider](https://registry.astronomer.io/providers/snowflake).
+- If an operator exists for your specific use case, you should always use it over your own Python functions or [hooks](https://www.astronomer.io/guides/what-is-a-hook). This makes your DAGs easier to read and maintain.
+- If an operator doesn't exist for your use case, you can extend operator to meet your needs. For more on how to customize operators, check out our previous [Anatomy of an Operator webinar](https://www.astronomer.io/events/webinars/anatomy-of-an-operator).
 - [Sensors](https://www.astronomer.io/guides/what-is-a-sensor) are a type of operator that wait for something to happen. They can be used to make your DAGs more event-driven.
 - [Deferrable Operators](https://www.astronomer.io/guides/deferrable-operators) are a type of operator that release their worker slot while waiting for their work to be completed. This can result in cost savings and greater scalability, and Astronomer recommends using them whenever possible. Note that you must be using Airflow 2.2+ and have a triggerer running to use deferrable operators. 
-- Any operator that interacts with a service external to Airflow will typically require a connection so that Airflow can authenticate to that external system. More information on how to set up connections can be found in our guide on [managing connections](https://www.astronomer.io/guides/connections/) or in the example section below.
+- Any operator that interacts with a service external to Airflow will typically require a connection so that Airflow can authenticate to that external system. More information on how to set up connections can be found in our guide on [managing connections](https://www.astronomer.io/guides/connections/) or in the examples to follow.
 
 
 ## Example Implementation
