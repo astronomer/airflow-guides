@@ -19,11 +19,11 @@ In this guide, we cover everything you need to know to make the most out of Airf
 
 ## Using Snowflake Providers
 
-There are multiple open source packages that you can use to orchestrate Snowflake in Airflow: 
+There are multiple open source packages that you can use to orchestrate Snowflake in Airflow:
 
 - The [Snowflake provider package](https://registry.astronomer.io/providers/snowflake) contains hooks, operators, and transfer operators for Snowflake maintained by the Airflow community.
 - The [Astronomer Providers](https://github.com/astronomer/astronomer-providers) package contains deferrable operators built and maintained by Astronomer, including a deferrable version of the `SnowflakeOperator`.
-- The [Common SQL provider package](https://registry.astronomer.io/providers/common-sql) contains SQL check operators that can be used to perform data quality checks against data in Snowflake. 
+- The [Common SQL provider package](https://registry.astronomer.io/providers/common-sql) contains SQL check operators that can be used to perform data quality checks against data in Snowflake.
 
 To leverage all of available Snowflake modules, we recommend installing all three packages in your Airflow environment. If you use the Astro CLI, you can do this by adding the following three lines to your `requirements.txt` file of your Astro project:
 
@@ -39,13 +39,13 @@ Modules for orchestrating basic queries and functions in Snowflake include:
 - [`S3ToSnowflakeOperator`](https://registry.astronomer.io/providers/snowflake/modules/s3tosnowflakeoperator): Executes a COPY command to transfer data from S3 into Snowflake.
 - [`SnowflakeToSlackOperator`](https://registry.astronomer.io/providers/snowflake/modules/snowflaketoslackoperator): Executes a SQL query in Snowflake and sends the results to Slack.
 - `SnowflakeOperatorAsync`: The [deferrable](https://www.astronomer.io/guides/deferrable-operators) version of the `SnowflakeOperator`, executes a SQL query in Snowflake.
-- [`SnowflakeHook`](https://registry.astronomer.io/providers/snowflake/modules/snowflakehook): A hook abstracting the Snowflake API. Generally, you only need to use this hook when creating a custom operator or function. This hook is part of `apache-airflow-providers-snowflake`. 
+- [`SnowflakeHook`](https://registry.astronomer.io/providers/snowflake/modules/snowflakehook): A hook abstracting the Snowflake API. Generally, you only need to use this hook when creating a custom operator or function. This hook is part of `apache-airflow-providers-snowflake`.
 - `SnowflakeHookAsync`: The [deferrable](https://www.astronomer.io/guides/deferrable-operators) version of the `SnowflakeHook`, abstracts the Snowflake API.
 
 Modules for orchestrating data quality checks in Snowflake include:
 
 - [`SQLColumnCheckOperator`](https://registry.astronomer.io/providers/common-sql/modules/sqlcolumncheckoperator): Performs a data quality check against columns of a given table. Using this operator with Snowflake requires a Snowflake connection ID, the name of the table to run checks on, and a `column_mapping` describing the relationship between columns and tests to run.
-- [`SQLTableCheckOperator`](https://registry.astronomer.io/providers/common-sql/modules/sqltablecheckoperator): Performs a data quality check against a given table. Using this operator with Snowflake requires a Snowflake connection ID, the name of the table to run checks on, and a checks dictionary describing the relationship between the table and the tests to run.  
+- [`SQLTableCheckOperator`](https://registry.astronomer.io/providers/common-sql/modules/sqltablecheckoperator): Performs a data quality check against a given table. Using this operator with Snowflake requires a Snowflake connection ID, the name of the table to run checks on, and a checks dictionary describing the relationship between the table and the tests to run.
 
 Note that the `apache-airflow-providers-snowflake` package also contains operators that can be used to run data quality checks in Snowflake, including the `SnowflakeCheckOperator`, `SnowflakeValueCheckOperator`, and `SnowflakeIntervalCheckOperator`. However, these operators are not as flexible as the operators in `apache-airflow-providers-common-sql` and will likely be deprecated in a future version of Airflow. We recommend using `apache-airflow-providers-common-sql` for the most up to date data quality check operators. For more details on using the SQL check operators, check out [this guide](https://www.astronomer.io/guides/airflow-sql-data-quality-tutorial).
 
@@ -53,34 +53,34 @@ Let's walk through an example of how to use some of these modules in a DAG that 
 
 ### Example Implementation
 
-> **Note:** Example code using various Snowflake operators can be found on the [Astronomer Registry](https://registry.astronomer.io/dags/complex-snowflake-transform). 
+> **Note:** Example code using various Snowflake operators can be found on the [Astronomer Registry](https://registry.astronomer.io/dags/complex-snowflake-transform).
 
 The example DAG below runs a write, audit, publish pattern to showcase loading and data quality checking with Snowflake. The following steps are completed:
 
 - Simultaneously create tables in Snowflake for the production data and the raw data that needs to be audited using the `SnowflakeOperator`. Note that these tasks are not implemented with the deferrable version of the `SnowflakeOperator` because `CREATE TABLE` statements typically run very quickly.
 - Load data into the audit table using the `SnowflakeOperatorAsync`. This task *is* deferred to save on compute, because loading data can take some time if the dataset is large. Note that to use the deferrable operator, you must have a [triggerer running](https://www.astronomer.io/guides/deferrable-operators#running-deferrable-tasks-in-your-airflow-environment) in your Airflow environment.
-- Run data quality checks on the audit table to ensure that no erroneous data is moved to production. This task group includes column checks using the `SQLColumnCheckOperator` and table checks using the `SQLTableCheckOperator`. 
+- Run data quality checks on the audit table to ensure that no erroneous data is moved to production. This task group includes column checks using the `SQLColumnCheckOperator` and table checks using the `SQLTableCheckOperator`.
 - If the data quality checks are passed, copy data from the audit table into the production table using the `SnowflakeOperatorAsync`.
 - Delete the audit table since it only contained temporary data.
 
 > **Note:** To make use of deferrable operators you must have a Triggerer running in your Airflow environment. For more on how to use deferrable operators, check out [this guide](https://www.astronomer.io/guides/deferrable-operators).
 
-All of these tasks rely on parameterized SQL scripts that are stored in the `include/sql/` directory and can be found on the [Astronomer Registry](https://registry.astronomer.io/dags/complex-snowflake-transform). 
+All of these tasks rely on parameterized SQL scripts that are stored in the `include/sql/` directory and can be found on the [Astronomer Registry](https://registry.astronomer.io/dags/complex-snowflake-transform).
 
 The DAG looks like this:
 
 ```python
 import json
+from pendulum import datetime
 
 from pathlib import Path
 
 from airflow import DAG
 from airflow.models.baseoperator import chain
-from airflow.operators.dummy_operator import DummyOperator
+from airflow.operators.empty import EmptyOperator
 from airflow.providers.snowflake.operators.snowflake import SnowflakeOperator
 from astronomer.providers.snowflake.operators.sensors.snowflake import SnowflakeOperatorAsync
 from airflow.providers.common.sql.operators import SQLColumnCheckOperator, SQLTableCheckOperator
-from airflow.utils.dates import datetime
 from airflow.utils.task_group import TaskGroup
 
 from include.libs.schema_reg.base_schema_transforms import snowflake_load_column_string
@@ -167,8 +167,8 @@ with DAG(
         trigger_rule="all_success"
     )
 
-    begin = DummyOperator(task_id="begin")
-    end = DummyOperator(task_id="end")
+    begin = EmptyOperator(task_id="begin")
+    end = EmptyOperator(task_id="end")
 
     chain(
         begin,
@@ -211,7 +211,7 @@ At a high level, the interaction between OpenLineage,Airflow, and Snowflake work
 
 ![Snowflake Openlineage](https://assets2.astronomer.io/main/guides/airflow-snowflake/snowflake_openlineage_architecture.png)
 
-Note that to view lineage data from your DAGs you need to have OpenLineage installed in your Airflow environment and a lineage front end running. For [Astro users](https://docs.astronomer.io/astro/data-lineage), lineage is enabled automatically. For users working with open source tools, you can run Marquez locally and connect it to your Airflow environment following the instructions in [this guide](https://www.astronomer.io/guides/airflow-openlineage). 
+Note that to view lineage data from your DAGs you need to have OpenLineage installed in your Airflow environment and a lineage front end running. For [Astro users](https://docs.astronomer.io/astro/data-lineage), lineage is enabled automatically. For users working with open source tools, you can run Marquez locally and connect it to your Airflow environment following the instructions in [this guide](https://www.astronomer.io/guides/airflow-openlineage).
 
 To show an example of lineage resulting from Snowflake orchestration, we'll look at the write, audit, publish DAG from the example above. Note that screenshots below are from the Datakin UI integrated with Astro, but Marquez will show similar information.
 
@@ -228,7 +228,7 @@ The Astro Python SDK is an open source DAG authoring tool maintained by Astronom
 The Astro Python SDK supports Snowflake as a data warehouse and can be used to simplify ETL workflows with Snowflake. For example, the following DAG moves data from S3 into Snowflake, performs some data transformations, and loads the resulting data into a reporting table.
 
 ```python
-from datetime import datetime
+from pendulum import datetime
 
 from airflow.models import DAG
 from pandas import DataFrame
@@ -266,14 +266,13 @@ def transform_dataframe(df: DataFrame):
     return purchase_dates
 
 
-dag = DAG(
+with DAG(
     dag_id="astro_orders",
     start_date=datetime(2019, 1, 1),
     schedule_interval="@daily",
     catchup=False,
-)
+) as dag:
 
-with dag:
     # Extract a file with a header from S3 into a Table object
     orders_data = aql.load_file(
         # data file needs to have a header row
