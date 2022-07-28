@@ -15,8 +15,9 @@ In this guide we will cover:
 
 - Best practices surrounding data quality.
 - When to implement data quality checks.
-- Three different tools used for data quality checks with concrete examples.
-- The relationship between data quality and data lineage.
+- Three different tools used for data quality checks with concrete examples: SQL Check operators, GreatExpectations and Soda.
+
+> **Note**: In complex data ecosystems about Data Lineage can be a powerful addition to data quality checks, especially for investigating what data from which origins caused a check to fail. You can learn more about Data Lineage in the ['Open Lineage and Airflow' guide](https://www.astronomer.io/guides/airflow-openlineage/).
 
 ## Assumed Knowledge
 
@@ -99,12 +100,12 @@ SQL Check Operators execute a SQL statement that results in a boolean. `True` le
 
 The SQL Check Operators work with any backend solution that accepts SQL queries and differ in what kind of data quality checks they can perform and how they are defined:
 
-- `[SQLColumnCheckOperator](https://registry.astronomer.io/providers/common-sql/modules/sqlcolumncheckoperator)`: Allows quick definition of many checks on whole columns of a table using a python dictionary.
-- `[SQLTableCheckOperator](https://registry.astronomer.io/providers/common-sql/modules/sqltablecheckoperator)`: Can run aggregated and non-aggregated statements involving several columns of a table.
-- `[SQLCheckOperator](https://registry.astronomer.io/providers/apache-airflow/modules/sqlcheckoperator)`: Can be used with any SQL statement that returns a single row of booleans.
-- `[SQLIntervalCheckOperator](https://registry.astronomer.io/providers/apache-airflow/modules/sqlintervalcheckoperator)`: Runs checks against historical data.
-- `[SQLValueCheckOperator](https://registry.astronomer.io/providers/apache-airflow/modules/sqlvaluecheckoperator)`: Compares the result of a SQL query against a value with or without a tolerance window.
-- `[SQLThresholdCheckOperator](https://registry.astronomer.io/providers/apache-airflow/modules/sqlthresholdcheckoperator)`: Compares the result of a SQL query against upper and lower thresholds which may also be described as SQL queries.
+- [`SQLColumnCheckOperator`](https://registry.astronomer.io/providers/common-sql/modules/sqlcolumncheckoperator): Allows quick definition of many checks on whole columns of a table using a python dictionary.
+- [`SQLTableCheckOperator`](https://registry.astronomer.io/providers/common-sql/modules/sqltablecheckoperator): Can run aggregated and non-aggregated statements involving several columns of a table.
+- [`SQLCheckOperator`](https://registry.astronomer.io/providers/apache-airflow/modules/sqlcheckoperator): Can be used with any SQL statement that returns a single row of booleans.
+- [`SQLIntervalCheckOperator`](https://registry.astronomer.io/providers/apache-airflow/modules/sqlintervalcheckoperator): Runs checks against historical data.
+- [`SQLValueCheckOperator`](https://registry.astronomer.io/providers/apache-airflow/modules/sqlvaluecheckoperator): Compares the result of a SQL query against a value with or without a tolerance window.
+- [`SQLThresholdCheckOperator`](https://registry.astronomer.io/providers/apache-airflow/modules/sqlthresholdcheckoperator): Compares the result of a SQL query against upper and lower thresholds which may also be described as SQL queries.
 
 Reasons to use SQL Check operators:
 
@@ -409,7 +410,7 @@ When using GreatExpectations Airflow will only log whether the suite passed or f
 
 ![GreatExpectations Data Quality Report](https://assets2.astronomer.io/main/guides/data-quality/ge_html_example.png)
 
-### Soda Core
+### Soda
 
 Soda Core is an open source framework for data quality checks using the SodaCL command-line interface to run checks defined in a YAML file.
 
@@ -493,7 +494,7 @@ The bash script below:
 
 - creates a virtual environment
 - provides it with the `checks.yml` and `configuration.yml` files
-- enters the virutal environment
+- enters the virtual environment
 - installs the `soda-core-snowflake` package in the virtual environment
 - runs the `soda scan` command on `MY_DATASOURCE` using the configuration files.
 
@@ -538,8 +539,6 @@ The logs from the Soda Core checks can be found in the Airflow task logs.
 
 Depending on your data stack you might be already using tools that offer some about of data quality checks. For example [dbt allows you to define assertions](https://docs.getdbt.com/docs/building-a-dbt-project/tests) about projects that can be run using a bash command and therefore of course can be kicked off from an Airflow DAG using the `BashOperator`.
 
-## Data Quality and OpenLineage
-
-(with link to OpenLineage Guide)
-
 ## Conclusion
+
+Data quality is important which is reflected in growth of tools designed to perform data quality checks. In-depth planning and collaborative exploration of what kind of data quality needs your organization is paramount in order to define checks to run and select the tools that are right for you. SQL Check operators offer a way to define your checks directly from within the DAG with no other tools necessary. If you run many checks on different databases you may profit from trialing a more complex testing solution like GreatExpectations or Soda.
