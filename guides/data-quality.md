@@ -541,4 +541,8 @@ Depending on your data stack you might be already using tools that offer some ab
 
 ## Conclusion
 
-Data quality is important which is reflected in growth of tools designed to perform data quality checks. In-depth planning and collaborative exploration of what kind of data quality needs your organization is paramount in order to define checks to run and select the tools that are right for you. SQL Check operators offer a way to define your checks directly from within the DAG with no other tools necessary. If you run many checks on different databases you may profit from trialing a more complex testing solution like GreatExpectations or Soda.
+Data quality is important which is reflected in growth of tools designed to perform data quality checks. In-depth planning and collaborative exploration of what kind of data quality needs your organization is paramount in order to define checks to run and select the tools that are right for you.
+
+SQL Check operators offer a way to define your checks directly from within the DAG with no other tools necessary. If you run many checks on different databases you may profit from trialing a more complex testing solution like GreatExpectations or Soda.
+
+No matter which tool is used it is possible orchestrate the checks from within an Airflow DAG which makes downstream actions depending on the outcome of the checks possible.
