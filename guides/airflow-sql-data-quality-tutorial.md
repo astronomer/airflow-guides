@@ -81,7 +81,7 @@ check_columns = SQLColumnCheckOperator(
                 "unique_check": {"equal_to": 0}
             },
             "MY_TEXT_COL": {
-                "distinct_check": {"geq_than": 10},
+                "distinct_check": {"geq_to": 10},
                 "null_check": {"equal_to": 0}
             },
             "MY_NUM_COL": {
