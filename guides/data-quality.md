@@ -15,9 +15,8 @@ In this guide we will cover:
 
 - Best practices surrounding data quality.
 - When to implement data quality checks.
-- Three different tools used for data quality checks with concrete examples: SQL Check operators, GreatExpectations and Soda.
-
-> **Note**: In complex data ecosystems about Data Lineage can be a powerful addition to data quality checks, especially for investigating what data from which origins caused a check to fail. You can learn more about Data Lineage in the ['Open Lineage and Airflow' guide](https://www.astronomer.io/guides/airflow-openlineage/).
+- Two different tools used for data quality checks with concrete examples: SQL Check operator and GreatExpectations.
+- How Data Lineage is connected to data quality
 
 ## Assumed Knowledge
 
@@ -86,11 +85,32 @@ Good reasons to start thinking about data quality checks are:
 
 ## Tools
 
-There are different tools that can be used to check data quality from an Airflow DAG. In this section we will highlight three tools with concrete examples:
+There are different tools that can be used to check data quality from an Airflow DAG. In this section we will highlight the two tools that also integrate with OpenLineage with concrete examples:
 
 - **[SQL Check operators](https://www.astronomer.io/guides/airflow-sql-data-quality-tutorial)**: a group of operators allowing the user to define data quality checks in python dictionaries and SQL directly from within the DAG.
 - **[GreatExpectations](https://greatexpectations.io/)**: an open source data validation framework where checks are defined in json format. Airflow offers a provider package for easy integration.
-- **[Soda](https://docs.soda.io/)**: an open source data validation framework that uses YAML to define checks which can be kicked off using the `BashOperator`.
+
+Other tools that can be used for data quality checks are:
+
+- [Soda](https://docs.soda.io/): an open source data validation framework that uses YAML to define checks which can be kicked off using the `BashOperator`. Soda also offers to write custom checks using SQL.
+- [dbt test](https://docs.getdbt.com/docs/building-a-dbt-project/tests): If you are using Airflow to orchestrate dbt jobs you might be able to implement data quality checks by using the `BashOperator` to kick of the dbt test command.
+
+### Choosing a tool
+
+Which tool to choose comes down to individual business needs and preferences. We recommend to use SQL Check operators if you want to:
+
+- write checks without needing to set up software additionally to Airflow.
+- write checks as Python dictionaries and in SQL.
+- be able to use any existing SQL statement that returns a single row of booleans as a data quality check.
+- implement many different downstream dependencies depending on the outcome of different checks.
+
+We recommend to use a data validation framework like GreatExpectations or Soda if:
+
+- you want to collect the results of your data quality checks in a central place.
+- you prefer to write checks in JSON or YAML format.
+- most or all of your checks can be implemented by the predefined checks of the solution of your choice.
+
+> **Note**: Currently only SQL Check operators and GreatExpectations offer Data Lineage extraction.
 
 ### SQL Check Operators
 
@@ -183,7 +203,7 @@ with DAG(
                 "unique_check": {"equal_to": 0}
             },
             "MY_TEXT_COL": {
-                "distinct_check": {"geq_than": 10},
+                "distinct_check": {"geq_to": 10},
                 "null_check": {"equal_to": 0}
             },
             "MY_NUM_COL": {
@@ -212,7 +232,7 @@ with DAG(
 
     # SQLCheckOperator example: ensure categorical values in MY_COL_3
     # are one of a list of 4 options
-    check_today_val_in_bounds = SQLCheckOperator(
+    check_val_in_list = SQLCheckOperator(
         task_id="check_today_val_in_bounds",
         conn_id=example_connection,
         sql="""
@@ -410,134 +430,21 @@ When using GreatExpectations Airflow will only log whether the suite passed or f
 
 ![GreatExpectations Data Quality Report](https://assets2.astronomer.io/main/guides/data-quality/ge_html_example.png)
 
-### Soda
+### OpenLineage and Data Quality
 
-Soda Core is an open source framework for data quality checks using the SodaCL command-line interface to run checks defined in a YAML file.
+In complex data ecosystems Data Lineage can be a powerful addition to data quality checks, especially for investigating what data from which origins caused a check to fail.
 
-Reasons to use Soda Core are:
+> **Note**: For more information on Data Lineage and details on how to set up OpenLineage with Airflow please see the ['Open Lineage and Airflow' guide](https://www.astronomer.io/guides/airflow-openlineage/).
 
-- Very flexible in how you can define your checks using predefined metrics or full SQL statements.
-- [Offers check configurations](https://docs.soda.io/soda-cl/optional-config.html) that can add a warn state for a check. For example having values > 10 in a column might warrant a warning, while a value over 100 in the same column leads the check to fail.
+Both SQL Check operators and the GreatExpectationsOperator have Data Lineage extractors that work with OpenLineage and Marquez.
 
-#### Requirements
+The output from the SQLColumnCheckOperator will contain each individual check and whether it succeeded or not:
 
-To use Soda Core, the Soda Core package for the database backend needs to be installed and configured. The [Soda documentation provides a list of supported databases](https://docs.soda.io/soda-core/configuration.html) and how to configure them.
+![Marquez SQLColumnCheckOperator](https://assets2.astronomer.io/main/guides/data-quality/marquez_sql_column_check.png)
 
-For the DAG code no additional providers or packages need to be installed since the BashOperator is part of the Airflow core.
+For the GreatExpectationsOperator OpenLineage receives whether or not the whole Expectation suite succeeded or failed:
 
-#### Example Soda
-
-This example shows one possible way to set up data quality checks on a Snowflake database using Soda Core in a virtual python environment inside the Airflow environment.
-
-The setup can be divided into the following steps:
-
-- Create a configuration file that connects to the Snowflake database: `configuration.yml`
-- Create a checks file containing the data quality checks: `checks.yml`
-- Create a bash script that will run `soda scan` using the two files above: `my_soda_script.sh`
-- Create the DAG code running the bash script using the `BashOperator`
-
-The configuration file can be created from the template in the Soda documentation as shown below.
-
-```YAML
-# the first line names the datasource "MY_DATASOURCE"
-data_source MY_DATASOURCE:
-  type: snowflake
-  connection:
-    # provide your snowflake username and password in double quotes
-    username: "MY_USERNAME"
-    password: "MY_PASSWORD"
-    # provide the account in the format xy12345.eu-central-1
-    account: my_account
-    database: MY_DATABASE
-    warehouse: MY_WAREHOUSE
-    # if your connection times out you may need to adjust the timeout value
-    connection_timeout: 300
-    role: MY_ROLE
-    client_session_keep_alive:
-    session_parameters:
-      QUERY_TAG: soda-queries
-      QUOTED_IDENTIFIERS_IGNORE_CASE: false
-  schema: MY_SCHEMA
-```
-
-In the second step you can define your data quality checks using the [many checks available for Soda CL](https://docs.soda.io/soda-cl/soda-cl-overview.html). If you cannot find a predefined metric or check that works for your use case you can create a User-defined check using SQL as shown below.
-
-```YAML
-checks for example_table:
-  # check that MY_DATE_COL has dates between 2017-01-01 and 2022-01-01 using regex
-  - invalid_count(MY_DATE_COL) = 0:
-      valid regex: (((20)?(1[7-9]|2[0-1]))[-](0?[0-9]|1[012])[-](0?[0-9]|[12][0-9]|3[01])|2022[-]01[-]01)
-  # check that all entries in MY_DATE_COL are unique
-  - duplicate_count(MY_DATE_COL) = 0
-  # check that MY_TEXT_COL has no missing values
-  - missing_count(MY_TEXT_COL) = 0
-  # check that MY_TEXT_COL has at least 10 distinct values using SQL
-  - distinct_vals >= 10:
-      distinct_vals query: |
-        SELECT DISTINCT(MY_TEXT_COL) FROM example_table
-  # check that MY_NUM_COL has a minimum between 90 and 110
-  - min(MY_NUM_COL) between 90 and 110
-  # check that example table has at least 1000 rows
-  - row_count >= 1000
-  # check that the sum of MY_COL_2 is bigger than the sum of MY_COL_1
-  - sum_difference > 0:
-      sum_difference query: |
-        SELECT SUM(MY_COL_2) - SUM(MY_COL_1) FROM example_table
-  # checks that all entries in MY_COL_3 are part of a set or possible values
-  - invalid_count(MY_COL_3) = 0:
-      valid values: ['val1', 'val2', 'val3', 'val4']
-```
-
-After creation of the YAML files write a bash script that will be executed by the BashOperator in your Airflow environment. It is considered best practice to use Soda Core in a virtual environment.
-
-The bash script below:
-
-- creates a virtual environment
-- provides it with the `checks.yml` and `configuration.yml` files
-- enters the virtual environment
-- installs the `soda-core-snowflake` package in the virtual environment
-- runs the `soda scan` command on `MY_DATASOURCE` using the configuration files.
-
-> **Note** It is important to make this script executable by running `chmod +x filepath/soda_script.sh` before providing it to your Airflow environment. For more information on using bash scripts with Airflow see the ['Running scripts using the BashOperator' guide](https://www.astronomer.io/guides/scripts-bash-operator/).
-
-```bash
-#!/bin/bash
-python -m venv .venv
-cp /usr/local/airflow/include/soda/checks.yml .venv/include
-cp /usr/local/airflow/include/soda/configuration.yml .venv/include
-source .venv/bin/activate
-pip install --upgrade pip
-pip install soda-core-snowflake
-cd .venv/include
-soda scan -d MY_DATASOURCE -c configuration.yml checks.yml
-```
-
-The DAG code itself stays very simple with one task using the `BashOperator` to execute the script.
-
-```python
-from airflow import DAG
-from datetime import datetime
-from airflow.operators.bash import BashOperator
-
-with DAG(
-    schedule_interval=None,
-    start_date=datetime(2022,7,1),
-    dag_id="soda_example_dag",
-    catchup=False,
-) as dag:
-
-    soda_test = BashOperator(
-        task_id="soda_test",
-        # please not the space at the end of the command!
-        bash_command="/usr/local/airflow/include/soda/soda_script.sh "
-    )
-```
-
-The logs from the Soda Core checks can be found in the Airflow task logs.
-
-### Other data quality check tools
-
-Depending on your data stack you might be already using tools that offer some about of data quality checks. For example [dbt allows you to define assertions](https://docs.getdbt.com/docs/building-a-dbt-project/tests) about projects that can be run using a bash command and therefore of course can be kicked off from an Airflow DAG using the `BashOperator`.
+![Marquez GreatExpectationsOperator](https://assets2.astronomer.io/main/guides/data-quality/marquez_ge.png)
 
 ## Conclusion
 
