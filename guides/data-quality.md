@@ -136,7 +136,7 @@ The SQL Check Operators work with any backend solution that accepts SQL queries 
 - [`SQLValueCheckOperator`](https://registry.astronomer.io/providers/apache-airflow/modules/sqlvaluecheckoperator): Compares the result of a SQL query against a value with or without a tolerance window.
 - [`SQLThresholdCheckOperator`](https://registry.astronomer.io/providers/apache-airflow/modules/sqlthresholdcheckoperator): Compares the result of a SQL query against upper and lower thresholds which may also be described as SQL queries.
 
-#### Requirements
+#### SQL Check operators: Requirements
 
 To use SQL Check operators no additional software is needed. The `SQLColumnCheckOperator` and `SQLTableCheckOperator` are part of the [Common SQL provider](https://pypi.org/project/apache-airflow-providers-common-sql/1.0.0/), which can be installed with:
 
@@ -146,7 +146,7 @@ pip install apache-airflow-providers-common-sql
 
 The other SQL check operators are built into core Airflow and do not require  separate package installation.
 
-#### Logs
+#### SQL Check operators: Logs
 
 The logs from SQL Check operators can be found in the regular Airflow task logs as shown in the logs excerpt below.
 
@@ -173,7 +173,7 @@ GreatExpectations is an open source data validation framework that allows the us
 
 > **Note** All currently available expectations can be discovered on the [GreatExpectations website](https://greatexpectations.io/expectations).
 
-#### Requirements
+#### GreatExpectations: Requirements
 
 To use GreatExpectations you will need to install the open source GreatExpectations software and set up a GreatExpectations project with at least one instance of each of the following components:
 
@@ -190,7 +190,7 @@ Additionally the GreatExpectations provider package has to be installed with:
 pip install airflow-provider-great-expectations
 ```
 
-#### Logs
+#### GreatExpectations: Logs
 
 When using GreatExpectations Airflow will only log whether the suite passed or failed, to get a detailed report on the checks that were run and their results you can refer to the html files in `great_expecations/uncommitted/data_docs/local_site/validations`, an screenshot of which is shown below:
 
@@ -227,7 +227,7 @@ The checks performed for both tools are:
 - The the value in each row of "MY_COL_1" plus the value of the same row in "MY_COL_2" is equal to 100
 - "MY_COL_3" only contains the values `val1`, `val2`, `val3` and `val4`
 
-### SQL Check Operators
+### Example: SQL Check Operators
 
 The example DAG below consists of 3 tasks:
 
@@ -341,7 +341,7 @@ with DAG(
     )
 ```
 
-### GreatExpectations
+### Example: GreatExpectations
 
 The following example runs the same data quality checks as the SQL Check operators example against the same database. After setting up the GreatExpectations instance with all four components, the checks can be defined in JSON format to form one Expectation suite.
 
