@@ -9,11 +9,22 @@ tags: ["Airflow UI", "DAGs", "Basics"]
 
 In Airflow, a DAG is a data pipeline defined in Python code. DAG stands for "directed, acyclic, graph". In that graph, each node represents a task which completes a unit of work, and each edge represents a dependency between tasks. There is no limit to what a DAG can do so long as tasks remain acyclic (tasks cannot create data that goes on to self-reference).
 
-In this guide, we'll cover everything you need to know to get started writing a DAG, including how to define a DAG in Python, how to run the DAG on your local computer using the Astro CLI, and how to view and monitor the DAG in the Airflow UI.
+In this guide, we'll cover how to define a DAG in Python, DAG parameters that all users should be aware of, and how to view and monitor DAGs in the Airflow UI.
 
 ## Presumed Knowledge
 
-## Creating DAGs
+To get the most out of this guide, users should have knowledge of:
+
+- What Airflow is and when to use it
+- Airflow operators
+
+The following resources are recommended:
+
+- [Introduction to Apache Airflow](https://www.astronomer.io/guides/intro-to-airflow)
+- [Operators 101](https://www.astronomer.io/guides/what-is-an-operator)
+- [Python Documentation](https://docs.python.org/3/tutorial/index.html)
+
+## Writing a DAG
 
 DAGs in Airflow are defined in a Python script that is placed in Airflow's `DAG_FOLDER`. Airflow will execute the code in this folder and will load any DAG objects. If you are working with the Astro CLI, DAG scripts can be placed in the `dags/` folder. 
 
@@ -24,30 +35,78 @@ Most DAGs will follow this general flow within a Python script:
 - Task instantiation: Each task is defined by calling an operator and providing necessary task-level parameters.
 - Dependencies: Any dependencies between tasks are set using bitshift operators (`<<` and `>>`), the `set_upstream()` or `set_downstream` functions, or the `chain()` function. Note that if you are using the TaskFlow API, dependencies are inferred based on the task function calls.
 
+For example, the following is a basic DAG that loads data from S3 to Snowflake, runs a Snowflake query, and sends an email.
+
+```python
+from airflow import DAG
+
+from airflow.operators.email_operator import EmailOperator
+from airflow.providers.snowflake.operators.snowflake import SnowflakeOperator
+from airflow.providers.snowflake.transfers.s3_to_snowflake import S3ToSnowflakeOperator
+
+from datetime import datetime, timedelta
+
+
+with DAG('s3_to_snowflake',
+         start_date=datetime(2020, 6, 1),
+         schedule_interval='@daily',
+         default_args={
+            'retries': 1,
+            'retry_delay': timedelta(minutes=5)
+        },
+         catchup=False
+         ) as dag:
+
+        load_file = S3ToSnowflakeOperator(
+            task_id='load_file',
+            s3_keys=['key_name.csv'],
+            stage='snowflake_stage',
+            table='my_table',
+            schema='my_schema',
+            file_format='csv',
+            snowflake_conn_id='snowflake_default'
+        )
+
+        snowflake_query = SnowflakeOperator(
+            task_id="run_query",
+            sql='SELECT COUNT(*) FROM my_table'
+        )
+
+        send_email = EmailOperator(
+            task_id='send_email',
+            to='noreply@astronomer.io',
+            subject='Snowflake DAG',
+            html_content='<p>The Snowflake DAG completed successfully.<p>'
+        )
+
+        load_file >> snowflake_query >> send_email
+
+```
+
+> **Note:** The example DAG above makes use of the [Snowflake provider package](https://registry.astronomer.io/providers/snowflake). Providers are Python packages separate from core Airflow that contain hooks, operators, and sensors to integrate Airflow with third party services. The [Astronomer Registry](https://registry.astronomer.io/) is the best place to go to learn about available Airflow providers.
+
+Astronomer recommends creating one Python file for each DAG. Some advanced use cases might require dynamically generating DAG files, which can also be accomplished using Python.
+
+### Writing DAGs with the TaskFlow API
+
+Since Airflow 2.0, the TaskFlow API has been available as an alternative DAG authoring experience to traditional operators like the ones shown in the previous example. With the TaskFlow API, you can define your DAG and any PythonOperator tasks using decorators. The purpose of decorators in Airflow is to simplify the DAG authoring experience by eliminating the boilerplate code. Whether to author DAGs in this way is a matter of developer preference and style. 
+
 For example, the following DAG is generated when you initialize an Astro project:
 
 ```python
 import json
 from datetime import datetime, timedelta
 
-from airflow.decorators import dag, task # DAG and task decorators for interfacing with the TaskFlow API
-
+from airflow.decorators import dag, task
 
 @dag(
-    # This defines how often your DAG will run, or the schedule by which your DAG runs. In this case, this DAG
-    # will run daily
     schedule_interval="@daily",
-    # This DAG is set to run for the first time on January 1, 2021. Best practice is to use a static
-    # start_date. Subsequent DAG runs are instantiated based on scheduler_interval
     start_date=datetime(2021, 1, 1),
-    # When catchup=False, your DAG will only run for the latest schedule_interval. In this case, this means
-    # that tasks will not be run between January 1, 2021 and 30 mins ago. When turned on, this DAG's first
-    # run will be for the next 30 mins, per the schedule_interval
     catchup=False,
     default_args={
-        "retries": 2, # If a task fails, it will retry 2 times.
+        "retries": 2
     },
-    tags=['example']) # If set, this tag is shown in the DAG view of the Airflow UI
+    tags=['example'])
 def example_dag_basic():
     """
     ### Basic ETL Dag
@@ -101,39 +160,11 @@ def example_dag_basic():
 
 # Call the dag function to register the DAG
 example_dag_basic = example_dag_basic()
-
 ```
 
-Astronomer recommends creating one Python file for each DAG. Some advanced use cases might require dynamically generating DAG files, which can also be accomplished using Python.
+In the DAG above, tasks are instantiated using the `@task` decorator, and the DAG is instantiated using the `@dag` decorator. When using decorators, you must call the DAG and task functions in the same DAG file for Airflow to register them.
 
-## Running DAGs
+## DAG Parameters
 
 ## Viewing DAGs
 
-Airflow UI
-States
-
-One of the key pieces of data stored in Airflow’s metadata database is **State**. States are used to keep track of what condition task instances and DAG Runs are in. In the screenshot below, we can see how states are represented in the Airflow UI:
-
-
-DAG Runs and tasks can have the following states:
-
-### DAG States
-
-- **Running (Lime):** DAG is currently being executed.
-- **Success (Green):** DAG was executed successfully.
-- **Failed (Red):** The task or DAG failed.
-
-### Task States
-
-- **None (Light Blue):** No associated state. Syntactically - set as Python None.
-- **Queued (Gray):** The task is waiting to be executed, set as queued.
-- **Scheduled (Tan):** The task has been scheduled to run.
-- **Running (Lime):** The task is currently being executed.
-- **Failed (Red):** The task failed.
-- **Success (Green):** The task was executed successfully.
-- **Skipped (Pink):** The task has been skipped due to an upstream condition.
-- **Shutdown (Blue):** The task is up for retry.
-- **Removed (Light Grey):** The task has been removed.
-- **Retry (Gold):** The task is up for retry.
-- **Upstream Failed (Orange):** The task will not run because of a failed upstream dependency.
