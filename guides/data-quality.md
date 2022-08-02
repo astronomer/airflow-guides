@@ -15,7 +15,7 @@ In this guide we will cover:
 
 - Best practices surrounding data quality.
 - When to implement data quality checks.
-- Two different tools used for data quality checks with concrete examples: SQL Check operator and GreatExpectations.
+- Two different tools used for data quality checks with concrete examples: SQL Check operators and GreatExpectations.
 - How Data Lineage is connected to data quality
 
 ## Assumed Knowledge
@@ -55,6 +55,11 @@ Data quality checks can be run on different levels:
 - **Table**: e.g. checking against a template schema to verify that it has not changed.
 - **Over several tables**: e.g. creating logical checks like making sure a customer marked as 'inactive' has no purchases listed in any of the other tables.
 
+It is also important to distinguish the two types of Data Integrity Control:
+
+- **Flow Control**: monitors incoming data on a record-by-record basis and will sometimes prevent single records that fail certain data quality checks from entering the database. A well known tool for flow control is [Monte Carlo](https://docs.getmontecarlo.com/).
+- **Static Control**: runs checks on existing tables in a database. These checks can be performed on tables anywhere in a typical ETL pipeline and might halt the pipeline downstream of the whole table in case of a failed check to prevent further processing of data with quality issues. In this guide we will only cover static data quality checks.
+
 > **Note**: When exploring data quality needs and designing checks good questions to ask data professionals are: "What changes in these datasets would need your attention downstream?", "What changes in the data would you want to be alerted about?", "What changes in the data would you want to hold the pipeline?".
 
 ### Location and Downstream Effects of Data Quality Checks
@@ -76,7 +81,7 @@ You should also consider how a check failing or passing should influence downstr
 
 ## When to implement Data Quality Checks
 
-When considering the implementation of data quality checks it is important to consider the tradeoffs between the upfront work of implementing checks vs. the cost of downstream issues caused by bad quality data.
+When considering the implementation of data quality checks it is important to consider the tradeoffs between the upfront work of implementing checks vs. the cost of downstream issues caused by data with bad quality.
 
 Good reasons to start thinking about data quality checks are:
 
@@ -88,11 +93,11 @@ Good reasons to start thinking about data quality checks are:
 There are different tools that can be used to check data quality from an Airflow DAG. In this section we will highlight the two tools that also integrate with OpenLineage with concrete examples:
 
 - **[SQL Check operators](https://www.astronomer.io/guides/airflow-sql-data-quality-tutorial)**: a group of operators allowing the user to define data quality checks in python dictionaries and SQL directly from within the DAG.
-- **[GreatExpectations](https://greatexpectations.io/)**: an open source data validation framework where checks are defined in json format. Airflow offers a provider package for easy integration.
+- **[GreatExpectations](https://greatexpectations.io/)**: an open source data validation framework where checks are defined in json format. Airflow offers a provider package including the `GreatExpectationsOperator` for easy integration.
 
 Other tools that can be used for data quality checks are:
 
-- [Soda](https://docs.soda.io/): an open source data validation framework that uses YAML to define checks which can be kicked off using the `BashOperator`. Soda also offers to write custom checks using SQL.
+- [Soda](https://docs.soda.io/): an open source data validation framework that uses YAML to define checks which can be kicked off using the `BashOperator`. Soda also offers the ability to write any custom checks using SQL.
 - [dbt test](https://docs.getdbt.com/docs/building-a-dbt-project/tests): If you are using Airflow to orchestrate dbt jobs you might be able to implement data quality checks by using the `BashOperator` to kick of the dbt test command.
 
 ### Choosing a tool
@@ -103,12 +108,14 @@ Which tool to choose comes down to individual business needs and preferences. We
 - write checks as Python dictionaries and in SQL.
 - be able to use any existing SQL statement that returns a single row of booleans as a data quality check.
 - implement many different downstream dependencies depending on the outcome of different checks.
+- be able to have full observability of which checks failed from within Airflow task logs, including the full SQL statements of failed checks.
 
 We recommend to use a data validation framework like GreatExpectations or Soda if:
 
 - you want to collect the results of your data quality checks in a central place.
-- you prefer to write checks in JSON or YAML format.
+- you prefer to write checks in JSON (GreatExpectations) or YAML (Soda) format.
 - most or all of your checks can be implemented by the predefined checks of the solution of your choice.
+- you want your data quality checks abstracted away from the DAG code.
 
 > **Note**: Currently only SQL Check operators and GreatExpectations offer Data Lineage extraction.
 
@@ -127,14 +134,6 @@ The SQL Check Operators work with any backend solution that accepts SQL queries 
 - [`SQLValueCheckOperator`](https://registry.astronomer.io/providers/apache-airflow/modules/sqlvaluecheckoperator): Compares the result of a SQL query against a value with or without a tolerance window.
 - [`SQLThresholdCheckOperator`](https://registry.astronomer.io/providers/apache-airflow/modules/sqlthresholdcheckoperator): Compares the result of a SQL query against upper and lower thresholds which may also be described as SQL queries.
 
-Reasons to use SQL Check operators:
-
-- Implementation like regular operators without the need to install additional software.
-- Full observability directly in the Airflow task logs, including the full SQL statement that caused a task to fail.
-- All checks are defined either in SQL or python dictionaries.
-- Any SQL statement can be turned into a check as long as it returns a single row of booleans with the `SQLCheckOperator`.
-- The `SQLColumnCheckOperator` offers the possibility to write common checks in a declarative way in a python dictionary without having to write SQL.
-
 #### Requirements
 
 To use SQL Check operators no additional software is needed. The `SQLColumnCheckOperator` and `SQLTableCheckOperator` are part of the [Common SQL provider](https://pypi.org/project/apache-airflow-providers-common-sql/1.0.0/), which can be installed with:
@@ -143,17 +142,58 @@ To use SQL Check operators no additional software is needed. The `SQLColumnCheck
 pip install apache-airflow-providers-common-sql
 ```
 
-The other SQL check operators are built into core Airflow and do not require a separate package installation.
+The other SQL check operators are built into core Airflow and do not require  separate package installation.
 
-#### Example SQL Check operators
+### GreatExpectations
 
-The example DAG below consists of 3 tasks:
+> **Note**: You can find more information on how to use GreatExpectations with Airflow in the ['Integrating Airflow and Great Expectations' guide](https://www.astronomer.io/guides/airflow-great-expectations/).
 
-- First the `SQLColumnCheckOperator` is used to perform checks on several columns in the target table.
-- Afterwards the `SQLTableCheckOperator` performs two checks involving aggregate functions on the whole table.
-- Lastly the `SQLCheckOperator` is used to make sure a categorical variable is set to one of 4 options.
+GreatExpectations is an open source data validation framework that allows the user to define multiple lists of data quality checks called 'Expectations Suite's as a json file. The checks can be run from any position in the DAG using the [`GreatExpectationsOperator`](https://registry.astronomer.io/providers/great-expectations/modules/greatexpectationsoperator).
 
-Within these 3 tasks 8 individual data quality checks are performed:
+> **Note** All currently available expectations can be discovered on the [GreatExpectations website](https://greatexpectations.io/expectations).
+
+When using GreatExpectations Airflow will only log whether the suite passed or failed, to get a detailed report on the checks that were run and their results you can refer to the html files in `great_expecations/uncommitted/data_docs/local_site/validations`, an screenshot of which is shown below:
+
+![GreatExpectations Data Quality Report](https://assets2.astronomer.io/main/guides/data-quality/ge_html_example.png)
+
+#### Requirements
+
+To use GreatExpectations you will need to install the open source GreatExpectations software and set up a GreatExpectations project with at least one instance of each of the following components:
+
+- Data Context
+- Datasource
+- Expectation Suite
+- Checkpoint
+
+The GreatExpectations documentation offers a [step-by-step tutorial](https://docs.greatexpectations.io/docs/tutorials/getting_started/tutorial_overview) for this setup.  
+
+Additionally the GreatExpectations provider package has to be installed with:
+
+```bash
+pip install airflow-provider-great-expectations
+```
+
+## OpenLineage and Data Quality
+
+In complex data ecosystems Data Lineage can be a powerful addition to data quality checks, especially for investigating what data from which origins caused a check to fail.
+
+> **Note**: For more information on Data Lineage and details on how to set up OpenLineage with Airflow please see the ['Open Lineage and Airflow' guide](https://www.astronomer.io/guides/airflow-openlineage/).
+
+Both SQL Check operators and the GreatExpectationsOperator have Data Lineage extractors that work with OpenLineage and Marquez.
+
+The output from the SQLColumnCheckOperator will contain each individual check and whether it succeeded or not:
+
+![Marquez SQLColumnCheckOperator](https://assets2.astronomer.io/main/guides/data-quality/marquez_sql_column_check.png)
+
+For the GreatExpectationsOperator OpenLineage receives whether or not the whole Expectation suite succeeded or failed:
+
+![Marquez GreatExpectationsOperator](https://assets2.astronomer.io/main/guides/data-quality/marquez_ge.png)
+
+## Example: Comparing SQL Check operators and GreatExpectations
+
+This example shows the steps necessary to perform the same set of data quality checks with SQL Check operators and with GreatExpectations.
+
+The checks performed for both tools are:
 
 - "MY_DATE_COL" only has unique values
 - "MY_DATE_COL" only has values between 2017-01-01 and 2022-01-01
@@ -161,8 +201,16 @@ Within these 3 tasks 8 individual data quality checks are performed:
 - "MY_TEXT_COL" has at least 10 distinct values
 - "MY_NUM_COL" has a minimum value between 90 and 110
 - `example_table` has at least 1000 rows
-- The sum of all rows in "MY_COL_1" is less than the sum of all rows in "MY_COL_2"
+- The the value in each row of "MY_COL_1" plus the value of the same row in "MY_COL_2" is equal to 100
 - "MY_COL_3" only contains the values `val1`, `val2`, `val3` and `val4`
+
+### SQL Check Operators
+
+The example DAG below consists of 3 tasks:
+
+- First the `SQLColumnCheckOperator` is used to perform checks on several columns in the target table.
+- Afterwards two `SQLTableCheckOperator`s perform one check each that involves several columns or the whole table respectively.
+- Lastly the `SQLCheckOperator` is used to make sure a categorical variable is set to one of 4 options.
 
 While this example shows all the checks being written within the python file defining the DAG, of course it is possible to modularize commonly used checks and SQL statements in separate files (for Astro CLI users, those files can be put into the `/include` directory).
 
@@ -212,20 +260,29 @@ with DAG(
         }
     )
 
-    # SQLTableCheckOperator example: This Operator performs two checks:
+    # SQLTableCheckOperator example: This Operator performs one check:
     #   - a row count check, making sure the table has >= 1000 rows
-    #   - a columns sum comparison check to the sum of MY_COL_1 is below the
-    #     sum of MY_COL_2
-    table_checks = SQLTableCheckOperator(
-        task_id="table_checks",
+    table_checks_aggregated = SQLTableCheckOperator(
+        task_id="table_checks_aggregated",
         conn_id=example_connection,
         table=example_table,
         checks={
             "my_row_count_check": {
                 "check_statement": "COUNT(*) >= 1000"
-                },
-            "my_column_sum_comparison_check": {
-                "check_statement": "SUM(MY_COL_1) < SUM(MY_COL_2)"
+                }
+        }
+    )
+
+    # SQLTableCheckOperator example: This Operator performs one check:
+    #   - a columns comparison check to see that the value in MY_COL_1 plus
+    #   the value in MY_COL_2 is 100
+    table_checks_not_aggregated = SQLTableCheckOperator(
+        task_id="table_checks_not_aggregated",
+        conn_id=example_connection,
+        table=example_table,
+        checks={
+            "my_column_comparison_check": {
+                "check_statement": "MY_COL_1 + MY_COL_2 = 100"
                 }
         }
     )
@@ -263,47 +320,10 @@ with DAG(
 
 ### GreatExpectations
 
-> **Note**: You can find more information on how to use GreatExpectations with Airflow in the ['Integrating Airflow and Great Expectations' guide](https://www.astronomer.io/guides/airflow-great-expectations/).
+The following example runs the same data quality checks as the SQL Check operators example against the same database. After setting up the GreatExpectations instance with all four components, the checks can be defined in JSON format to form one Expectation suite.
 
-GreatExpectations is an open source data validation framework that allows the user to define multiple lists of data quality checks called 'Expectations Suite's as a json file. The checks can be run from any position in the DAG using the [`GreatExpectationsOperator`](https://registry.astronomer.io/providers/great-expectations/modules/greatexpectationsoperator).
+> **Note**: Running the same checks is possible because for each of the checks in this example an `Expectation` already exists. This is not always the case and especially for more complicated checks you may need to define a [custom expectation](https://docs.greatexpectations.io/docs/guides/expectations/creating_custom_expectations/overview).
 
-Reasons to use GreatExpectations:
-
-- If an expectation exists for your use case it is possible to implement it in a declarative way without needing to write any SQL.
-- Useful when many checks are expected to fail to collect all results in a central place in an easily readable form.
-- Abstracts data quality checks away from the DAG code.
-
-> **Note** All currently available expectations can be discovered on the [GreatExpectations website](https://greatexpectations.io/expectations).
-
-#### Requirements
-
-To use GreatExpectations you will need to install the open source GreatExpectations software and set up a GreatExpectations project with at least one instance of each of the following components:
-
-- Data Context
-- Datasource
-- Expectation Suite
-- Checkpoint
-
-The GreatExpectations documentation offers a [step-by-step tutorial](https://docs.greatexpectations.io/docs/tutorials/getting_started/tutorial_overview) for this setup.  
-
-Additionally the GreatExpectations provider package has to be installed with:
-
-```bash
-pip install airflow-provider-great-expectations
-```
-
-#### Example GreatExpectations
-
-The following example runs the same data quality checks as the SQL Check operators example against the same database, with one exception: there is currently no expectation that can compare the sum of two columns, for this a [custom expectation](https://docs.greatexpectations.io/docs/guides/expectations/creating_custom_expectations/overview) would need to be defined.
-
-The json file below shows a GreatExpectations Expectations Suite called `my_suite` containing 7 data quality checks:
-- "MY_DATE_COL" only has unique values
-- "MY_DATE_COL" only has values between 2017-01-01 and 2022-01-01
-- "MY_TEXT_COL" has no null values
-- "MY_TEXT_COL" has at least 10 distinct values
-- "MY_NUM_COL" has a minimum value between 90 and 110
-- `example_table` has at least 1000 rows
-- "MY_COL_3" only contains the values `val1`, `val2`, `val3` and `val4`
 
 ```json
 {
@@ -383,6 +403,18 @@ The json file below shows a GreatExpectations Expectations Suite called `my_suit
     },
     {
       "expectation_context": {
+        "description": "for each row MY_COL_1 plus MY_COL_2 is = 100"
+      },
+      "expectation_type": "expect_multicolumn_sum_to_equal",
+      "ge_cloud_id": null,
+      "kwargs": {
+        "column_list": ["MY_COL_1", "MY_COL_2"],
+        "sum_total": 100
+      },
+      "meta": {}
+    },
+    {
+      "expectation_context": {
         "description": "MY_COL_3 only contains values from a defined set"
       },
       "expectation_type": "expect_column_values_to_be_in_set",
@@ -425,26 +457,6 @@ with DAG(
         do_xcom_push = False
     )
 ```
-
-When using GreatExpectations Airflow will only log whether the suite passed or failed, to get a detailed report on the checks that were run and their results you can refer to the html files in `great_expecations/uncommitted/data_docs/local_site/validations`, an screenshot of which is shown below:
-
-![GreatExpectations Data Quality Report](https://assets2.astronomer.io/main/guides/data-quality/ge_html_example.png)
-
-### OpenLineage and Data Quality
-
-In complex data ecosystems Data Lineage can be a powerful addition to data quality checks, especially for investigating what data from which origins caused a check to fail.
-
-> **Note**: For more information on Data Lineage and details on how to set up OpenLineage with Airflow please see the ['Open Lineage and Airflow' guide](https://www.astronomer.io/guides/airflow-openlineage/).
-
-Both SQL Check operators and the GreatExpectationsOperator have Data Lineage extractors that work with OpenLineage and Marquez.
-
-The output from the SQLColumnCheckOperator will contain each individual check and whether it succeeded or not:
-
-![Marquez SQLColumnCheckOperator](https://assets2.astronomer.io/main/guides/data-quality/marquez_sql_column_check.png)
-
-For the GreatExpectationsOperator OpenLineage receives whether or not the whole Expectation suite succeeded or failed:
-
-![Marquez GreatExpectationsOperator](https://assets2.astronomer.io/main/guides/data-quality/marquez_ge.png)
 
 ## Conclusion
 
