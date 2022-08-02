@@ -13,10 +13,12 @@ Ensuring the quality of your data is a prerequisite to getting actionable insigh
 
 In this guide we will cover:
 
-- Best practices surrounding data quality.
+- Best practices and essential knowledge surrounding the planning of a data quality approach.
 - When to implement data quality checks.
-- Two different tools used for data quality checks with concrete examples: SQL Check operators and GreatExpectations.
-- How Data Lineage is connected to data quality
+- How to chose a data quality check tool.
+- Two different tools used for data quality checks with their requirements and logging capabilities.
+- How Data Lineage is connected to data quality.
+- An example showing the same set of data quality checks implemented using two different tools.
 
 ## Assumed Knowledge
 
@@ -144,6 +146,25 @@ pip install apache-airflow-providers-common-sql
 
 The other SQL check operators are built into core Airflow and do not require  separate package installation.
 
+#### Logs
+
+The logs from SQL Check operators can be found in the regular Airflow task logs as shown in the logs excerpt below.
+
+```text
+[2022-08-02, 05:55:58 UTC] {base.py:68} INFO - Using connection ID 'snowflake_conn' for task execution.
+[2022-08-02, 05:55:58 UTC] {base.py:68} INFO - Using connection ID 'snowflake_conn' for task execution.
+[2022-08-02, 05:55:58 UTC] {connection.py:257} INFO - Snowflake Connector for Python Version: 2.7.9, Python Version: 3.9.7, Platform: Linux-5.10.104-linuxkit-x86_64-with-glibc2.31
+[2022-08-02, 05:55:58 UTC] {connection.py:876} INFO - This connection is in OCSP Fail Open Mode. TLS Certificates would be checked for validity and revocation status. Any other Certificate Revocation related exceptions or OCSP Responder failures would be disregarded in favor of connectivity.
+[2022-08-02, 05:55:58 UTC] {connection.py:894} INFO - Setting use_openssl_only mode to False
+[2022-08-02, 05:56:00 UTC] {cursor.py:710} INFO - query: [SELECT MIN(my_row_count_check),MIN(my_column_sum_comparison_check) FROM (SELECT ...]
+[2022-08-02, 05:56:01 UTC] {cursor.py:734} INFO - query execution done
+[2022-08-02, 05:56:01 UTC] {connection.py:507} INFO - closed
+[2022-08-02, 05:56:01 UTC] {connection.py:510} INFO - No async queries seem to be running, deleting session
+[2022-08-02, 05:56:01 UTC] {sql.py:301} INFO - Record: (1, 1)
+[2022-08-02, 05:56:01 UTC] {sql.py:315} INFO - All tests have passed
+[2022-08-02, 05:56:01 UTC] {taskinstance.py:1415} INFO - Marking task as SUCCESS. dag_id=sql_check_example_dag, task_id=table_checks, execution_date=20220802T055539, start_date=20220802T055557, end_date=20220802T055601
+```
+
 ### GreatExpectations
 
 > **Note**: You can find more information on how to use GreatExpectations with Airflow in the ['Integrating Airflow and Great Expectations' guide](https://www.astronomer.io/guides/airflow-great-expectations/).
@@ -151,10 +172,6 @@ The other SQL check operators are built into core Airflow and do not require  se
 GreatExpectations is an open source data validation framework that allows the user to define multiple lists of data quality checks called 'Expectations Suite's as a json file. The checks can be run from any position in the DAG using the [`GreatExpectationsOperator`](https://registry.astronomer.io/providers/great-expectations/modules/greatexpectationsoperator).
 
 > **Note** All currently available expectations can be discovered on the [GreatExpectations website](https://greatexpectations.io/expectations).
-
-When using GreatExpectations Airflow will only log whether the suite passed or failed, to get a detailed report on the checks that were run and their results you can refer to the html files in `great_expecations/uncommitted/data_docs/local_site/validations`, an screenshot of which is shown below:
-
-![GreatExpectations Data Quality Report](https://assets2.astronomer.io/main/guides/data-quality/ge_html_example.png)
 
 #### Requirements
 
@@ -172,6 +189,12 @@ Additionally the GreatExpectations provider package has to be installed with:
 ```bash
 pip install airflow-provider-great-expectations
 ```
+
+#### Logs
+
+When using GreatExpectations Airflow will only log whether the suite passed or failed, to get a detailed report on the checks that were run and their results you can refer to the html files in `great_expecations/uncommitted/data_docs/local_site/validations`, an screenshot of which is shown below:
+
+![GreatExpectations Data Quality Report](https://assets2.astronomer.io/main/guides/data-quality/ge_html_example.png)
 
 ## OpenLineage and Data Quality
 
