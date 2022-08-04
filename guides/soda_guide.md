@@ -9,12 +9,12 @@ tags: ["Soda", "Data Quality"]
 
 [Soda Core](https://www.soda.io/core) is an open source framework for data quality checks using the SodaCL interface to run checks defined in a YAML file.
 
-Reasons to use Soda Core are:
+Soda Core lets you:
 
-- Lets you define checks as YAML configuration with many predefined metrics available.
-- If there is no metric available for your use case you can provide any SQL query within the YAML file and check against its returned value.
-- Easy to set up a large amount of data quality checks.
-- Integrates with commonly used data engineering tools such as Airflow, Apache Spark, PostgreSQL, Snowflake [and more](https://www.soda.io/integrations).
+- Define checks as YAML configuration with many predefined metrics available.
+- Provide any SQL query within the YAML file and check against its returned value, if no predefined metrics fit your use case.
+- Easily set up a large amount of data quality checks.
+- Integrate data quality checks with commonly used data engineering tools such as Airflow, Apache Spark, PostgreSQL, Snowflake [and more](https://www.soda.io/integrations).
 
 > **Note**: For a general overview on how to approach data quality and of different tools available to run data quality checks using Airflow see the 'Data Quality and Airflow' guide.
 
@@ -36,11 +36,85 @@ The following resources are recommended:
 - [Relational database on Wikipedia](https://en.wikipedia.org/wiki/Relational_database)
 - [The Official YAML Web Site](https://yaml.org/)
 
+## Features of Soda Core
+
+Soda Core uses the SodaCL to run data quality checks defined in a YAML file. In this section we will highlight different types of checks. For a full overview please refer to the [Soda CL documentation](https://docs.soda.io/soda-cl/soda-cl-overview.html).
+
+Standard check metrics offer the ability to run checks on individual columns:
+
+```YAML
+checks for MY_TABLE_1:
+  # MY_NUM_COL_1 has a minimum of above or equal 0
+  - min(MY_NUM_COL_1) >= 0
+  # MY_TEXT_COL has less than 10% missing values
+  - missing_percent(MY_TEXT_COL) < 10
+checks for MY_TABLE_2:
+  # MY_NUM_COL_2 has an average between 100 and 1000
+  - avg(MY_NUM_COL_2) is between 100 and 1000
+  # MY_ID_COL has no duplicates
+  - duplicate_count(MY_ID_COL) = 0
+```
+
+It is possible to add optional check configurations like naming a check or configure warning vs failing conditions:
+
+```YAML
+checks for MY_TABLE_1:
+  # fail the check when MY_TABLE_1 has less than 10 or more than a million rows
+  # warn if there are less than 100 (but 10 or more) rows
+  - row_count:
+      warn: when < 100
+      fail:
+        when < 10
+        when > 1000000
+      name: Wrong number of rows!
+```
+
+How a metric is defined can be further specified using a:
+
+- List of values.
+- Predefined valid format.
+- Regex.
+- SQL query.
+
+```YAML
+checks for MY_TABLE_1:
+  # MY_CATEGORICAL_COL has no other values than val1, val2 and val3
+  - invalid_count(MY_CATEGORICAL_COL) = 0:
+      valid values: ['val1', 'val2', 'val3']
+  # less than 10 missing valid IP addresses
+  - missing_count(IP_ADDRESS_COL) < 10:
+      valid format: ip address
+  # WEBSITE_COL has less than 5% entries that don't contain "astronomer.io"
+  - invalid_percent(WEBSITE_COL) < 5:
+      valid regex: astronomer\.io
+  # The average of 3 columns for values of category_1 is between 10 and 100
+  - my_average_total_for_category_1 between 10 and 100:
+      my_average_total_for_category_1 query: |
+        SELECT AVG(MY_COL_1 + MY_COL_2 + MY_COL_3)
+        FROM MY_TABLE_1
+        WHERE MY_CATEGORY = 'category_1'
+```
+
+Two more unique features are freshness checks, schema checks and reference checks:
+
+```YAML
+checks for MY_TABLE_1:
+  # MY_DATE has no values older than 10 days
+  - freshness(MY_DATE) <= 10d
+  # The schema has to have the MY_KEY column
+  - schema:
+      fail:
+        when required column missing: [MY_KEY]
+  # all names listed in MY_TABLE_1's MY_NAMES column have to also exists
+  # in the MY_CUSTOMER_NAMES column in MY_TABLE_2
+  - values in (MY_NAMES) must exist in MY_TABLE_2 (MY_CUSTOMER_NAMES)
+```
+
 ## Requirements
 
 To use Soda Core, the Soda Core package for the database backend needs to be installed and configured. The [Soda documentation provides a list of supported databases](https://docs.soda.io/soda-core/configuration.html) and how to configure them.
 
-For the DAG code no additional providers or packages need to be installed since the BashOperator is part of the Airflow core.
+For the DAG code no additional providers or packages need to be installed since the `BashOperator` is part of the Airflow core.
 
 ## Example: Run Soda Core checks on a Snowflake database
 
@@ -162,7 +236,7 @@ Below an example of the logs in the case of 3 checks passing:
 [2022-08-04, 13:07:22 UTC] {subprocess.py:92} INFO - All is good. No failures. No warnings. No errors.
 ```
 
-In case of failure of a check, the logs will show which check failed and what the `check_value` was that caused the failure. 
+In case of failure of a check, the logs will show which check failed and what the `check_value` was that caused the failure.
 
 ```text
 [2022-08-04, 13:23:59 UTC] {subprocess.py:92} INFO - Scan summary:
