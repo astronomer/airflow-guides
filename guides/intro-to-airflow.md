@@ -4,107 +4,140 @@ description: "Everything you need to know to get started with Apache Airflow."
 date: 2018-05-21T00:00:00.000Z
 slug: "intro-to-airflow"
 heroImagePath: null
-tags: ["Basics", "DAGs"]
+tags: ["Basics", "Intro", "Concepts", "Start"]
 ---
 
-If you're at all involved in the data engineering space, you've probably heard of [Apache Airflow](https://github.com/apache/airflow). Since its [inception as an open-source project at AirBnb in 2015](https://medium.com/airbnb-engineering/airflow-a-workflow-management-platform-46318b977fd8), Airflow has quickly become the gold standard for data engineering, getting public contributions from folks at major orgs like [Bloomberg](https://www.techatbloomberg.com/blog/airflow-on-kubernetes/), [Lyft](https://eng.lyft.com/running-apache-airflow-at-lyft-6e53bb8fccff), [Robinhood](https://robinhood.engineering/why-robinhood-uses-airflow-aed13a9a90c8), and [many more](https://github.com/apache/airflow#who-uses-apache-airflow).
+[Apache Airflow](https://airflow.apache.org/) is the de facto standard for programmatic data orchestration. Airflow is freely available as open source software, has over 9 million downloads per month and a vibrant OSS community.
 
-If you're just getting your feet wet, you're probably wondering what all the hype is about. We're here to walk you through the basic concepts that you need to know to get started with Airflow.
+Data practitioners are choosing Airflow because it allows them to define their data pipelines as Python code in a highly extensible and infinitely scalable way. Since Airflow is tool agnostic is the glue that holds your data ecosystem together.
+
+This guide offers an introduction to Apache Airflow and its core concepts. We will cover:
+
+- The history behind Apache Airflow
+- Why to use Airflow
+- When to use Airflow
+- Basic concepts and terminology
+- A list of advanced concepts to explore
+- Resources to learn more.
+
+> **Quickstart**: If you like learning by doing you can follow the [Get Started with Airflow](linkplaceholder) tutorial to get a practical introduction to Apache Airflow, complementary to this guide.
+
+## Assumed Knowledge
+
+To get the most out of this guide, users should have knowledge of:
+
+- Basic Python 3 programming concepts like packages and functions.
+
+The following resources are recommended:
+
+- [Official Python Tutorial](https://docs.python.org/3/tutorial/index.html)
 
 ## History
 
-In 2015, Airbnb experienced a problem. They were growing like crazy and had a massive amount of data that was only getting larger. To achieve the vision of becoming a fully data-driven organization, they had to grow their workforce of data engineers, data scientists, and analysts — all of whom had to regularly automate processes by writing scheduled batch jobs. To satisfy the need for a robust scheduling tool,  [Maxime Beauchemin](https://soundcloud.com/the-airflow-podcast/the-origins-of-airflow) created and open-sourced Airflow with the idea that it would allow them to quickly author, iterate on, and monitor their batch data pipelines.
+Airflow started as an open source project at Airbnb. In 2015 they were growing rapidly and the facing larger amounts of internal data every day. To achieve the vision of becoming a fully data-driven organization, they had to grow their workforce of data engineers, data scientists, and analysts — all of whom had to regularly automate processes by writing scheduled batch jobs. To satisfy the need for a robust scheduling tool, [Maxime Beauchemin](https://soundcloud.com/the-airflow-podcast/the-origins-of-airflow) created and open-sourced Airflow with the idea that it would allow them to quickly author, iterate on, and monitor their batch data pipelines.
 
-Since Maxime's first commit way back then, Airflow has come a long way. The project joined the official Apache Foundation Incubator in April of 2016, where it lived and grew until it graduated as a top-level project on January 8th, 2019. Almost two years later, as of December 2020, Airflow has over 1,400 contributors, 11,230 commits, and 19,800 stars on Github. On December 17th 2020, [Airflow 2.0](https://www.astronomer.io/blog/introducing-airflow-2-0) was released, bringing with it major upgrades and powerful new features. Airflow is used by thousands of Data Engineering teams around the world and continues to be adopted as the community grows stronger.
+Since Maxime's first commit way back then, Airflow has come a long way. The project joined the official Apache Foundation Incubator in April of 2016, where it lived and grew until it graduated as a top-level project in January 2019. As of August 2022 Airflow has over 2'000 contributors, 16'900 commits and 26'900 stars on [GitHub](https://github.com/apache/airflow).
 
-## Overview
+On December 17th 2020, [Airflow 2.0](https://www.astronomer.io/blog/introducing-airflow-2-0) was released, bringing with it major upgrades and powerful new features. Airflow is used by thousands of Data Engineering teams around the world and continues to be adopted as the community grows stronger.
 
-[Apache Airflow](https://airflow.apache.org/index.html) is a platform for programmatically authoring, scheduling, and monitoring workflows. It is completely open source and is especially useful in architecting and orchestrating complex data pipelines. Airflow was originally created to solve the issues that come with long-running cron tasks and hefty scripts, but it's since grown to become one of the most powerful open source data pipeline platforms out there.
+## Why to use Airflow
 
-Airflow has a couple of key benefits, namely:
+[Apache Airflow](https://airflow.apache.org/index.html) is a platform for programmatically authoring, scheduling, and monitoring workflows. It is open source and especially useful in architecting and orchestrating complex data pipelines.
 
-- **It's dynamic:** Anything you can do in Python, you can do in Airflow.
-- **It's extensible:** Airflow has readily available plugins for interacting with most common external systems. You can also create your own plugins as needed.
-- **It's scalable:** Teams use Airflow to run thousands of different tasks per day.
+Data orchestration sits at the heart of any modern data stack and provides elaborate automation of data pipelines. With orchestration, actions in your data pipeline become aware of each other and your data team has a central location to gain insight into, edit and debug their workflows.
 
-With Airflow, workflows are architected and expressed as Directed Acyclic Graphs (DAGs), with each node of the DAG representing a specific task. Airflow is designed with the belief that all data pipelines are best expressed as code, and as such is a code-first platform where you can quickly iterate on workflows. This code-first design philosophy provides a degree of extensibility that other pipeline tools can't match.
+Airflow has many key benefits like:
 
-## Use Cases
+- **Dynamic data pipelines**: In Airflow pipelines are defined as Python code. Anything you can do in Python, you can do in Airflow.
+- **CI/CD for data pipelines**: With all logic of your workflows defined in Python it is possible to implement CI/CD processes for your data pipeline.
+- **Tool agnosticism**: Airflow can connect with any other tool in the Data Engineering space that allows connection through an API.
+- **High Extensibility**: For many commonly used data engineering tools, integrations exist in form of provider packages, which are routinely extended and updated.
+- **Infinite Scalability**: given enough computing power you can orchestrate as many processes as you need, no matter how complex your pipelines get.
+- **Visualization**: Airflow comes with a fully functional UI that offers immediate overview over data pipelines.
+- **Stable REST API**:
+- **Easy of use**: thanks to the [Astro CLI](ttps://docs.astronomer.io/astro/cli/get-started) you can get a fully functional local dockerized Airflow instance running with only three bash commands.
+- **Vibrant OSS community**: with millions of users Airflow is here to stay and grow.
+
+> **Note**: Astronomer is a company providing managed Airflow in production as a service to cooperations. We work closely with the OSS Airflow community and provide open source tools like the [Astro CLI](https://docs.astronomer.io/astro/cli/get-started), [the Astronomer provider](https://registry.astronomer.io/providers/astronomer-providers) and resources like guides, webinars and the [Astronomer Registry](https://registry.astronomer.io/).
+
+## When to use Airflow
 
 Airflow can be used for virtually any batch data pipelines, and there are a ton of [documented use cases](https://github.com/jghoman/awesome-apache-airflow#best-practices-lessons-learned-and-cool-use-cases) in the community. Because of its extensibility, Airflow is particularly powerful for orchestrating jobs with complex dependencies in multiple external systems.
 
-For example, the diagram below shows a complex use case that can easily be accomplished with Airflow. By writing pipelines in code and using Airflow's many available plugins, you can integrate with any number of different, dependent systems with just a single platform for orchestration and monitoring.
+For example, the diagram below shows a complex use case that can easily be accomplished with Airflow. By writing pipelines in code and using Airflow's many available providers, you can integrate with any number of different, dependent systems with just a single platform for orchestration and monitoring.
 
 ![Example Use Case](https://assets2.astronomer.io/main/guides/intro-to-airflow/example_pipeline.png)
 
-If you're interested in more specific examples, here are a few cool things we've seen folks do with Airflow:
+Some common use cases of Airflow include:
 
-- Aggregate daily sales team updates from Salesforce to send a daily report to executives at the company.
-- Use Airflow to organize and kick off machine learning jobs running on external Spark clusters.
-- Load website/application analytics data into a data warehouse on an hourly basis.
+- **ETL/ELT pipelines**: for example running a write, audit, publish pattern on data in Snowflake as shown in the example implementation in the [Orchestrating Snowflake Queries with Airflow](https://www.astronomer.io/guides/airflow-snowflake/) guide.
+- **MLOps**: for example using Airflow with Tensorflow and MLFlow as shown in [this webinar](https://www.astronomer.io/events/webinars/using-airflow-with-tensorflow-mlflow/).
+- **Operationalized Analytics**: for example orchestrating a pipeline to extract insights from your data and display them in dashboards, an implementation of which is showcased in the [Using Airflow as a Data Analyst](https://www.astronomer.io/events/webinars/using-airflow-as-a-data-analyst/) webinar.
 
-We further discuss Airflow's use cases in our [podcast episode here](https://soundcloud.com/the-airflow-podcast/use-cases) if you're interested in diving deeper!
+> **Note**: If you are interested in diving deeper into use cases give this [Astronomer podcast](https://soundcloud.com/the-airflow-podcast/use-cases) episode a listen!
 
-## Core Concepts
+## Core Airflow Concepts
 
-### DAG
+To navigate Airflow resources it is helpful to have a general understanding of  core Airflow concepts:
 
-A Directed Acyclic Graph, or DAG, is a data pipeline defined in Python code. Each DAG represents a collection of tasks you want to run and is organized to show relationships between tasks in Airflow's UI. When breaking down the properties of DAGs, their usefulness becomes clear:
+- **DAG**: Directed Acyclic Graph. An Airflow DAG is a workflow defined as a graph where all dependencies between nodes are directed and does not contain circles. For more information on Airflow DAGs see the [Introduction to Airflow DAGs](https://www.astronomer.io/guides/dags/) guide.
+- **Dagrun**: The execution of a DAG at a specific point in time is called a Dagrun. A DAG can have scheduled Dagruns for example hourly or daily and manually triggered Dagruns.
+- **Task**: In Airflow, a task is a node in a DAG graph describing one unit of work.
+- **Task Instance**: The combination of a task in a specific DAG being executed at a specific point in time is refered to as a task instance.
 
-- Directed: If multiple tasks with dependencies exist, each must have at least one defined upstream or downstream task.
-- Acyclic: Tasks are not allowed to create data that goes on to self-reference. This is to avoid creating infinite loops.
-- Graph: All tasks are laid out in a clear structure with processes occurring at clear points with set relationships to other tasks.
-
-For example, the image below shows a valid DAG on the left with a couple of simple dependencies, in contrast to an invalid DAG on the right that is not acyclic.
-
-![Example DAGs](https://assets2.astronomer.io/main/guides/intro-to-airflow/dags.png)
-
-For a more in-depth review on DAGs, check out our [Intro to DAGs guide](https://astronomer.io/guides/dags).
-
-### Tasks
-
-[Tasks](https://airflow.apache.org/docs/apache-airflow/stable/concepts.html?highlight=hook#tasks) represent each node of a defined DAG. They are visual representations of the work being done at each step of the workflow, with the actual work that they represent being defined by operators.
-
-### Operators
-
-[Operators](https://airflow.apache.org/docs/apache-airflow/stable/concepts.html?highlight=hook#operators) are the building blocks of Airflow, and determine the actual work that gets done. They can be thought of as a wrapper around a single task, or node of a DAG, that defines how that task will be run. DAGs make sure that operators get scheduled and run in a certain order, while operators define the work that must be done at each step of the process.
-
-
-![Example DAGs](https://assets2.astronomer.io/main/guides/intro-to-airflow/operator.png)
+When authoring DAGs you will mostly interact with Operators, the building blocks of DAGs. An operator is an abstraction over Python code designed to perform a specific action and takes the form of a function that accepts parameters. Each Operator in your DAG code corresponds to one Airflow task.
 
 There are three main categories of operators:
 
-- **Action Operators** execute a function, like the [PythonOperator](https://registry.astronomer.io/providers/apache-airflow/modules/pythonoperator) or [BashOperator](https://registry.astronomer.io/providers/apache-airflow/modules/bashoperator)
-- **Transfer Operators** move data from a source to a destination, like the [S3ToRedshiftOperator](https://registry.astronomer.io/providers/amazon/modules/s3toredshiftoperator)
-- **Sensor Operators** wait for something to happen, like the [ExternalTaskSensor](https://registry.astronomer.io/providers/apache-airflow/modules/externaltasksensor)
+- **Action Operators** execute a function, like the [PythonOperator](https://registry.astronomer.io/providers/apache-airflow/modules/pythonoperator) or the [BashOperator](https://www.astronomer.io/guides/scripts-bash-operator/).
+- **Transfer Operators** move data from a source to a destination, like the [S3ToRedshiftOperator](https://registry.astronomer.io/providers/amazon/modules/s3toredshiftoperator).
+- **[Sensors](https://www.astronomer.io/guides/what-is-a-sensor/)** wait for something to happen, like the [ExternalTaskSensor](https://registry.astronomer.io/providers/apache-airflow/modules/externaltasksensor) or the [HttpSensorAsync](https://registry.astronomer.io/providers/astronomer-providers/modules/httpsensorasync).
 
-Operators are defined individually, but they can pass information to other operators using [XComs](https://airflow.apache.org/docs/apache-airflow/stable/concepts.html?highlight=hook#xcoms).
+While operators are defined individually, they can pass information to each other by using [XComs](https://www.astronomer.io/guides/airflow-passing-data-between-tasks/). You can learn more about operators in the [Operators 101](https://www.astronomer.io/guides/what-is-an-operator/) guide.
 
-At a high level, the combined system of DAGs, operators, and tasks looks like this:
+Airflow comes with a set of preinstalled operators that can be extended by using Airflow provider packages.
 
-![Combined Concepts](https://assets2.astronomer.io/main/guides/intro-to-airflow/combined_concepts.png)
+**Providers** are community-maintained packages that include all of the core operators, hooks and sensors for a given service, for example:
 
-### Hooks
+- [Amazon Provider](https://registry.astronomer.io/providers/amazon)
+- [Snowflake Provider](https://registry.astronomer.io/providers/snowflake)
+- [Google Provider](https://registry.astronomer.io/providers/google)
+- [Azure Provider](https://registry.astronomer.io/providers/microsoft-azure)
+- [Databricks Provider](https://registry.astronomer.io/providers/databricks)
+- [Fivetran Provider](https://registry.astronomer.io/providers/fivetran)
 
-[Hooks](https://airflow.apache.org/docs/apache-airflow/stable/concepts.html?highlight=hook#hooks) are Airflow's way of interfacing with third-party systems. They allow you to connect to external APIs and databases like Hive, S3, GCS, MySQL, Postgres, etc. They act as building blocks for operators. Secure information such as authentication credentials are kept out of hooks - that information is stored via Airflow connections in the encrypted metadata db that lives under your Airflow instance.
+> **Note**: The best way to explore available providers and operators is the [Astronomer Registry](https://registry.astronomer.io/)!
 
-### Providers
+**[Connections](https://www.astronomer.io/guides/connections/)** are where Airflow stores information that allows you to connect to external systems, such as authentication credentials or API tokens. This is managed directly from the UI and the actual information is encrypted and stored in the Airflow metadata database. Connections use [Hooks](https://www.astronomer.io/guides/what-is-a-hook/) as a way of interfacing with third party systems.
 
-[Providers](https://airflow.apache.org/docs/apache-airflow-providers/index.html) are community-maintained packages that includes all of the core `Operators` and `Hooks` for a given service (e.g. Amazon, Google, Salesforce, etc.).  As part of Airflow 2.0 these packages are delivered multiple, separate but connected packages and can be directly installed to an Airflow environment.
+## Airflow Components
 
-> To browse and search all of the available Providers and modules, visit the [Astronomer Registry](https://registry.astronomer.io), the discovery and distribution hub for Apache Airflow integrations created to aggregate and curate the best bits of the ecosystem.
+A fully functional Airflow instance is comprised of several components. While you don't have to interact directly with them when authoring DAGs it is good to have a general idea about what they are and their functionality.
 
-### Plugins
+The 4 components that are mandatory for Airflow to function are:
 
-Airflow plugins represent a combination of Hooks and Operators that can be used to accomplish a certain task, such as [transferring data from Salesforce to Redshift](https://www.astronomer.io/guides/salesforce-to-redshift). Check out our [open-source library of Airflow plugins](https://github.com/airflow-plugins) if you'd like to check if a plugin you need has already been created by the community.
+- The **Scheduler**: schedules DAGs and tasks.
+- The **[Executor](https://www.astronomer.io/guides/airflow-executors-explained/)**: defines how the available computing resources are used to execute a task.
+- The **Webserver**: serves the [Airflow UI](https://www.astronomer.io/guides/airflow-ui/) at `localhost:8080`.
+- The **[Metadata Database]((https://www.astronomer.io/guides/airflow-database))**: stores all metadata generated by the Airflow instance.
 
-### Connections
+Additionally you can have:
 
-[Connections](https://airflow.apache.org/docs/apache-airflow/stable/concepts.html?highlight=hook#connections) are where Airflow stores information that allows you to connect to external systems, such as authentication credentials or API tokens. This is managed directly from the UI and the actual information is encrypted and stored as metadata in Airflow's underlying Postgres or MySQL database.
+- a **Triggerer**: which is necessary when working with [Deferrable Operators](https://www.astronomer.io/guides/deferrable-operators/).
+- one or more Celery **Worker**s: that distribute the task load in distributive set ups.   
 
+## Resources
 
-## Learn by Doing
+While it is easy to get started with Airflow there are many more concepts and possibilities to explore. You can learn more by checking out:
 
-If you'd like to get started playing around with Airflow on your local machine, check out our [Astro CLI](https://github.com/astronomer/astro-cli)- it's open source and completely free to use. With the CLI, you can spin up Airflow locally and start getting your hands dirty with the core concepts mentioned above in just a few minutes.
+- [Astronomer Webinars](https://www.astronomer.io/events/webinars/) cover concepts and use cases in-depth and offer the possibility to ask us questions live on air.
+- [Live with Astronomer](https://www.astronomer.io/events/live/) are hands-on and code focussed live walkthroughs of specific Airflow features.
+- [Astronomer Guides](https://www.astronomer.io/guides/) cover both entry and expert level concepts in Airflow.
+- The [Astronomer Academy](https://academy.astronomer.io/) offers many video tutorials and the option to purchase full length Airflow courses and to take exams to get certified.
+- The [Official Airflow Documentation](https://airflow.apache.org/docs/) contains comprehensive guidance on how to use Airflow.
 
-As always, please feel free to [reach out to us](https://www.astronomer.io/contact) if you have any questions or if there's anything we can do to help you on your Airflow journey!
+## Conclusion
+
+After reading this guide should should have a general idea what Apache Airflow is and how it can be used. High-level knowledge about the concept explained will give you a good foundation to dive deeper into Airflow resources.
+
+We are excited to see where your Airflow journey takes you! Please feel free to [reach out to us](https://www.astronomer.io/contact) if you have any questions or if there's anything we can do to help you succeed!
