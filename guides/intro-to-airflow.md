@@ -20,7 +20,7 @@ This guide offers an introduction to Apache Airflow and its core concepts. We wi
 - A list of advanced concepts to explore
 - Resources to learn more.
 
-> **Quickstart**: If you like learning by doing you can follow the [Get Started with Airflow](linkplaceholder) tutorial to get a practical introduction to Apache Airflow, complementary to this guide.
+> **Quickstart**: If you like learning by doing you can follow the Get Started with Airflow tutorial to get a practical introduction to Apache Airflow, complementary to this guide.
 
 ## Assumed Knowledge
 
@@ -83,7 +83,7 @@ To navigate Airflow resources it is helpful to have a general understanding of  
 - **DAG**: Directed Acyclic Graph. An Airflow DAG is a workflow defined as a graph where all dependencies between nodes are directed and does not contain circles. For more information on Airflow DAGs see the [Introduction to Airflow DAGs](https://www.astronomer.io/guides/dags/) guide.
 - **Dagrun**: The execution of a DAG at a specific point in time is called a Dagrun. A DAG can have scheduled Dagruns for example hourly or daily and manually triggered Dagruns.
 - **Task**: In Airflow, a task is a node in a DAG graph describing one unit of work.
-- **Task Instance**: The combination of a task in a specific DAG being executed at a specific point in time is refered to as a task instance.
+- **Task Instance**: The combination of a task in a specific DAG being executed at a specific point in time is referred to as a task instance.
 
 When authoring DAGs you will mostly interact with Operators, the building blocks of DAGs. An operator is an abstraction over Python code designed to perform a specific action and takes the form of a function that accepts parameters. Each Operator in your DAG code corresponds to one Airflow task.
 
