@@ -1,6 +1,6 @@
 ---
 title: "Soda Core and Airflow"
-description: "Use Soda Core for data quality checks with Airflow"
+description: "Using Soda Core to implement data quality checks in Airflow DAGs"
 date: 2022-08-02T00:00:00.000Z
 slug: "data-quality"
 heroImagePath: null
@@ -16,7 +16,7 @@ Soda Core lets you:
 - Easily set up a large amount of data quality checks.
 - Integrate data quality checks with commonly used data engineering tools such as Airflow, Apache Spark, PostgreSQL, Snowflake [and more](https://www.soda.io/integrations).
 
-> **Note**: For a general overview on how to approach data quality and of different tools available to run data quality checks using Airflow see the 'Data Quality and Airflow' guide.
+> **Note**: For a general overview on how to approach data quality, and of different tools available to run data quality checks using Airflow, see the 'Data Quality and Airflow' guide.
 
 ## Assumed Knowledge
 
@@ -24,21 +24,20 @@ To get the most out of this guide, users should have knowledge of:
 
 - How to design a data quality approach
 - What Airflow is and when to use it
-- Airflow Operators
+- Airflow operators
 - Relational Databases
 - Basic familiarity with writing YAML configurations
 
 The following resources are recommended:
 
 - Data Quality and Airflow
-- [Introduction to Apache Airflow](Introduction to Apache Airflow)
 - [Operators 101](Operators 101)
 - [Relational database on Wikipedia](https://en.wikipedia.org/wiki/Relational_database)
 - [The Official YAML Web Site](https://yaml.org/)
 
 ## Features of Soda Core
 
-Soda Core uses the SodaCL to run data quality checks defined in a YAML file. In this section we will highlight different types of checks. For a full overview please refer to the [Soda CL documentation](https://docs.soda.io/soda-cl/soda-cl-overview.html).
+Soda Core uses the SodaCL to run data quality checks defined in a YAML file. In this section, we will highlight different types of checks you can implement with Soda Core. For a full overview please refer to the [Soda CL documentation](https://docs.soda.io/soda-cl/soda-cl-overview.html).
 
 Standard check metrics offer the ability to run checks on individual columns:
 
@@ -55,7 +54,7 @@ checks for MY_TABLE_2:
   - duplicate_count(MY_ID_COL) = 0
 ```
 
-It is possible to add optional check configurations like naming a check or configure warning vs failing conditions:
+It is possible to add optional check configurations like naming a check or configure warning versus failing conditions:
 
 ```YAML
 checks for MY_TABLE_1:
@@ -69,7 +68,7 @@ checks for MY_TABLE_1:
       name: Wrong number of rows!
 ```
 
-How a metric is defined can be further specified using a:
+How a metric is defined can be specified using any one of the following methods:
 
 - List of values.
 - Predefined valid format.
@@ -95,7 +94,7 @@ checks for MY_TABLE_1:
         WHERE MY_CATEGORY = 'category_1'
 ```
 
-Two more unique features are freshness checks, schema checks and reference checks:
+Two more unique features of Soda Core are freshness checks, schema checks and reference checks:
 
 ```YAML
 checks for MY_TABLE_1:
@@ -116,7 +115,7 @@ To use Soda Core, the Soda Core package for the database backend needs to be ins
 
 For the DAG code no additional providers or packages need to be installed since the `BashOperator` is part of the Airflow core.
 
-## Example: Run Soda Core checks on a Snowflake database
+## Example: Run Soda Core checks from Airflow
 
 This example shows one possible way to set up data quality checks on a Snowflake database using Soda Core.
 
@@ -125,12 +124,12 @@ The setup can be divided into the following steps:
 - Create a configuration file that connects to the Snowflake database: `configuration.yml`.
 - Create a checks file containing the data quality checks: `checks.yml`.
 - Install the `soda-core-snowflake` package in your Airflow environment.
-- Create the DAG code running the `soca scan` command using the `BashOperator`.
+- Run the checks from a DAG by running the `soca scan` command using the `BashOperator`.
 
 
 ### Step 1: Create the configuration file
 
-The configuration file needed to connect to Snowflake can be created from the template in the Soda documentation as shown below.
+First we need to create a configuration file to connect to Snowflake. The easiest way to create the file is to use the template in the Soda documentation as shown below.
 
 ```YAML
 # the first line names the datasource "MY_DATASOURCE"
@@ -156,7 +155,7 @@ data_source MY_DATASOURCE:
 
 ### Step 2: Create the checks file
 
-You can define your data quality checks using the [many checks available for Soda CL](https://docs.soda.io/soda-cl/soda-cl-overview.html). If you cannot find a predefined metric or check that works for your use case you can create a user-defined check using SQL as shown below.
+You can define your data quality checks using the [many checks available for Soda CL](https://docs.soda.io/soda-cl/soda-cl-overview.html). If you cannot find a predefined metric or check that works for your use case, you can create a user-defined check using SQL as shown below.
 
 ```YAML
 checks for example_table:
@@ -196,7 +195,7 @@ soda-core-snowflake
 
 ### Step 4: Run soda scan using the BashOperator
 
-The DAG code itself stays very simple with one task using the `BashOperator` to execute the `soda scan` command. Of course it is possible to incorporate data quality checks using Soda Core in different locations within your data pipeline.  
+In a DAG, Soda Core checks are executed by using the `BashOperator` to run the `soda scan` command. The DAG below shows how to reference the configuration and checks YAML files in the command.
 
 ```python
 from airflow import DAG
@@ -222,7 +221,7 @@ with DAG(
     soda_test
 ```
 
-The logs from the Soda Core checks can be found in the Airflow task logs. They will list all checks that ran with their result.
+The logs from the Soda Core checks can be found in the Airflow task logs. The logs will list all checks that ran along with their result.
 
 Below an example of the logs in the case of 3 checks passing:
 
@@ -236,7 +235,7 @@ Below an example of the logs in the case of 3 checks passing:
 [2022-08-04, 13:07:22 UTC] {subprocess.py:92} INFO - All is good. No failures. No warnings. No errors.
 ```
 
-In case of failure of a check, the logs will show which check failed and what the `check_value` was that caused the failure.
+In the case of a check failure, the logs will show which check failed and the `check_value` that caused the failure.
 
 ```text
 [2022-08-04, 13:23:59 UTC] {subprocess.py:92} INFO - Scan summary:
@@ -255,4 +254,3 @@ Traceback (most recent call last):
   File "/usr/local/lib/python3.9/site-packages/airflow/operators/bash.py", line 194, in execute
     raise AirflowException(
 airflow.exceptions.AirflowException: Bash command failed. The command returned a non-zero exit code 2.
-```
