@@ -16,8 +16,8 @@ This guide offers an introduction to Apache Airflow and its core concepts. We wi
 - The history behind Apache Airflow
 - Why to use Airflow
 - When to use Airflow
-- Basic concepts and terminology
-- A list of advanced concepts to explore
+- Core Airflow concepts
+- An overview of Airflow components
 - Resources for learning more
 
 ## Assumed Knowledge
