@@ -4,10 +4,10 @@ description: "Everything you need to know to get started with Apache Airflow."
 date: 2018-05-21T00:00:00.000Z
 slug: "intro-to-airflow"
 heroImagePath: null
-tags: ["Basics", "Intro", "Concepts", "Start"]
+tags: ["Basics", "Start"]
 ---
 
-[Apache Airflow](https://airflow.apache.org/) is a tool for programmatically authoring, scheduling, and monitoring data pipelines. It is the de facto standard for programmatic data orchestration. Airflow is freely available as open source software, and has over 9 million downloads per month and a vibrant OSS community.
+[Apache Airflow](https://airflow.apache.org/) is a tool for programmatically authoring, scheduling, and monitoring data pipelines. It is the de facto standard for programmatic data orchestration. Airflow is freely available as open source software, and has over 9 million downloads per month as well as a vibrant OSS community.
 
 Data practitioners choose Airflow because it allows them to define their data pipelines as Python code in a highly extensible and infinitely scalable way. Airflow can integrate with virtually any other tool, and acts as the glue that holds your data ecosystem together.
 
@@ -53,7 +53,7 @@ Airflow has many key benefits, such as:
 - **Infinite scalability**: Given enough computing power, you can orchestrate as many processes as you need, no matter how complex your pipelines get.
 - **Visualization**: Airflow comes with a fully functional UI that offers an immediate overview over data pipelines.
 - **Stable REST API**: The [Airflow REST API](https://airflow.apache.org/docs/apache-airflow/stable/stable-rest-api-ref.html) allows Airflow to interact with RESTful web services.
-- **Easy of use**: Thanks to the [Astro CLI](ttps://docs.astronomer.io/astro/cli/get-started), you can get a fully functional local Airflow instance running with only three bash commands.
+- **Easy to use**: Thanks to the [Astro CLI](ttps://docs.astronomer.io/astro/cli/get-started), you can get a fully functional local Airflow instance running with only three bash commands.
 - **Vibrant OSS community**: With millions of users and thousands of contributors, Airflow is here to stay and grow.
 
 ## When to use Airflow
@@ -77,7 +77,7 @@ Some common use cases of Airflow include:
 To navigate Airflow resources, it is helpful to have a general understanding of core Airflow concepts:
 
 - **DAG**: Directed Acyclic Graph. An Airflow DAG is a workflow defined as a graph, where all dependencies between nodes are directed and nodes do not self reference. For more information on Airflow DAGs, see the [Introduction to Airflow DAGs](https://www.astronomer.io/guides/dags/) guide.
-- **DAG run**: A DAG run is the execution of a DAG at a specific point in time. A DAG can have scheduled DAG runs  and/or manually triggered DAG runs.
+- **DAG run**: A DAG run is the execution of a DAG at a specific point in time. A DAG can have scheduled DAG runs and/or manually triggered DAG runs.
 - **Task**: A task is a node in a DAG graph describing one unit of work.
 - **Task Instance**: A task instance is the combination of a task, in a specific DAG, being executed at a specific point in time.
 
@@ -85,22 +85,22 @@ When authoring DAGs, you will mostly interact with operators, the building block
 
 There are three main categories of operators:
 
-- **Action Operators** execute a function, like the [PythonOperator](https://registry.astronomer.io/providers/apache-airflow/modules/pythonoperator) or the [BashOperator](https://www.astronomer.io/guides/scripts-bash-operator/).
-- **Transfer Operators** move data from a source to a destination, like the [S3ToRedshiftOperator](https://registry.astronomer.io/providers/amazon/modules/s3toredshiftoperator).
-- **[Sensors](https://www.astronomer.io/guides/what-is-a-sensor/)** wait for something to happen, like the [ExternalTaskSensor](https://registry.astronomer.io/providers/apache-airflow/modules/externaltasksensor) or the [HttpSensorAsync](https://registry.astronomer.io/providers/astronomer-providers/modules/httpsensorasync).
+- **Action operators** execute a function, like the [`PythonOperator`](https://registry.astronomer.io/providers/apache-airflow/modules/pythonoperator) or the [`BashOperator`](https://www.astronomer.io/guides/scripts-bash-operator/).
+- **Transfer operators** move data from a source to a destination, like the [`S3ToRedshiftOperator`](https://registry.astronomer.io/providers/amazon/modules/s3toredshiftoperator).
+- **[Sensors](https://www.astronomer.io/guides/what-is-a-sensor/)** wait for something to happen, like the [`ExternalTaskSensor`](https://registry.astronomer.io/providers/apache-airflow/modules/externaltasksensor) or the [`HttpSensorAsync`](https://registry.astronomer.io/providers/astronomer-providers/modules/httpsensorasync).
 
 While operators are defined individually, they can pass information to each other by using [XComs](https://www.astronomer.io/guides/airflow-passing-data-between-tasks/). You can learn more about operators in the [Operators 101](https://www.astronomer.io/guides/what-is-an-operator/) guide.
 
-Some commonly used action operators like the PythonOperator are part of core Airflow and are automatically installed in your Airflow instance. Operators used to interact with external systems are maintained separately to Airflow in provider packages.
+Some commonly used action operators like the `PythonOperator` are part of core Airflow and are automatically installed in your Airflow instance. Operators used to interact with external systems are maintained separately to Airflow in provider packages.
 
 **Providers** are community-maintained packages that include all of the core operators, hooks and sensors for a given service, for example:
 
-- [Amazon Provider](https://registry.astronomer.io/providers/amazon)
-- [Snowflake Provider](https://registry.astronomer.io/providers/snowflake)
-- [Google Provider](https://registry.astronomer.io/providers/google)
-- [Azure Provider](https://registry.astronomer.io/providers/microsoft-azure)
-- [Databricks Provider](https://registry.astronomer.io/providers/databricks)
-- [Fivetran Provider](https://registry.astronomer.io/providers/fivetran)
+- [Amazon provider](https://registry.astronomer.io/providers/amazon)
+- [Snowflake provider](https://registry.astronomer.io/providers/snowflake)
+- [Google provider](https://registry.astronomer.io/providers/google)
+- [Azure provider](https://registry.astronomer.io/providers/microsoft-azure)
+- [Databricks provider](https://registry.astronomer.io/providers/databricks)
+- [Fivetran provider](https://registry.astronomer.io/providers/fivetran)
 
 > **Note**: The best way to explore available providers and operators is the [Astronomer Registry](https://registry.astronomer.io/). In many cases interacting with external systems will necessitate creating an [Airflow Connection](https://www.astronomer.io/guides/connections/).
 
@@ -117,8 +117,8 @@ Airflow has four core components that must be running at all times:
 
 Additionally, you may also have the following situational components:
 
-- **Triggerer**: A separate process which supports [deferrable operators](https://www.astronomer.io/guides/deferrable-operators). This component is optional and must be run separately.
-- **Worker**: The process that executes tasks, as defined by the executor. Depending on which executor you choose, you may or may not have workers as part of your Airflow infrastructure.
+- Triggerer: A separate process which supports [deferrable operators](https://www.astronomer.io/guides/deferrable-operators). This component is optional and must be run separately.
+- Worker: The process that executes tasks, as defined by the executor. Depending on which executor you choose, you may or may not have workers as part of your Airflow infrastructure.
 
 > **Note**: You can learn more about the Airflow infrastructure in the [Airflow's Components](https://www.astronomer.io/guides/airflow-components/) guide.
 
