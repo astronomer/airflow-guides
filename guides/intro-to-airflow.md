@@ -58,7 +58,7 @@ Airflow has many key benefits, such as:
 
 ## When to use Airflow
 
-Airflow can be used for virtually any batch data pipelines, and there are a ton of [documented use cases](https://github.com/jghoman/awesome-apache-airflow#best-practices-lessons-learned-and-cool-use-cases) in the community. Because of its extensibility, Airflow is particularly powerful for orchestrating jobs with complex dependencies in multiple external systems.
+Airflow can be used for virtually any batch data pipelines, and there are a ton of [documented use cases](https://soundcloud.com/the-airflow-podcast/use-cases) in the community. Because of its extensibility, Airflow is particularly powerful for orchestrating jobs with complex dependencies in multiple external systems.
 
 For example, the diagram below shows a complex use case that can easily be accomplished with Airflow. By writing pipelines in code and using Airflow's many available providers, you can integrate with any number of different, dependent systems with just a single platform for orchestration and monitoring.
 
@@ -69,8 +69,6 @@ Some common use cases of Airflow include:
 - **ETL/ELT pipelines**: For example, running a write, audit, publish pattern on data in Snowflake as shown in the example implementation in the [Orchestrating Snowflake Queries with Airflow](https://www.astronomer.io/guides/airflow-snowflake/) guide.
 - **MLOps**: For example, using Airflow with Tensorflow and MLFlow as shown in [this webinar](https://www.astronomer.io/events/webinars/using-airflow-with-tensorflow-mlflow/).
 - **Operationalized Analytics**: For example, orchestrating a pipeline to extract insights from your data and display them in dashboards, an implementation of which is showcased in the [Using Airflow as a Data Analyst](https://www.astronomer.io/events/webinars/using-airflow-as-a-data-analyst/) webinar.
-
-> **Note**: If you are interested in diving deeper into use cases, give this [Airflow podcast](https://soundcloud.com/the-airflow-podcast/use-cases) episode a listen!
 
 ## Core Airflow Concepts
 
@@ -126,6 +124,7 @@ Additionally, you may also have the following situational components:
 
 While it is easy to get started with Airflow, there are many more concepts and possibilities to explore. You can learn more by checking out:
 
+- The [Astro CLI](https://docs.astronomer.io/astro/cli/get-started), which is the easiest way to get Airflow running locally.
 - [Astronomer Webinars](https://www.astronomer.io/events/webinars/), which cover concepts and use cases in-depth and offer the possibility to ask us questions live on air.
 - [LIVE with Astronomer](https://www.astronomer.io/events/live/), which are hands-on and code-focussed live walkthroughs of specific Airflow features.
 - [Astronomer Guides](https://www.astronomer.io/guides/), which cover both entry and expert level concepts in Airflow.
