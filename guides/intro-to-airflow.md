@@ -53,7 +53,7 @@ Airflow has many key benefits, such as:
 - **Infinite scalability**: Given enough computing power, you can orchestrate as many processes as you need, no matter how complex your pipelines get.
 - **Visualization**: Airflow comes with a fully functional UI that offers an immediate overview over data pipelines.
 - **Stable REST API**: The [Airflow REST API](https://airflow.apache.org/docs/apache-airflow/stable/stable-rest-api-ref.html) allows Airflow to interact with RESTful web services.
-- **Easy to use**: Thanks to the [Astro CLI](ttps://docs.astronomer.io/astro/cli/get-started), you can get a fully functional local Airflow instance running with only three bash commands.
+- **Easy to use**: Thanks to the [Astro CLI](https://docs.astronomer.io/astro/cli/get-started), you can get a fully functional local Airflow instance running with only three bash commands.
 - **Vibrant OSS community**: With millions of users and thousands of contributors, Airflow is here to stay and grow.
 
 ## When to use Airflow
