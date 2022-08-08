@@ -274,22 +274,21 @@ To start, we will create a DAG 'template' file that defines the DAG's structure.
 
 ```python
 from airflow import DAG
-from airflow.operators.postgres_operator import PostgresOperator
+from airflow.providers.postgres.operators.postgres import PostgresOperator
 from datetime import datetime
 
 default_args = {'owner': 'airflow',
                 'start_date': datetime(2021, 1, 1)
                 }
 
-dag = DAG(dag_id,
+with DAG(dag_id,
             schedule_interval=scheduletoreplace,
             default_args=default_args,
-            catchup=False)
+            catchup=False) as dag:
 
-with dag:
     t1 = PostgresOperator(
         task_id='postgres_query',
-        postgres_conn_id=connection_id
+        postgres_conn_id=connection_id,
         sql=querytoreplace)
 
 ```
@@ -316,18 +315,17 @@ config_filepath = 'include/dag-config/'
 dag_template_filename = 'include/dag-template.py'
 
 for filename in os.listdir(config_filepath):
-    f = open(config_filepath + filename)
-    config = json.load(f)
-    
-    new_filename = 'dags/'+config['DagId']+'.py'
-    shutil.copyfile(dag_template_filename, new_filename)
-    
+    with open(config_filepath + filename) as f:
+        config = json.load(f)
+        new_filename = 'dags/' + config['DagId'] + '.py'
+        shutil.copyfile(dag_template_filename, new_filename)
 
-    for line in fileinput.input(new_filename, inplace=True):
-        line.replace("dag_id", "'"+config['DagId']+"'")
-        line.replace("scheduletoreplace", config['Schedule'])
-        line.replace("querytoreplace", config['Query'])
-        print(line, end="")
+        with fileinput.input(new_filename, inplace=True) as file:
+            for line in file:
+                new_line = line.replace('dag_id', "'" + config['DagId'] + "'")\
+                    .replace('scheduletoreplace', config['Schedule'])\
+                    .replace('querytoreplace', config['Query'])
+                print(new_line, end='')
 
 ```
 
