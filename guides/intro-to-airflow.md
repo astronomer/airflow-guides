@@ -20,8 +20,6 @@ This guide offers an introduction to Apache Airflow and its core concepts. We wi
 - A list of advanced concepts to explore
 - Resources for learning more
 
-> **Quickstart**: If you like learning by doing you can follow the Get Started with Airflow tutorial to get a practical introduction to Apache Airflow, complementary to this guide.
-
 ## Assumed Knowledge
 
 To get the most out of this guide, users should have knowledge of:
@@ -54,11 +52,9 @@ Airflow has many key benefits, such as:
 - **High extensibility**: For many commonly used data engineering tools, integrations exist in the form of provider packages, which are routinely extended and updated.
 - **Infinite scalability**: Given enough computing power, you can orchestrate as many processes as you need, no matter how complex your pipelines get.
 - **Visualization**: Airflow comes with a fully functional UI that offers an immediate overview over data pipelines.
-- **Stable REST API**:
+- **Stable REST API**: The [Airflow REST API](https://airflow.apache.org/docs/apache-airflow/stable/stable-rest-api-ref.html) allows Airflow to interact with RESTful web services.
 - **Easy of use**: Thanks to the [Astro CLI](ttps://docs.astronomer.io/astro/cli/get-started), you can get a fully functional local Airflow instance running with only three bash commands.
 - **Vibrant OSS community**: With millions of users and thousands of contributors, Airflow is here to stay and grow.
-
-> **Note**: Astronomer is a company providing managed Airflow in production as a service to cooperations. We work closely with the OSS Airflow community and provide open source tools like the [Astro CLI](https://docs.astronomer.io/astro/cli/get-started), [the Astronomer provider](https://registry.astronomer.io/providers/astronomer-providers) and resources like guides, webinars and the [Astronomer Registry](https://registry.astronomer.io/).
 
 ## When to use Airflow
 
@@ -74,7 +70,7 @@ Some common use cases of Airflow include:
 - **MLOps**: For example, using Airflow with Tensorflow and MLFlow as shown in [this webinar](https://www.astronomer.io/events/webinars/using-airflow-with-tensorflow-mlflow/).
 - **Operationalized Analytics**: For example, orchestrating a pipeline to extract insights from your data and display them in dashboards, an implementation of which is showcased in the [Using Airflow as a Data Analyst](https://www.astronomer.io/events/webinars/using-airflow-as-a-data-analyst/) webinar.
 
-> **Note**: If you are interested in diving deeper into use cases, give this [Astronomer podcast](https://soundcloud.com/the-airflow-podcast/use-cases) episode a listen!
+> **Note**: If you are interested in diving deeper into use cases, give this [Airflow podcast](https://soundcloud.com/the-airflow-podcast/use-cases) episode a listen!
 
 ## Core Airflow Concepts
 
@@ -106,13 +102,11 @@ Some commonly used action operators like the PythonOperator are part of core Air
 - [Databricks Provider](https://registry.astronomer.io/providers/databricks)
 - [Fivetran Provider](https://registry.astronomer.io/providers/fivetran)
 
-> **Note**: The best way to explore available providers and operators is the [Astronomer Registry](https://registry.astronomer.io/)!
-
-**[Connections](https://www.astronomer.io/guides/connections/)** are where Airflow stores information that allows you to connect to external systems, such as authentication credentials or API tokens. This is managed directly from the UI and the actual information is encrypted and stored in the Airflow metadata database. Connections use [Hooks](https://www.astronomer.io/guides/what-is-a-hook/) as a way of interfacing with third party systems.
+> **Note**: The best way to explore available providers and operators is the [Astronomer Registry](https://registry.astronomer.io/). In many cases interacting with external systems will necessitate creating an [Airflow Connection](https://www.astronomer.io/guides/connections/).
 
 ## Airflow Components
 
-When working with Airflow, it is important to understand its underlying components of its infrastructure. Even if you mostly interact with Airflow as a DAG author, knowing which components are “under the hood” are and why they are needed can be helpful for running developing your DAGs, debugging, and running Airflow successfully.
+When working with Airflow, it is important to understand the underlying components of its infrastructure. Even if you mostly interact with Airflow as a DAG author, knowing which components are “under the hood” and why they are needed can be helpful for developing your DAGs, debugging, and running Airflow successfully.
 
 Airflow has four core components that must be running at all times:
 
@@ -126,6 +120,8 @@ Additionally, you may also have the following situational components:
 - **Triggerer**: A separate process which supports [deferrable operators](https://www.astronomer.io/guides/deferrable-operators). This component is optional and must be run separately.
 - **Worker**: The process that executes tasks, as defined by the executor. Depending on which executor you choose, you may or may not have workers as part of your Airflow infrastructure.
 
+> **Note**: You can learn more about the Airflow infrastructure in the [Airflow's Components](https://www.astronomer.io/guides/airflow-components/) guide.
+
 ## Resources
 
 While it is easy to get started with Airflow, there are many more concepts and possibilities to explore. You can learn more by checking out:
@@ -138,6 +134,6 @@ While it is easy to get started with Airflow, there are many more concepts and p
 
 ## Conclusion
 
-After reading this guide should should have a general idea what Apache Airflow is and how it can be used. High-level knowledge about the concepts explained will give you a good foundation to dive deeper into Airflow resources.
+After reading this guide you should have a general idea what Apache Airflow is and how it can be used. High-level knowledge about the concepts explained will give you a good foundation to dive deeper into Airflow resources.
 
 We are excited to see where your Airflow journey takes you! Please feel free to [reach out to us](https://www.astronomer.io/contact) if you have any questions or if there's anything we can do to help you succeed.
