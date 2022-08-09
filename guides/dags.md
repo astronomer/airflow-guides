@@ -7,41 +7,37 @@ heroImagePath: "https://assets.astronomer.io/website/img/guides/IntroToDAG_previ
 tags: ["Airflow UI", "DAGs", "Basics"]
 ---
 
-In Airflow, a DAG is a data pipeline defined in Python code. DAG stands for "directed, acyclic, graph". Within that graph, each node represents a task which completes a unit of work, and each edge represents a dependency between tasks.
+In Airflow, data pipelines are defined in Python code as directed acyclic graphs, also known as DAGs. Within a graph, each node represents a task which completes a unit of work, and each edge represents a dependency between tasks.
 
-In this guide, we'll cover the background of DAGs, how to define a DAG in Python, and DAG parameters that all users should be aware of.
+In this guide, we'll cover the background of DAGs, how to define a DAG in Python, and DAG parameters that all users should know.
 
-## Presumed Knowledge
+## Assumed Knowledge
 
-To get the most out of this guide, users should have knowledge of:
+To get the most out of this guide, you should have knowledge of:
 
-- What Airflow is and when to use it
-- Airflow operators
+- What Airflow is and when to use it. See [Introduction to Apache Airflow](https://www.astronomer.io/guides/intro-to-airflow).
+- Airflow operators. See [Operators 101](https://www.astronomer.io/guides/what-is-an-operator).
 
-The following resources are recommended:
 
-- [Introduction to Apache Airflow](https://www.astronomer.io/guides/intro-to-airflow)
-- [Operators 101](https://www.astronomer.io/guides/what-is-an-operator)
+## What is a DAG?
 
-## DAG background
+In Airflow, a directed acyclic graph (DAG) is a data pipeline defined in Python code. Each DAG represents a collection of tasks you want to run and is organized to show relationships between tasks in Airflow’s UI. The mathematic properties of DAGs make them useful for building data pipelines:
 
-A Directed Acyclic Graph, or DAG, is a data pipeline defined in Python code. Each DAG represents a collection of tasks you want to run and is organized to show relationships between tasks in Airflow’s UI. When breaking down the properties of DAGs, their usefulness becomes clear:
+- Directed: If multiple tasks exist, then each task must have at least one defined upstream or downstream task.
+- Acyclic: Tasks cannot have a dependency to themselves. This avoids infinite loops.
+- Graph: All tasks can be visualized in a graph structure, with relationships between tasks defined by nodes and vertices.
 
-- Directed: If multiple tasks with dependencies exist, each must have at least one defined upstream or downstream task.
-- Acyclic: Tasks are not allowed to create data that goes on to self-reference. This is to avoid creating infinite loops.
-- Graph: All tasks are laid out in a clear structure with processes occurring at clear points with set relationships to other tasks.
+Aside from these requirements, DAGs in Airflow can be defined however you need! They can have a single task or thousands of tasks arranged in any number of ways.
 
-Aside from these requirements, DAGs in Airflow can be defined however is required for your use case. They can have a single task or thousands of tasks, with or without dependencies.
-
-An instance of a DAG for a particular execution date is called a DAG run. A DAG run may be created by the Airflow scheduler based on the DAG's defined schedule, or it may be created by a manual trigger.
+An instance of a DAG running on a specific date is called a DAG run. DAG runs can be started by the Airflow scheduler based on the DAG's defined schedule, or they can be started using a manual trigger.
 
 ## Writing a DAG
 
-DAGs in Airflow are defined in a Python script that is placed in Airflow's `DAG_FOLDER`. Airflow will execute the code in this folder and will load any DAG objects. If you are working with the [Astro CLI](https://docs.astronomer.io/astro/cli/overview), DAG scripts can be placed in the `dags/` folder. 
+DAGs in Airflow are defined in a Python script that is placed in an Airflow project's `DAG_FOLDER`. Airflow will execute the code in this folder to load any DAG objects. If you are working with the [Astro CLI](https://docs.astronomer.io/astro/cli/overview), DAG code is placed in the `dags` folder. 
 
-Most DAGs will follow this general flow within a Python script:
+Most DAGs follow this general flow within a Python script:
 
-- Imports: Any needed Python packages are imported at the top of the DAG script. This will always include a `dag` function import (either the `DAG` class or the `dag` decorator), and may also include provider packages or other general Python packages.
+- Imports: Any needed Python packages are imported at the top of the DAG script. This always includes a `dag` function import (either the `DAG` class or the `dag` decorator). It can also include provider packages or other general Python packages.
 - DAG instantiation: A DAG object is created and any DAG-level parameters such as the schedule interval are set.
 - Task instantiation: Each task is defined by calling an operator and providing necessary task-level parameters.
 - Dependencies: Any dependencies between tasks are set using bitshift operators (`<<` and `>>`), the `set_upstream()` or `set_downstream` functions, or the `chain()` function. Note that if you are using the TaskFlow API, dependencies are inferred based on the task function calls.
@@ -103,9 +99,9 @@ Astronomer recommends creating one Python file for each DAG. Some advanced use c
 
 ### Writing DAGs with the TaskFlow API
 
-Since Airflow 2.0, the TaskFlow API has been available as an alternative DAG authoring experience to traditional operators like the ones shown in the previous example. With the TaskFlow API, you can define your DAG and any PythonOperator tasks using decorators. The purpose of decorators in Airflow is to simplify the DAG authoring experience by eliminating the boilerplate code. Whether to author DAGs in this way is a matter of developer preference and style. 
+Since Airflow 2.0, the TaskFlow API has been available as an alternative DAG authoring experience to traditional operators like the ones shown in the previous example. With the TaskFlow API, you can define your DAG and any PythonOperator tasks using decorators. The purpose of decorators in Airflow is to simplify the DAG authoring experience by eliminating boilerplate code. Which way you author your DAGs is purely a matter of preference and style. 
 
-For example, the following DAG is generated when you initialize an Astro project:
+For example, the following DAG is generated when you initialize an Astro project with the Astro CLI:
 
 ```python
 import json
@@ -180,7 +176,7 @@ In the DAG above, tasks are instantiated using the `@task` decorator, and the DA
 
 ## DAG Parameters
 
-In Airflow, you can configure when and how your DAG runs by setting parameters in the DAG object. DAG-level parameters affect how the entire DAG behaves, as opposed to task-level parameters which only impact a single task.
+In Airflow, you can configure when and how your DAG runs by setting parameters in the DAG object. DAG-level parameters affect how the entire DAG behaves, as opposed to task-level parameters which only affect a single task.
 
 In the previous example, DAG parameters are set within the `@dag()` function call:
 
@@ -198,15 +194,15 @@ In the previous example, DAG parameters are set within the `@dag()` function cal
 
 These parameters define:
 
-- How the DAG is identified: 'example_dag' (provided in this case as a positional argument without the `dag_id` parameter name) and `tags`
+- How the DAG is identified: `example_dag` (provided in this case as a positional argument without the `dag_id` parameter name) and `tags`
 - When the DAG will run: `schedule_interval`
 - What periods the DAG runs for: `start_date` and `catchup`
 - How failures are handled for all tasks in the DAG: `retries`
 
-Every DAG requires a `dag_id` and a `schedule_interval`. All other parameters are optional. The following parameters are the most frequently used:
+Every DAG requires a `dag_id` and a `schedule_interval`. All other parameters are optional. The following parameters are relevant for most use cases:
 
 - `dag_id`: The name of the DAG. This must be unique for each DAG in the Airflow environment. This parameter is required.
-- `schedule_interval`: A timedelta expression defining how often a DAG runs. This parameter is required. If the DAG should only be run on demand, `None` can be provided. Alternatively the schedule interval can be provided as a CRON expression or as a macro like '@daily'.
+- `schedule_interval`: A timedelta expression defining how often a DAG runs. This parameter is required. If the DAG should only be run on demand, `None` can be provided. Alternatively the schedule interval can be provided as a CRON expression or as a macro like `@daily`.
 - `start_date`: The date for which the first DAG run should occur. If a DAG is added after the `start_date`, the scheduler will attempt to backfill all missed DAG runs provided `catchup` (see below) is not set to `False`.
 - `end_date`: The date beyond which no further DAG runs will be scheduled. Defaults to `None`.
 - `catchup`: Whether the scheduler should backfill all missed DAG runs between the current date and the start date when the DAG is added. Defaults to `True`.
