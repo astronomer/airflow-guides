@@ -91,7 +91,7 @@ Finally, note that with the `BranchPythonOperator`, your Python callable *must* 
 
 <!-- markdownlint-disable MD033 -->
 <a href="https://academy.astronomer.io/branching-course" onclick="analytics.track('Clicked Academy Banner CTA', { bannerText: 'For more guidance and best practices try out Astronomer\'s Academy Course on Branching. Register for free today!', buttonText: 'Register | Free'})" style="border:none">
-    <img src="https://images.ctfassets.net/bsbv786nih7n/xz2NEHok6rmqjWTioHbK1/b13fc5a03da78e7c336ad450ba5990b5/academy-branching-course-banner.png" alt="For more guidance and best practices try out Astronomer\'s Academy Course on Branching. Register for free today!" style="border:none" />
+    <img src="https://images.ctfassets.net/bsbv786nih7n/xz2NEHok6rmqjWTioHbK1/b13fc5a03da78e7c336ad450ba5990b5/academy-branching-course-banner.png" alt="For more guidance and best practices try out Astronomer\'s Academy Course on Branching. Register for free today!" style="border:none" loading="lazy"/>
 </a>
 
 ## ShortCircuitOperator

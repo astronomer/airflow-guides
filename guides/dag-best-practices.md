@@ -301,7 +301,7 @@ Changing the name of a DAG also creates a new entry in the database, which power
 
 <!-- markdownlint-disable MD033 -->
 <a href="https://academy.astronomer.io/airflow-best-practices" onclick="analytics.track('Clicked Academy Banner CTA', { bannerText: 'Take your DAGs to the next level with our free Airflow Best Practices course. Register today!', buttonText: 'Register | Free'})" style="border:none">
-    <img src="https://images.ctfassets.net/bsbv786nih7n/70UIikCB0wdXioGW3jHejh/81e29d370c381e7114a05e16febc7e80/dags-best-practices-course-banner.png" alt="Take your DAGs to the next level with our free Airflow Best Practices course. Register today!" style="border:none" />
+    <img src="https://images.ctfassets.net/bsbv786nih7n/70UIikCB0wdXioGW3jHejh/81e29d370c381e7114a05e16febc7e80/dags-best-practices-course-banner.png" alt="Take your DAGs to the next level with our free Airflow Best Practices course. Register today!" style="border:none" loading="lazy" />
 </a>
 
 ### Set Retries at the DAG Level
