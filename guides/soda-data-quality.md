@@ -116,7 +116,7 @@ checks for MY_TABLE_1:
 
 To use Soda Core, the Soda Core package for the database backend needs to be installed and configured. The [Soda documentation provides a list of supported databases](https://docs.soda.io/soda-core/configuration.html) and how to configure them.
 
-When using Soda Core with Airflow the Soda Core package needs to be installed in your Airflow environment. Additionally, both YAML files, `configuration.yml`, which contains the connection information for the database backend and `checks.yml`, which contains the data quality checks will need to be made available to the Airflow environment.
+When using Soda Core with Airflow, the Soda Core package needs to be installed in your Airflow environment. Additionally, two YAML files need to be made available to the Airflow environment: `configuration.yml`, which contains the connection information for the database backend, and `checks.yml`, which contains the data quality checks.
 Astro CLI users can simply put `soda-core-<database>` in `requirements.txt` and provide the YAML files in `/include`.
 
 ## Example: Run Soda Core checks from Airflow
