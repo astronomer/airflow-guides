@@ -1,25 +1,21 @@
 ---
-title: "Astro for ETL"
-description: "Using the astro library to implement ETL use cases in Airflow."
+title: "The Astro Python SDK for ETL"
+description: "Using the Astro Python SDK to implement ETL use cases in Airflow."
 date: 2022-01-10T00:00:00.000Z
-slug: "astro-etl"
+slug: "astro-python-sdk-etl"
 heroImagePath: null
 tags: ["Astro", "ETL", "SQL"]
 ---
 
-## Overview
+The [Astro Python SDK](https://github.com/astro-projects/astro) is an open source Python package maintained by Astronomer that provides tools to improve the DAG authoring experience for Airflow users. The available decorators and functions allow you to write DAGs based on how you want your data to move by simplifying the data transformation process between different environments.
 
-> **Note:** The `astro` project is currently in the alpha stage and is not yet ready for production. The API will likely change as it progresses. However, we are actively seeking alpha users to test functionality and offer feedback.
+In this guide, we’ll demonstrate how you can use the Astro Python SDK functions for ETL use cases. The resulting DAGs will be easier to write and read, and require less code.
 
-The [`astro` library](https://github.com/astro-projects/astro) is an open source Python package maintained by Astronomer that provides tools to improve the DAG authoring experience for Airflow users. The available decorators and functions allow you to write DAGs based on how you want your data to move by simplifying the data transformation process between different environments.
+## Astro Python SDK ETL Functionality
 
-In this guide, we’ll demonstrate how you can use `astro` functions for ETL use cases. The resulting DAGs will be easier to write and read, and require less code.
+The Astro Python SDK makes implementing ETL use cases easier by allowing you to seamlessly transition between Python and SQL for each step in your process. Details like creating dataframes, storing intermediate results, passing context and data between tasks, and creating Airflow task dependencies are all managed automatically. This means that you can focus solely on writing execution logic in whichever language you need without having to worry about Airflow orchestration logic.
 
-## Astro ETL Functionality
-
-The `astro` library makes implementing ETL use cases easier by allowing you to seamlessly transition between Python and SQL for each step in your process. Details like creating dataframes, storing intermediate results, passing context and data between tasks, and creating Airflow task dependencies are all managed automatically. This means that you can focus solely on writing execution logic in whichever language you need without having to worry about Airflow orchestration logic.
-
-More specifically, `astro` has the following functions that are helpful when implementing an ETL framework (for a full list of functions, check out the [Readme](https://github.com/astro-projects/astro)):
+More specifically, the Astro Python SDK has the following functions that are helpful when implementing an ETL framework (for a full list of functions and documentation, check out the [Readme](https://github.com/astronomer/astro-sdk)):
 
 - `load_file`: If the data you’re starting with is in CSV or parquet files (stored locally or on S3 or GCS), you can use this function to load it into your database.
 - `transform`: This function allows you to transform your data with a SQL query.  It uses a `SELECT` statement that you define to automatically store your results in a new table. By default, the `output_table` is placed in a `tmp_astro` schema and is given a unique name each time the DAG runs, but you can overwrite this behavior by defining a specific `output_table` in your function. You can then pass the results of the `transform` downstream to the next task as if it were a native Python object.
@@ -29,11 +25,11 @@ In the next section, we’ll show a practical example implementing these functio
 
 ## Example ETL Implementation
 
-To show `astro` for ETL in action, we’ll start with a pretty common use case: managing billing data. In this first scenario, we need to extract customer subscription data by joining data from a CSV on S3 with the results of a query to our Snowflake database. Then, we need to perform some transformations on the data before loading it into a results table. First we'll show how to implement this without `astro`, and then we'll show how `astro` can make it easier.
+To show the Astro Python SDK in action, we’ll start with a simple ETL use case. In this first scenario, we need to load data from two CSVs in S3 into Snowflake. Then, we need to combine the data and perform some transformations before loading it into a results table. First we'll show how to implement this using built-in Airflow features, and then we'll show how the Astro Python SDK can make it easier.
 
-### The DAG Before Astro
+### The DAG before the Astro Python SDK
 
-Here is our billing subscription ETL DAG implemented with OSS Airflow operators and decorators, as well as the TaskFlow API:
+Here is our ETL DAG implemented with OSS Airflow operators and decorators, as well as the TaskFlow API. We take "homes" data from two CSVs in S3, load them to Snowflake, and perform two transformation tasks before appending the results to a reporting table.
 
 ```python
 from datetime import datetime
@@ -134,74 +130,104 @@ While we achieved our ETL goal with the DAG above, there are a couple of limitat
 - While the TaskFlow API makes it easier to pass data between tasks here, it is storing the resulting dataframes as XComs by default. This means that we need to worry about the size of our data. We could implement a custom XCom backend, but that would be extra lift.
 - Loading data back to Snowflake after the transformation is complete requires writing extra code to store an intermediate CSV in S3.
 
-### The DAG With Astro
+### The DAG with the Astro Python SDK
 
-Next, we’ll show how to rewrite the DAG using `astro` to alleviate the challenges listed above. 
+Next, we’ll show how to rewrite the DAG using the Astro Python SDK to alleviate the challenges listed above. 
 
 ```python
-from airflow.decorators import dag
-from astro.sql import transform, append, load_file
-from astro.sql.table import Table
-from astro import dataframe
-
+import os
 from datetime import datetime
+
 import pandas as pd
+from airflow.decorators import dag
 
-SNOWFLAKE_CONN_ID = "snowflake"
-S3_FILE_PATH = '</path/to/file/'
+from astro.files import File
+from astro.sql import (
+    append,
+    dataframe,
+    load_file,
+    run_raw_sql,
+    transform,
+)
+from astro.sql.table import Metadata, Table
 
-# Start by selecting data from two source tables in Snowflake
+
+SNOWFLAKE_CONN_ID = "snowflake_conn"
+AWS_CONN_ID = "aws_conn"
+
+# The first transformation combines data from the two source tables
 @transform
-def extract_data(subscriptions: Table, customer_data: Table):
+def extract_data(homes1: Table, homes2: Table):
     return """
     SELECT *
-    FROM {subscriptions}
-    LEFT JOIN {customer_data}
-           ON customer_id=customer_id
+    FROM {{homes1}}
+    UNION
+    SELECT *
+    FROM {{homes2}}
     """
 
-# Switch to Pandas for pivoting transformation
+# Switch to Python (Pandas) for melting transformation to get data into long format
 @dataframe
 def transform_data(df: pd.DataFrame):
-    transformed_df = df.pivot_table(index='DATE', 
-                                    values='CUSTOMER_NAME', 
-                                    columns=['TYPE'], 
-                                    aggfunc='count').reset_index()
-
-    return transformed_df
-
-main_table = Table("billing_reporting", schema="SANDBOX_KENTEND", )
-
-@dag(start_date=datetime(2021, 12, 1), schedule_interval='@daily', catchup=False)
-
-def astro_billing_dag():
-    # Load subscription data
-    subscription_data = load_file(
-        path=S3_FILE_PATH + '/subscription_data.csv',
-        file_conn_id="my_s3_conn",
-        output_table=Table(table_name="subscription_data", conn_id=SNOWFLAKE_CONN_ID),
+    df.columns = df.columns.str.lower()
+    melted_df = df.melt(
+        id_vars=["sell", "list"], value_vars=["living", "rooms", "beds", "baths", "age"]
     )
+
+    return melted_df
+
+# Run a raw SQL statement to create the reporting table if it doesn't already exist
+@run_raw_sql
+def create_reporting_table():
+    """Create the reporting data which will be the target of the append method"""
+    return """
+    CREATE TABLE IF NOT EXISTS homes_reporting (
+      sell number,
+      list number,
+      variable varchar,
+      value number
+    );
+    """
+
+@dag(start_date=datetime(2021, 12, 1), schedule_interval="@daily", catchup=False)
+def example_s3_to_snowflake_etl():
+
+    # Initial load of homes data csv's from S3 into Snowflake
+    homes_data1 = load_file(
+        task_id="load_homes1",
+        input_file=File(path="s3://airflow-kenten/homes1.csv", conn_id=AWS_CONN_ID),
+        output_table=Table(name="HOMES1", conn_id=SNOWFLAKE_CONN_ID)
+    )
+
+    homes_data2 = load_file(
+        task_id="load_homes2",
+        input_file=File(path="s3://airflow-kenten/homes2.csv", conn_id=AWS_CONN_ID),
+        output_table=Table(name="HOMES2", conn_id=SNOWFLAKE_CONN_ID)
+    )
+
     # Define task dependencies
     extracted_data = extract_data(
-        subscriptions=subscription_data,
-        customer_data=Table('customer_data', schema='SANDBOX_KENTEND')
+        homes1=homes_data1,
+        homes2=homes_data2,
+        output_table=Table(name="combined_homes_data"),
     )
 
     transformed_data = transform_data(
-        extracted_data,
-        output_table=Table('aggregated_bills')
-    )
-    
-    # Append transformed data to billing table
-    # Dependency is inferred by passing the previous `transformed_data` task to `append_table` param
-    append(
-        conn_id="snowflake",
-        append_table=transformed_data,
-        columns=["DATE", "CUSTOMER_ID", "AMOUNT"],
-        main_table=Table("billing_reporting", schema="SANDBOX_KENTEND"),
+        df=extracted_data, output_table=Table(name="homes_data_long")
     )
 
-astro_billing_dag = astro_billing_dag()
+    create_reporting_table = create_reporting_table(conn_id=SNOWFLAKE_CONN_ID)
+
+    # Append transformed data to reporting table
+    # Dependency is inferred by passing the previous `transformed_data` task to `source_table` param
+    record_results = append(
+        source_table=transformed_data,
+        target_table=Table(name="homes_reporting", conn_id=SNOWFLAKE_CONN_ID),
+        columns=["sell", "list", "variable", "value"],
+    )
+    record_results.set_upstream(create_results_table)
+
+example_s3_to_snowflake_etl_dag = example_s3_to_snowflake_etl()
 ```
 
 ![Astro Graph](https://assets2.astronomer.io/main/guides/astro-etl/astro_billing_graph_view.png)
@@ -210,7 +236,7 @@ The key differences in this implementation are:
 
 - The `load_file` and `append` functions take care of loading our raw data from S3 and transforming data to our reporting table respectively. We didn't have to write any extra code to get the data into Snowflake.
 - Using the `transform` function, we easily executed SQL to combine our data from multiple tables. The results are automatically stored in a table in Snowflake. We didn't have to use the `SnowflakeHook` or write any of the code to execute the query.
-- We seamlessly transitioned to a transformation in Python with the `df` function without needing to explicitly convert the results of our previous task to a Pandas dataframe. We then wrote the output of our transformation to our aggregated bills table in Snowflake using the `output_table` parameter, so we didn't have to worry about storing the data in XCom.
-- We only had to define our connection in the first `load_file` task. All downstream task that inherit from a task with a connection defined will use it.
+- We seamlessly transitioned to a transformation in Python with the `df` function without needing to explicitly convert the results of our previous task to a Pandas dataframe. We then wrote the output of our transformation to our aggregated reporting table in Snowflake using the `target_table` parameter, so we didn't have to worry about storing the data in XCom.
+- We only had to define our connection in tasks with no upstream (`load_file` and `create_reporting_table`). All downstream task that inherit from a task with a connection defined will use it.
 
-Overall, our DAG with `astro` is shorter, simpler to implement, and easier to read. This allows us to implement even more complicated use cases easily while focusing on the movement of our data.
+Overall, our DAG with the Astro Python SDK is shorter, simpler to implement, and easier to read. This allows us to implement even more complicated use cases easily while focusing on the movement of our data.
