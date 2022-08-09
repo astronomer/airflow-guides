@@ -451,4 +451,4 @@ The growth of tools designed to perform data quality checks reflect the importan
 
 SQL Check operators offer a way to define your checks directly from within the DAG, with no other tools necessary. If you run many checks on different databases, you may benefit from using a more complex testing solution like Great Expectations or Soda.
 
-No matter which tool is used, it is possible orchestrate the checks from within an Airflow DAG, which makes downstream actions depending on the outcome of the checks possible.
+No matter which tool is used, data quality checks can be orchestrated from within an Airflow DAG, which makes downstream actions depending on the outcome of the checks possible.
