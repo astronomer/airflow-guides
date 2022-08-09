@@ -32,7 +32,7 @@ To get the most out of this guide, users should have knowledge of:
 The following resources are recommended:
 
 - Data Quality and Airflow
-- [Operators 101](Operators 101)
+- [Operators 101](https://www.astronomer.io/guides/what-is-an-operator/)
 - [Relational database on Wikipedia](https://en.wikipedia.org/wiki/Relational_database)
 - [The Official YAML Web Site](https://yaml.org/)
 
@@ -73,10 +73,10 @@ checks for MY_TABLE_1:
 
 Data can be filtered according to validity criteria using the following methods:
 
-- List of valid values.
-- Predefined valid format.
-- Regex.
-- SQL query.
+- List of valid values
+- Predefined valid format
+- Regex
+- SQL query
 
 ```YAML
 checks for MY_TABLE_1:
@@ -157,6 +157,8 @@ data_source MY_DATASOURCE:
   schema: MY_SCHEMA
 ```
 
+Save the YAML instructions above in a filed called `configuration.yml` and make it available to your Airflow environment. Astro CLI users can place the file into the `/include` directory.
+
 ### Step 2: Create the checks file
 
 You can define your data quality checks using the [many checks available for Soda CL](https://docs.soda.io/soda-cl/soda-cl-overview.html). If you cannot find a predefined metric or check that works for your use case, you can create a user-defined check using SQL as shown below.
@@ -188,7 +190,7 @@ checks for example_table:
       valid values: ['val1', 'val2', 'val3', 'val4']
 ```
 
-> **Note**: You need to make both YAML files available to your Airflow environment. Users of the Astro CLI can simply put them into the `/include` folder.
+Save the YAML instructions above in a filed called `checks.yml` and make it available to your Airflow environment. Astro CLI users can place the file into the `/include` directory.
 
 ### Step 3: Install the Soda Core package
 
