@@ -20,21 +20,14 @@ In this guide, we will cover:
 - An in depth look at two commonly used data quality check tools: SQL Check operators and Great Expectations.
 - An example comparing implementation of data quality checks using each of these tools.
 
-## Assumed knowledge
+## Assumed Knowledge
 
-To get the most out of this guide, users should have knowledge of:
+To get the most out of this guide, you should have knowledge of:
 
-- What Airflow is and when to use it
-- Airflow operators
-- Airflow connections
-- Relational databases
-
-The following resources are recommended:
-
-- [Introduction to Apache Airflow](https://www.astronomer.io/guides/intro-to-airflow)
-- [Operators 101](https://www.astronomer.io/guides/what-is-an-operator)
-- [Managing your Connections in Apache Airflow](https://www.astronomer.io/guides/connections/)
-- [Relational database on Wikipedia](https://en.wikipedia.org/wiki/Relational_database)
+- What Airflow is and when to use it. See [Introduction to Apache Airflow](https://www.astronomer.io/guides/intro-to-airflow).
+- Airflow operators. [Operators 101](https://www.astronomer.io/guides/what-is-an-operator)
+- Airflow connections. [Managing your Connections in Apache Airflow](https://www.astronomer.io/guides/connections/)
+- Relational databases. [Relational database on Wikipedia](https://en.wikipedia.org/wiki/Relational_database)
 
 ## Data quality essentials
 
