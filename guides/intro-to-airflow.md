@@ -22,13 +22,9 @@ This guide offers an introduction to Apache Airflow and its core concepts. We wi
 
 ## Assumed Knowledge
 
-To get the most out of this guide, users should have knowledge of:
+To get the most out of this guide, you should have knowledge of:
 
-- Basic Python 3 programming concepts like packages and functions.
-
-The following resources are recommended:
-
-- [Official Python Tutorial](https://docs.python.org/3/tutorial/index.html)
+- Basic Python 3 programming concepts like packages and functions. See the [Official Python Tutorial](https://docs.python.org/3/tutorial/index.html).
 
 ## History
 
