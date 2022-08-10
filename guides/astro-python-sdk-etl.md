@@ -34,10 +34,12 @@ To use the Astro Python SDK for our ETL example, you must complete a couple of s
 
 1. Add the `astro-sdk-python` Python package to your Airflow environment. Astro CLI users can add the package to your `requirements.txt` file.
 2. Set the following environment variables:
+
     ```text
     export AIRFLOW__CORE__ENABLE_XCOM_PICKLING=True
     export AIRFLOW__ASTRO_SDK__SQL_SCHEMA=<snowflake_schema>
     ```
+    
     If you are using the Astro CLI, you can add these variables to your `.env` file for local development. 
 
     The `AIRFLOW__ASTRO_SDK__SQL_SCHEMA` variable should be the schema you want to store all intermediary tables in.
