@@ -25,9 +25,9 @@ In this guide, we will cover:
 To get the most out of this guide, you should have knowledge of:
 
 - What Airflow is and when to use it. See [Introduction to Apache Airflow](https://www.astronomer.io/guides/intro-to-airflow).
-- Airflow operators. [Operators 101](https://www.astronomer.io/guides/what-is-an-operator)
-- Airflow connections. [Managing your Connections in Apache Airflow](https://www.astronomer.io/guides/connections/)
-- Relational databases. [Relational database on Wikipedia](https://en.wikipedia.org/wiki/Relational_database)
+- Airflow operators. See [Operators 101](https://www.astronomer.io/guides/what-is-an-operator).
+- Airflow connections. See [Managing your Connections in Apache Airflow](https://www.astronomer.io/guides/connections/).
+- Relational databases. See [Relational database on Wikipedia](https://en.wikipedia.org/wiki/Relational_database).
 
 ## Data quality essentials
 
