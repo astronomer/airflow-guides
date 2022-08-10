@@ -55,7 +55,7 @@ You can use the `BashOperator` to execute:
 
 ## Example: Execute two bash commands using one BashOperator
 
-The `BashOperator` can execute any number of bash commands seperated by `&&`.
+The `BashOperator` can execute any number of bash commands separated by `&&`.
 
 In this example two commands are run:
 
