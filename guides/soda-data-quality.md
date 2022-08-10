@@ -22,19 +22,12 @@ In this guide, we will cover key features of Soda Core and how to use it with Ai
 
 ## Assumed Knowledge
 
-To get the most out of this guide, users should have knowledge of:
+To get the most out of this guide, you should have knowledge of:
 
-- How to design a data quality approach
-- Airflow operators
-- Relational Databases
-- Basic familiarity with writing YAML configurations
-
-The following resources are recommended:
-
-- Data Quality and Airflow
-- [Operators 101](https://www.astronomer.io/guides/what-is-an-operator/)
-- [Relational database on Wikipedia](https://en.wikipedia.org/wiki/Relational_database)
-- [The Official YAML Web Site](https://yaml.org/)
+- How to design a data quality approach. See Data Quality and Airflow.
+- Airflow operators. See [Operators 101](https://www.astronomer.io/guides/what-is-an-operator/).
+- Relational Databases. See [Relational database on Wikipedia](https://en.wikipedia.org/wiki/Relational_database).
+- Basic familiarity with writing YAML configurations. See [The Official YAML Web Site](https://yaml.org/).
 
 ## Features of Soda Core
 
