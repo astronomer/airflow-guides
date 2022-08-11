@@ -89,12 +89,16 @@ checks for MY_TABLE_1:
         WHERE MY_CATEGORY = 'category_1'
 ```
 
-Three more unique features of Soda Core are freshness checks, schema checks and reference checks:
+Three more unique features of Soda Core are:
+
+- [Freshness checks](https://docs.soda.io/soda-cl/freshness.html): Set limits to the age of the youngest row in the table.
+- [Schema checks](https://docs.soda.io/soda-cl/schema.html): Run checks on the existence of columns and validate data types.
+- [Reference checks](https://docs.soda.io/soda-cl/reference.html): Ensure parity in between columns in different datasets in the same data source.
 
 ```YAML
 checks for MY_TABLE_1:
-  # MY_DATE has no values older than 10 days
-  - freshness(MY_DATE) <= 10d
+  # MY_DATE's youngest row is younger 10 days
+  - freshness(MY_DATE) < 10d
   # The schema has to have the MY_KEY column
   - schema:
       fail:
@@ -154,7 +158,7 @@ Save the YAML instructions above in a filed called `configuration.yml` and make 
 
 ### Step 2: Create the checks file
 
-You can define your data quality checks using the [many preset checks available for Soda CL](https://docs.soda.io/soda-cl/soda-cl-overview.html). If you cannot find a preset metric or check that works for your use case, you can create a custom check using SQL as shown below.
+You can define your data quality checks using the [many preset checks available for Soda CL](https://docs.soda.io/soda-cl/soda-cl-overview.html). If you cannot find a preset check that works for your use case, you can create a custom one using SQL as shown below.
 
 ```YAML
 checks for example_table:
@@ -183,7 +187,7 @@ checks for example_table:
       valid values: ['val1', 'val2', 'val3', 'val4']
 ```
 
-Save the YAML instructions above in a filed called `checks.yml` and make it available to your Airflow environment. If you use the Astro CLI, you can place this file in your `/include` directory.
+Save the YAML instructions above in a file called `checks.yml` and make it available to your Airflow environment. If you use the Astro CLI, you can place this file in your `/include` directory.
 
 ### Step 3: Install the Soda Core package
 
@@ -255,4 +259,3 @@ Traceback (most recent call last):
     raise AirflowException(
 airflow.exceptions.AirflowException: Bash command failed. The command returned a non-zero exit code 2.
 ```
-
