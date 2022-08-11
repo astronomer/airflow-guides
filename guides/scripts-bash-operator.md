@@ -1,6 +1,6 @@
 ---
-title: "Running scripts using the BashOperator"
-description: "Learn and troubleshoot how to run shell scripts using the Bash Operator in Airflow"
+title: "Using the BashOperator"
+description: "Learn how to use the BashOperator in Airflow to execute bash commands and scripts in any programming language"
 date: 2018-07-17T00:00:00.000Z
 slug: "scripts-bash-operator"
 heroImagePath: null
@@ -25,7 +25,7 @@ To get the most out of this guide, you should have knowledge of:
 
 ## How to use the BashOperator
 
-The BashOperator is part of core Airflow and can be used to execute a single bash command, a set of bash commands or a bash script ending in `.sh`.
+The [BashOperator](https://registry.astronomer.io/providers/apache-airflow/modules/bashoperator) is part of core Airflow and can be used to execute a single bash command, a set of bash commands or a bash script ending in `.sh`.
 
 The following parameters can be provided to the operator:
 
@@ -63,7 +63,7 @@ In this example, we run two commands:
 - `echo Hello $MY_NAME!` prints the environment variable `MY_NAME` to the console.
 - `echo $A_LARGE_NUMBER | rev  2>&1 | tee $AIRFLOW_HOME/include/my_secret_number.txt` takes the environment variable `A_LARGE_NUMBER`, pipes it to the `rev` command which reverses any input, and saves the result in a file called `my_secret_number.txt` located in the `/include` directory. The reversed number will also be printed to the terminal.
 
-Note that the second command uses an environment variable from the Airflow environment `AIRFLOW_HOME`. This is only possible if `append_env` has been set to `True`. 
+Note that the second command uses an environment variable from the Airflow environment `AIRFLOW_HOME`. This is only possible if `append_env` has been set to `True`.
 
 ```Python
 from airflow import DAG
@@ -90,6 +90,7 @@ with DAG(
     )
 ```
 It is also possible to use two separate BashOperators to run the two commands, for example if you want to assign different dependencies to the tasks.
+
 ## Example: Execute a bash script
 
 The `BashOperator` can also be provided with a bash script (ending in `.sh`) to be executed.
@@ -156,7 +157,7 @@ with DAG(
 
 Using the `BashOperator` is the easiest way to run a script in a non-Python programming language in Airflow. It is   possible to run a script in any language that can be run with a bash command.
 
-In this example, we run a script written in JavaScript to query a public API providing the [current location of the international Space Station](http://open-notify.org/Open-Notify-API/ISS-Location-Now/). The query result will be pushed to XCom, and a second task extracts the latitude and longitude information in a script written in R and print them to the console.
+In this example, we run a script written in JavaScript to query a public API providing the [current location of the international Space Station](http://open-notify.org/Open-Notify-API/ISS-Location-Now/). The query result will be pushed to XCom, and a second task extracts the latitude and longitude information in a script written in R and prints them to the console.
 
 The following steps are required:
 
