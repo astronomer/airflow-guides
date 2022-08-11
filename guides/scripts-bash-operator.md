@@ -127,6 +127,8 @@ If you are an Astro CLI user, you can either run the above command on the bash s
 RUN chmod +x /usr/local/airflow/include/my_bash_script.sh
 ```
 
+> **Note**: If you are running CICD processes that might impact file permissions add the command in the Dockerfile to ensure that permissions are set correctly when the container image is built.
+
 Then in the DAG code, we provide the script to the `bash_command` parameter of the `BashOperator`.
 
 > **Note**: When running a bash script with the `BashOperator` it is crucial to add a space at the end of the command! Otherwise the task will fail with a Jinja exception.
