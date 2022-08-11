@@ -53,6 +53,7 @@ The `BashOperator` is very flexible and widely used in Airflow DAGs. Some common
 - Running a single or multiple bash commands in your Airflow environment.
 - Running a previously prepared bash script.
 - Running scripts in a programming language other than Python.
+- Running commands kicking off tools that do not have specific operator support yet. For example Soda Core.
 
 ## Example: Execute two bash commands using one BashOperator
 
