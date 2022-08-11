@@ -68,7 +68,7 @@ This project directory is where you'll store all files necessary to build your A
 
 ## Step 3: Add Airflow 2.0 to your Dockerfile
 
-Your `Dockerfile` will include reference to a Debian-based, [Astronomer Certified](https://www.astronomer.io/downloads/) Docker Image.
+Your `Dockerfile` includes a reference to a Debian-based, Astronomer Certified Docker Image.
 
 In your Dockerfile, replace the existing FROM statement with:
 
