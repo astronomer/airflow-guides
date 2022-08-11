@@ -70,8 +70,7 @@ Within the ETL pipeline, data quality checks can be placed in several different 
 
 ![Different locations for data quality checks in an ETL pipeline](https://assets2.astronomer.io/main/guides/data-quality/dq_checks_locations_example_graph.png)
 
-It's common to define further downstream tasks depending on the results of data quality checks (`post_check_action_1` and `post_check_action_2`) or [`callbacks`](https://airflow.apache.org/docs/apache-airflow/stable/logging-monitoring/callbacks.html).
-These tasks can alert data professionals with [error notifications](https://www.astronomer.io/guides/error-notifications-in-airflow/), such as an email or a Slack message.
+It's common to define further downstream tasks or [`callbacks`](https://airflow.apache.org/docs/apache-airflow/stable/logging-monitoring/callbacks.html), depending on the results of data quality checks (`post_check_action_1` and `post_check_action_2`). Most commonly these tasks will alert data professionals with [error notifications](https://www.astronomer.io/guides/error-notifications-in-airflow/), such as an email or a Slack message, of a data quality issue. It is also possible to create a downstream task that only runs in case all data quality checks have been successful, for example to log the successful checking event for reporting purposes.
 
 When implementing data quality checks, consider how a check success or failure should influence downstream dependencies. [Trigger Rules](https://www.astronomer.io/guides/managing-dependencies/#trigger-rules) are especially useful for managing operator dependencies.
 
@@ -151,7 +150,7 @@ To use Great Expectations, you will need to install the open source Great Expect
 
 The Great Expectations documentation offers a [step-by-step tutorial](https://docs.greatexpectations.io/docs/tutorials/getting_started/tutorial_overview) for this setup. Additionally, to use Great Expectations with Airflow, you have to install the [Great Expectations provider package](https://registry.astronomer.io/providers/great-expectations).
 
-When using Great Expectations, Airflow task logs show only whether the suite passed or failed. To get a detailed report on the checks that were run and their results, you can view to the HTML files in `great_expecations/uncommitted/data_docs/local_site/validations`.
+When using Great Expectations, Airflow task logs show only whether the suite passed or failed. To get a [detailed report](https://docs.greatexpectations.io/docs/terms/data_docs/) on the checks that were run and their results, you can view the HTML files located in `great_expecations/uncommitted/data_docs/local_site/validations` in any browser.
 
 ## Data lineage and data quality
 
@@ -198,6 +197,7 @@ While this example shows all the checks being written within the Python file def
 from airflow import DAG
 from datetime import datetime
 
+from airflow.operators.empty import EmptyOperator
 from airflow.operators.sql import SQLCheckOperator
 from airflow.providers.common.sql.operators.sql import (
   SQLColumnCheckOperator, SQLTableCheckOperator
@@ -215,6 +215,9 @@ with DAG(
       "conn_id": example_connection
     }
 ) as dag:
+
+    start = EmptyOperator(task_id="start")
+    end = EmptyOperator(task_id="end")
 
     # SQLColumnCheckOperator example: runs checks on 3 columns:
     #   - MY_DATE_COL is checked to only contain unique values ("unique_check")
@@ -295,6 +298,9 @@ with DAG(
                 "options_tuple": "('val1', 'val2', 'val3', 'val4')"
                 }
     )
+
+    start >> [column_checks, table_checks_aggregated,
+              table_checks_not_aggregated, check_val_in_list] >> end
 ```
 
 ### Example: Great Expectations
@@ -440,8 +446,13 @@ with DAG(
 
 ## Conclusion
 
-The growth of tools designed to perform data quality checks reflect the importance of ensuring data quality in production workflows. Commitment to data quality requires in-depth planning and collaboration between data professionals. What kind of data quality your organization needs will depend on your unique use case, which you can explore using the steps outlined in this guide.
+The growth of tools designed to perform data quality checks reflect the importance of ensuring data quality in production workflows. Commitment to data quality requires in-depth planning and collaboration between data professionals. What kind of data quality your organization needs will depend on your unique use case, which you can explore using the steps outlined in this guide. Special consideration should be given to the type of data quality checks and their location in the data pipeline.
 
-SQL Check operators offer a way to define your checks directly from within the DAG, with no other tools necessary. If you run many checks on different databases, you may benefit from using a more complex testing solution like Great Expectations or Soda.
+Integrating Airflow with a data lineage tool can further enhance your ability to trace the origin of data that did not pass the checks you established.
+
+This guide highlights two data quality tools and their use cases:
+
+- SQL Check operators offer a way to define your checks directly from within the DAG, with no other tools necessary.
+- If you run many checks on different databases, you may benefit from using a more complex testing solution like Great Expectations or Soda.
 
 No matter which tool is used, data quality checks can be orchestrated from within an Airflow DAG, which makes it possible to trigger downstream actions depending on the outcome of your checks.
