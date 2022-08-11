@@ -89,6 +89,7 @@ with DAG(
         append_env=True
     )
 ```
+
 It is also possible to use two separate BashOperators to run the two commands, for example if you want to assign different dependencies to the tasks.
 
 ## Example: Execute a bash script
