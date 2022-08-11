@@ -7,33 +7,32 @@ heroImagePath: null
 tags: ["Soda", "Data Quality"]
 ---
 
-[Soda Core](https://www.soda.io/core) is an open source framework for data quality checks using the SodaCL interface to run checks defined in a YAML file.
+[Soda Core](https://www.soda.io/core) is an open source framework for checking data quality. It uses the Soda Checks Language (SodaCL) to run checks defined in a YAML file.
 
 Soda Core lets you:
 
-- Define checks as YAML configuration with many predefined metrics available.
-- Provide any SQL query within the YAML file and check against its returned value, if no predefined metrics fit your use case.
-- Easily set up a large amount of data quality checks.
+- Define checks as YAML configuration, including many preset checks.
+- Provide a SQL query within the YAML file and check against a returned value if no preset checks fit your use case.
 - Integrate data quality checks with commonly used data engineering tools such as Airflow, Apache Spark, PostgreSQL, Snowflake [and more](https://www.soda.io/integrations).
 
 In this guide, we will cover key features of Soda Core and how to use it with Airflow.
 
 > **Note**: For a general overview on how to approach data quality, and of different tools available to run data quality checks using Airflow, see the 'Data Quality and Airflow' guide.
 
-## Assumed Knowledge
+## Assumed knowledge
 
 To get the most out of this guide, you should have knowledge of:
 
 - How to design a data quality approach. See Data Quality and Airflow.
 - Airflow operators. See [Operators 101](https://www.astronomer.io/guides/what-is-an-operator/).
-- Relational Databases. See [Relational database on Wikipedia](https://en.wikipedia.org/wiki/Relational_database).
-- Basic familiarity with writing YAML configurations. See [The Official YAML Web Site](https://yaml.org/).
+- Relational Databases. See [IBM's "Relational Databases Explained"](https://www.ibm.com/cloud/learn/relational-databases).
+- Basic familiarity with writing YAML configurations. See [yaml.org](https://yaml.org/).
 
 ## Features of Soda Core
 
-Soda Core uses the SodaCL to run data quality checks defined in a YAML file. Soda Core is a powerful tool on its own. Integrating it into your data pipelines with Airflow enables you to use Soda Core dynamically and allows the outcome of data quality checks to influence downstream tasks.
+Soda Core uses SodaCL to run data quality checks defined in a YAML file. Soda Core is a powerful tool on its own, but integrating it into your data pipelines with Airflow means that you can use the outcome of data quality checks to influence downstream tasks.
 
-In this section, we will highlight different types of checks you can implement with Soda Core. For a full overview please refer to the [Soda CL documentation](https://docs.soda.io/soda-cl/soda-cl-overview.html).
+In this section, we will highlight different types of checks you can implement with Soda Core. For a complete overview, see the to the [Soda CL documentation](https://docs.soda.io/soda-cl/soda-cl-overview.html).
 
 Soda Core offers the ability to run checks on different properties of your dataset against a numerically defined threshold:
 
@@ -50,7 +49,7 @@ checks for MY_TABLE_2:
   - duplicate_count(MY_ID_COL) = 0
 ```
 
-It is possible to add optional check configurations like naming a check or configure warning versus failing conditions:
+You can add optional configurations, such as custom names for checks and varying error levels:
 
 ```YAML
 checks for MY_TABLE_1:
@@ -107,14 +106,15 @@ checks for MY_TABLE_1:
 
 ## Requirements
 
-To use Soda Core, the Soda Core package for the database backend needs to be installed and configured. The [Soda documentation provides a list of supported databases](https://docs.soda.io/soda-core/configuration.html) and how to configure them.
+To use Soda Core, you first need to install the Soda Core package for your database backend. The [Soda documentation provides a list of supported databases](https://docs.soda.io/soda-core/configuration.html) and how to configure them.
 
 When using Soda Core with Airflow, the Soda Core package needs to be installed in your Airflow environment. Additionally, two YAML files need to be made available to the Airflow environment: `configuration.yml`, which contains the connection information for the database backend, and `checks.yml`, which contains the data quality checks.
-Astro CLI users can simply put `soda-core-<database>` in `requirements.txt` and provide the YAML files in `/include`.
+
+If you use the Astro CLI, you can add `soda-core-<database>` to `requirements.txt` and your YAML files to `/include` in your Astro project.
 
 ## Example: Run Soda Core checks from Airflow
 
-This example shows one possible way to set up data quality checks on a Snowflake database using Soda Core from within Airflow.
+This example shows one possible way to run data quality checks on a Snowflake database using Soda Core from within Airflow.
 
 The setup can be divided into the following steps:
 
@@ -150,11 +150,11 @@ data_source MY_DATASOURCE:
   schema: MY_SCHEMA
 ```
 
-Save the YAML instructions above in a filed called `configuration.yml` and make it available to your Airflow environment. Astro CLI users can place the file into the `/include` directory.
+Save the YAML instructions above in a filed called `configuration.yml` and make it available to your Airflow environment. If you use the Astro CLI, you can do this by placing the file into the `/include` directory of your Astro project.
 
 ### Step 2: Create the checks file
 
-You can define your data quality checks using the [many checks available for Soda CL](https://docs.soda.io/soda-cl/soda-cl-overview.html). If you cannot find a predefined metric or check that works for your use case, you can create a user-defined check using SQL as shown below.
+You can define your data quality checks using the [many preset checks available for Soda CL](https://docs.soda.io/soda-cl/soda-cl-overview.html). If you cannot find a preset metric or check that works for your use case, you can create a custom check using SQL as shown below.
 
 ```YAML
 checks for example_table:
@@ -183,11 +183,11 @@ checks for example_table:
       valid values: ['val1', 'val2', 'val3', 'val4']
 ```
 
-Save the YAML instructions above in a filed called `checks.yml` and make it available to your Airflow environment. Astro CLI users can place the file into the `/include` directory.
+Save the YAML instructions above in a filed called `checks.yml` and make it available to your Airflow environment. If you use the Astro CLI, you can place this file in your `/include` directory.
 
 ### Step 3: Install the Soda Core package
 
-The `soda-core-snowflake` package needs to be installed in your Airflow environment. Astro CLI users can add the following line to the `requirements.txt` file:
+The `soda-core-snowflake` package needs to be installed in your Airflow environment. If you use the Astro CLI, you can do this by adding the following line to the `requirements.txt` file:
 
 ```text
 soda-core-snowflake
@@ -219,9 +219,11 @@ with DAG(
     )
 ```
 
-The logs from the Soda Core checks can be found in the Airflow task logs. The logs will list all checks that ran along with their result.
+Because Soda Core runs through the BashOperator, you can run your checks in any part of your DAG and trigger tasks with your results like you would with other Airflow operators.
 
-Below an example of the logs in the case of 3 checks passing:
+The logs from the Soda Core checks can be found in the Airflow task logs. The logs list all checks that ran and their results.
+
+The following is an example of how your logs might look if all 3 checks pass:
 
 ```text
 [2022-08-04, 13:07:22 UTC] {subprocess.py:92} INFO - Scan summary:
@@ -233,7 +235,7 @@ Below an example of the logs in the case of 3 checks passing:
 [2022-08-04, 13:07:22 UTC] {subprocess.py:92} INFO - All is good. No failures. No warnings. No errors.
 ```
 
-In the case of a check failure, the logs will show which check failed and the `check_value` that caused the failure.
+In the case of a check failure, the logs show which check failed and the `check_value` that caused the failure:
 
 ```text
 [2022-08-04, 13:23:59 UTC] {subprocess.py:92} INFO - Scan summary:
@@ -254,4 +256,3 @@ Traceback (most recent call last):
 airflow.exceptions.AirflowException: Bash command failed. The command returned a non-zero exit code 2.
 ```
 
-Of course it is possible to incorporate data quality checks using Soda Core in different locations within your DAG, and to use the results of those checks to control the flow of data within your pipeline.
