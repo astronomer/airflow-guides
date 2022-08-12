@@ -37,23 +37,23 @@ Generally speaking, though, the data quality check process can be summarized in 
 
 1. Assess where and in what formats relevant data is stored, and where it moves along your pipeline. This step can be assisted by using a data lineage tool.
 2. Gather the data quality criteria from data professionals using the data.
-3. Determine the quality checks to run on each level of data.
+3. Determine the quality checks to run different components of the dataset.
 4. Determine where those quality checks should occur in your pipeline.
 5. Determine what happens when a check fails.
-6. Choose a data quality tool (see the "Tools" section of this guide for more information).
+6. Choose a data quality tool (see the "Data quality tools" section of this guide for more information).
 7. Write the checks.
 8. Test the checks.
 
 ### Types of data quality checks
 
-Data quality checks can be run on different levels:
+Data quality checks can be run on different components of the dataset:
 
 - **Column**: Common checks include confirming uniqueness of a key column, restricting the amount of `NULL` values that are allowed, defining logical bounds for numeric or date columns, and defining valid options for categorical variables.
 - **Row**: Common checks include comparing the values in several columns for each row, and ensuring that there are no mutually exclusive values present in the same row.
 - **Table**: Common checks include checking against a template schema to verify that it has not changed, and checking that a table has a minimum row count.
 - **Over several tables**: Common checks include data parity checks across several tables. You can also create logical checks like making sure a customer marked as `inactive` has no purchases listed in any of the other tables.
 
-It is also important to distinguish between the two types of data integrity control:
+It is also important to distinguish between the two types of control in data quality:
 
 - **Static control**: Runs checks on Spark or Pandas dataframes, or on existing tables in a database. These checks can be performed anywhere in a typical ETL pipeline and might halt the pipeline in case of a failed check to prevent further processing of data with quality issues.
 - **Flow control**: Monitors incoming data on a record-by-record basis, which sometimes prevents single records that fail certain data quality checks from entering the database. We do not cover flow control in this guide.
@@ -112,7 +112,7 @@ We recommend using a data validation framework like Great Expectations or Soda i
 - Most or all of your checks can be implemented by the predefined checks in the solution of your choice.
 - You want your data quality checks abstracted away from the DAG code.
 
-> **Note**: Currently only SQL Check operators and Great Expectations offer data lineage extraction.
+> **Note**: Currently only SQL Check operators and the `GreatExpectationsOperator` offer data lineage extraction.
 
 ### SQL Check operators
 
@@ -150,7 +150,7 @@ To use Great Expectations, you will need to install the open source Great Expect
 
 The Great Expectations documentation offers a [step-by-step tutorial](https://docs.greatexpectations.io/docs/tutorials/getting_started/tutorial_overview) for this setup. Additionally, to use Great Expectations with Airflow, you have to install the [Great Expectations provider package](https://registry.astronomer.io/providers/great-expectations).
 
-When using Great Expectations, Airflow task logs show only whether the suite passed or failed. To get a [detailed report](https://docs.greatexpectations.io/docs/terms/data_docs/) on the checks that were run and their results, you can view the HTML files located in `great_expecations/uncommitted/data_docs/local_site/validations` in any browser.
+When using Great Expectations, Airflow task logs show only whether the suite passed or failed. To get a [detailed report](https://docs.greatexpectations.io/docs/terms/data_docs/) on the checks that were run and their results, you can view the HTML files located in the `great_expecations/uncommitted/data_docs/local_site/validations` directory in any browser.
 
 ## Data lineage and data quality
 
