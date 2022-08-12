@@ -60,9 +60,9 @@ It is also important to distinguish between the two types of data integrity cont
 
 ### Deciding where to place data quality checks
 
-Data quality checks can be run at different times within a data pipeline or Airflow environment. It often makes sense to test them in their own DAG and later incorporate them into your ETL pipelines to be able to make downstream behavior dependent on the outcome of selected data quality checks.
+Data quality checks can be run at different times within a data pipeline or Airflow environment. It often makes sense to test them in their own DAG and later incorporate them into your pipelines to be able to make downstream behavior dependent on the outcome of selected data quality checks.
 
-Within the ETL pipeline, data quality checks can be placed in several different locations as shown in the DAG graph below:
+For example, within an ETL pipeline, data quality checks can be placed in several different locations as shown in the DAG graph below:
 
 - Before the transform step (`data_quality_check_1`)
 - After the transform step (`data_quality_check_2`)
