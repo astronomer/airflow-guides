@@ -1,6 +1,6 @@
 ---
 title: "Using the BashOperator"
-description: "Learn how to use the BashOperator in Airflow to execute bash commands and scripts in any programming language"
+description: "Using the BashOperator in Airflow to execute bash commands and scripts"
 date: 2018-07-17T00:00:00.000Z
 slug: "scripts-bash-operator"
 heroImagePath: null
