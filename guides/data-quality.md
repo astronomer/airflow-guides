@@ -118,7 +118,7 @@ We recommend using a data validation framework like Great Expectations or Soda i
 
 > **Note**: You can find more details and examples on SQL Check operators as well as example logs in the ['Airflow Data Quality Checks with SQL Operators' guide](https://www.astronomer.io/guides/airflow-sql-data-quality-tutorial/).
 
-SQL Check operators execute a SQL statement that results in a set of booleans. A result of `True` leads to the check passing and the task being labelled as successful. A result of `False`, or any error when the statement is executed, leads to a failure of the task. Before using any of the operators, you need to define the [connection](https://www.astronomer.io/guides/connections/) to your data storage from the Airflow UI or via an external secrets manager.
+SQL Check operators execute a SQL statement that results in a set of booleans. A result of `True` leads to the check passing and the task being labeled as successful. A result of `False`, or any error when the statement is executed, leads to a failure of the task. Before using any of the operators, you need to define the [connection](https://www.astronomer.io/guides/connections/) to your data storage from the Airflow UI or via an external secrets manager.
 
 The SQL Check operators work with any backend solution that accepts SQL queries and supports Airflow, and differ in what kind of data quality checks they can perform and how they are defined.
 
