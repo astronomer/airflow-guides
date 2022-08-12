@@ -1,7 +1,7 @@
 ---
 title: "Data quality and Airflow"
-description: "Improve the quality of your data using Airflow"
-date: 2022-07-12T00:00:00.000Z
+description: "Check the quality of your data using Airflow"
+date: 2022-08-12T00:00:00.000Z
 slug: "data-quality"
 heroImagePath: null
 tags: ["SQL", "Great Expectations", "Data quality"]
