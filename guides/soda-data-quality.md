@@ -24,15 +24,16 @@ In this guide, we will cover key features of Soda Core and how to use it with Ai
 To get the most out of this guide, you should have knowledge of:
 
 - How to design a data quality approach. See Data Quality and Airflow.
+- The basics of Soda Core. See [How Soda Core works](https://docs.soda.io/soda-core/how-core-works.html).
 - Airflow operators. See [Operators 101](https://www.astronomer.io/guides/what-is-an-operator/).
 - Relational Databases. See [IBM's "Relational Databases Explained"](https://www.ibm.com/cloud/learn/relational-databases).
 - Basic familiarity with writing YAML configurations. See [yaml.org](https://yaml.org/).
 
 ## Features of Soda Core
 
-Soda Core uses SodaCL to run data quality checks defined in a YAML file. Soda Core is a powerful tool on its own, but integrating it into your data pipelines with Airflow means that you can use the outcome of data quality checks to influence downstream tasks.
+Soda Core uses Soda Checks Language (SodaCL) to run data quality checks defined in a YAML file. Soda Core is a powerful tool on its own, but integrating it into your data pipelines with Airflow means that you can use the outcome of data quality checks to influence downstream tasks.
 
-In this section, we will highlight different types of checks you can implement with Soda Core. For a complete overview, see the to the [Soda CL documentation](https://docs.soda.io/soda-cl/soda-cl-overview.html).
+In this section, we will highlight different types of checks you can implement with Soda Core. For a complete overview, see the to the [SodaCL documentation](https://docs.soda.io/soda-cl/soda-cl-overview.html).
 
 Soda Core offers the ability to run checks on different properties of your dataset against a numerically defined threshold:
 
@@ -63,7 +64,7 @@ checks for MY_TABLE_1:
       name: Wrong number of rows!
 ```
 
-Data can be filtered according to validity criteria using the following methods:
+Data can be checked according to validity criteria using the following methods:
 
 - List of valid values
 - Predefined valid format
@@ -74,7 +75,12 @@ Data can be filtered according to validity criteria using the following methods:
 checks for MY_TABLE_1:
   # MY_CATEGORICAL_COL has no other values than val1, val2 and val3
   - invalid_count(MY_CATEGORICAL_COL) = 0:
-      valid values: ['val1', 'val2', 'val3']
+      valid values: [val1, val2, val3]
+  # MY_NUMERIC_COL has no other values than 0, 1 and 2.
+  # Single quotes are necessary for valid values checks involving numeric
+  # characters.
+  - invalid_count(MY_NUMERIC_COL) = 0:
+      valid values: ['0', '1', '2']
   # less than 10 missing valid IP addresses
   - missing_count(IP_ADDRESS_COL) < 10:
       valid format: ip address
@@ -182,9 +188,9 @@ checks for example_table:
   - sum_difference > 0:
       sum_difference query: |
         SELECT SUM(MY_COL_2) - SUM(MY_COL_1) FROM example_table
-  # checks that all entries in MY_COL_3 are part of a set or possible values
+  # checks that all entries in MY_COL_3 are part of a set of possible values
   - invalid_count(MY_COL_3) = 0:
-      valid values: ['val1', 'val2', 'val3', 'val4']
+      valid values: [val1, val2, val3, val4]
 ```
 
 Save the YAML instructions above in a file called `checks.yml` and make it available to your Airflow environment. If you use the Astro CLI, you can place this file in your `/include` directory.
@@ -223,7 +229,7 @@ with DAG(
     )
 ```
 
-Because Soda Core runs through the BashOperator, you can run your checks in any part of your DAG and trigger tasks with your results like you would with other Airflow operators.
+Because Soda Core runs through the `BashOperator`, you can run your checks in any part of your DAG and trigger tasks with your results like you would with other Airflow operators.
 
 The logs from the Soda Core checks can be found in the Airflow task logs. The logs list all checks that ran and their results.
 
