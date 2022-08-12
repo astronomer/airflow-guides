@@ -1,6 +1,6 @@
 ---
 title: "Data quality and Airflow"
-description: "Check the quality of your data using Airflow"
+description: "Check the quality of your data using Airflow."
 date: 2022-08-10T00:00:00.000Z
 slug: "data-quality"
 heroImagePath: null
@@ -88,11 +88,11 @@ You might need to implement data quality checks if:
 There are multiple open source tools that can be used to check data quality from an Airflow DAG. While we list the most commonly used tools here, we will focus on the two tools that also integrate with OpenLineage:
 
 - **[SQL Check operators](https://www.astronomer.io/guides/airflow-sql-data-quality-tutorial)**: A group of operators that you can use to define data quality checks in Python dictionaries and SQL from within your DAGs.
-- **[Great Expectations](https://greatexpectations.io/)**: An open source data validation framework where checks are defined in JSON. Airflow offers a provider package including the `GreatExpectationsOperator` for easy integration.
+- **[Great Expectations](https://www.astronomer.io/guides/airflow-great-expectations/)**: An open source data validation framework where checks are defined in JSON. Airflow offers a provider package including the `GreatExpectationsOperator` for easy integration.
 
 Other tools that can be used for data quality checks include:
 
-- **[Soda](https://docs.soda.io/)**: An open source data validation framework that uses YAML to define checks which can be run in Airflow using the `BashOperator`. Soda also offers the ability to write any custom checks using SQL.
+- **[Soda](https://www.astronomer.io/guides/soda-data-quality/)**: An open source data validation framework that uses YAML to define checks which can be run in Airflow using the `BashOperator`. Soda also offers the ability to write any custom checks using SQL.
 - **[dbt test](https://docs.getdbt.com/docs/building-a-dbt-project/tests)**: A testing framework for models using the `dbt test` CLI command, which you can run in Airflow with the `BashOperator` or `PythonOperator`.
 
 ### Choosing a tool
