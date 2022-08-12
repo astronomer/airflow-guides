@@ -1,10 +1,10 @@
 ---
 title: "Soda Core and Airflow"
-description: "Using Soda Core to implement data quality checks in Airflow DAGs"
-date: 2022-08-02T00:00:00.000Z
+description: "Using Soda Core to implement data quality checks in Airflow DAGs."
+date: 2022-08-11T00:00:00.000Z
 slug: "soda-data-quality"
 heroImagePath: null
-tags: ["Soda", "Data Quality"]
+tags: ["Soda", "Data quality"]
 ---
 
 [Soda Core](https://www.soda.io/core) is an open source framework for checking data quality. It uses the Soda Checks Language (SodaCL) to run checks defined in a YAML file.
@@ -17,13 +17,13 @@ Soda Core lets you:
 
 In this guide, we will cover key features of Soda Core and how to use it with Airflow.
 
-> **Note**: For a general overview on how to approach data quality, and of different tools available to run data quality checks using Airflow, see the 'Data Quality and Airflow' guide.
+> **Note**: For a general overview on how to approach data quality, and of different tools available to run data quality checks using Airflow, see the '[Data quality and Airflow](https://www.astronomer.io/guides/data-quality)' guide.
 
 ## Assumed knowledge
 
 To get the most out of this guide, you should have knowledge of:
 
-- How to design a data quality approach. See Data Quality and Airflow.
+- How to design a data quality approach. See [Data quality and Airflow](https://www.astronomer.io/guides/data-quality).
 - The basics of Soda Core. See [How Soda Core works](https://docs.soda.io/soda-core/how-core-works.html).
 - Airflow operators. See [Operators 101](https://www.astronomer.io/guides/what-is-an-operator/).
 - Relational Databases. See [IBM's "Relational Databases Explained"](https://www.ibm.com/cloud/learn/relational-databases).
@@ -109,7 +109,7 @@ checks for MY_TABLE_1:
   - schema:
       fail:
         when required column missing: [MY_KEY]
-  # all names listed in MY_TABLE_1's MY_NAMES column have to also exists
+  # all names listed in MY_TABLE_1's MY_NAMES column have to also exist
   # in the MY_CUSTOMER_NAMES column in MY_TABLE_2
   - values in (MY_NAMES) must exist in MY_TABLE_2 (MY_CUSTOMER_NAMES)
 ```
@@ -132,7 +132,6 @@ The setup can be divided into the following steps:
 - Create a checks file containing the data quality checks: `checks.yml`.
 - Install the `soda-core-snowflake` package in your Airflow environment.
 - Run the checks from a DAG by running the `soda scan` command using the `BashOperator`.
-
 
 ### Step 1: Create the configuration file
 
@@ -164,7 +163,7 @@ Save the YAML instructions above in a filed called `configuration.yml` and make 
 
 ### Step 2: Create the checks file
 
-You can define your data quality checks using the [many preset checks available for Soda CL](https://docs.soda.io/soda-cl/soda-cl-overview.html). If you cannot find a preset check that works for your use case, you can create a custom one using SQL as shown below.
+You can define your data quality checks using the [many preset checks available for SodaCL](https://docs.soda.io/soda-cl/soda-cl-overview.html). If you cannot find a preset check that works for your use case, you can create a custom one using SQL as shown below.
 
 ```YAML
 checks for example_table:
@@ -233,7 +232,7 @@ Because Soda Core runs through the `BashOperator`, you can run your checks in an
 
 The logs from the Soda Core checks can be found in the Airflow task logs. The logs list all checks that ran and their results.
 
-The following is an example of how your logs might look if all 3 checks pass:
+This is an example of what your logs might look like if all 3 checks pass:
 
 ```text
 [2022-08-04, 13:07:22 UTC] {subprocess.py:92} INFO - Scan summary:
