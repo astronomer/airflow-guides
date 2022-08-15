@@ -11,7 +11,7 @@ Since Airflow 2.0, decorators have been available for some functions as an alter
 
 In this guide, we'll cover the benefit of decorators, the decorators available in Airflow, and decorators provided in Astronomer's open source Astro Python SDK library. We'll also show examples throughout and address common questions about when to use decorators and how to combine them with traditional operators in a DAG.
 
-## When and why to use decorators
+## When to use decorators
 
 The purpose of decorators in Airflow is to simplify the DAG authoring experience by eliminating the boilerplate code required by traditional operators. The result can be cleaner DAG files that are more concise and easier to read. Currently, decorators can be used for Python and SQL functions.
 
