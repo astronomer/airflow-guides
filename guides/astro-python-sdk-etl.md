@@ -39,7 +39,7 @@ To use the Astro Python SDK for our ETL example, you must complete a couple of s
     export AIRFLOW__CORE__ENABLE_XCOM_PICKLING=True
     export AIRFLOW__ASTRO_SDK__SQL_SCHEMA=<snowflake_schema>
     ```
-    
+
     If you are using the Astro CLI, you can add these variables to your `.env` file for local development. 
 
     The `AIRFLOW__ASTRO_SDK__SQL_SCHEMA` variable should be the schema you want to store all intermediary tables in.
@@ -119,10 +119,10 @@ def transform_data(xcom: str) -> str:
 
 def classic_etl_dag():
 
-    load_subscription_data = S3ToSnowflakeOperator(
-        task_id='load_subscription_data',
+    load_data = S3ToSnowflakeOperator(
+        task_id='load_homes_data',
         snowflake_conn_id=SNOWFLAKE_CONN_ID,
-        s3_keys=[S3_FILE_PATH + '/subscription_data.csv'],
+        s3_keys=[S3_FILE_PATH + '/homes.csv'],
         table=SNOWFLAKE_SAMPLE_TABLE,
         schema=SNOWFLAKE_SCHEMA,
         stage=SNOWFLAKE_STAGE,
