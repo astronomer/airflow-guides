@@ -33,7 +33,7 @@ To get the most out of this guide, you should have knowledge of:
 
 Soda Core uses Soda Checks Language (SodaCL) to run data quality checks defined in a YAML file. Soda Core is a powerful tool on its own, but integrating it into your data pipelines with Airflow means that you can use the outcome of data quality checks to influence downstream tasks.
 
-In this section, we will highlight different types of checks you can implement with Soda Core. For a complete overview, see the to the [SodaCL documentation](https://docs.soda.io/soda-cl/soda-cl-overview.html).
+In this section, we will highlight different types of checks you can implement with Soda Core. For a complete overview, see the [SodaCL documentation](https://docs.soda.io/soda-cl/soda-cl-overview.html).
 
 Soda Core offers the ability to run checks on different properties of your dataset against a numerically defined threshold:
 
@@ -159,7 +159,7 @@ data_source MY_DATASOURCE:
   schema: MY_SCHEMA
 ```
 
-Save the YAML instructions above in a filed called `configuration.yml` and make it available to your Airflow environment. If you use the Astro CLI, you can do this by placing the file into the `/include` directory of your Astro project.
+Save the YAML instructions above in a file called `configuration.yml` and make it available to your Airflow environment. If you use the Astro CLI, you can do this by placing the file into the `/include` directory of your Astro project.
 
 ### Step 2: Create the checks file
 
