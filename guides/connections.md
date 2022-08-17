@@ -114,81 +114,6 @@ AIRFLOW_CONN_MYCONNID='{
 
 Note that connections that are defined using environment variables will not show up in the list of connections in the Airflow UI and which parameters to specify can very for different connection types.
 
-## Example: Configuring the SnowflakeToSlackOperator
-
-In this example, we will configure the `SnowflakeToSlackOperator`, which requires connections to Snowflake and Slack. We will define the connections using the Airflow UI.
-
-Before starting Airflow, we need to install both the [Snowflake](https://registry.astronomer.io/providers/snowflake) and the [Slack provider](https://registry.astronomer.io/providers/slack). Astro CLI users can add them to `requirements.txt`:
-
-```text
-apache-airflow-providers-snowflake
-apache-airflow-providers-slack
-```
-
-In the Airflow UI, we can navigate to the list of connections and add a connection of the 'Connection Type' `Snowflake`. The following parameters are required:
-
-- Connection Id: `snowflake_conn` (or another string that has not been used for a different connection already)
-- Connection Type: `Snowflake`
-- Account: Your Snowflake account in the format xy12345.region
-- Login: Your Snowflake login name.
-- Password: Your Snowflake login password.
-
-You can leave the other fields empty. Test the connection by clicking on the `Test` button.
-
-The screenshot below shows the confirmation that the connection to Snowflake was successful.
-
-![Successful Connection to Snowflake](https://assets2.astronomer.io/main/guides/connections/SuccessfulSnowflakeConn.png)
-
-Next we set up a connection to Slack. To post a message to a Slack channel, you will need to create a Slack app for your server and configure incoming webhooks. A step-by-step explanation of this process can be found in the [Slack Documentation](https://api.slack.com/messaging/webhooks).
-
-To connect to Slack from Airflow, you only have to provide a few parameters:
-
-- Connection Id: `slack_conn` (or another string that has not been used for a different connection already)
-- Connection Type: `Slack Webhook`
-- Host: `https://hooks.slack.com.services` (the first part of the Webhook URL)
-- Password: The second part of the Webhook URL. It will have the format `T00000000/B00000000/XXXXXXXXXXXXXXXXXXXXXXXX`
-
-Test the connection by clicking on the `Test` button.
-
-The last step is writing the DAG using the `SnowflakeToSlackOperator` to run a SQL query on a Snowflake table and post the result as a message to a Slack channel. The `SnowflakeToSlackOperator` needs both, the connection id pointing towards the snowflake connection `snowflake_conn_id` and the connection id for the Slack connection `slack_conn_id`.
-
-```Python
-from airflow import DAG
-from datetime import datetime
-from airflow.providers.snowflake.transfers.snowflake_to_slack import (
-    SnowflakeToSlackOperator
-)
-
-with DAG(
-    dag_id="snowflake_to_slack_dag",
-    start_date=datetime(2022, 7, 1),
-    schedule_interval=None,
-    catchup=False
-) as dag:
-
-    transfer_task = SnowflakeToSlackOperator(
-        task_id="transfer_task",
-
-        # the two connections are passed to the operator here:
-        snowflake_conn_id="snowflake_conn",
-        slack_conn_id="slack_conn",
-
-        params={
-            "table_name": "ORDERS",
-            "col_to_sum": "O_TOTALPRICE"
-        },
-        sql="""
-            SELECT
-              COUNT(*) AS row_count,
-              SUM({{ params.col_to_sum }}) AS sum_price
-            FROM {{ params.table_name }}
-        """,
-        slack_message="""The table {{ params.table_name }} has
-            => {{ results_df.ROW_COUNT[0] }} entries
-            => with a total price of {{results_df.SUM_PRICE[0]}}"""
-    )
-```
-
 ## Programmatically creating and modifying connections
 
 Connections can be created and modified programmatically to sync with an external secrets manager.
@@ -320,4 +245,79 @@ def create_connections(session=None):
             task_logger.info(
                 "Failed creating connection"
             task_logger.info(e)
+```
+
+## Example: Configuring the SnowflakeToSlackOperator
+
+In this example, we will configure the `SnowflakeToSlackOperator`, which requires connections to Snowflake and Slack. We will define the connections using the Airflow UI.
+
+Before starting Airflow, we need to install both the [Snowflake](https://registry.astronomer.io/providers/snowflake) and the [Slack provider](https://registry.astronomer.io/providers/slack). Astro CLI users can add them to `requirements.txt`:
+
+```text
+apache-airflow-providers-snowflake
+apache-airflow-providers-slack
+```
+
+In the Airflow UI, we can navigate to the list of connections and add a connection of the 'Connection Type' `Snowflake`. The following parameters are required:
+
+- Connection Id: `snowflake_conn` (or another string that has not been used for a different connection already)
+- Connection Type: `Snowflake`
+- Account: Your Snowflake account in the format xy12345.region
+- Login: Your Snowflake login name.
+- Password: Your Snowflake login password.
+
+You can leave the other fields empty. Test the connection by clicking on the `Test` button.
+
+The screenshot below shows the confirmation that the connection to Snowflake was successful.
+
+![Successful Connection to Snowflake](https://assets2.astronomer.io/main/guides/connections/SuccessfulSnowflakeConn.png)
+
+Next we set up a connection to Slack. To post a message to a Slack channel, you will need to create a Slack app for your server and configure incoming webhooks. A step-by-step explanation of this process can be found in the [Slack Documentation](https://api.slack.com/messaging/webhooks).
+
+To connect to Slack from Airflow, you only have to provide a few parameters:
+
+- Connection Id: `slack_conn` (or another string that has not been used for a different connection already)
+- Connection Type: `Slack Webhook`
+- Host: `https://hooks.slack.com.services` (the first part of the Webhook URL)
+- Password: The second part of the Webhook URL. It will have the format `T00000000/B00000000/XXXXXXXXXXXXXXXXXXXXXXXX`
+
+Test the connection by clicking on the `Test` button.
+
+The last step is writing the DAG using the `SnowflakeToSlackOperator` to run a SQL query on a Snowflake table and post the result as a message to a Slack channel. The `SnowflakeToSlackOperator` needs both, the connection id pointing towards the snowflake connection `snowflake_conn_id` and the connection id for the Slack connection `slack_conn_id`.
+
+```Python
+from airflow import DAG
+from datetime import datetime
+from airflow.providers.snowflake.transfers.snowflake_to_slack import (
+    SnowflakeToSlackOperator
+)
+
+with DAG(
+    dag_id="snowflake_to_slack_dag",
+    start_date=datetime(2022, 7, 1),
+    schedule_interval=None,
+    catchup=False
+) as dag:
+
+    transfer_task = SnowflakeToSlackOperator(
+        task_id="transfer_task",
+
+        # the two connections are passed to the operator here:
+        snowflake_conn_id="snowflake_conn",
+        slack_conn_id="slack_conn",
+
+        params={
+            "table_name": "ORDERS",
+            "col_to_sum": "O_TOTALPRICE"
+        },
+        sql="""
+            SELECT
+              COUNT(*) AS row_count,
+              SUM({{ params.col_to_sum }}) AS sum_price
+            FROM {{ params.table_name }}
+        """,
+        slack_message="""The table {{ params.table_name }} has
+            => {{ results_df.ROW_COUNT[0] }} entries
+            => with a total price of {{results_df.SUM_PRICE[0]}}"""
+    )
 ```
