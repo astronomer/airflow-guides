@@ -14,8 +14,8 @@ In this guide we will cover:
 - The basics of Airflow connections.
 - How to define connections using the Airflow UI.
 - How to define connections using environment variables.
-- An example showing a Snowflake connection and a Slack Webhook connection being used in a DAG.
 - How to programmatically create and modify connections.
+- An example showing a Snowflake connection and a Slack Webhook connection being used in a DAG.
 
 ## Assumed knowledge
 
@@ -23,18 +23,31 @@ To get the most out of this guide, you should have knowledge of:
 
 - What Airflow is and when to use it. See [Introduction to Apache Airflow](https://www.astronomer.io/guides/intro-to-airflow/).
 - Airflow operators. See [Operators 101](https://www.astronomer.io/guides/what-is-an-operator).
+- Airflow hooks. See [Hooks 101](https://www.astronomer.io/guides/what-is-a-hook/).
 
 ## Airflow connection essentials
 
-A connection in Airflow is a set of configurations containing the information necessary to send requests to the API of an external tool. The information a connection needs to contain will vary based on which tool you are connecting to.
+A connection in Airflow is a set of configurations containing the information necessary to send requests to the API of an external tool. The information a connection needs to contain will vary based on which tool you are connecting to. In most cases a connection necessitates login credentials or a private key in order to authenticate Airflow to the external tool.
 
-Each connection is associated with a unique `conn_id`, which can be provided to operators requiring a connection.
+Airflow connections can be defined in multiple ways, using:
 
-Under the hood, Airflow [hooks](https://www.astronomer.io/guides/what-is-a-hook/) use connections to authenticate to external systems in order to send API requests. Most hooks that require connections are part of provider packages, which can be discovered on the [Astronomer Registry](https://registry.astronomer.io/).
+- The Airflow UI
+- Environment variables
+- The `airflow.cfg` file
+- The Airflow CLI
+- The `airflow_settings.yaml` file (Astro CLI users)
 
-For example, the `S3Hook`, which is part of the [Amazon provider (https://registry.astronomer.io/providers/amazon), requires a connection of the type `Amazon S3`.
+In this guide we will cover adding connections using the Airflow UI and environment variables. For more in-depth information on configuring connections in other ways see ['Managing Connections'](https://airflow.apache.org/docs/apache-airflow/stable/howto/connection.html) in the Airflow documentation.
 
+To discover which information to provide to which field you can search for the relevant provider in the [Astronomer Registry](https://registry.astronomer.io/) and click on the `Docs` button to find documentation on a specific provider. Most common providers will have documentation on each of their associated `Connection types`. For example, you can find information on how to set up different connections to Azure on the [Connection Types page of the Azure provider](https://airflow.apache.org/docs/apache-airflow-providers-microsoft-azure/stable/connections/index.html).
 
+> **Note**: If you cannot find the relevant information in the Apache Airflow documentation on the external tool you are trying to connect to, see if the documentation of the external tool offers guidance on how to authenticate to it or refer to the source code of the hook that is being used by your operator.
+
+Under the hood, Airflow [hooks](https://www.astronomer.io/guides/what-is-a-hook/) use connections to authenticate to external systems in order to send API requests. Most hooks that require connections are part of provider packages.
+
+For example, the `S3Hook`, which is part of the [Amazon provider](https://registry.astronomer.io/providers/amazon), requires a connection of the type `Amazon S3`.
+
+Each connection is associated with a unique `conn_id`, which can be provided to operators and hooks requiring a connection.
 
 ## Define connections in the UI
 
@@ -54,24 +67,38 @@ For most connections it is not necessary to specify all fields. The example belo
 
 ![Example AWS S3 connection](https://assets2.astronomer.io/main/guides/connections/AWSS3connection.png)
 
-Some connection types offer the possibility to test the connection from the Airflow UI. A message either confirming a successful connection or providing an error message will appear on top of the screen after running a connection test.
+It is possible to pass additional configuration parameters to a connection by providing them to the `Extra` field as a JSON. For example it would be possible to add the [ARN of a role](https://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles.html) to assume when logging into AWS by entering `{"role_arn":"arn:aws:iam::123456789012:role/my_role_name"}` in the `Extra` field. To learn about additional parameters for a specific connection type please refer to the documentation of the relevant provider package.
 
-> **Note**: Passwords are treated as a secret by Airflow and will be hidden from the user after saving the connection.
+In Airflow version 2.2+ some connection types offer the possibility to test the connection from the Airflow UI. A message either confirming a successful connection or providing an error message will appear on top of the screen after running a connection test.
+
+### Masking sensitive information
+
+Connections often contain sensitive credentials. By default Airflow will hide the connection password, both in the UI and in the Airflow logs. Values from the Connection's `Extra` field will also be hidden if their key contains any of the words listed in the environment variable `AIRFLOW__CORE__SENSITIVE_VAR_CONN_NAMES`, as long as `AIRLFOW__CORE__HIDE_SENSITIVE_VAR_CONN_FIELDS` is set to `True`. You can find more information on masking including a list of the default values of this environment variable in the Airflow documentation on [Masking sensitive data](https://airflow.apache.org/docs/apache-airflow/stable/security/secrets/mask-sensitive-values.html).
 
 ## Define connections via environment variables
 
 Connections can also be defined using environment variables. Astro CLI users can use the `.env` file for local development, or specify environment variables in the Dockerfile.
 
-The connection can be provided in URI format (in this example defined from a Dockerfile).
+> **Note**: If you are synchronizing your project using a public remote repository, make sure not to save sensitive information in the Dockerfile. In this case using either a secrets backend, Airflow connections defined in the UI or `.env` locally is preferred as to not expose secrets in plain text.
+
+The environment variable used for the connection needs to be in the form of `AIRFLOW_CONN_YOURCONNID` and can be provided either in URI or, starting with Airflow 2.3, in JSON format.
+
+URI (Uniform Resource Identifier) is a format designed to contain all necessary connection information in one string, starting with the connection type followed by login, password and host. In many cases a specific port and schema, as well as additional parameters will be added.
 
 ```Dockerfile
-ENV AIRFLOW_CONN_MY_CONN_ID='my-conn-type://login:password@host:port/schema?param1=val1&param2=val2'
+
+# the general format of a URI connection
+ENV AIRFLOW_CONN_MYCONNID='my-conn-type://login:password@host:port/schema?param1=val1&param2=val2'
+
+# an example of a connection to snowflake defined as a URI
+ENV AIRFLOW_CONN_snowflake_conn='snowflake://LOGIN:PASSWORD@/?account=xy12345&region=eu-central-1'
+
 ```
 
 In Airflow 2.3+, connections can alternatively be provided as a JSON (in this example defined from `.env`).
 
 ```text
-AIRFLOW_CONN_MY_CONN_ID='{
+AIRFLOW_CONN_MYCONNID='{
     "conn_type": "my-conn-type",
     "login": "my-login",
     "password": "my-password",
@@ -85,11 +112,7 @@ AIRFLOW_CONN_MY_CONN_ID='{
 }'
 ```
 
-Note that connections that are defined using environment variables will not show up in the list of connections in the Airflow UI.
-
-> **Note**: There are more ways to add connections to Airflow, for example by modifying airflow.cfg or via the CLI. It is also possible to create custom connection fields. For more in-depth information on configuring connections see ['Managing Connections'](https://airflow.apache.org/docs/apache-airflow/stable/howto/connection.html) in the Airflow documentation.
-
-> **Note**: Astro CLI users can also define connections for local development by adding them to the `airflow_settings.yaml` file.
+Note that connections that are defined using environment variables will not show up in the list of connections in the Airflow UI and which parameters to specify can very for different connection types.
 
 ## Example: Configuring the SnowflakeToSlackOperator
 
@@ -106,11 +129,9 @@ In the Airflow UI, we can navigate to the list of connections and add a connecti
 
 - Connection Id: `snowflake_conn` (or another string that has not been used for a different connection already)
 - Connection Type: `Snowflake`
-- Schema: The schema of your database that you want to query.
+- Account: Your Snowflake account in the format xy12345.region
 - Login: Your Snowflake login name.
 - Password: Your Snowflake login password.
-- Account: Your Snowflake account in the format xy12345.region
-- Database: The database you want to query
 
 You can leave the other fields empty. Test the connection by clicking on the `Test` button.
 
@@ -129,12 +150,7 @@ To connect to Slack from Airflow, you only have to provide a few parameters:
 
 Test the connection by clicking on the `Test` button.
 
-The last step is writing the DAG using the `SnowflakeToSlackOperator`. This operator queries the provided Snowflake database using a SQL statement and can directly post parts of the query to Slack.
-
-In the example the `ORDERS` table from the `TPCH_SF1` schema in the `SNOWFLAKE_SAMPLE_DATA` database is queried for its total count of rows and the sum of the `O_TOTALPRICE` column. The name of the table and of the column are provided using the operator's params argument and [Jinja templating](https://www.astronomer.io/guides/templating/).
-
-The result of the query provided to the `sql` parameter is accessible as a Pandas dataframe called `results_df`. In the `slack_message` we index into the `results_df` by providing the column name. Note that the operator will save the column names in upper case even if they were provided as lower case in the SQL statement.
-
+The last step is writing the DAG using the `SnowflakeToSlackOperator` to run a SQL query on a Snowflake table and post the result as a message to a Slack channel. The `SnowflakeToSlackOperator` needs both, the connection id pointing towards the snowflake connection `snowflake_conn_id` and the connection id for the Slack connection `slack_conn_id`.
 
 ```Python
 from airflow import DAG
@@ -152,34 +168,26 @@ with DAG(
 
     transfer_task = SnowflakeToSlackOperator(
         task_id="transfer_task",
+
+        # the two connections are passed to the operator here:
         snowflake_conn_id="snowflake_conn",
         slack_conn_id="slack_conn",
 
-        # params can be access within the operator using Jinja templating
         params={
             "table_name": "ORDERS",
             "col_to_sum": "O_TOTALPRICE"
         },
-
-        # the SQL statement retrieves row_count of the table
-        # and the total sum of one column
         sql="""
             SELECT
               COUNT(*) AS row_count,
               SUM({{ params.col_to_sum }}) AS sum_price
             FROM {{ params.table_name }}
         """,
-
-        # the message to be printed to Slack can use Jinja templating as well
         slack_message="""The table {{ params.table_name }} has
             => {{ results_df.ROW_COUNT[0] }} entries
             => with a total price of {{results_df.SUM_PRICE[0]}}"""
     )
 ```
-
-Running the DAG results in the message being printed to Slack.
-
-![Slack Message](https://assets2.astronomer.io/main/guides/connections/SlackMessage.png)
 
 ## Programmatically creating and modifying connections
 
