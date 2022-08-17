@@ -31,14 +31,14 @@ A connection in Airflow is a set of configurations containing the information ne
 
 Airflow connections can be defined in multiple ways, using:
 
-- The Airflow UI
-- Environment variables
-- The [Airflow REST API](https://airflow.apache.org/docs/apache-airflow/stable/stable-rest-api-ref.html#tag/Connection)
-- A secrets backend
-- The `airflow.cfg` file
-- The Airflow CLI
+- **The Airflow UI**: The most straightforward way to add connections directly from the UI.
+- **Environment variables**: Add connections that are completely hidden from the UI.
+- **The [Airflow REST API](https://airflow.apache.org/docs/apache-airflow/stable/stable-rest-api-ref.html#tag/Connection)**: Add a connection using an API call.
+- **A secrets backend**: Integrate Airflow with a secrets backend solution that can store credentials and sensitive values to be used by Airflow.
+- The `airflow.cfg` file: Add connections by modifying a configuration file.
+- The Airflow CLI: Add connections by running a CLI command.
 
-In this guide we will cover adding connections using the Airflow UI and environment variables. For more in-depth information on configuring connections in other ways see ['Managing Connections'](https://airflow.apache.org/docs/apache-airflow/stable/howto/connection.html) and ['Secrets Backend'](https://airflow.apache.org/docs/apache-airflow/stable/security/secrets/secrets-backend/index.html) in the Airflow documentation.
+In this guide we will cover adding connections using the Airflow UI and environment variables. For more in-depth information on configuring connections in other ways see the REST API documentation, as well as ['Managing Connections'](https://airflow.apache.org/docs/apache-airflow/stable/howto/connection.html) and ['Secrets Backend'](https://airflow.apache.org/docs/apache-airflow/stable/security/secrets/secrets-backend/index.html) in the Airflow documentation.
 
 To discover which information to provide to which field you can search for the relevant provider in the [Astronomer Registry](https://registry.astronomer.io/) and click on the `Docs` button to find documentation on a specific provider. Most common providers will have documentation on each of their associated `Connection types`. For example, you can find information on how to set up different connections to Azure on the [Connection Types page of the Azure provider](https://airflow.apache.org/docs/apache-airflow-providers-microsoft-azure/stable/connections/index.html).
 
