@@ -33,11 +33,12 @@ Airflow connections can be defined in multiple ways, using:
 
 - The Airflow UI
 - Environment variables
+- The [Airflow REST API](https://airflow.apache.org/docs/apache-airflow/stable/stable-rest-api-ref.html#tag/Connection)
+- A secrets backend
 - The `airflow.cfg` file
 - The Airflow CLI
-- The `airflow_settings.yaml` file (Astro CLI users)
 
-In this guide we will cover adding connections using the Airflow UI and environment variables. For more in-depth information on configuring connections in other ways see ['Managing Connections'](https://airflow.apache.org/docs/apache-airflow/stable/howto/connection.html) in the Airflow documentation.
+In this guide we will cover adding connections using the Airflow UI and environment variables. For more in-depth information on configuring connections in other ways see ['Managing Connections'](https://airflow.apache.org/docs/apache-airflow/stable/howto/connection.html) and ['Secrets Backend'](https://airflow.apache.org/docs/apache-airflow/stable/security/secrets/secrets-backend/index.html) in the Airflow documentation.
 
 To discover which information to provide to which field you can search for the relevant provider in the [Astronomer Registry](https://registry.astronomer.io/) and click on the `Docs` button to find documentation on a specific provider. Most common providers will have documentation on each of their associated `Connection types`. For example, you can find information on how to set up different connections to Azure on the [Connection Types page of the Azure provider](https://airflow.apache.org/docs/apache-airflow-providers-microsoft-azure/stable/connections/index.html).
 
@@ -113,78 +114,6 @@ AIRFLOW_CONN_MYCONNID='{
 ```
 
 Note that connections that are defined using environment variables will not show up in the list of connections in the Airflow UI and which parameters to specify can very for different connection types.
-
-## Programmatically creating and modifying connections
-
-Connections can be created and modified programmatically for example when moving large amounts of connection information in context of the migration of several Airflow deployments.
-
-To access connection information from within your DAG you will need to provide the session information to a Python function by using the `provide_session` function from the `airflow.utils.db` module as a decorator.
-
-The function below shows how to write a new connection to the metadata database from information provided as a JSON.
-
-```Python
-from airflow import DAG
-from datetime import datetime
-from airflow.operators.python import PythonOperator
-from airflow.utils.db import provide_session
-from airflow.models import Connection
-import logging
-
-# get the airflow.task logger
-task_logger = logging.getLogger('airflow.task')
-
-@provide_session
-def load_connections(session=None):
-
-    # the connections you want to have in a the new Airflow deployment
-    sources = {"Connection information JSON"}
-
-    # iterating over sources from the secrets manager
-    for source in sources:
-
-        # get properties of the source connection, you may need to adjust this
-        # for different connection types
-        host = source.get("host", "")
-        port = source.get("port", "5439")
-        db = source.get("db", "")
-        user = source.get("user", "")
-        password = source.get("pw", "")
-​
-        try:
-            # create a Connection objection with the source parameters
-            connection = Connection(
-                             conn_id=source['name'],
-                             conn_type='postgres',
-                             host=host,
-                             port=port,
-                             login=user,
-                             password=password,
-                             schema=db
-                         )
-
-            # add and commit the new connection to the session
-            session.add(connection)
-            session.commit()
-
-        # in case creating the connection fails, log the error message
-        except Exception as e:
-            task_logger.info(
-                "Failed creating connection"
-            task_logger.info(e)
-
-# run the above task within a DAG
-with DAG(
-    dag_id="load_connections_dag",
-    start_date=datetime(2022, 8, 1),
-    schedule_interval=None,
-    catchup=False
-) as dag:
-
-    load_connections_task = PythonOperator(
-        task_id="load_connections_task",
-        python_callable=load_connections,
-    )
-```
 
 ## Example: Configuring the SnowflakeToSlackOperator
 
