@@ -73,7 +73,7 @@ In Airflow version 2.2+ some connection types offer the possibility to test the 
 
 ### Masking sensitive information
 
-Connections often contain sensitive credentials. By default Airflow will hide the connection password, both in the UI and in the Airflow logs. Values from the Connection's `Extra` field will also be hidden if their key contains any of the words listed in the environment variable `AIRFLOW__CORE__SENSITIVE_VAR_CONN_NAMES`, as long as `AIRLFOW__CORE__HIDE_SENSITIVE_VAR_CONN_FIELDS` is set to `True`. You can find more information on masking including a list of the default values of this environment variable in the Airflow documentation on [Masking sensitive data](https://airflow.apache.org/docs/apache-airflow/stable/security/secrets/mask-sensitive-values.html).
+Connections often contain sensitive credentials. By default Airflow will hide the connection password, both in the UI and in the Airflow logs. Values from the Connection's `Extra` field will also be hidden if their key contains any of the words listed in the environment variable `AIRFLOW__CORE__SENSITIVE_VAR_CONN_NAMES`, as long as `AIRFLOW__CORE__HIDE_SENSITIVE_VAR_CONN_FIELDS` is set to `True`. You can find more information on masking including a list of the default values of this environment variable in the Airflow documentation on [Masking sensitive data](https://airflow.apache.org/docs/apache-airflow/stable/security/secrets/mask-sensitive-values.html).
 
 ## Define connections via environment variables
 
