@@ -14,7 +14,6 @@ In this guide we will cover:
 - The basics of Airflow connections.
 - How to define connections using the Airflow UI.
 - How to define connections using environment variables.
-- How to programmatically create and modify connections.
 - An example showing a Snowflake connection and a Slack Webhook connection being used in a DAG.
 
 ## Assumed knowledge
