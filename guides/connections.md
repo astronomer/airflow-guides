@@ -116,61 +116,16 @@ Note that connections that are defined using environment variables will not show
 
 ## Programmatically creating and modifying connections
 
-Connections can be created and modified programmatically to sync with an external secrets manager.
+Connections can be created and modified programmatically for example when moving large amounts of connection information in context of the migration of several Airflow deployments.
 
 To access connection information from within your DAG you will need to provide the session information to a Python function by using the `provide_session` function from the `airflow.utils.db` module as a decorator.
 
-The DAG below shows the steps necessary to print out the host parameter of an existing connection.
-
-- Import the `provide_session` function and the `Connection` object.
-- Provide the name of the connection to examine. In this example the name is `my_database_connection`.
-- Create a function using the `provide_session` function as a decorator.
-- In that function query the `session` object for any `Connection` objects and filters for connections with the `conn_id` `my_database_connection` and use the `one_or_none()` method on the query to extract the search results. The last line of the function prints the `host` information from this result.
-- Provide the function to a PythonOperator in order to run it within a DAG.
+The function below shows how to write a new connection to the metadata database from information provided as a JSON.
 
 ```Python
 from airflow import DAG
 from datetime import datetime
 from airflow.operators.python import PythonOperator
-from airflow.utils.db import provide_session
-from airflow.models import Connection
-
-CONN_ID = "my_database_connection"
-
-@provide_session
-def print_conn_host(conn_id=None, session=None):
-    conn_query = session.query(Connection).filter(
-        Connection.conn_id == conn_id,)
-
-    conn_query_result = conn_query.one_or_none()
-
-    print(conn_query_result.host)
-
-with DAG(
-    dag_id="print_host_from_connection_id_dag",
-    start_date=datetime(2022, 8, 1),
-    schedule_interval=None,
-    catchup=False
-) as dag:
-
-    print_result = PythonOperator(
-        task_id="print_result",
-        python_callable=print_conn_host,
-        op_kwargs={"conn_id": CONN_ID}
-    )
-```
-
-Knowing that connection information is programmatically accessible it is possible to build functions which are able to modify connection information. A possible use case is to synchronize information with an external secrets manager.
-
-The function below show a possible implementation of such a synchronization.
-
-- `sources` are connections with their information stored in a secrets manager.
-- Looping through each `source` the `port` property will be checked to be numeric.
-- The current session is queried to check if a connection with the same `conn_id` as the connection from the `source` already exists.
-- If no connection of the same id exists a new connection is created.
-- If a connection of the same id exists it will be overwritten with the new information from the `source`.
-
-```Python
 from airflow.utils.db import provide_session
 from airflow.models import Connection
 import logging
@@ -179,20 +134,13 @@ import logging
 task_logger = logging.getLogger('airflow.task')
 
 @provide_session
-def create_connections(session=None):
+def load_connections(session=None):
 
-    # query the API of your secrets manager here
-    sources = {"Connection information from the secrets manager"}
+    # the connections you want to have in a the new Airflow deployment
+    sources = {"Connection information JSON"}
 
     # iterating over sources from the secrets manager
     for source in sources:
-
-        # check that the port property of the sources are numeric
-        try:
-            int(source['port'])
-        except:
-            task_logger.info("Port is not numeric for source")
-            continue
 
         # get properties of the source connection, you may need to adjust this
         # for different connection types
@@ -202,49 +150,40 @@ def create_connections(session=None):
         user = source.get("user", "")
         password = source.get("pw", "")
 ​
-        # the code below attempts to either modify an existing connection or
-        # create a new one
         try:
-            # query connection information from the current session
-            # to see if a connection with the conn_id source['name'] already
-            # exists
-            connection_query = session.query(Connection).filter(
-                Connection.conn_id == source['name'],)
-            connection_query_result = connection_query.one_or_none()
+            # create a Connection objection with the source parameters
+            connection = Connection(
+                             conn_id=source['name'],
+                             conn_type='postgres',
+                             host=host,
+                             port=port,
+                             login=user,
+                             password=password,
+                             schema=db
+                         )
 
-            # if the result of the query is None, this conn_id has not been
-            # used before and the new connection can be created from the
-            # information pulled from the source in the secrets manager
-            if not connection_query_result:                    
-                connection = Connection(
-                                 conn_id=source['name'],
-                                 conn_type='postgres',
-                                 host=host,
-                                 port=port,
-                                 login=user,
-                                 password=password,
-                                 schema=db
-                             )
-                # add and commit the new connection to the session
-                session.add(connection)
-                session.commit()
-
-            # if the conn_id already exists the connection is modified
-            # with the information from the source in the secrets manager
-            else:
-                connection_query_result.host = host
-                connection_query_result.login = user
-                connection_query_result.schema = db
-                connection_query_result.port = port
-                connection_query_result.set_password(password)
-                session.add(connection_query_result)
-                session.commit()
+            # add and commit the new connection to the session
+            session.add(connection)
+            session.commit()
 
         # in case creating the connection fails, log the error message
         except Exception as e:
             task_logger.info(
                 "Failed creating connection"
             task_logger.info(e)
+
+# run the above task within a DAG
+with DAG(
+    dag_id="load_connections_dag",
+    start_date=datetime(2022, 8, 1),
+    schedule_interval=None,
+    catchup=False
+) as dag:
+
+    load_connections_task = PythonOperator(
+        task_id="load_connections_task",
+        python_callable=load_connections,
+    )
 ```
 
 ## Example: Configuring the SnowflakeToSlackOperator
