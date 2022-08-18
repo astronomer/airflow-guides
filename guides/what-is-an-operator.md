@@ -38,13 +38,13 @@ Operators are easy to use and typically only a few parameters are required. Ther
 - If an operator exists for your specific use case, you should always use it over your own Python functions or [hooks](https://www.astronomer.io/guides/what-is-a-hook). This makes your DAGs easier to read and maintain.
 - If an operator doesn't exist for your use case, you can extend operator to meet your needs. For more on how to customize operators, check out our previous [Anatomy of an Operator webinar](https://www.astronomer.io/events/webinars/anatomy-of-an-operator).
 - [Sensors](https://www.astronomer.io/guides/what-is-a-sensor) are a type of operator that wait for something to happen. They can be used to make your DAGs more event-driven.
-- [Deferrable Operators](https://www.astronomer.io/guides/deferrable-operators) are a type of operator that release their worker slot while waiting for their work to be completed. This can result in cost savings and greater scalability. Astronomer recommends using deferrable operators whenever one exists for your use case and your task takes longer than about a minute. Note that you must be using Airflow 2.2+ and have a triggerer running to use deferrable operators. 
+- [Deferrable Operators](https://www.astronomer.io/guides/deferrable-operators) are a type of operator that release their worker slot while waiting for their work to be completed. This can result in cost savings and greater scalability. Astronomer recommends using deferrable operators whenever one exists for your use case and your task takes longer than about a minute. Note that you must be using Airflow 2.2+ and have a triggerer running to use deferrable operators.
 - Any operator that interacts with a service external to Airflow will typically require a connection so that Airflow can authenticate to that external system. More information on how to set up connections can be found in our guide on [managing connections](https://www.astronomer.io/guides/connections/) or in the examples to follow.
 
 
 ## Example Implementation
 
-This example shows how to use several common operators in a DAG used to transfer data from S3 to Redshift and perform data quality checks. 
+This example shows how to use several common operators in a DAG used to transfer data from S3 to Redshift and perform data quality checks.
 
 > **Note:** The full code and repository for this example can be found on the [Astronomer Registry](https://registry.astronomer.io/dags/simple-redshift-3).
 
@@ -52,7 +52,7 @@ The following operators are used:
 
 - [EmptyOperator](https://registry.astronomer.io/providers/apache-airflow/modules/dummyoperator): This operator is part of core Airflow and does nothing. It is used to organize the flow of tasks in the DAG.
 - [PythonDecoratedOperator](https://registry.astronomer.io/providers/apache-airflow/modules/pythonoperator): This operator is part of core Airflow and executes a Python function. It is functionally the same as the PythonOperator, but it instantiated using the `@task` [decorator](https://www.astronomer.io/guides/airflow-decorators/).
-- [LocalFilesystemToS3Operator](https://registry.astronomer.io/providers/amazon/modules/localfilesystemtos3operator): This operator is part of the [AWS provider](https://registry.astronomer.io/providers/amazon) and is used to upload a file from a local filesystem to S3. 
+- [LocalFilesystemToS3Operator](https://registry.astronomer.io/providers/amazon/modules/localfilesystemtos3operator): This operator is part of the [AWS provider](https://registry.astronomer.io/providers/amazon) and is used to upload a file from a local filesystem to S3.
 - [S3ToRedshiftOperator](https://registry.astronomer.io/providers/amazon/modules/s3toredshiftoperator): This operator is part of the [AWS provider](https://registry.astronomer.io/providers/amazon) and is used to transfer data from S3 to Redshift.
 - [PostgresOperator](https://registry.astronomer.io/providers/postgres/modules/postgresoperator): This operator is part of the [Postgres provider](https://registry.astronomer.io/providers/postgres) and is used to execute a query against a Postgres database.
 - [SQLCheckOperator](https://registry.astronomer.io/providers/apache-airflow/modules/sqlcheckoperator): This operator is part of core Airflow and is used to perform checks against a database using a SQL query.
@@ -67,7 +67,7 @@ from airflow import DAG, AirflowException
 from airflow.decorators import task
 from airflow.models import Variable
 from airflow.models.baseoperator import chain
-from airflow.operators.empty_operator import EmptyOperator
+from airflow.operators.empty import EmptyOperator
 from airflow.utils.dates import datetime
 from airflow.providers.amazon.aws.hooks.s3 import S3Hook
 from airflow.providers.amazon.aws.transfers.local_to_s3 import (
@@ -81,7 +81,7 @@ from airflow.operators.sql import SQLCheckOperator
 from airflow.utils.task_group import TaskGroup
 
 
-# The file(s) to upload shouldn't be hardcoded in a production setting, 
+# The file(s) to upload shouldn't be hardcoded in a production setting,
 # this is just for demo purposes.
 CSV_FILE_NAME = "forestfires.csv"
 CSV_FILE_PATH = f"include/sample_data/forestfire_data/{CSV_FILE_NAME}"
@@ -89,7 +89,7 @@ CSV_FILE_PATH = f"include/sample_data/forestfire_data/{CSV_FILE_NAME}"
 with DAG(
     "simple_redshift_3",
     start_date=datetime(2021, 7, 7),
-    description="""A sample Airflow DAG to load data from csv files to S3 
+    description="""A sample Airflow DAG to load data from csv files to S3
                  and then Redshift, with data integrity and quality checks.""",
     schedule_interval=None,
     template_searchpath="/usr/local/airflow/include/sql/redshift_examples/",
@@ -97,7 +97,7 @@ with DAG(
 ) as dag:
 
     """
-    Before running the DAG, set the following in an Airflow 
+    Before running the DAG, set the following in an Airflow
     or Environment Variable:
     - key: aws_configs
     - value: { "s3_bucket": [bucket_name], "s3_key_prefix": [key_prefix],
@@ -118,7 +118,7 @@ with DAG(
     def validate_etag():
         """
         #### Validation task
-        Check the destination ETag against the local MD5 hash to ensure 
+        Check the destination ETag against the local MD5 hash to ensure
         the file was uploaded without errors.
         """
         s3 = S3Hook()
@@ -133,7 +133,7 @@ with DAG(
             open(CSV_FILE_PATH).read().encode("utf-8")).hexdigest()
         if obj_etag != file_hash:
             raise AirflowException(
-                f"""Upload Error: Object ETag in S3 did not match 
+                f"""Upload Error: Object ETag in S3 did not match
                 hash of local file."""
             )
 
