@@ -39,7 +39,7 @@ This `expand` function creates three mapped `add` tasks, one for each entry in t
 There are a couple of things to keep in mind when working with mapped tasks:
 
 - You *can* use the results of an upstream task as the input to a mapped task (in fact, this is one of the most powerful possibilities of this feature). The upstream task must return a value in a `dict` or `list` form. If you're using traditional operators (ie. not [decorated tasks](https://airflow.apache.org/docs/apache-airflow/2.0.0/concepts.html#python-task-decorator)), the mapping values must be stored in XCom.
-- You *can* map over multiple parameters. This will result in a cross product with one task for each combination of parameters.
+- You *can* map over multiple parameters. See the 'Mapping over multiple parameters' section below.
 - You *can* use the results of a mapped task as input to a downstream mapped task.
 - You *can* have a mapped task that results in no task instances (e.g. if your upstream task that generates the mapping values returns an empty list). In this case, the mapped task will be marked skipped, and downstream tasks will be run according to the trigger rules you set (by default, downstream tasks will also be skipped).
 - Some parameters *are not* mappable. For example, `task_id`, `pool`, and many `BaseOperator` arguments are not mappable.
@@ -64,7 +64,7 @@ Similarly, the Grid View shows task details and history for each mapped task. Al
 
 ![Mapped Grid](https://assets2.astronomer.io/main/guides/dynamic-tasks/mapped_grid_view.png)
 
-## Mapping multiple parameters
+## Mapping over multiple parameters
 
 There are three different ways to map over multiple parameters:
 
@@ -74,9 +74,9 @@ There are three different ways to map over multiple parameters:
 
 ## Cross-Product
 
-The default behavior of the `expand()` function is to create a mapped task instance for every possible combination of all provided inputs. For example, if you were to map over 3 keyword arguments and provide 2 options to the first, 4 options to the second and 5 options to the third, you would end up with 2x4x5=40 mapped task instances. One use case of this behavior is in tuning of hyperparameters for ML models.
+The default behavior of the `expand()` function is to create a mapped task instance for every possible combination of all provided inputs. For example, if you were to map over 3 keyword arguments and provide 2 options to the first, 4 options to the second and 5 options to the third, you would create 2x4x5=40 mapped task instances. One use case of this behavior is in tuning model hyperparameters.
 
-The task definition below maps over 3 options for `bash_command` and 3 options for `env` variables. This will result in 3x3=9 mapped tasks. Each bash command is run with each definition for the environment variable `WORD`.
+The task definition below maps over 3 options for `bash_command` and 3 options for `env` variables. This will result in 3x3=9 mapped task instances. Each bash command runs with each definition for the environment variable `WORD`.
 
 ```Python
 # mapping over two parameters - cross product
@@ -90,34 +90,34 @@ t1 = BashOperator.partial(
     ],
     env=[
         {"WORD": "hello"},
-        {"WORD": "bird"},
+        {"WORD": "tea"},
         {"WORD": "goodbye"}
     ]
 )
 ```
 
-This results in the following log outputs of the nine mapped tasks:
+The nine mapped task instance run all possible combinations of the bash command with the env variable:
 
 - Map index 0: `hello`
-- Map index 1: `bird`
+- Map index 1: `tea`
 - Map index 2: `goodbye`
 - Map index 3: `5`
 - Map index 4: `4`
 - Map index 5: `7`
 - Map index 6: `hXllo`
-- Map index 7: `bird`
+- Map index 7: `tXa`
 - Map index 8: `goodbyX`
 
 ### Sets of kwargs
 
-To expand over sets of inputs of two or more parameters you can use the `.expand_kwargs` function. The two tasks below show how you can provided sets of parameters as a list containing a dictionary or as an XComArg. Each operator has 3 sets of commands resulting in 3 mapped task instances.
+To expand over sets of inputs of two or more parameters you can use the `expand_kwargs()` function. The two tasks below show how you can provided sets of parameters as a list containing a dictionary or as an XComArg. Each operator has 3 sets of commands resulting in 3 mapped task instances.
 
 ```Python
 # input sets of kwargs directly as a list[dict] PENDING IMPLEMENTATION!
 t1 = BashOperator.partial(task_id="t1").expand_kwargs(
     [
         {"bash_command": "echo $WORD", "env" : {"WORD": "hello"}},
-        {"bash_command": "echo `expr length $WORD`", "env" : {"WORD": "bird"}},
+        {"bash_command": "echo `expr length $WORD`", "env" : {"WORD": "tea"}},
         {"bash_command": "echo ${WORD//e/X}", "env" : {"WORD": "goodbye"}}
     ],
 )
@@ -127,7 +127,7 @@ t1 = BashOperator.partial(task_id="t1").expand_kwargs(
 def turn_into_XComArg():
     return [
         {"bash_command": "echo $WORD", "env" : {"WORD": "hello"}},
-        {"bash_command": "echo `expr length $WORD`", "env" : {"WORD": "bird"}},
+        {"bash_command": "echo `expr length $WORD`", "env" : {"WORD": "tea"}},
         {"bash_command": "echo ${WORD//e/X}", "env" : {"WORD": "goodbye"}}
     ]
 
@@ -139,7 +139,7 @@ t2 = BashOperator.partial(task_id="t2").expand_kwargs(kwargs)
 Both `t1` and `t2` will each have 3 mapped task instances printing their results into the logs:
 
 - Map index 0: `hello`
-- Map index 1: `4`
+- Map index 1: `3`
 - Map index 2: `goodbyX`
 
 ### Zip
@@ -151,7 +151,7 @@ The code snippet below shows how a list of zipped arguments can be provided to t
 ```Python
 # use the zip function to create three-tuples out of three lists
 zipped_arguments = list(zip([1,2,3], [10,20,30], [100,200,300]))
-# zipped arguments contains: [(1,10,100), (2,20,200), (3,30,300)]
+# zipped_arguments contains: [(1,10,100), (2,20,200), (3,30,300)]
 
 # creating the mapped task instances using the TaskFlowAPI
 @task
