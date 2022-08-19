@@ -30,12 +30,12 @@ A connection in Airflow is a set of configurations containing the information ne
 
 Airflow connections can be created by using one of the following methods:
 
-- The Airflow UI
-- Environment variables
+- The [Airflow UI](https://www.astronomer.io/guides/airflow-ui/)
+- [Environment variables](https://airflow.apache.org/docs/apache-airflow/stable/cli-and-env-variables-ref.html#environment-variables)
 - The [Airflow REST API](https://airflow.apache.org/docs/apache-airflow/stable/stable-rest-api-ref.html#tag/Connection)
-- A secrets backend (a system for managing secrets external to Airflow)
-- The `airflow.cfg` file
-- The Airflow CLI
+- A [secrets backend](https://airflow.apache.org/docs/apache-airflow/stable/security/secrets/secrets-backend/index.html) (a system for managing secrets external to Airflow)
+- The [`airflow.cfg` file](https://airflow.apache.org/docs/apache-airflow/stable/configurations-ref.html)
+- The [Airflow CLI](https://airflow.apache.org/docs/apache-airflow/stable/usage-cli.html)
 
 In this guide we will show how to add connections using the Airflow UI and environment variables methods. For more in-depth information on configuring connections using the other methods, see the REST API documentation, as well as ['Managing Connections'](https://airflow.apache.org/docs/apache-airflow/stable/howto/connection.html) and ['Secrets Backend'](https://airflow.apache.org/docs/apache-airflow/stable/security/secrets/secrets-backend/index.html) in the Airflow documentation.
 
@@ -45,14 +45,11 @@ Under the hood, Airflow [hooks](https://www.astronomer.io/guides/what-is-a-hook/
 
 There are a couple of ways you can find what information needs to be provided for a particular connection type:
 
-- Search for the relevant provider in the [Astronomer Registry](https://registry.astronomer.io/), and click on the `Docs` button to find documentation for provider. Most commonly used providers will have documentation on each of their associated `Connection types`. For example, you can find information on how to set up different connections to Azure on the [Connection Types page of the Azure provider](https://airflow.apache.org/docs/apache-airflow-providers-microsoft-azure/stable/connections/index.html).
+- Search for the relevant provider in the [Astronomer Registry](https://registry.astronomer.io/), and click on the `Docs` button to find documentation for the provider. Most commonly used providers will have documentation on each of their associated `Connection types`. For example, you can find information on how to set up different connections to Azure on the [Connection Types page of the Azure provider](https://airflow.apache.org/docs/apache-airflow-providers-microsoft-azure/stable/connections/index.html).
 - Check the documentation of the external tool you are connecting to and see if it offers guidance on how to authenticate.
 - Refer to the source code of the hook that is being used by your operator.
 
-
-
 For example, the `S3Hook`, which is part of the [Amazon provider](https://registry.astronomer.io/providers/amazon), requires a connection of the type `Amazon S3`.
-
 
 ## Define connections in the UI
 
@@ -68,17 +65,13 @@ The fields on the lefthand side may change depending on which 'Connection Type' 
 
 > **Note**: Specific connection types will only be available in the dropdown menu if the relevant provider is installed in your Airflow environment.  
 
-For most connections it is not necessary to specify all fields. The example below shows a connection made to an Amazon S3 bucket using the AWS access key ID as `login` and the AWS secret access key as `password` (See the [AWS documentation](https://docs.aws.amazon.com/powershell/latest/userguide/pstools-appendix-sign-up.html) for how to retrieve your AWS access key ID and AWS secret access key).
+For most connections it is not necessary to specify all fields. The example below shows a connection made to an Amazon S3 bucket. Referencing the [Airflow AWS provider documentation](https://airflow.apache.org/docs/apache-airflow-providers-amazon/stable/connections/aws.html) you can learn that the mandatory information needed to create this connection are the AWS access key ID as `login` and the AWS secret access key as `password` (See the [AWS documentation](https://docs.aws.amazon.com/powershell/latest/userguide/pstools-appendix-sign-up.html) for how to retrieve your AWS access key ID and AWS secret access key).
 
 ![Example AWS S3 connection](https://assets2.astronomer.io/main/guides/connections/AWSS3connection.png)
 
 Any required parameters that do not have specific fields in the connection form can be provided to the `Extra` field as a JSON dictionary. For example, you can add the [ARN of a role](https://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles.html) to assume when logging into AWS by entering `{"role_arn":"arn:aws:iam::123456789012:role/my_role_name"}` in the `Extra` field. To learn more about additional parameters for a specific connection type, refer to the documentation of the relevant provider package.
 
 In Airflow version 2.2+, you can test some connection types from the Airflow UI with the `Test` button. After running a connection test, a message will appear on the top of the screen either confirming a successful connection or providing an error message.
-
-### Masking sensitive information
-
-Connections often contain sensitive credentials. By default, Airflow will hide the connection password, both in the UI and in the Airflow logs. Values from the connection's `Extra` field will also be hidden if their key contains any of the words listed in the environment variable `AIRFLOW__CORE__SENSITIVE_VAR_CONN_NAMES`, as long as `AIRFLOW__CORE__HIDE_SENSITIVE_VAR_CONN_FIELDS` is set to `True`. You can find more information on masking, including a list of the default values in this environment variable, in the Airflow documentation on [Masking sensitive data](https://airflow.apache.org/docs/apache-airflow/stable/security/secrets/mask-sensitive-values.html).
 
 ## Define connections via environment variables
 
@@ -88,7 +81,7 @@ Connections can also be defined using environment variables. Astro CLI users can
 
 The environment variable used for the connection needs to be in the form of `AIRFLOW_CONN_YOURCONNID` and can be provided either in URI or, starting with Airflow 2.3, in JSON format.
 
-URI (Uniform Resource Identifier) is a format designed to contain all necessary connection information in one string, starting with the connection type, followed by login, password and host. In many cases a specific port, schema, and additional parameters will be added.
+[URI (Uniform Resource Identifier)](https://en.wikipedia.org/wiki/Uniform_Resource_Identifier) is a format designed to contain all necessary connection information in one string, starting with the connection type, followed by login, password and host. In many cases a specific port, schema, and additional parameters will be added.
 
 ```Dockerfile
 
@@ -118,6 +111,10 @@ AIRFLOW_CONN_MYCONNID='{
 ```
 
 Note that connections that are defined using environment variables will not show up in the list of connections in the Airflow UI.
+
+## Masking sensitive information
+
+Connections often contain sensitive credentials. By default, Airflow will hide the connection password, both in the UI and in the Airflow logs. Values from the connection's `Extra` field will also be hidden if their key contains any of the words listed in the environment variable `AIRFLOW__CORE__SENSITIVE_VAR_CONN_NAMES`, as long as `AIRFLOW__CORE__HIDE_SENSITIVE_VAR_CONN_FIELDS` is set to `True`. You can find more information on masking, including a list of the default values in this environment variable, in the Airflow documentation on [Masking sensitive data](https://airflow.apache.org/docs/apache-airflow/stable/security/secrets/mask-sensitive-values.html).
 
 ## Example: Configuring the SnowflakeToSlackOperator
 
