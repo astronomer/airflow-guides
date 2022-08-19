@@ -101,7 +101,7 @@ The nine mapped task instance of the task `cross_product_example` run all possib
 - Map index 1: `tea`
 - Map index 2: `goodbye`
 - Map index 3: `5`
-- Map index 4: `4`
+- Map index 4: `3`
 - Map index 5: `7`
 - Map index 6: `hXllo`
 - Map index 7: `tXa`
