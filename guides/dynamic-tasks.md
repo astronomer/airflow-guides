@@ -69,7 +69,7 @@ Similarly, the Grid View shows task details and history for each mapped task. Al
 There are three different ways to map over multiple parameters:
 
 - **Cross-Product**: Map over 2 or more parameters and get a mapped task instance for each possible combination of inputs.
-- **Sets of kwargs**: Map over 2 or more sets of one or more keyword arguments. Get a mapped task instance for every set.
+- **Sets of keyword arguments**: Map over 2 or more sets of one or more keyword arguments. Get a mapped task instance for every set.
 - **Zip**: Use Python's built-in `zip()` function to create sets of arguments for one parameter that is to be mapped over. Get one mapped task for every set of arguments.
 
 ## Cross-Product
@@ -79,9 +79,8 @@ The default behavior of the `expand()` function is to create a mapped task insta
 The task definition below maps over 3 options for `bash_command` and 3 options for `env` variables. This will result in 3x3=9 mapped task instances. Each bash command runs with each definition for the environment variable `WORD`.
 
 ```Python
-# mapping over two parameters - cross product
-t1 = BashOperator.partial(
-    task_id="t1"
+cross_product_example = BashOperator.partial(
+    task_id="cross_product_example"
 ).expand(
     bash_command=[
         "echo $WORD", # prints the env variable WORD
@@ -96,7 +95,7 @@ t1 = BashOperator.partial(
 )
 ```
 
-The nine mapped task instance run all possible combinations of the bash command with the env variable:
+The nine mapped task instance of the task `cross_product_example` run all possible combinations of the bash command with the env variable:
 
 - Map index 0: `hello`
 - Map index 1: `tea`
@@ -108,9 +107,9 @@ The nine mapped task instance run all possible combinations of the bash command 
 - Map index 7: `tXa`
 - Map index 8: `goodbyX`
 
-### Sets of kwargs
+### Sets of keyword arguments
 
-To expand over sets of inputs of two or more parameters you can use the `expand_kwargs()` function. The two tasks below show how you can provided sets of parameters as a list containing a dictionary or as an XComArg. Each operator has 3 sets of commands resulting in 3 mapped task instances.
+To expand over sets of inputs to two or more keyword arguments (kwargs) you can use the `expand_kwargs()` function. The two tasks below show how you can provided sets of parameters as a list containing a dictionary or as an XComArg. Each operator has 3 sets of commands resulting in 3 mapped task instances.
 
 ```Python
 # input sets of kwargs directly as a list[dict] PENDING IMPLEMENTATION!
@@ -144,7 +143,7 @@ Both `t1` and `t2` will each have 3 mapped task instances printing their results
 
 ### Zip
 
-To provide sets of configurations to the same parameter, for example as arguments to a Python function. You can leverage the built-in Python function [`zip()`](https://docs.python.org/3/library/functions.html#zip).
+To provide sets of configurations to the same parameter, for example as arguments to a Python function, you can leverage the built-in Python function [`zip()`](https://docs.python.org/3/library/functions.html#zip).
 
 The code snippet below shows how a list of zipped arguments can be provided to the `expand()` function in order to create mapped tasks over pairs of inputs to the same argument created by the `zip()` function. It is of course possible to generate the lists of inputs with an upstream function.
 
@@ -160,7 +159,6 @@ def TaskFlow_add_numbers(zipped_x_y_z):
     return zipped_x_y_z[0] + zipped_x_y_z[1] + zipped_x_y_z
 
 TaskFlow_add_numbers.expand(zipped_x_y_z=zipped_arguments)
-
 
 # creating the mapped task instances using the PythonOperator
 def add_numbers(x,y,z):
