@@ -161,9 +161,9 @@ one_two_three_task_2 >> plus_10_task_2
 
 There are three different ways to map over multiple parameters:
 
-- **Cross-Product**: Mapping over 2 or more _keyword_ arguments results in a mapped task instance for each possible combination of inputs. This type of mapping uses the `expand()` function.
-- **Sets of keyword arguments**: Mapping over 2 or more sets of one or more _keyword_ arguments results in a mapped task instance for every set. This type of mapping uses the `expand_kwargs()` function.
-- **Zip**: Mapping over a set of _positional_ arguments created with Python's built-in `zip()` function or with the `.zip()` method of an XComArg. Results in one mapped task for every set of positional arguments. Each set of positional arguments is passed to the same _keyword_ argument of the operator. This type of mapping uses the `expand()` function.
+- **Cross-Product**: Mapping over 2 or more *keyword* arguments results in a mapped task instance for each possible combination of inputs. This type of mapping uses the `expand()` function.
+- **Sets of keyword arguments**: Mapping over 2 or more sets of one or more *keyword* arguments results in a mapped task instance for every set. This type of mapping uses the `expand_kwargs()` function.
+- **Zip**: Mapping over a set of *positional* arguments created with Python's built-in `zip()` function or with the `.zip()` method of an XComArg. Results in one mapped task for every set of positional arguments. Each set of positional arguments is passed to the same *keyword* argument of the operator. This type of mapping uses the `expand()` function.
 
 ### Cross-Product
 
