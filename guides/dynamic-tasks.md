@@ -28,21 +28,22 @@ For example, the following task uses both of these functions to dynamically gene
 
 ```python
 @task
-    def add(x: int, y: int):
-        return x + y
+def add(x: int, y: int):
+    return x + y
 
-    added_values = add.partial(y=10).expand(x=[1, 2, 3])
+added_values = add.partial(y=10).expand(x=[1, 2, 3])
 ```
 
 This `expand` function creates three mapped `add` tasks, one for each entry in the `x` input list. The `partial` function specifies a value for `y` that remains constant in each task.
 
 There are a couple of things to keep in mind when working with mapped tasks:
 
-- You *can* use the results of an upstream task as the input to a mapped task (in fact, this is one of the most powerful possibilities of this feature). The upstream task must return a value in a `dict` or `list` form. If you're using traditional operators (ie. not [decorated tasks](https://airflow.apache.org/docs/apache-airflow/2.0.0/concepts.html#python-task-decorator)), the mapping values must be stored in XCom.
+- You *can* use the results of an upstream task as the input to a mapped task (in fact, this is one of the most powerful possibilities of this feature). The upstream task must return a value in a `dict` or `list` form. If you're using traditional operators (ie. not [decorated tasks](https://airflow.apache.org/docs/apache-airflow/2.0.0/concepts.html#python-task-decorator)), the mapping values must be stored in XComs.
 - You *can* map over multiple parameters. See the 'Mapping over multiple parameters' section below.
 - You *can* use the results of a mapped task as input to a downstream mapped task.
 - You *can* have a mapped task that results in no task instances (e.g. if your upstream task that generates the mapping values returns an empty list). In this case, the mapped task will be marked skipped, and downstream tasks will be run according to the trigger rules you set (by default, downstream tasks will also be skipped).
 - Some parameters *are not* mappable. For example, `task_id`, `pool`, and many `BaseOperator` arguments are not mappable.
+- `expand()` only accepts keyword arguments.
 
 For more high level examples of how to apply dynamic task mapping functions in different cases, check out the [Apache Airflow documentation](https://airflow.apache.org/docs/apache-airflow/2.3.0/concepts/dynamic-task-mapping.html).
 
@@ -64,13 +65,105 @@ Similarly, the Grid View shows task details and history for each mapped task. Al
 
 ![Mapped Grid](https://assets2.astronomer.io/main/guides/dynamic-tasks/mapped_grid_view.png)
 
+## Mapping over the result of another operator
+
+It is possible to use the input of an upstream operator as the input over which a downstream task is being mapped over. A possible use case is shown below in the ETL example.
+
+In this section we are going to show how to pass mapping information to a downstream task if:
+
+- Both tasks are defined using the TaskFlowAPI.
+- The upstream task is defined using the TaskFlowAPI and the downstream task is using a classical operator.
+- The upstream task is using a classical operator and the downstream task is defined using the TaskFlowAPI.
+- Both tasks are defined using classical operators.
+
+If both tasks are defined using the TaskFlowAPI the call of the upstream task can be provided to the keyword parameter that is being expanded over.
+
+```Python
+@task
+def one_two_three_TF():
+    return [1,2,3]
+
+@task
+def plus_10_TF(x):
+    return x+10
+
+plus_10_TF.partial().expand(x=one_two_three_TF())
+```
+
+Passing data from an upstream task being defined using the TaskFlowAPI to a classical downstream operator works in a very similar fashion. Note that the format in which the mapping information is returned by the upstream task had to be adjusted to the `op_args` argument of the classical `PythonOperator` expecting each argument in the form of a list.
+
+```Python
+@task
+def one_two_three_TF():
+    # this adjustment is due to op_args expecting each argument as a list
+    return [[1],[2],[3]]  
+
+def plus_10_classic(x):
+    return x+10
+
+plus_10_task = PythonOperator.partial(
+    task_id="plus_10_task",
+    python_callable=plus_10_classic
+).expand(
+    op_args=one_two_three_TF()
+)
+```
+
+If the upstream task providing the information to be mapped over is a classical operator, we need to extract the return value using the `XComArg` object, which can be imported using `from airflow import XComArg`.
+
+```Python
+from airflow import XComArg
+
+def one_two_three_classical():
+    return [1,2,3]
+
+@task
+def plus_10_TF(x):
+    return x+10
+
+one_two_three_task = PythonOperator(
+    task_id="one_two_three_task",
+    python_callable=one_two_three_classical
+)
+
+plus_10_TF.partial().expand(x=XComArg(one_two_three_task))
+```
+
+The `XComArg` object can also be used to map a one classical operator over the results of another classical operator.
+
+```Python
+from airflow import XComArg
+
+def one_two_three_classical():
+    # this adjustment is due to op_args expecting each argument as a list
+    return [[1],[2],[3]]
+
+def plus_10_classic(x):
+    return x+10
+
+one_two_three_task_2 = PythonOperator(
+    task_id="one_two_three_task_2",
+    python_callable=one_two_three_classical
+)
+
+plus_10_task_2 = PythonOperator.partial(
+    task_id="plus_10_task_2",
+    python_callable=plus_10_classic
+).expand(
+    op_args=XComArg(one_two_three_task_2)
+)
+
+# when only using classical operators, define dependencies explicitly
+one_two_three_task_2 >> plus_10_task_2
+```
+
 ## Mapping over multiple parameters
 
 There are three different ways to map over multiple parameters:
 
-- **Cross-Product**: Mapping over 2 or more parameters results in a mapped task instance for each possible combination of inputs.
-- **Sets of keyword arguments**: Mapping over 2 or more sets of one or more keyword arguments results in a mapped task instance for every set.
-- **Zip**: Mapping over a set of arguments created with Python's built-in `zip()` results in one mapped task for every set of arguments.
+- **Cross-Product**: Mapping over 2 or more _keyword_ arguments results in a mapped task instance for each possible combination of inputs. This type of mapping uses the `expand()` function.
+- **Sets of keyword arguments**: Mapping over 2 or more sets of one or more _keyword_ arguments results in a mapped task instance for every set. This type of mapping uses the `expand_kwargs()` function.
+- **Zip**: Mapping over a set of _positional_ arguments created with Python's built-in `zip()` function or with the `.zip()` method of an XComArg. Results in one mapped task for every set of positional arguments. Each set of positional arguments is passed to the same _keyword_ argument of the operator. This type of mapping uses the `expand()` function.
 
 ### Cross-Product
 
@@ -143,9 +236,17 @@ Both `t1` and `t2` will each have 3 mapped task instances printing their results
 
 ### Zip
 
-To provide sets of configurations to the same parameter, for example as arguments to a Python function, you can leverage the built-in Python function [`zip()`](https://docs.python.org/3/library/functions.html#zip).
+To provide sets of positional arguments to the same keyword argument, for example to the `op_args` keyword argument of the `PythonOperator`, you can leverage the built-in Python function [`zip()`](https://docs.python.org/3/library/functions.html#zip).
 
-The code snippet below shows how a list of zipped arguments can be provided to the `expand()` function in order to create mapped tasks over pairs of inputs to the same argument created by the `zip()` function. It is of course possible to generate the lists of inputs with an upstream function.
+The `zip()` function takes in an arbitrary number of iterables (for example lists) and uses their elements to create a zip-object containing tuples. There will be as many tuples as there are elements in the shortest iterable. Each tuple contains one element from every iterable provided. For example:
+
+- `zip(["a", "b", "c"], [1, 2, 3], ["hi", "bye", "tea"])` will result in a zip object containing: `("a", 1, "hi"), ("b", 2, "bye"), ("c", 3, "tea")`
+- `zip(["a", "b"], [1], ["hi", "bye"], [19, 23], ["x", "y", "z"])` will result in a zip object containing only one tuple: `("a", 1, "hi", 19, "x")` because the shortest list provided only contains one element.
+- It is also possible to zip together different types of iterables: `zip(["a", "b"], {"hi", "bye"}, (19, 23))` will result in a zip object containing: `('a', 'hi', 19), ('b', 'bye', 23)`.
+
+> **Note**: To get as many tuples as there are elements in the _longest_ list provided you can use the [`zip_longest()`](https://docs.python.org/3/library/itertools.html#itertools.zip_longest) function from the Python package `itertools`.
+
+The code snippet below shows how a list of zipped arguments can be provided to the `expand()` function in order to create mapped tasks over sets of positional arguments. Each set of positional arguments is passed to a keyword argument, `zipped_x_y_z` in case of the TaskFlow example and `op_args` in case of the `PythonOperator` example.
 
 ```Python
 # use the zip function to create three-tuples out of three lists
@@ -177,6 +278,35 @@ Both tasks, `TaskFlow_add_numbers` and `standard_add_numbers` will have three ma
 - Map index 0: `111`
 - Map index 1: `222`
 - Map index 2: `333`
+
+It is also possible to 'zip' XComArg objects by using their `.zip()` method to combine them with one or more other XComArg objects. If the upstream task has been defined using the TaskFlowAPI simply provide the function call. If the upstream task used a classical operator, provide the `XComArg(task_object)`. Below you can see an example of the results of two TaskFlowAPI tasks and one classical operator being zipped together to form functionally the same `zipped_arguments` (`[(1,10,100), (2,20,200), (3,30,300)]`) as in the previous example.
+
+```Python
+from airflow import XComArg
+
+@task
+def one_two_three():
+    return [1,2,3]
+
+@task
+def ten_twenty_thirty():
+    return [10,20,30]
+
+def one_two_three_hundred():
+    return [100,200,300]
+
+one_two_three_hundred_task = PythonOperator(
+    task_id="one_two_three_hundred_task",
+    python_callable=one_two_three_hundred
+)
+
+zipped_arguments = one_two_three().zip(
+    ten_twenty_thirty(),
+    XComArg(one_two_three_hundred_task)
+)
+```
+
+> **Note**: Mixing direct inputs of iterables with inputs via XComs in the `zip()` function is currently not supported.
 
 ## Example Implementations
 
