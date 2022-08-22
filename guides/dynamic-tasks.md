@@ -281,16 +281,18 @@ Both tasks, `TaskFlow_add_numbers` and `standard_add_numbers` will have three ma
 
 It is also possible to 'zip' XComArg objects by using their `.zip()` method to combine them with one or more other XComArg objects. If the upstream task has been defined using the TaskFlowAPI simply provide the function call. If the upstream task used a classical operator, provide the `XComArg(task_object)`. Below you can see an example of the results of two TaskFlowAPI tasks and one classical operator being zipped together to form functionally the same `zipped_arguments` (`[(1,10,100), (2,20,200), (3,30,300)]`) as in the previous example.
 
+To mimic the behavior of the `zip_longest()` function from the `itertools` package, you can add an optional keyword argument `fillvalue` to the `.zip()` method. If `fillvalue` is specified, the method will produce as many tuples as the longest input has elements, missing elements are filled with the default value.
+
 ```Python
 from airflow import XComArg
 
 @task
 def one_two_three():
-    return [1,2,3]
+    return [1,2]
 
 @task
 def ten_twenty_thirty():
-    return [10,20,30]
+    return [10]
 
 def one_two_three_hundred():
     return [100,200,300]
@@ -302,9 +304,25 @@ one_two_three_hundred_task = PythonOperator(
 
 zipped_arguments = one_two_three().zip(
     ten_twenty_thirty(),
-    XComArg(one_two_three_hundred_task)
+    XComArg(one_two_three_hundred_task),
+    fillvalue=1000
 )
+# the content zipped_arguments is [(1,10,100), (2,1000,200), (1000,1000,300)]
+
+# creating the mapped task instances using the TaskFlowAPI
+@task
+def add_nums(zipped_x_y_z):
+    print(zipped_x_y_z)
+    return zipped_x_y_z[0] + zipped_x_y_z[1] + zipped_x_y_z[2]
+
+add_nums.expand(zipped_x_y_z=zipped_arguments)
 ```
+
+The add_nums task will have three mapped instances with the following results:
+
+- Map index 0: `111` (1+10+100)
+- Map index 1: `1202` (2+1000+200)
+- Map index 2: `2300` (1000+1000+300)
 
 > **Note**: Mixing direct inputs of iterables with inputs via XComs in the `zip()` function is currently not supported.
 
