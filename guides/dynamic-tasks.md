@@ -68,15 +68,15 @@ Similarly, the Grid View shows task details and history for each mapped task. Al
 
 There are three different ways to map over multiple parameters:
 
-- **Cross-Product**: Map over 2 or more parameters and get a mapped task instance for each possible combination of inputs.
-- **Sets of keyword arguments**: Map over 2 or more sets of one or more keyword arguments. Get a mapped task instance for every set.
-- **Zip**: Use Python's built-in `zip()` function to create sets of arguments for one parameter that is to be mapped over. Get one mapped task for every set of arguments.
+- **Cross-Product**: Mapping over 2 or more parameters results in a mapped task instance for each possible combination of inputs.
+- **Sets of keyword arguments**: Mapping over 2 or more sets of one or more keyword arguments results in a mapped task instance for every set.
+- **Zip**: Mapping over a set of arguments created with Python's built-in `zip()` results in one mapped task for every set of arguments.
 
-## Cross-Product
+### Cross-Product
 
-The default behavior of the `expand()` function is to create a mapped task instance for every possible combination of all provided inputs. For example, if you were to map over 3 keyword arguments and provide 2 options to the first, 4 options to the second and 5 options to the third, you would create 2x4x5=40 mapped task instances. One use case of this behavior is in tuning model hyperparameters.
+The default behavior of the `expand()` function is to create a mapped task instance for every possible combination of all provided inputs. For example, if you map over 3 keyword arguments and provide 2 options to the first, 4 options to the second, and 5 options to the third, you would create 2x4x5=40 mapped task instances. One common use case for this method is tuning model hyperparameters.
 
-The task definition below maps over 3 options for `bash_command` and 3 options for `env` variables. This will result in 3x3=9 mapped task instances. Each bash command runs with each definition for the environment variable `WORD`.
+The task definition below maps over 3 options for  the `bash_command` parameter and 3 options for the `env` parameter. This will result in 3x3=9 mapped task instances. Each bash command runs with each definition for the environment variable `WORD`.
 
 ```Python
 cross_product_example = BashOperator.partial(
@@ -109,7 +109,7 @@ The nine mapped task instance of the task `cross_product_example` run all possib
 
 ### Sets of keyword arguments
 
-To expand over sets of inputs to two or more keyword arguments (kwargs) you can use the `expand_kwargs()` function. The two tasks below show how you can provided sets of parameters as a list containing a dictionary or as an XComArg. Each operator has 3 sets of commands resulting in 3 mapped task instances.
+To map over sets of inputs to two or more keyword arguments (kwargs), you can use the `expand_kwargs()` function. The two tasks below show how you can provide sets of parameters as a list containing a dictionary or as an XComArg. Each operator has 3 sets of commands resulting in 3 mapped task instances.
 
 ```Python
 # input sets of kwargs directly as a list[dict] PENDING IMPLEMENTATION!
