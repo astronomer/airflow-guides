@@ -244,7 +244,7 @@ The `zip()` function takes in an arbitrary number of iterables (for example list
 - `zip(["a", "b"], [1], ["hi", "bye"], [19, 23], ["x", "y", "z"])` will result in a zip object containing only one tuple: `("a", 1, "hi", 19, "x")` because the shortest list provided only contains one element.
 - It is also possible to zip together different types of iterables: `zip(["a", "b"], {"hi", "bye"}, (19, 23))` will result in a zip object containing: `('a', 'hi', 19), ('b', 'bye', 23)`.
 
-> **Note**: To get as many tuples as there are elements in the _longest_ list provided you can use the [`zip_longest()`](https://docs.python.org/3/library/itertools.html#itertools.zip_longest) function from the Python package `itertools`.
+> **Note**: To get as many tuples as there are elements in the *longest* list provided you can use the [`zip_longest()`](https://docs.python.org/3/library/itertools.html#itertools.zip_longest) function from the Python package `itertools`.
 
 The code snippet below shows how a list of zipped arguments can be provided to the `expand()` function in order to create mapped tasks over sets of positional arguments. Each set of positional arguments is passed to a keyword argument, `zipped_x_y_z` in case of the TaskFlow example and `op_args` in case of the `PythonOperator` example.
 
