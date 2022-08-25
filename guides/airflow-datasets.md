@@ -52,7 +52,7 @@ with DAG(
     )
 ```
 
-Once a dataset is defined, any DAGs in your Airflow environment can be configured to run when that dataset is updated, rather than running on a schedule. For example, if you have a DAG that should run when `dag1_dataset` and `dag2_dataset` are updated, you provide the names of the dependent datasets to that DAG's schedule.
+Once a dataset is defined in one or more producer DAGs, any consumer DAGs in your Airflow environment can be configured to run when that dataset is updated, rather than running on a schedule. For example, if you have a DAG that should run when `dag1_dataset` and `dag2_dataset` are updated, you provide the names of the dependent datasets to that DAG's schedule.
 
 ```python
 dag1_dataset = Dataset('s3://dataset1/output_1.txt')
@@ -78,14 +78,14 @@ There are a couple of things to keep in mind when working with datasets:
 
 - Datasets can only be used by DAGs in the *same* Airflow environment.
 - For now, Airflow only monitors datasets within the context of DAGs and tasks. It does not monitor updates to datasets within an external system that occur outside of Airflow.
-- DAGs that are scheduled on a dataset will be triggered every time that dataset is updated. For example, if `DAG1` and `DAG2` both operate on `dataset_a`, a DAG dependent on `dataset_a` will run *both* when `DAG1` completes and when `DAG2` completes.
-- DAGs scheduled on a dataset will be triggered as soon as the first *task* that operates on that dataset finishes, even if there are downstream tasks in that DAG that also operate on the dataset.
+- Consumer DAGs that are scheduled on a dataset will be triggered every time that dataset is updated. For example, if `DAG1` and `DAG2` both produce `dataset_a`, a consumer DAG of `dataset_a` will run *both* when `DAG1` completes and when `DAG2` completes.
+- Consumer DAGs scheduled on a dataset will be triggered as soon as the first *task* with that dataset as an outlet finishes, even if there are downstream tasks in the producer DAG that also operate on the dataset.
 
 LINK HERE TO AIRFLOW DOCS
 
 The Airflow UI gives you observability for datasets and data dependencies in the DAG's schedule, the new **Datasets** tab, and the **DAG Dependencies** view.
 
-On the **DAGs** view, we can see that our `dataset_downstream_1_2` DAG is scheduled on two upstream datasets (one in `dataset_upstream1` and `dataset_upstream2`), and its next run is pending one dataset update. At this point the `dataset_upstream` DAG has run and updated its dataset, but the `dataset_upstream2` DAG has not.
+On the **DAGs** view, we can see that our `dataset_downstream_1_2` DAG is scheduled on two producer datasets (one in `dataset_upstream1` and `dataset_upstream2`), and its next run is pending one dataset update. At this point the `dataset_upstream` DAG has run and updated its dataset, but the `dataset_upstream2` DAG has not.
 
 ![DAGs View](https://assets2.astronomer.io/main/guides/data-driven-scheduling/dags_view_dataset_schedule.png)
 
@@ -99,4 +99,121 @@ The **DAG Dependencies** view (found under the **Browse** tab) shows a graph of 
 
 ## Example Implementation
 
+In this section we'll show how datasets and data-driven scheduling can help with a classic ML Ops use case. We assume that two teams are responsible for DAGs that provide data, train a model, and publish the results. 
+
+In this example, a data engineering team has a DAG that publishes data to S3. Then a data science team has another DAG that uses that data to train a Sagemaker model and publish the results to Redshift. 
+
+Using datasets, the data science team can schedule their DAG to run only when the data engineering team's data has completed publishing the data, ensuring that only the most recent data is used in the model.
+
+The data engineering team's DAG looks like this:
+
+```python
+from airflow import Dataset
+from airflow.decorators import task, dag
+from airflow.providers.amazon.aws.hooks.s3 import S3Hook
+
+import pendulum
+
+s3_bucket = 'sagemaker-us-east-2-559345414282'
+test_s3_key = 'demo-sagemaker-xgboost-adult-income-prediction/test/test.csv' 
+dataset_uri = 's3://' + test_s3_key  
+
+@dag(
+    schedule='@daily',
+    start_date=pendulum.datetime(2021, 1, 1, tz="UTC"),
+    catchup=False,
+)
+
+def datasets_ml_example_publish():
+
+    @task(outlets=Dataset(dataset_uri))
+    def upload_data_to_s3(s3_bucket, test_s3_key):
+        """
+        Uploads validation data to S3 from /include/data
+        """
+        s3_hook = S3Hook(aws_conn_id='aws-sagemaker')
+
+        # Take string, upload to S3 using predefined method
+        s3_hook.load_file(filename='include/data/test.csv',
+                        key=test_s3_key,
+                        bucket_name=s3_bucket,
+                        replace=True)
+
+    upload_data = upload_data_to_s3(s3_bucket, test_s3_key)
+
+datasets_ml_example_publish = datasets_ml_example_publish()
+```
+
+This DAG has a single task, `upload_data_to_s3`, that publishes the data. An outlet dataset is defined in the `@task` decorator: `outlets=Dataset(dataset_uri)` (where the dataset URI is defined at the top of the DAG script).
+
+Then the data science team's can provide that same dataset URI to the schedule parameter in their DAG:
+
+```python
+from airflow import DAG, Dataset
+from airflow.providers.amazon.aws.operators.sagemaker_transform import SageMakerTransformOperator
+from airflow.providers.amazon.aws.transfers.s3_to_redshift import S3ToRedshiftOperator
+
+from datetime import datetime, timedelta
+
+# Define variables used in config and Python function
+date = '{{ ds_nodash }}'                                                     # Date for transform job name
+s3_bucket = 'sagemaker-us-east-2-559345414282'                               # S3 Bucket used with SageMaker instance
+test_s3_key = 'demo-sagemaker-xgboost-adult-income-prediction/test/test.csv' # Test data S3 key
+output_s3_key = 'demo-sagemaker-xgboost-adult-income-prediction/output/'     # Model output data S3 key
+sagemaker_model_name = "sagemaker-xgboost-2021-08-03-23-25-30-873"           # SageMaker model name
+dataset_uri = 's3://' + test_s3_key  
+
+# Define transform config for the SageMakerTransformOperator
+transform_config = {
+        "TransformJobName": "test-sagemaker-job-{0}".format(date),
+        "TransformInput": {
+            "DataSource": {
+                "S3DataSource": {
+                    "S3DataType":"S3Prefix",
+                    "S3Uri": "s3://{0}/{1}".format(s3_bucket, test_s3_key)
+                }
+            },
+            "SplitType": "Line",
+            "ContentType": "text/csv",
+        },
+        "TransformOutput": {
+            "S3OutputPath": "s3://{0}/{1}".format(s3_bucket, output_s3_key)
+        },
+        "TransformResources": {
+            "InstanceCount": 1,
+            "InstanceType": "ml.m5.large"
+        },
+        "ModelName": sagemaker_model_name
+    }
+
+
+with DAG(
+    'datasets_ml_example_consume',
+    start_date=datetime(2021, 7, 31),
+    max_active_runs=1,
+    schedule=[Dataset(dataset_uri)] # Schedule based on the dataset published in another DAG,
+    default_args={
+        'retries': 1,
+        'retry_delay': timedelta(minutes=1),
+        'aws_conn_id': 'aws-sagemaker'
+    },
+    catchup=False
+) as dag:
+
+    predict = SageMakerTransformOperator(task_id='predict', config=transform_config)
+
+    results_to_redshift = S3ToRedshiftOperator(
+            task_id='save_results',
+            s3_bucket=s3_bucket,
+            s3_key=output_s3_key,
+            schema="PUBLIC",
+            table="results",
+            copy_options=['csv'],
+        )
+
+    predict >> results_to_redshift
+```
  
+This dependency between the two DAGs is simple to implement and is easily viewed in the Airflow UI.
+
+![ML Example Dependencies](https://assets2.astronomer.io/main/guides/data-driven-scheduling/ml_example_dependencies.png)
