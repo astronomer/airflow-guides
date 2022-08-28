@@ -67,16 +67,16 @@ Similarly, the Grid View shows task details and history for each mapped task. Al
 
 ## Mapping over the result of another operator
 
-It is possible to use the input of an upstream operator as the input over which a downstream task is being mapped over. A possible use case is shown below in the ETL example.
+It is possible to use the output of an upstream operator as the input over which a downstream task is being mapped over. A possible use case is shown below in the ETL example.
 
-In this section we are going to show how to pass mapping information to a downstream task if:
+In this section we will show how to pass mapping information to a downstream task for the following cases:
 
 - Both tasks are defined using the TaskFlowAPI.
-- The upstream task is defined using the TaskFlowAPI and the downstream task is using a classical operator.
-- The upstream task is using a classical operator and the downstream task is defined using the TaskFlowAPI.
-- Both tasks are defined using classical operators.
+- The upstream task is defined using the TaskFlowAPI and the downstream task is using a traditional operator.
+- The upstream task is defined using a traditional operator and the downstream task is defined using the TaskFlowAPI.
+- Both tasks are defined using traditional operators.
 
-If both tasks are defined using the TaskFlowAPI the call of the upstream task can be provided to the keyword parameter that is being expanded over.
+If both tasks are defined using the TaskFlowAPI, you can provide the call of the upstream task to the keyword parameter that is being expanded over.
 
 ```Python
 @task
@@ -90,7 +90,7 @@ def plus_10_TF(x):
 plus_10_TF.partial().expand(x=one_two_three_TF())
 ```
 
-Passing data from an upstream task being defined using the TaskFlowAPI to a classical downstream operator works in a very similar fashion. Note that the format in which the mapping information is returned by the upstream task had to be adjusted to the `op_args` argument of the classical `PythonOperator` expecting each argument in the form of a list.
+Passing data from an upstream task defined using the TaskFlowAPI to a downstream traditional operator works in a very similar fashion. Note that the format of the mapping information returned by the upstream task may need to be modified to be accepted by the `op_args` argument of the traditional `PythonOperator`.
 
 ```Python
 @task
@@ -109,7 +109,7 @@ plus_10_task = PythonOperator.partial(
 )
 ```
 
-If the upstream task providing the information to be mapped over is a classical operator, we need to extract the return value using the `XComArg` object, which can be imported using `from airflow import XComArg`.
+If you are mapping over the results of a traditional operator, you need to extract the return value using the `XComArg` object.
 
 ```Python
 from airflow import XComArg
@@ -129,7 +129,7 @@ one_two_three_task = PythonOperator(
 plus_10_TF.partial().expand(x=XComArg(one_two_three_task))
 ```
 
-The `XComArg` object can also be used to map a one classical operator over the results of another classical operator.
+The `XComArg` object can also be used to map a traditional operator over the results of another traditional operator.
 
 ```Python
 from airflow import XComArg
@@ -163,7 +163,7 @@ There are three different ways to map over multiple parameters:
 
 - **Cross-Product**: Mapping over 2 or more *keyword* arguments results in a mapped task instance for each possible combination of inputs. This type of mapping uses the `expand()` function.
 - **Sets of keyword arguments**: Mapping over 2 or more sets of one or more *keyword* arguments results in a mapped task instance for every set. This type of mapping uses the `expand_kwargs()` function.
-- **Zip**: Mapping over a set of *positional* arguments created with Python's built-in `zip()` function or with the `.zip()` method of an XComArg. Results in one mapped task for every set of positional arguments. Each set of positional arguments is passed to the same *keyword* argument of the operator. This type of mapping uses the `expand()` function.
+- **Zip**: Mapping over a set of *positional* arguments created with Python's built-in `zip()` function or with the `.zip()` method of an XComArg results in one mapped task for every set of positional arguments. Each set of positional arguments is passed to the same *keyword* argument of the operator. This type of mapping uses the `expand()` function.
 
 ### Cross-Product
 
@@ -202,7 +202,7 @@ The nine mapped task instance of the task `cross_product_example` run all possib
 
 ### Sets of keyword arguments
 
-To map over sets of inputs to two or more keyword arguments (kwargs), you can use the `expand_kwargs()` function. The two tasks below show how you can provide sets of parameters as a list containing a dictionary or as an XComArg. Each operator has 3 sets of commands resulting in 3 mapped task instances.
+To map over sets of inputs to two or more keyword arguments (kwargs), you can use the `expand_kwargs()` function. The two tasks below show how you can provide sets of parameters as a list containing a dictionary or as an `XComArg`. Each operator has 3 sets of commands, resulting in 3 mapped task instances.
 
 ```Python
 # input sets of kwargs directly as a list[dict] PENDING IMPLEMENTATION!
@@ -279,7 +279,7 @@ Both tasks, `TaskFlow_add_numbers` and `standard_add_numbers` will have three ma
 - Map index 1: `222`
 - Map index 2: `333`
 
-It is also possible to 'zip' XComArg objects by using their `.zip()` method to combine them with one or more other XComArg objects. If the upstream task has been defined using the TaskFlowAPI simply provide the function call. If the upstream task used a classical operator, provide the `XComArg(task_object)`. Below you can see an example of the results of two TaskFlowAPI tasks and one classical operator being zipped together to form functionally the same `zipped_arguments` (`[(1,10,100), (2,20,200), (3,30,300)]`) as in the previous example.
+It is also possible to zip `XComArg` objects. If the upstream task has been defined using the TaskFlow API, simply provide the function call. If the upstream task used a traditional operator, provide the `XComArg(task_object)`. Below you can see an example of the results of two TaskFlowAPI tasks and one traditional operator being zipped together to form the same `zipped_arguments` (`[(1,10,100), (2,20,200), (3,30,300)]`) as in the previous example.
 
 To mimic the behavior of the `zip_longest()` function from the `itertools` package, you can add an optional keyword argument `fillvalue` to the `.zip()` method. If `fillvalue` is specified, the method will produce as many tuples as the longest input has elements, missing elements are filled with the default value.
 
