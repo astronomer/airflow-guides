@@ -124,7 +124,7 @@ Other views in the Browse tab include:
 - **Jobs:** Shows a list of all jobs that have been completed. This includes executed tasks as well as scheduler jobs.
 - **Audit Logs:** Shows a list of events that have occurred in your Airflow environment that can be used for auditing purposes.
 - **Task Reschedules:** Shows a list of all tasks that have been rescheduled.
-- **Triggers:** Shows any triggers that occured in this Airflow environment. To learn more about triggers and related concepts added in Airflow 2.2 you can check out the [guide on Deferrable Operators](https://www.astronomer.io/guides/deferrable-operators/).
+- **Triggers:** Shows any triggers that occurred in this Airflow environment. To learn more about triggers and related concepts added in Airflow 2.2 you can check out the [guide on Deferrable Operators](https://www.astronomer.io/guides/deferrable-operators/).
 - **SLA Misses:** Shows any task instances that have missed their SLAs.
 
 ## Admin
