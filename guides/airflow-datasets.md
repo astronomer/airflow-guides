@@ -6,9 +6,9 @@ slug: "airflow-datasets"
 tags: ["DAGs", "Dependencies", "Scheduling"]
 ---
 
-The release of [Airflow 2.4](link release notes!) includes a new concept of datasets and data dependencies. This means that DAGs that touch the same data will have explicit, visible relationships, and DAGs can be scheduled based on updates to these datasets. This feature is a big step forward in making Airflow data-aware, and vastly expands Airflow's scheduling capabilities beyond time-based methods like Cron.
+The release of [Airflow 2.4](link release notes!) introduces datasets and data dependencies. This means that DAGs which access the same data now have explicit, visible relationships, and that DAGs can be scheduled based on updates to these datasets. This feature is a big step forward in making Airflow data-aware and vastly expands Airflow's scheduling capabilities beyond time-based methods like Cron.
 
-This feature will help with many common use cases, such as when a data engineering team has a DAG that creates a dataset, and an analytics team has a DAG that completes analysis of that data. Using datasets, the data analytics team can ensure their DAG runs only when the data engineering team's DAG has finished publishing the dataset.
+This feature will help with many common use cases. For example, consider a data engineering team with a DAG that creates a dataset and an analytics team with a DAG that analyses the dataset. Using datasets, the data analytics team can ensure their DAG runs only when the data engineering team's DAG has finished publishing the dataset.
 
 In this guide, we'll explain the concept of datasets in Airflow and how to use them to implement triggering of DAGs based on dataset updates.
 
@@ -19,11 +19,11 @@ To get the most out of this guide, you should have knowledge of:
 - Airflow scheduling concepts. See [Scheduling and Timetables in Airflow](https://www.astronomer.io/guides/scheduling-in-airflow/).
 - Creating dependencies between DAGs. See [Cross-DAG Dependencies](https://www.astronomer.io/guides/cross-dag-dependencies/).
 
-## Dataset Concepts
+## Dataset concepts
 
-Airflow's datasets feature allows you to define datasets in your Airflow environment and use them to create dependencies between DAGs. You can define a dataset by instantiating the `Dataset` class and providing a URI. The URI can be any string, including an arbitrary name.
+You can define datasets in your Airflow environment and use them to create dependencies between DAGs. To define a dataset, instantiate the `Dataset` class and provide a URI to the dataset. The URI can be any string, including an arbitrary name.
 
-Then you can reference the dataset in a task by providing it to the `outlets` parameter. `outlets` is part of the `BaseOperator`, so it is available to every Airflow operator. Defining an outlet tells Airflow that that task updates that dataset.
+You can reference the dataset in a task by passing it to the `outlets` parameter. `outlets` is part of the `BaseOperator`, so it's available to every Airflow operator. Defining an `outlet` tells Airflow that the task updates the given dataset.
 
 ```python
 from airflow import DAG, Dataset
@@ -52,7 +52,7 @@ with DAG(
     )
 ```
 
-Once a dataset is defined in one or more producer DAGs, any consumer DAGs in your Airflow environment can be configured to run when that dataset is updated, rather than running on a schedule. For example, if you have a DAG that should run when `dag1_dataset` and `dag2_dataset` are updated, you provide the names of the dependent datasets to that DAG's schedule.
+When you define a dataset in a DAG, it is considered a "producer" DAG. Once a dataset is defined in one or more producer DAGs, a "consumer" DAG in your Airflow environment listen to the producer DAG and run whenever the defined dataset is updated, rather than running on a time-based schedule. For example, if you have a DAG that should run when `dag1_dataset` and `dag2_dataset` are updated, you define the DAG's scheduler using the names of the datasets.
 
 ```python
 dag1_dataset = Dataset('s3://dataset1/output_1.txt')
@@ -76,10 +76,10 @@ Any number of datasets can be provided to the `schedule` parameter as a list. Th
 
 There are a couple of things to keep in mind when working with datasets:
 
-- Datasets can only be used by DAGs in the *same* Airflow environment.
-- For now, Airflow only monitors datasets within the context of DAGs and tasks. It does not monitor updates to datasets within an external system that occur outside of Airflow.
-- Consumer DAGs that are scheduled on a dataset will be triggered every time that dataset is updated. For example, if `DAG1` and `DAG2` both produce `dataset_a`, a consumer DAG of `dataset_a` will run *both* when `DAG1` completes and when `DAG2` completes.
-- Consumer DAGs scheduled on a dataset will be triggered as soon as the first *task* with that dataset as an outlet finishes, even if there are downstream tasks in the producer DAG that also operate on the dataset.
+- Datasets can only be used by DAGs in the same Airflow environment.
+- Airflow monitors datasets only within the context of DAGs and tasks. It does not monitor updates to datasets that occur outside of Airflow.
+- Consumer DAGs that are scheduled on a dataset are triggered every time that dataset is updated. For example, if `DAG1` and `DAG2` both produce `dataset_a`, a consumer DAG of `dataset_a` runs twice: First when `DAG1` completes, and again when `DAG2` completes.
+- Consumer DAGs scheduled on a dataset are triggered as soon as the first *task* with that dataset as an outlet finishes, even if there are downstream tasks in the producer DAG that also operate on the dataset.
 
 LINK HERE TO AIRFLOW DOCS
 
