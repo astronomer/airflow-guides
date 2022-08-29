@@ -21,9 +21,11 @@ To get the most out of this guide, you should have knowledge of:
 
 ## Dataset concepts
 
-You can define datasets in your Airflow environment and use them to create dependencies between DAGs. To define a dataset, instantiate the `Dataset` class and provide a URI to the dataset. The URI can be any string, including an arbitrary name.
+You can define datasets in your Airflow environment and use them to create dependencies between DAGs. To define a dataset, instantiate the `Dataset` class and provide a name for the dataset. The name should be in the form of a valid Uniform Resource Identifier (URI). In 2.4, Airflow simply treats the URI as a string (Airflow does not use the URI to connect to an external system), but using this naming convention helps you to easily identify which dataset in which location you are referring to and will ensure compatibility with future Airflow versions.
 
-You can reference the dataset in a task by passing it to the `outlets` parameter. `outlets` is part of the `BaseOperator`, so it's available to every Airflow operator. Defining an `outlet` tells Airflow that the task updates the given dataset.
+> **Note:** The dataset URI is saved in plain text, so it is best practice to hide any sensitive values using environment variables or a secrets backend.
+
+You can reference the dataset in a task by passing it to the `outlets` parameter. `outlets` is part of the `BaseOperator`, so it's available to every Airflow operator. Defining an `outlet` tells Airflow that the task updates the given dataset. Note that it is up to the DAG author to figure out which tasks should be considered producer tasks for a dataset. You can define an `outlet` dataset on any task, even if that task doesn't actually operate on a dataset (for example, the sleeping BashOperator examples below).
 
 ```python
 from airflow import DAG, Dataset
@@ -52,7 +54,7 @@ with DAG(
     )
 ```
 
-When you define a dataset in a DAG, it is considered a "producer" DAG. Once a dataset is defined in one or more producer DAGs, a "consumer" DAG in your Airflow environment listen to the producer DAG and run whenever the defined dataset is updated, rather than running on a time-based schedule. For example, if you have a DAG that should run when `dag1_dataset` and `dag2_dataset` are updated, you define the DAG's scheduler using the names of the datasets.
+When you define a dataset as an `outlet` in a task, it is considered a "producer" task. Once a dataset is defined in one or more producer tasks, "consumer" DAGs in your Airflow environment listen to the producer tasks and run whenever the task completes, rather than running on a time-based schedule. For example, if you have a DAG that should run when `dag1_dataset` and `dag2_dataset` are updated, you define the DAG's schedule using the names of the datasets.
 
 ```python
 dag1_dataset = Dataset('s3://dataset1/output_1.txt')
@@ -72,14 +74,14 @@ with DAG(
     )
 ```
 
-Any number of datasets can be provided to the `schedule` parameter as a list. The DAG will be triggered once all of those datasets have been updated.
+Any number of datasets can be provided to the `schedule` parameter as a list. The DAG will be triggered once all tasks that update those datasets have completed.
 
 There are a couple of things to keep in mind when working with datasets:
 
 - Datasets can only be used by DAGs in the same Airflow environment.
 - Airflow monitors datasets only within the context of DAGs and tasks. It does not monitor updates to datasets that occur outside of Airflow.
-- Consumer DAGs that are scheduled on a dataset are triggered every time that dataset is updated. For example, if `DAG1` and `DAG2` both produce `dataset_a`, a consumer DAG of `dataset_a` runs twice: First when `DAG1` completes, and again when `DAG2` completes.
-- Consumer DAGs scheduled on a dataset are triggered as soon as the first *task* with that dataset as an outlet finishes, even if there are downstream tasks in the producer DAG that also operate on the dataset.
+- Consumer DAGs that are scheduled on a dataset are triggered every time a task that updates that dataset completes successfully. For example, if `task1` and `task2` both produce `dataset_a`, a consumer DAG of `dataset_a` runs twice: First when `task1` completes, and again when `task2` completes.
+- Consumer DAGs scheduled on a dataset are triggered as soon as the first task with that dataset as an outlet finishes, even if there are downstream producer tasks that also operate on the dataset.
 
 LINK HERE TO AIRFLOW DOCS
 
