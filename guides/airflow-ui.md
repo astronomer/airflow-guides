@@ -13,6 +13,13 @@ In this guide, we'll walk through an overview of some of the most useful feature
 
 > Note: This guide focuses on the Airflow 2 UI, which was significantly redesigned compared to previous Airflow versions. If you haven't upgraded yet, check out the [Airflow documentation on Upgrading from 1.10 to 2](https://airflow.apache.org/docs/apache-airflow/stable/upgrading-from-1-10/index.html).
 
+## Assumed knowledge
+
+To get the most out of this guide, you should have knowledge of:
+
+- What Airflow is and when to use it. See [Introduction to Apache Airflow](https://www.astronomer.io/guides/intro-to-airflow).
+- What an Airflow DAG is. See [Introduction to Airflow DAGs](https://www.astronomer.io/guides/dags/).
+
 ## DAGs
 
 The DAGs view is the landing page when you sign in to Airflow. It shows a list of all your DAGs, the status of recent DAG runs and tasks, the time of the last DAG run, and basic metadata about the DAG like the owner and the schedule.
