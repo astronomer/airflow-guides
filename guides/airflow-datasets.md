@@ -97,13 +97,13 @@ The **DAG Dependencies** view (found under the **Browse** tab) shows a graph of 
 
 ![DAG Dependencies View](https://assets2.astronomer.io/main/guides/data-driven-scheduling/dag_dependencies.png)
 
-## Example Implementation
+## Example implementation
 
 In this section we'll show how datasets and data-driven scheduling can help with a classic ML Ops use case. We assume that two teams are responsible for DAGs that provide data, train a model, and publish the results. 
 
-In this example, a data engineering team has a DAG that publishes data to S3. Then a data science team has another DAG that uses that data to train a Sagemaker model and publish the results to Redshift. 
+In this example, a data engineering team has a DAG that sends data to an S3 bucket. Then a data science team has another DAG that uses that data to train a Sagemaker model and publish the results to Redshift. 
 
-Using datasets, the data science team can schedule their DAG to run only when the data engineering team's data has completed publishing the data, ensuring that only the most recent data is used in the model.
+Using datasets, the data science team can schedule their DAG to run only when the data engineering team's DAG has completed sending the data to the S3 bucket, ensuring that only the most recent data is used in the model.
 
 The data engineering team's DAG looks like this:
 
@@ -115,15 +115,15 @@ from airflow.providers.amazon.aws.hooks.s3 import S3Hook
 import pendulum
 
 s3_bucket = 'sagemaker-us-east-2-559345414282'
-test_s3_key = 'demo-sagemaker-xgboost-adult-income-prediction/test/test.csv' 
-dataset_uri = 's3://' + test_s3_key  
+test_s3_key = 'demo-sagemaker-xgboost-adult-income-prediction/test/test.csv'
+dataset_uri = 's3://' + test_s3_key
+
 
 @dag(
     schedule='@daily',
     start_date=pendulum.datetime(2021, 1, 1, tz="UTC"),
     catchup=False,
 )
-
 def datasets_ml_example_publish():
 
     @task(outlets=Dataset(dataset_uri))
@@ -133,11 +133,13 @@ def datasets_ml_example_publish():
         """
         s3_hook = S3Hook(aws_conn_id='aws-sagemaker')
 
-        # Take string, upload to S3 using predefined method
-        s3_hook.load_file(filename='include/data/test.csv',
-                        key=test_s3_key,
-                        bucket_name=s3_bucket,
-                        replace=True)
+        #  Upload the file using the .load_file() method
+        s3_hook.load_file(
+            filename='include/data/test.csv',
+            key=test_s3_key,
+            bucket_name=s3_bucket,
+            replace=True
+        )
 
     upload_data = upload_data_to_s3(s3_bucket, test_s3_key)
 
@@ -146,7 +148,7 @@ datasets_ml_example_publish = datasets_ml_example_publish()
 
 This DAG has a single task, `upload_data_to_s3`, that publishes the data. An outlet dataset is defined in the `@task` decorator: `outlets=Dataset(dataset_uri)` (where the dataset URI is defined at the top of the DAG script).
 
-Then the data science team's can provide that same dataset URI to the schedule parameter in their DAG:
+Then the data science team can provide that same dataset URI to the schedule parameter in their DAG:
 
 ```python
 from airflow import DAG, Dataset
@@ -161,7 +163,7 @@ s3_bucket = 'sagemaker-us-east-2-559345414282'                               # S
 test_s3_key = 'demo-sagemaker-xgboost-adult-income-prediction/test/test.csv' # Test data S3 key
 output_s3_key = 'demo-sagemaker-xgboost-adult-income-prediction/output/'     # Model output data S3 key
 sagemaker_model_name = "sagemaker-xgboost-2021-08-03-23-25-30-873"           # SageMaker model name
-dataset_uri = 's3://' + test_s3_key  
+dataset_uri = 's3://' + test_s3_key
 
 # Define transform config for the SageMakerTransformOperator
 transform_config = {
