@@ -13,10 +13,10 @@ When designing Airflow DAGs, it is often best practice to put all related tasks 
 
 According to the Airflow documentation on [cross-DAG dependencies](https://airflow.apache.org/docs/apache-airflow/stable/howto/operator/external_task_sensor.html#cross-dag-dependencies), designing DAGs in this way can be useful when:
 
-- A DAG should only run after one or more upstream DAGs have updated specific datasets.
 - Two DAGs are dependent, but they have different schedules.
 - Two DAGs are dependent, but they are owned by different teams.
 - A task depends on another task but for a different execution date.
+- A DAG should only run after one or more upstream DAGs have updated specific datasets.
 
 For any scenario where you have dependent DAGs, we've got you covered! In this guide, we'll discuss multiple methods for implementing cross-DAG dependencies, including how to implement dependencies if your dependent DAGs are located in different Airflow deployments.
 
