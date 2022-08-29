@@ -152,8 +152,12 @@ Then the data science team can provide that same dataset URI to the schedule par
 
 ```python
 from airflow import DAG, Dataset
-from airflow.providers.amazon.aws.operators.sagemaker_transform import SageMakerTransformOperator
-from airflow.providers.amazon.aws.transfers.s3_to_redshift import S3ToRedshiftOperator
+from airflow.providers.amazon.aws.operators.sagemaker_transform import (
+    SageMakerTransformOperator
+)
+from airflow.providers.amazon.aws.transfers.s3_to_redshift import (
+    S3ToRedshiftOperator
+)
 
 from datetime import datetime, timedelta
 
@@ -171,7 +175,7 @@ transform_config = {
         "TransformInput": {
             "DataSource": {
                 "S3DataSource": {
-                    "S3DataType":"S3Prefix",
+                    "S3DataType": "S3Prefix",
                     "S3Uri": "s3://{0}/{1}".format(s3_bucket, test_s3_key)
                 }
             },
@@ -186,14 +190,14 @@ transform_config = {
             "InstanceType": "ml.m5.large"
         },
         "ModelName": sagemaker_model_name
-    }
+}
 
 
 with DAG(
     'datasets_ml_example_consume',
     start_date=datetime(2021, 7, 31),
     max_active_runs=1,
-    schedule=[Dataset(dataset_uri)] # Schedule based on the dataset published in another DAG,
+    schedule=[Dataset(dataset_uri)], # Schedule based on the dataset published in another DAG
     default_args={
         'retries': 1,
         'retry_delay': timedelta(minutes=1),
@@ -202,7 +206,10 @@ with DAG(
     catchup=False
 ) as dag:
 
-    predict = SageMakerTransformOperator(task_id='predict', config=transform_config)
+    predict = SageMakerTransformOperator(
+        task_id='predict',
+        config=transform_config
+    )
 
     results_to_redshift = S3ToRedshiftOperator(
             task_id='save_results',
