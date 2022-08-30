@@ -7,7 +7,7 @@ heroImagePath: null
 tags: ["DAGs"]
 ---
 
-One of the most fundamental features of Apache Airflow is the ability to schedule jobs. Historically, Airflow users could schedule their DAGs by specifying a `schedule` (`schedule_interval` in Airflow version 2.3 or older) with a cron expression, a timedelta, or a preset Airflow schedule.
+One of the most fundamental features of Apache Airflow is the ability to schedule jobs. Historically, Airflow users could schedule their DAGs by specifying a `schedule` with a cron expression, a timedelta object, or a preset Airflow schedule.
 
 Timetables, released in Airflow 2.2, brought new flexibility to scheduling. Timetables allow users to create their own custom schedules using Python, effectively eliminating the limitations of cron. With timetables, you can now schedule DAGs to run at any time for any use case.
 
@@ -45,10 +45,11 @@ The following parameters are derived from the concepts described above and are i
 
 - **`data_interval_start`**: A datetime object defining the start date and time of the data interval. A DAG's timetable will return this parameter for each DAG run. This parameter is either created automatically by Airflow, or can be specified by the user when implementing a custom timetable.
 - **`data_interval_end`**: A datetime object defining the end date and time of the data interval. A DAG's timetable will return this parameter for each DAG run. This parameter is either created automatically by Airflow, or can be specified by the user when implementing a custom timetable.
-- **`schedule`**: A parameter that can be set at the DAG level to define when that DAG will be run. In Airflow 2.3 or older, this parameter is called `schedule_interval`. It accepts cron expressions, timedelta objects, timetables, and lists of datasets.
-- **`timetable`**: A parameter that can be set at the DAG level to define its timetable (either custom or built-in). Timetables can be defined explicitly within the DAG (more on this below), or will be determined automatically by Airflow in cases where a `schedule` is provided. Either a `timetable` or a `schedule` should be defined for each DAG, not both.
+- **`schedule`**: A parameter that can be set at the DAG level to define when that DAG will be run. It accepts cron expressions, timedelta objects, timetables, and lists of datasets.
 - **`start_date`**: The first date your DAG will be executed. This parameter is required for your DAG to be scheduled by Airflow.
 - **`end_date`**: The last date your DAG will be executed. This parameter is optional.
+
+> **Note** In Airflow 2.3 or older, the `schedule` parameter was called `schedule_interval` and only accepted cron expressions or timedelta objects. Timetables had to be passed to Airflow using the now obsolete `timetable` parameter. For versions of Airflow prior to 2.2 specifying the `schedule_interval` was the only mechanism for defining a DAG's schedule.
 
 ### Example
 
@@ -62,11 +63,11 @@ If we look at the next run in the UI, the logical date is `2022-08-28 22:42:33`.
 
 In the sections below, we'll walk through how to use the `schedule` parameter or timetables to schedule your DAG.
 
-## Schedule interval
+## Basic schedules
 
-For pipelines with basic schedules, you can define a `schedule` in your DAG. For versions of Airflow prior to 2.2, this (with the parameter being named `schedule_interval`) is the *only* mechanism for defining a DAG's schedule.
+For pipelines with basic schedules, you can define a `schedule` in your DAG.
 
-### Setting a schedule interval
+### Setting a basic schedule
 
 #### Cron expression
 
@@ -86,7 +87,7 @@ If you want to schedule your DAG on a particular cadence (hourly, every 5 minute
 
 > **Note**: Do not make your DAG's schedule dynamic (e.g. `datetime.now()`)! This will cause an error in the Scheduler.
 
-### Schedule interval & logical date / execution date
+### Schedule & logical date
 
 Airflow was originally developed for ETL under the expectation that data is constantly flowing in from some source and then will be summarized on a regular interval. If you want to summarize Monday's data, you can only do it after Monday is over (Tuesday at 12:01 AM). However, this assumption has turned out to be ill suited to the many other things Airflow is being used for now. This discrepancy is what led to Timetables, which were introduced in Airflow 2.2.
 
@@ -96,7 +97,7 @@ If you want to pass a timestamp to the DAG run that represents "the earliest tim
 
 > **Note**: It is best practice to make each DAG run idempotent (able to be re-run without changing the result) which precludes using `datetime.now()`.
 
-### Schedule limitations
+### Basic Schedule limitations
 
 The relationship between a DAG's `schedule` and its `logical_date` leads to particularly unintuitive results when the spacing between DAG runs is irregular. The most common example of irregular spacing is when DAGs run only during business days (Mon-Fri). In this case, the DAG run with an `logical_date` of Friday will not run until Monday, even though all of Friday's data will be available on Saturday. This means that a DAG whose desired behavior is to summarize results at the end of each business day actually cannot be set using only the `schedule`. In versions of Airflow prior to 2.2, one must instead schedule the DAG to run every day (including the weekend) and include logic in the DAG itself to skip all tasks for days on which the DAG doesn't really need to run.
 
@@ -110,9 +111,7 @@ In the next section, we'll describe how these limitations were addressed in Airf
 
 ## Timetables
 
-[Timetables](https://airflow.apache.org/docs/apache-airflow/stable/concepts/timetable.html), introduced in Airflow 2.2, address the limitations of cron expressions and timedeltas by allowing users to define their own schedules in Python code. All DAG schedules are determined by their internal timetable.
-
-Going forward, timetables will become the primary method for scheduling in Airflow. You can still define a `schedule`, but Airflow converts this to a timetable behind the scenes. And if a cron expression or timedelta is not sufficient for your use case, you can define your own timetable.
+[Timetables](https://airflow.apache.org/docs/apache-airflow/stable/concepts/timetable.html), introduced in Airflow 2.2, address the limitations of cron expressions and timedelta objects by allowing users to define their own schedules in Python code. All DAG schedules are ultimately determined by their internal timetable and if a cron expression or timedelta object is not sufficient for your use case, you can define your own.
 
 Custom timetables can be registered as part of an Airflow plugin. They must be a subclass of `Timetable`, and they should contain the following methods, both of which return a `DataInterval` with a start and an end:
 
@@ -307,7 +306,7 @@ There are some limitations to keep in mind when implementing custom timetables:
 
 ## Dataset driven scheduling
 
-Airflow 2.4 introduced the concept of datasets and data driven cross-DAG dependencies. In short, this means that you can make Airflow aware of the fact that a task in a DAG updated a data object. Using that awareness, other DAGs can be scheduled depending on these updates to datasets. To do so, you simply pass the names of the datasets a list to the `schedule` parameter.
+Airflow 2.4 introduced the concept of datasets and data driven cross-DAG dependencies. In short, this means that you can make Airflow aware of the fact that a task in a DAG updated a data object. Using that awareness, other DAGs can be scheduled depending on these updates to datasets. To do so, you simply pass the names of the datasets as a list to the `schedule` parameter.
 
 ```Python
 dataset1 = Dataset(f"{DATASETS_PATH}/dataset_1.txt")
