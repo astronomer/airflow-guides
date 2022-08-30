@@ -63,7 +63,7 @@ If we look at the next run in the UI, the logical date is `2022-08-28 22:42:33`.
 
 In the sections below, we'll walk through how to use the `schedule` parameter or timetables to schedule your DAG.
 
-## Basic schedules
+## Cron-based schedules
 
 For pipelines with simple scheduling needs, you can define a `schedule` in your DAG using:
 
@@ -71,7 +71,7 @@ For pipelines with simple scheduling needs, you can define a `schedule` in your 
 - a cron preset
 - a timedelta object
 
-### Setting a basic schedule
+### Setting a cron-based schedule
 
 #### Cron expressions
 
@@ -91,7 +91,7 @@ If you want to schedule your DAG on a particular cadence (hourly, every 5 minute
 
 > **Note**: Do not make your DAG's schedule dynamic (e.g. `datetime.now()`)! This will cause an error in the Scheduler.
 
-### Basic schedules & the logical date
+### Cron-based schedules & the logical date
 
 Airflow was originally developed for ETL under the expectation that data is constantly flowing in from some source and then will be summarized on a regular interval. If you want to summarize Monday's data, you can only do it after Monday is over (Tuesday at 12:01 AM). However, this assumption has turned out to be ill suited to the many other things Airflow is being used for now. This discrepancy is what led to Timetables, which were introduced in Airflow 2.2.
 
@@ -101,7 +101,7 @@ If you want to pass a timestamp to the DAG run that represents "the earliest tim
 
 > **Note**: It is best practice to make each DAG run idempotent (able to be re-run without changing the result) which precludes using `datetime.now()`.
 
-### Limitations of basic schedules
+### Limitations of cron-based schedules
 
 The relationship between a DAG's `schedule` and its `logical_date` leads to particularly unintuitive results when the spacing between DAG runs is irregular. The most common example of irregular spacing is when DAGs run only during business days (Mon-Fri). In this case, the DAG run with an `logical_date` of Friday will not run until Monday, even though all of Friday's data will be available on Saturday. This means that a DAG whose desired behavior is to summarize results at the end of each business day actually cannot be set using only the `schedule`. In versions of Airflow prior to 2.2, one must instead schedule the DAG to run every day (including the weekend) and include logic in the DAG itself to skip all tasks for days on which the DAG doesn't really need to run.
 
