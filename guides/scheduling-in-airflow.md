@@ -319,7 +319,7 @@ dataset2 = Dataset(f"{DATASETS_PATH}/dataset_2.txt")
 with DAG(
     dag_id='dataset_dependent_example_dag',
     catchup=False,
-    start_date=datetime(2022, 1, 1),
+    start_date=datetime(2022, 8, 1),
     schedule=[dataset1, dataset2],
     tags=['consumes', 'dataset-scheduled'],
 ) as dag:
