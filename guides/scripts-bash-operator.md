@@ -13,7 +13,7 @@ In this guide we will cover:
 
 - When to use the BashOperator.
 - How to use the BashOperator.
-- Examples of how to use the BashOperator including executing bash commands and bash scripts
+- Examples of how to use the BashOperator including executing bash commands and bash scripts.
 - How to run scripts in non-Python programming languages using the BashOperator.
 
 ## Assumed knowledge
@@ -33,7 +33,7 @@ The following parameters can be provided to the operator:
 - `env`: Defines environment variables in a dictionary for the bash process. By default, the defined dictionary overwrites all existing environment variables in your Airflow environment, including those not defined in the provided dictionary. To change this behavior, you can set the `append_env` parameter. If you leave this parameter blank, the BashOperator inherits the environment variables from your Airflow environment.
 - `append_env`: If you set this to `True`, the environment variables you define in `env` are appended to existing environment variables instead of overwriting them. The default is `False`.
 - `output_encoding`: Defines the output encoding of the bash command. The default is `utf-8`.
-- `skip_exit_code`: Defines which bash exit code should be emitted when the task using the BashOperator enters a `skipped` state. The default is `99`.
+- `skip_exit_code`: Defines which bash exit code should cause the BashOperator to enter a `skipped` state. The default is `99`.
 - `cwd`: Changes the working directory where the bash command is run. The default is `None` and the bash command runs in a temporary directory.
 
 The behavior of a BashOperator task is based on the status of the bash shell:
@@ -53,7 +53,7 @@ The BashOperator is very flexible and widely used in Airflow DAGs. Some common u
 - Running a single or multiple bash commands in your Airflow environment.
 - Running a previously prepared bash script.
 - Running scripts in a programming language other than Python.
-- Running commands kicking off tools that do not have specific operator support yet. For example Soda Core.
+- Running commands kicking off tools that do not have specific operator support yet. For example [Soda Core](https://www.astronomer.io/guides/soda-data-quality/).
 
 ## Example: Execute two bash commands using one BashOperator
 
@@ -64,7 +64,7 @@ In this example, we run two bash commands in a single task:
 - `echo Hello $MY_NAME!` prints the environment variable `MY_NAME` to the console.
 - `echo $A_LARGE_NUMBER | rev  2>&1 | tee $AIRFLOW_HOME/include/my_secret_number.txt` takes the environment variable `A_LARGE_NUMBER`, pipes it to the `rev` command which reverses any input, and saves the result in a file called `my_secret_number.txt` located in the `/include` directory. The reversed number will also be printed to the terminal.
 
-Note that the second command uses an environment variable from the Airflow environment `AIRFLOW_HOME`. This is only possible because `append_env` is set to `True`.
+Note that the second command uses an environment variable from the Airflow environment, `AIRFLOW_HOME`. This is only possible because `append_env` is set to `True`.
 
 ```Python
 from airflow import DAG
@@ -86,7 +86,7 @@ with DAG(
         env={
             "MY_NAME": "<my name>",
             "A_LARGE_NUMBER": "231942"
-            },
+        },
         append_env=True
     )
 ```
@@ -180,7 +180,7 @@ nodejs
 The JavaScript file below contains code for sending a GET request to the `/iss-now` path at `api.open-notify.org` and returning the results to `stdout`, which will both be printed to the console and pushed to XCom by the BashOperator.
 
 ```JavaScript
-// specify that an http API is queried
+// specify that a http API is queried
 const http = require('http');
 
 // define the API to query
@@ -222,7 +222,7 @@ myargs <- commandArgs(trailingOnly = TRUE)
 # split a string using : as a separator
 set <- strsplit(myargs, ":")
 
-# use Regex to extract the lat/long information and convert them to numeric
+# use regex to extract the lat/long information and convert them to numeric
 longitude <- as.numeric(gsub(".*?([0-9]+.[0-9]+).*", "\\1", set[3]))
 latitude <- as.numeric(gsub(".*?([0-9]+.[0-9]+).*", "\\1", set[5]))
 
@@ -230,7 +230,7 @@ latitude <- as.numeric(gsub(".*?([0-9]+.[0-9]+).*", "\\1", set[5]))
 sprintf("The current ISS location: lat: %s / long: %s.", latitude, longitude)
 ```
 
-To run these scripts using the BashOperator, ensure that they are accessible to your Airflow environment.If you use the Astro CLI, you can place these files in the `/include` directory of your Astro project.
+To run these scripts using the BashOperator, ensure that they are accessible to your Airflow environment. If you use the Astro CLI, you can place these files in the `/include` directory of your Astro project.
 
 The DAG uses the BashOperator to execute both files defined above sequentially.
 
@@ -261,7 +261,7 @@ with DAG(
             "ISS_COORDINATES": "{{ task_instance.xcom_pull(\
                                task_ids='get_ISS_coordinates', \
                                key='return_value') }}"
-            },
+        },
         # set append_env to True to be able to use env variables
         # like AIRFLOW_HOME from the Airflow environment
         append_env=True
