@@ -11,7 +11,7 @@ One of the most fundamental features of Apache Airflow is the ability to schedul
 
 Timetables, released in Airflow 2.2, brought new flexibility to scheduling. Timetables allow users to create their own custom schedules using Python, effectively eliminating the limitations of cron. With timetables, you can now schedule DAGs to run at any time for any use case.
 
-Airflow 2.4 introduced the concept of Datasets and with it the ability to schedule your DAG depending on other DAGs touching specific data objects. A more in-depth explanation on these features can be found in the [Datasets and Data Driven Scheduling in Airflow](https://www.astronomer.io/guides/airflow-datasets/) guide.
+Additionally, Airflow 2.4 introduced datasets and the ability to schedule your DAGs on updates to a dataset rather than a time-based schedule. A more in-depth explanation on these features can be found in the [Datasets and Data Driven Scheduling in Airflow](https://www.astronomer.io/guides/airflow-datasets/) guide.
 
 In this guide, we'll walk through Airflow scheduling concepts and the different ways you can schedule a DAG with a focus on timetables. For additional instructions check out our [Scheduling in Airflow webinar](https://www.astronomer.io/events/webinars/trigger-dags-any-schedule).  
 
@@ -22,8 +22,8 @@ In this guide, we'll walk through Airflow scheduling concepts and the different 
 To get the most out of this guide, you should have knowledge of:
 
 - What Airflow is and when to use it. See [Introduction to Apache Airflow](https://www.astronomer.io/guides/intro-to-airflow).
-- The concept and parameters of an Airflow DAG. See [Introduction to Airflow DAGs](https://www.astronomer.io/guides/dags/).
-- How to interact with date and time in Python3. See the [Python documentation on the `datetime` package](https://docs.python.org/3/library/datetime.html).
+- Parameters of Airflow DAGs. See [Introduction to Airflow DAGs](https://www.astronomer.io/guides/dags/).
+- Date and time modules in Python3. See the [Python documentation on the `datetime` package](https://docs.python.org/3/library/datetime.html).
 
 ## Scheduling concepts
 
@@ -45,7 +45,7 @@ The following parameters are derived from the concepts described above and are i
 
 - **`data_interval_start`**: A datetime object defining the start date and time of the data interval. A DAG's timetable will return this parameter for each DAG run. This parameter is either created automatically by Airflow, or can be specified by the user when implementing a custom timetable.
 - **`data_interval_end`**: A datetime object defining the end date and time of the data interval. A DAG's timetable will return this parameter for each DAG run. This parameter is either created automatically by Airflow, or can be specified by the user when implementing a custom timetable.
-- **`schedule`**: A parameter that can be set at the DAG level to define when that DAG will be run. In Airflow 2.3 or older, this parameter is called `schedule_interval`. It accepts cron expressions, timedelta objects and lists of Datasets (see the next sections for more on this). Starting in Airflow 2.2 the information provided to `schedule` will be automatically converted to a timetable by Airflow.
+- **`schedule`**: A parameter that can be set at the DAG level to define when that DAG will be run. In Airflow 2.3 or older, this parameter is called `schedule_interval`. It accepts cron expressions, timedelta objects, timetables, and lists of datasets.
 - **`timetable`**: A parameter that can be set at the DAG level to define its timetable (either custom or built-in). Timetables can be defined explicitly within the DAG (more on this below), or will be determined automatically by Airflow in cases where a `schedule` is provided. Either a `timetable` or a `schedule` should be defined for each DAG, not both.
 - **`start_date`**: The first date your DAG will be executed. This parameter is required for your DAG to be scheduled by Airflow.
 - **`end_date`**: The last date your DAG will be executed. This parameter is optional.
@@ -307,7 +307,7 @@ There are some limitations to keep in mind when implementing custom timetables:
 
 ## Dataset driven scheduling
 
-Airflow 2.4 introduced the concept of Datasets and data driven cross-DAG dependencies. In short, this means that you can make Airflow aware of the fact that a task in a DAG updated a data object, for example in an S3 bucket. Using that awareness, other DAGs can be scheduled depending on these updates to datasets. To do so you simply pass the datasets that have to be updated to trigger the DAG run as a list to the `schedule` parameter.
+Airflow 2.4 introduced the concept of datasets and data driven cross-DAG dependencies. In short, this means that you can make Airflow aware of the fact that a task in a DAG updated a data object. Using that awareness, other DAGs can be scheduled depending on these updates to datasets. To do so, you simply pass the names of the datasets a list to the `schedule` parameter.
 
 ```Python
 dataset1 = Dataset(f"{DATASETS_PATH}/dataset_1.txt")
@@ -322,10 +322,10 @@ with DAG(
 ) as dag:
 ```
 
-The DAG defined above will only run, once both `dataset1` and `dataset2` have been flagged as updated. These updates can occur by different tasks in different DAGs as long as they are located in the same Airflow environment.
+The DAG defined above will only run once both `dataset1` and `dataset2` have been updated. These updates can occur by different tasks in different DAGs as long as they are located in the same Airflow environment.
 
-In the Airflow UI the schedule of the DAG will be shown as `Dataset` and the Next Run column informs you how many datasets the DAG depends on and how many of them have been updated already.
+In the Airflow UI, the schedule of the DAG will be shown as `Dataset` and the Next Run column informs you how many datasets the DAG depends on and how many of them have been updated already.
 
 ![Dataset dependent DAG](https://assets2.astronomer.io/main/guides/scheduling-in-airflow/2_4_DatasetDependentDAG.png)
 
-To learn more about Datasets and data driven scheduling check out the [Datasets and Data Driven Scheduling in Airflow](https://www.astronomer.io/guides/airflow-datasets/) guide.
+To learn more about datasets and data driven scheduling, check out the [Datasets and Data Driven Scheduling in Airflow](https://www.astronomer.io/guides/airflow-datasets/) guide.
