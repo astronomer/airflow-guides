@@ -1,13 +1,13 @@
 ---
 title: "Using the BashOperator"
-description: "Using the BashOperator in Airflow to execute bash commands and scripts"
+description: "Use the BashOperator in Airflow to execute bash commands and scripts"
 date: 2018-07-17T00:00:00.000Z
 slug: "scripts-bash-operator"
 heroImagePath: null
 tags: ["DAGs", "Operators"]
 ---
 
-The [`BashOperator`](https://registry.astronomer.io/providers/apache-airflow/modules/bashoperator) is one of the most commonly used operators in Airflow. It is used to execute bash commands or a bash script from within your Airflow DAG.
+The [`BashOperator`](https://registry.astronomer.io/providers/apache-airflow/modules/bashoperator) is one of the most commonly used operators in Airflow. It executes bash commands or a bash script from within your Airflow DAG.
 
 In this guide we will cover:
 
@@ -29,14 +29,14 @@ The [BashOperator](https://registry.astronomer.io/providers/apache-airflow/modul
 
 The following parameters can be provided to the operator:
 
-- `bash_command`: Provide a single bash command, a set of commands, or a bash script to be executed. This argument is required.
-- `env`: Define environment variables in a dictionary for the bash process created. By default, the dictionary provided will overwrite all existing environment variables; to change this behavior, see `append_env` below. If left empty, the `BashOperator` will inherit the environment variables from your Airflow environment.
-- `append_env`: Append environment variables provided in the `env` dictionary to any existing in your Airflow environment by setting to `True`. The default is `False`.
-- `output_encoding`: Define the output encoding of the bash command. The default is `'utf-8'`.
-- `skip_exit_code`: Declare which bash exit code would leave the task defined by the `BashOperator` in a 'skipped' state. The default is 99.
-- `cwd`: Change the working directory where the bash command is run. The default is `None` and the bash command runs in a temporary directory.
+- `bash_command`: Defines a single bash command, a set of commands, or a bash script to execute. This parameter is required.
+- `env`: Defines environment variables in a dictionary for the bash process. By default, the defined dictionary overwrites all existing environment variables in your Airflow environment, including those not defined in the library. To change this behavior, you can set the `append_env` parameter.  If you leave this parameter blank, the `BashOperator` inherits the environment variables from your Airflow environment.
+- `append_env`: If you set this to `True`, the environment variables you define in `env` are appended to existing environment variables instead of overwriting them. The default is `False`.
+- `output_encoding`: Defines the output encoding of the bash command. The default is `'utf-8'`.
+- `skip_exit_code`: Defines which bash exit code should be emitted when the task using the `BashOperator` enters a `skipped` state. The default is `99`.
+- `cwd`: Changes the working directory where the bash command is run. The default is `None` and the bash command runs in a temporary directory.
 
-`BashOperator` tasks have the following behavior:
+The behavior of a BashOperator task is based on the status of the bash shell:
 
 - Tasks succeed if the whole shell exits with an exit code of 0.
 - Tasks are skipped if the exit code is 99 (unless otherwise specified in `skip_exit_code`).
@@ -59,12 +59,12 @@ The `BashOperator` is very flexible and widely used in Airflow DAGs. Some common
 
 The `BashOperator` can execute any number of bash commands separated by `&&`.
 
-In this example, we run two commands:
+In this example, we run two bash commands in a single task:
 
 - `echo Hello $MY_NAME!` prints the environment variable `MY_NAME` to the console.
 - `echo $A_LARGE_NUMBER | rev  2>&1 | tee $AIRFLOW_HOME/include/my_secret_number.txt` takes the environment variable `A_LARGE_NUMBER`, pipes it to the `rev` command which reverses any input, and saves the result in a file called `my_secret_number.txt` located in the `/include` directory. The reversed number will also be printed to the terminal.
 
-Note that the second command uses an environment variable from the Airflow environment `AIRFLOW_HOME`. This is only possible if `append_env` has been set to `True`.
+Note that the second command uses an environment variable from the Airflow environment `AIRFLOW_HOME`. This is only possible because `append_env` is set to `True`.
 
 ```Python
 from airflow import DAG
@@ -91,13 +91,13 @@ with DAG(
     )
 ```
 
-It is also possible to use two separate BashOperators to run the two commands, for example if you want to assign different dependencies to the tasks.
+It is also possible to use two separate BashOperators to run the two commands, which can be useful if you want to assign different dependencies to the tasks.
 
 ## Example: Execute a bash script
 
 The `BashOperator` can also be provided with a bash script (ending in `.sh`) to be executed.
 
-For this example, we run a bash script which iterates over all files in the `/include` folder and prints their name to the console.
+For this example, we run a bash script which iterates over all files in the `/include` folder and prints their names to the console.
 
 ```bash  
 #!/bin/bash
@@ -114,25 +114,24 @@ done
 echo "The script has run. Have an amazing day!"
 ```
 
-Make sure that your bash script (`my_bash_script.sh` in this example) is available to your Airflow environment. Astro CLI users can place the file into the `/include` directory.
+Make sure that your bash script (`my_bash_script.sh` in this example) is available to your Airflow environment. If you use the Astro CLI, you can make this file accessible to Airflow by placing it in the `/include` directory of your Astro project.
 
-It is important to make the bash script executable by running:
+It is important to make the bash script executable by running the following command before starting Airflow:
 
 ```bash
 chmod +x my_bash_script.sh
 ```
 
-If you are an Astro CLI user, you can either run the above command on the bash script before building your project with `astro dev start`, or you can add the command to the Dockerfile itself as:
+If you use the Astro CLI, you can either run this command before running `astro dev start`, or you can add the command to your project's Dockerfile with the following `RUN` command:
 
 ```Dockerfile
 RUN chmod +x /usr/local/airflow/include/my_bash_script.sh
 ```
 
-> **Note**: If you are running CICD processes that might impact file permissions add the command in the Dockerfile to ensure that permissions are set correctly when the container image is built.
+Astronomer recommends running this command in your Dockerfile for production builds such as Astro Deployments or in production CI/CD pipelines.
 
-Then in the DAG code, we provide the script to the `bash_command` parameter of the `BashOperator`.
+After making the script available to Airflow, you only have to provide the path to the script in the `bash_command` parameter. Be sure to add a space character at the end of the filepath, or else the task will fail with a Jinja exception!
 
-> **Note**: When running a bash script with the `BashOperator` it is crucial to add a space at the end of the command! Otherwise the task will fail with a Jinja exception.
 
 ```Python
 from airflow import DAG
@@ -159,26 +158,26 @@ with DAG(
 
 ## Example: Run a script in another programming language
 
-Using the `BashOperator` is the easiest way to run a script in a non-Python programming language in Airflow. It is   possible to run a script in any language that can be run with a bash command.
+Using the `BashOperator` is the easiest way to run a script in a non-Python programming language in Airflow. You can run a script in any language that can be run with a bash command.
 
-In this example, we run a script written in JavaScript to query a public API providing the [current location of the international Space Station](http://open-notify.org/Open-Notify-API/ISS-Location-Now/). The query result will be pushed to XCom, and a second task extracts the latitude and longitude information in a script written in R and prints them to the console.
+In this example, we run some JavaScript to query a public API providing the [current location of the international Space Station](http://open-notify.org/Open-Notify-API/ISS-Location-Now/). The query result is pushed to XCom so that a second task can extract the latitude and longitude information in a script written in R and print the data to the console.
 
-The following steps are required:
+The following setup is required:
 
-- Install the JavaScript and R language packages at the OS level
-- Write a JavaScript file
-- Write a R script file
-- Make the scripts available to the Airflow environment
-- Execute the files from within a DAG using the `BashOperator`
+- Install the JavaScript and R language packages at the OS level.
+- Write a JavaScript file.
+- Write a R script file.
+- Make the scripts available to the Airflow environment.
+- Execute the files from within a DAG using the `BashOperator`.
 
-The language packages can be installed at the OS level by providing them to `packages.txt`:
+If you use the Astro CLI, the programming language packages can be installed at the OS level by specifying them to the `packages.txt` file of your Astro project. 
 
 ```text
 r-base
 nodejs
 ```
 
-The JavaScript file below contains the code necessary to send a GET request to the `/iss-now` path at `api.open-notify.org` and returns the results at `stdout`, which will both be printed to the console and pushed to XCom by the `BashOperator`.
+The JavaScript file below contains code for sending GET request to the `/iss-now` path at `api.open-notify.org` and returning the results to `stdout`, which will both be printed to the console and pushed to XCom by the BashOperator.
 
 ```JavaScript
 // specify that an http API is queried
@@ -211,7 +210,7 @@ req.end();
 ```
 
 
-The second task runs a script written in R that uses a Regex to filter the longitude and latitude information from the API response and print them in a sentence.
+The second task runs a script written in R that uses a regex to filter the longitude and latitude information from the API response and print it in a sentence.
 
 ```R
 # print outputs to the console
@@ -231,7 +230,7 @@ latitude <- as.numeric(gsub(".*?([0-9]+.[0-9]+).*", "\\1", set[5]))
 sprintf("The current ISS location: lat: %s / long: %s.", latitude, longitude)
 ```
 
-Make sure that both scripts (`my_R_script.R` and `my_java_script.js` in this example) are available to your Airflow environment. Astro CLI users can place the files into the `/include` directory.
+To run these scripts using the BashOperator, ensure that they are accessible to your Airflow environment.If you use the Astro CLI, you can place these files in the `/include` directory of your Astro project.
 
 The DAG uses the `BashOperator` to execute both files defined above sequentially.
 
@@ -271,7 +270,7 @@ with DAG(
     get_ISS_coordinates >> print_ISS_coordinates
 ```
 
-The logs from the second task will show the statement with the current ISS location:
+The logs from the second task will show a statement with the current ISS location:
 
 ```text
 [2022-08-10, 18:54:30 UTC] {subprocess.py:92} INFO - [1] "The current ISS location: lat: 23.0801 / long: 163.5282."
