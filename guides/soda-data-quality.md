@@ -25,7 +25,7 @@ To get the most out of this guide, you should have knowledge of:
 
 - How to design a data quality approach. See [Data quality and Airflow](https://www.astronomer.io/guides/data-quality).
 - The basics of Soda Core. See [How Soda Core works](https://docs.soda.io/soda-core/how-core-works.html).
-- Airflow operators. See [Operators 101](https://www.astronomer.io/guides/what-is-an-operator/).
+- How to use the BashOperator. See [Using the BashOperator](https://www.astronomer.io/guides/scripts-bash-operator/).
 - Relational Databases. See [IBM's "Relational Databases Explained"](https://www.ibm.com/cloud/learn/relational-databases).
 - Basic familiarity with writing YAML configurations. See [yaml.org](https://yaml.org/).
 
@@ -131,7 +131,7 @@ The setup can be divided into the following steps:
 - Create a configuration file that connects to the Snowflake database: `configuration.yml`.
 - Create a checks file containing the data quality checks: `checks.yml`.
 - Install the `soda-core-snowflake` package in your Airflow environment.
-- Run the checks from a DAG by running the `soda scan` command using the `BashOperator`.
+- Run the checks from a DAG by running the `soda scan` command using the BashOperator.
 
 ### Step 1: Create the configuration file
 
@@ -204,7 +204,7 @@ soda-core-snowflake
 
 ### Step 4: Run soda scan using the BashOperator
 
-In a DAG, Soda Core checks are executed by using the `BashOperator` to run the `soda scan` command. The DAG below shows how to reference the configuration and checks YAML files in the command.
+In a DAG, Soda Core checks are executed by using the BashOperator to run the `soda scan` command. The DAG below shows how to reference the configuration and checks YAML files in the command.
 
 ```python
 from airflow import DAG
@@ -228,7 +228,7 @@ with DAG(
     )
 ```
 
-Because Soda Core runs through the `BashOperator`, you can run your checks in any part of your DAG and trigger tasks with your results like you would with other Airflow operators.
+Because Soda Core runs through the BashOperator, you can run your checks in any part of your DAG and trigger tasks with your results like you would with other Airflow operators.
 
 The logs from the Soda Core checks can be found in the Airflow task logs. The logs list all checks that ran and their results.
 
