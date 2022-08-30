@@ -65,11 +65,15 @@ In the sections below, we'll walk through how to use the `schedule` parameter or
 
 ## Basic schedules
 
-For pipelines with basic schedules, you can define a `schedule` in your DAG.
+For pipelines with simple scheduling needs, you can define a `schedule` in your DAG using:
+
+- a cron expression
+- a cron preset
+- a timedelta object
 
 ### Setting a basic schedule
 
-#### Cron expression
+#### Cron expressions
 
 You can pass any cron expression as a string to the `schedule` parameter in your DAG. For example, if you want to schedule your DAG at 4:05 AM every day, you would use `schedule='5 4 * * *'`.
 
@@ -81,13 +85,13 @@ Airflow can utilize cron presets for common, basic schedules.
 
 For example, `schedule='@hourly'` will schedule the DAG to run at the beginning of every hour. For the full list of presets, check out the [Airflow documentation](https://airflow.apache.org/docs/apache-airflow/stable/dag-run.html#cron-presets). If your DAG does not need to run on a schedule and will only be triggered manually or externally triggered by another process, you can set `schedule=None`.
 
-#### Timedelta
+#### Timedelta objects
 
 If you want to schedule your DAG on a particular cadence (hourly, every 5 minutes, etc.) rather than at a specific time, you can pass a `timedelta` object imported from the [`datetime` package](https://docs.python.org/3/library/datetime.html) to the `schedule` parameter. For example, `schedule=timedelta(minutes=30)` will run the DAG every thirty minutes, and `schedule=timedelta(days=1)` will run the DAG every day.
 
 > **Note**: Do not make your DAG's schedule dynamic (e.g. `datetime.now()`)! This will cause an error in the Scheduler.
 
-### Schedule & logical date
+### Basic schedules & the logical date
 
 Airflow was originally developed for ETL under the expectation that data is constantly flowing in from some source and then will be summarized on a regular interval. If you want to summarize Monday's data, you can only do it after Monday is over (Tuesday at 12:01 AM). However, this assumption has turned out to be ill suited to the many other things Airflow is being used for now. This discrepancy is what led to Timetables, which were introduced in Airflow 2.2.
 
@@ -97,7 +101,7 @@ If you want to pass a timestamp to the DAG run that represents "the earliest tim
 
 > **Note**: It is best practice to make each DAG run idempotent (able to be re-run without changing the result) which precludes using `datetime.now()`.
 
-### Basic Schedule limitations
+### Limitations of basic schedules
 
 The relationship between a DAG's `schedule` and its `logical_date` leads to particularly unintuitive results when the spacing between DAG runs is irregular. The most common example of irregular spacing is when DAGs run only during business days (Mon-Fri). In this case, the DAG run with an `logical_date` of Friday will not run until Monday, even though all of Friday's data will be available on Saturday. This means that a DAG whose desired behavior is to summarize results at the end of each business day actually cannot be set using only the `schedule`. In versions of Airflow prior to 2.2, one must instead schedule the DAG to run every day (including the weekend) and include logic in the DAG itself to skip all tasks for days on which the DAG doesn't really need to run.
 
