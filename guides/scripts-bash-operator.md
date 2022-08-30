@@ -7,14 +7,14 @@ heroImagePath: null
 tags: ["DAGs", "Operators"]
 ---
 
-The [`BashOperator`](https://registry.astronomer.io/providers/apache-airflow/modules/bashoperator) is one of the most commonly used operators in Airflow. It executes bash commands or a bash script from within your Airflow DAG.
+The [BashOperator](https://registry.astronomer.io/providers/apache-airflow/modules/bashoperator) is one of the most commonly used operators in Airflow. It executes bash commands or a bash script from within your Airflow DAG.
 
 In this guide we will cover:
 
-- When to use the `BashOperator`.
-- How to use the `BashOperator`.
-- Examples of how to use the `BashOperator` including executing bash commands and bash scripts
-- How to run scripts in non-Python programming languages using the `BashOperator`.
+- When to use the BashOperator.
+- How to use the BashOperator.
+- Examples of how to use the BashOperator including executing bash commands and bash scripts
+- How to run scripts in non-Python programming languages using the BashOperator.
 
 ## Assumed knowledge
 
@@ -30,10 +30,10 @@ The [BashOperator](https://registry.astronomer.io/providers/apache-airflow/modul
 The following parameters can be provided to the operator:
 
 - `bash_command`: Defines a single bash command, a set of commands, or a bash script to execute. This parameter is required.
-- `env`: Defines environment variables in a dictionary for the bash process. By default, the defined dictionary overwrites all existing environment variables in your Airflow environment, including those not defined in the library. To change this behavior, you can set the `append_env` parameter.  If you leave this parameter blank, the `BashOperator` inherits the environment variables from your Airflow environment.
+- `env`: Defines environment variables in a dictionary for the bash process. By default, the defined dictionary overwrites all existing environment variables in your Airflow environment, including those not defined in the provided dictionary. To change this behavior, you can set the `append_env` parameter. If you leave this parameter blank, the BashOperator inherits the environment variables from your Airflow environment.
 - `append_env`: If you set this to `True`, the environment variables you define in `env` are appended to existing environment variables instead of overwriting them. The default is `False`.
-- `output_encoding`: Defines the output encoding of the bash command. The default is `'utf-8'`.
-- `skip_exit_code`: Defines which bash exit code should be emitted when the task using the `BashOperator` enters a `skipped` state. The default is `99`.
+- `output_encoding`: Defines the output encoding of the bash command. The default is `utf-8`.
+- `skip_exit_code`: Defines which bash exit code should be emitted when the task using the BashOperator enters a `skipped` state. The default is `99`.
 - `cwd`: Changes the working directory where the bash command is run. The default is `None` and the bash command runs in a temporary directory.
 
 The behavior of a BashOperator task is based on the status of the bash shell:
@@ -44,11 +44,11 @@ The behavior of a BashOperator task is based on the status of the bash shell:
 
 > **Note**: If you expect a non-zero exit from a sub-command you can add the prefix `set -e;` to your bash command to make sure that the exit is captured as a task failure.
 
-Both the `bash_command` and the `env` parameters will render [Jinja templates](https://www.astronomer.io/guides/templating/). Please note that the input given through Jinja templates to `bash_command` are neither escaped nor sanitized. If you are concerned about potentially harmful user input you can use the setup shown in the [`BashOperator` documentation](https://airflow.apache.org/docs/apache-airflow/stable/howto/operator/bash.html).
+Both the `bash_command` and the `env` parameter will render [Jinja templates](https://www.astronomer.io/guides/templating/). Please note that the input given through Jinja templates to `bash_command` are neither escaped nor sanitized. If you are concerned about potentially harmful user input you can use the setup shown in the [BashOperator documentation](https://airflow.apache.org/docs/apache-airflow/stable/howto/operator/bash.html).
 
 ## When to use the BashOperator
 
-The `BashOperator` is very flexible and widely used in Airflow DAGs. Some common use cases include:
+The BashOperator is very flexible and widely used in Airflow DAGs. Some common use cases include:
 
 - Running a single or multiple bash commands in your Airflow environment.
 - Running a previously prepared bash script.
@@ -57,7 +57,7 @@ The `BashOperator` is very flexible and widely used in Airflow DAGs. Some common
 
 ## Example: Execute two bash commands using one BashOperator
 
-The `BashOperator` can execute any number of bash commands separated by `&&`.
+The BashOperator can execute any number of bash commands separated by `&&`.
 
 In this example, we run two bash commands in a single task:
 
@@ -95,7 +95,7 @@ It is also possible to use two separate BashOperators to run the two commands, w
 
 ## Example: Execute a bash script
 
-The `BashOperator` can also be provided with a bash script (ending in `.sh`) to be executed.
+The BashOperator can also be provided with a bash script (ending in `.sh`) to be executed.
 
 For this example, we run a bash script which iterates over all files in the `/include` folder and prints their names to the console.
 
@@ -116,7 +116,7 @@ echo "The script has run. Have an amazing day!"
 
 Make sure that your bash script (`my_bash_script.sh` in this example) is available to your Airflow environment. If you use the Astro CLI, you can make this file accessible to Airflow by placing it in the `/include` directory of your Astro project.
 
-It is important to make the bash script executable by running the following command before starting Airflow:
+It is important to make the bash script executable by running the following command before making the script available to your Airflow environment:
 
 ```bash
 chmod +x my_bash_script.sh
@@ -158,7 +158,7 @@ with DAG(
 
 ## Example: Run a script in another programming language
 
-Using the `BashOperator` is the easiest way to run a script in a non-Python programming language in Airflow. You can run a script in any language that can be run with a bash command.
+Using the BashOperator is the easiest way to run a script in a non-Python programming language in Airflow. You can run a script in any language that can be run with a bash command.
 
 In this example, we run some JavaScript to query a public API providing the [current location of the international Space Station](http://open-notify.org/Open-Notify-API/ISS-Location-Now/). The query result is pushed to XCom so that a second task can extract the latitude and longitude information in a script written in R and print the data to the console.
 
@@ -168,16 +168,16 @@ The following setup is required:
 - Write a JavaScript file.
 - Write a R script file.
 - Make the scripts available to the Airflow environment.
-- Execute the files from within a DAG using the `BashOperator`.
+- Execute the files from within a DAG using the BashOperator.
 
-If you use the Astro CLI, the programming language packages can be installed at the OS level by specifying them to the `packages.txt` file of your Astro project. 
+If you use the Astro CLI, the programming language packages can be installed at the OS level by specifying them to the `packages.txt` file of your Astro project.
 
 ```text
 r-base
 nodejs
 ```
 
-The JavaScript file below contains code for sending GET request to the `/iss-now` path at `api.open-notify.org` and returning the results to `stdout`, which will both be printed to the console and pushed to XCom by the BashOperator.
+The JavaScript file below contains code for sending a GET request to the `/iss-now` path at `api.open-notify.org` and returning the results to `stdout`, which will both be printed to the console and pushed to XCom by the BashOperator.
 
 ```JavaScript
 // specify that an http API is queried
@@ -232,7 +232,7 @@ sprintf("The current ISS location: lat: %s / long: %s.", latitude, longitude)
 
 To run these scripts using the BashOperator, ensure that they are accessible to your Airflow environment.If you use the Astro CLI, you can place these files in the `/include` directory of your Astro project.
 
-The DAG uses the `BashOperator` to execute both files defined above sequentially.
+The DAG uses the BashOperator to execute both files defined above sequentially.
 
 ```Python
 from airflow import DAG
@@ -278,4 +278,4 @@ The logs from the second task will show a statement with the current ISS locatio
 
 ## Conclusion
 
-The `BashOperator` is a powerful tool to run bash commands and scripts from within Airflow DAGs. It also offers the possibility to leverage advantages of other programming languages by executing all scripts that can be run from the command line.
+The BashOperator is a powerful tool to run bash commands and scripts from within Airflow DAGs. It also offers the possibility to leverage advantages of other programming languages by executing all scripts that can be run from the command line.
