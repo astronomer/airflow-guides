@@ -49,7 +49,7 @@ Each connection type requires different configurations and values based on the s
 - Check the documentation of the external tool you are connecting to and see if it offers guidance on how to authenticate.
 - Refer to the source code of the hook that is being used by your operator.
 
-## Define connections in the UI
+## Defining connections in the UI
 
 The most common way of defining a connection is using the Airflow UI. Go to **Admin** > **Connections** to access the **Connections** page.
 
@@ -63,11 +63,11 @@ As you update the **Connection Type** field, notice how the other available fiel
 
 > **Note**: Specific connection types will only be available in the dropdown menu if the relevant provider is installed in your Airflow environment.  
 
-You don't have to specify every field on most connections. However, the values marked as required in the Airflow UI can be misleading. For example to set up a connection to a PostgreSQL database, we need to reference the [PostgreSQL provider documentation](https://airflow.apache.org/docs/apache-airflow-providers-postgres/stable/connections/postgres.html) to learn that the connection requires a `Host`, a user name as `login` and a password in the `password` field.
+You don't have to specify every field on most connections. However, the values marked as required in the Airflow UI can be misleading. For example to set up a connection to a PostgreSQL database, we need to reference the [PostgreSQL provider documentation](https://airflow.apache.org/docs/apache-airflow-providers-postgres/stable/connections/postgres.html) to learn that the connection requires a `Host`, a user name as `login`, and a password in the `password` field.
 
 ![Example PostgreSQL connection](https://assets2.astronomer.io/main/guides/connections/PostgreSQLconnection.png)
 
-Any parameters that do not have specific fields in the connection form can be provided to the **Extra** field as a JSON dictionary. For example, you can add the `sslmode` or a client `sslkey` in the **Extra** field of your PostgreSQL connection.
+Any parameters that don't have specific fields in the connection form can be defined in the **Extra** field as a JSON dictionary. For example, you can add the `sslmode` or a client `sslkey` in the **Extra** field of your PostgreSQL connection.
 
 Starting in Airflow 2.2, you can test some connection types from the Airflow UI with the **Test** button. After running a connection test, a message appears on the top of the screen showing either a success confirmation or an error message.
 
@@ -93,7 +93,7 @@ ENV AIRFLOW_CONN_snowflake_conn='snowflake://LOGIN:PASSWORD@/?account=xy12345&re
 
 In Airflow 2.3+, connections can be provided to an environment variable as a JSON dictionary:
 
-```text
+```json
 # example of a connection defined as a JSON file in your `.env` file
 AIRFLOW_CONN_MYCONNID='{
     "conn_type": "my-conn-type",
