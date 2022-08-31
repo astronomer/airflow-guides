@@ -24,14 +24,16 @@ To get the most out of this guide, you should have knowledge of:
 
 The DAGs view is the landing page when you sign in to Airflow. It shows a list of all your DAGs, the status of recent DAG runs and tasks, the time of the last DAG run, and basic metadata about the DAG like the owner and the schedule.
 
+> Note: All screenshots in this guide were taken from an [Astronomer Runtime](https://docs.astronomer.io/astro/runtime-release-notes) Airflow image. Other than some modified colors, the UI is the same as that of OSS Airflow.
+
 ![DAGs View](https://assets2.astronomer.io/main/guides/airflow-ui/2_4_DAGs.png)
 
 From the DAGs view you can:
 
-- Pause/unpause a DAG with the toggle to the left of the DAG name
-- Filter the list of DAGs to show active, paused, or all DAGs
-- Trigger, refresh, or delete a DAG with the buttons in the Actions section
-- Navigate quickly to other DAG-specific pages from the Links section
+- Pause/unpause a DAG with the toggle to the left of the DAG name.
+- Filter the list of DAGs to show active, paused, or all DAGs.
+- Trigger, refresh, or delete a DAG with the buttons in the Actions section.
+- Navigate quickly to other DAG-specific pages from the Links section.
 
 To drill down on a specific DAG, you can click on its name or use one of the links. This will give you access to the views described in the following sections.
 
@@ -63,11 +65,13 @@ The actions available for the task instance are:
 
 ### Grid View
 
-The Grid View was introduced in Airflow 2.3 and shows a grid representation of the DAG's previous runs, including their duration and the outcome of all individual task instances. Each column represents a DAG run and each square represents a task instance in that DAG run. Task instances are color-coded according to their status. A small play icon on a DAG run indicates that a run was triggered manually, and a small dataset icon shows that a run was triggered via a dataset update.
+The Grid View was introduced in Airflow 2.3 and shows a grid representation of the DAG's previous runs, including their duration and the outcome of all individual task instances. Each column represents a DAG run and each square represents a task instance in that DAG run. Task instances are color-coded according to their status. A small play icon on a DAG run indicates that a run was triggered manually, and a small dataset icon shows that a run was triggered via a [dataset update](https://astronomer.io/guides/airflow-datasets).
 
-![Grid View](https://assets2.astronomer.io/main/guides/airflow-ui/2_4_GridView.png)
+![Grid View](https://assets2.astronomer.io/main/guides/airflow-ui/2_4_GridView_incl_fails.png)
 
 Clicking on a square in the grid will open a view with more details about that individual task instance as well as links to the same additional views and actions described in the Graph View section above.
+
+> **Note**: The **Grid View** replaced the [**Tree View**](https://airflow.apache.org/docs/apache-airflow/2.2.5/ui.html#tree-view) in Airflow version 2.3+.
 
 ### Calendar View
 
@@ -131,7 +135,7 @@ Other views in the Browse tab include:
 - **Jobs:** Shows a list of all jobs that have been completed. This includes executed tasks as well as scheduler jobs.
 - **Audit Logs:** Shows a list of events that have occurred in your Airflow environment that can be used for auditing purposes.
 - **Task Reschedules:** Shows a list of all tasks that have been rescheduled.
-- **Triggers:** Shows any triggers that occurred in this Airflow environment. To learn more about triggers and related concepts added in Airflow 2.2, you can check out the [guide on Deferrable Operators](https://www.astronomer.io/guides/deferrable-operators/).
+- **Triggers:** Shows any triggers that occurred in this Airflow environment. To learn more about triggers and related concepts added in Airflow 2.2, you can check out the guide on [Deferrable Operators](https://www.astronomer.io/guides/deferrable-operators/).
 - **SLA Misses:** Shows any task instances that have missed their SLAs.
 
 ## Admin
