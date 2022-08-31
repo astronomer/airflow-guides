@@ -67,7 +67,7 @@ The actions available for the task instance are:
 
 The Grid View was introduced in Airflow 2.3 and shows a grid representation of the DAG's previous runs, including their duration and the outcome of all individual task instances. Each column represents a DAG run and each square represents a task instance in that DAG run. Task instances are color-coded according to their status. A small play icon on a DAG run indicates that a run was triggered manually, and a small dataset icon shows that a run was triggered via a [dataset update](https://astronomer.io/guides/airflow-datasets).
 
-![Grid View](https://assets2.astronomer.io/main/guides/airflow-ui/2_4_GridView_incl_fails.png)
+![Grid View](https://assets2.astronomer.io/main/guides/airflow-ui/2_4_GridView_incl_fails_skip.png)
 
 Clicking on a square in the grid will open a view with more details about that individual task instance as well as links to the same additional views and actions described in the Graph View section above.
 
