@@ -43,7 +43,7 @@ Each connection has a unique `conn_id` which can be provided to operators and [h
 
 To standardize connections, Airflow includes many different **connection types** for connecting to specific types of systems. There are general connection types for connecting to large clouds, such as `aws_default` and `gcp_default`, as well as connection types for specific services like `azure_service_bus_default`.
 
-Each connection type requires different configurations and values based on the service it's connecting to. There are a couple of ways find the information you need to provide for a particular connection type:
+Each connection type requires different configurations and values based on the service it's connecting to. There are a couple of ways to find the information you need to provide for a particular connection type:
 
 - Open the relevant provider's page in the [Astronomer Registry](https://registry.astronomer.io/providers/) and go to the **Docs** tab to access the Apache Airflow documentation for the provider. Most commonly used providers will have documentation on each of their associated connection types. For example, you can find information on how to set up different connections to Azure on the [Azure provider docs](https://registry.astronomer.io/providers/microsoft-azure).
 - Check the documentation of the external tool you are connecting to and see if it offers guidance on how to authenticate.
@@ -87,7 +87,7 @@ The environment variable used for the connection must be formatted as `AIRFLOW_C
 ENV AIRFLOW_CONN_MYCONNID='my-conn-type://login:password@host:port/schema?param1=val1&param2=val2'
 
 # an example of a connection to snowflake defined as a URI
-ENV AIRFLOW_CONN_snowflake_conn='snowflake://LOGIN:PASSWORD@/?account=xy12345&region=eu-central-1'
+ENV AIRFLOW_CONN_SNOWFLAKE_CONN='snowflake://LOGIN:PASSWORD@/?account=xy12345&region=eu-central-1'
 
 ```
 
