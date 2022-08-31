@@ -11,14 +11,14 @@ A notable feature of Apache Airflow is the [UI](https://airflow.apache.org/docs/
 
 In this guide, we'll walk through an overview of some of the most useful features and visualizations in the Airflow UI. Each section of the guide corresponds to one of the tabs at the top of the Airflow UI. If you're not already using Airflow and want to get it up and running to follow along, check out the [Astro CLI](https://docs.astronomer.io/astro/cli/get-started) to quickly run Airflow on your local machine.
 
-> Note: This guide focuses on the Airflow 2 UI, which was significantly redesigned compared to previous Airflow versions. If you haven't upgraded yet, check out the [Airflow documentation on Upgrading from 1.10 to 2](https://airflow.apache.org/docs/apache-airflow/stable/upgrading-from-1-10/index.html).
+> Note: This guide focuses on the Airflow 2 UI, which was significantly redesigned compared to previous Airflow versions. If you haven't upgraded yet, check out the [Airflow documentation on upgrading from 1.10 to 2](https://airflow.apache.org/docs/apache-airflow/stable/upgrading-from-1-10/index.html).
 
 ## Assumed knowledge
 
 To get the most out of this guide, you should have knowledge of:
 
 - What Airflow is and when to use it. See [Introduction to Apache Airflow](https://www.astronomer.io/guides/intro-to-airflow).
-- What an Airflow DAG is. See [Introduction to Airflow DAGs](https://www.astronomer.io/guides/dags/).
+- Airflow DAGs. See [Introduction to Airflow DAGs](https://www.astronomer.io/guides/dags/).
 
 ## DAGs
 
@@ -63,7 +63,7 @@ The actions available for the task instance are:
 
 ### Grid View
 
-The Grid View is new as of Airflow 2.3 and shows a grid representation of the DAG's previous runs, including their duration and the outcome of all individual task instances. Each column represents a DAG run and each square is a task instance in that DAG run. Task instances are color-coded according to their status. A small play icon on a DAG run marks that a run was triggered manually and a small dataset icon shows that a run was triggered via a Dataset.
+The Grid View was introduced in Airflow 2.3 and shows a grid representation of the DAG's previous runs, including their duration and the outcome of all individual task instances. Each column represents a DAG run and each square represents a task instance in that DAG run. Task instances are color-coded according to their status. A small play icon on a DAG run indicates that a run was triggered manually, and a small dataset icon shows that a run was triggered via a dataset update.
 
 ![Grid View](https://assets2.astronomer.io/main/guides/airflow-ui/2_4_GridView.png)
 
@@ -96,7 +96,7 @@ There are a couple of additional DAG views that we won't cover in depth here, bu
 
 ## Datasets
 
-In Airflow 2.4 [Dataset driven scheduling](https://www.astronomer.io/guides/airflow-datasets) was added and with it the Dataset tab at the top of the Airflow UI. The Dataset tab links to a page showing all Datasets that have been produced in this Airflow environment, as well as a count of producing tasks and consuming DAGs for each individual Dataset. The `Graph` button links to the DAG Dependencies view, which is also accessible through the Browse tab.
+The Dataset tab was introduced in Airflow 2.4 in support of the new [dataset driven scheduling](https://www.astronomer.io/guides/airflow-datasets) feature. The Dataset tab links to a page showing all datasets that have been produced in this Airflow environment, as well as a count of producing tasks and consuming DAGs for each individual dataset. The `Graph` button links to the DAG Dependencies view, which is also accessible through the Browse tab.
 
 ![Datasets](https://assets2.astronomer.io/main/guides/airflow-ui/2_4_Datasets.png)
 
@@ -122,7 +122,7 @@ The DAG runs and task instances (shown in the screenshot below) pages are the ea
 
 ![Task Instance](https://assets2.astronomer.io/main/guides/airflow-ui/2_4_ListTaskInstance.png)
 
-The DAG Dependencies view shows a graphical representation of any [cross-DAG](https://www.astronomer.io/guides/cross-dag-dependencies) and Dataset dependencies in your Airflow environment.
+The DAG Dependencies view shows a graphical representation of any [cross-DAG](https://www.astronomer.io/guides/cross-dag-dependencies) and dataset dependencies in your Airflow environment.
 
 ![DAG Dependencies](https://assets2.astronomer.io/main/guides/airflow-ui/2_4_DAGDependencies.png)
 
@@ -131,7 +131,7 @@ Other views in the Browse tab include:
 - **Jobs:** Shows a list of all jobs that have been completed. This includes executed tasks as well as scheduler jobs.
 - **Audit Logs:** Shows a list of events that have occurred in your Airflow environment that can be used for auditing purposes.
 - **Task Reschedules:** Shows a list of all tasks that have been rescheduled.
-- **Triggers:** Shows any triggers that occurred in this Airflow environment. To learn more about triggers and related concepts added in Airflow 2.2 you can check out the [guide on Deferrable Operators](https://www.astronomer.io/guides/deferrable-operators/).
+- **Triggers:** Shows any triggers that occurred in this Airflow environment. To learn more about triggers and related concepts added in Airflow 2.2, you can check out the [guide on Deferrable Operators](https://www.astronomer.io/guides/deferrable-operators/).
 - **SLA Misses:** Shows any task instances that have missed their SLAs.
 
 ## Admin
