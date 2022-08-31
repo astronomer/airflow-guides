@@ -53,7 +53,7 @@ Each connection type requires different configurations and values based on the s
 
 The most common way of defining a connection is using the Airflow UI. Go to **Admin** > **Connections** to access the **Connections** page.
 
-![Connections seen from the DAG view](https://assets2.astronomer.io/main/guides/connections/DAGview_connections.png)
+![Connections seen from the DAG view](https://assets2.astronomer.io/main/guides/connections/DAGview_connections_cropped.png)
 
 Airflow doesn't include any configured connections by default. To create a new connection, click the blue **+** button.
 
