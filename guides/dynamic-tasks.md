@@ -7,15 +7,21 @@ heroImagePath: null
 tags: ["Tasks"]
 ---
 
-## Overview
-
 With the release of [Airflow 2.3](https://airflow.apache.org/blog/airflow-2.3.0/), users can write DAGs that dynamically generate parallel tasks at runtime. This feature, known as dynamic task mapping, is a paradigm shift for DAG design in Airflow.
 
 Prior to Airflow 2.3, tasks could only be generated dynamically at the time that the DAG was parsed, meaning you had to change your DAG code if you needed to adjust tasks based on some external factor. With dynamic task mapping, you can easily write DAGs that create tasks based on your current runtime environment.
 
 In this guide, we'll explain the concept of dynamic task mapping and provide example implementations for common use cases.
 
-## Dynamic Task Concepts
+## Assumed knowledge
+
+To get the most out of this guide, you should have knowledge of:
+
+- Airflow Operators. See [Operators 101](https://www.astronomer.io/guides/what-is-an-operator/).
+- How to use Airflow decorators to define tasks. See [Introduction to Airflow Decorators](https://www.astronomer.io/guides/airflow-decorators/).
+- XComs in Airflow. See [Passing Data Between Airflow Tasks](https://www.astronomer.io/guides/airflow-passing-data-between-tasks/).
+
+## Dynamic task concepts
 
 Airflow's dynamic task mapping feature is built off of the [MapReduce](https://en.wikipedia.org/wiki/MapReduce) programming model. The map procedure takes a set of inputs and creates a single task for each one. The reduce procedure, which is optional, allows a task to operate on the collected output of a mapped task. In practice, this means that your DAG can create an arbitrary number of parallel tasks at runtime based on some input parameter(s) (the "map"), and then if needed, have a single task downstream of your parallel mapped tasks that depends on their output (the "reduce").
 
@@ -63,7 +69,7 @@ Selecting one of the mapped instances provides links to other views like you wou
 
 ![Mapped Views](https://assets2.astronomer.io/main/guides/dynamic-tasks/mapped_instance_views.png)
 
-Similarly, the Grid View shows task details and history for each mapped task. All mapped tasks will be combined into one row on the grid (shown as `load_files_to_snowflake [ ]` in the following example). Clicking into that task will provide details on each individual mapped instance.
+Similarly, the **Grid View** shows task details and history for each mapped task. All mapped tasks will be combined into one row on the grid (shown as `load_files_to_snowflake [ ]` in the following example). Clicking into that task will provide details on each individual mapped instance.
 
 ![Mapped Grid](https://assets2.astronomer.io/main/guides/dynamic-tasks/mapped_grid_view.png)
 
@@ -143,20 +149,20 @@ def one_two_three_traditional():
 def plus_10_traditional(x):
     return x+10
 
-one_two_three_task_2 = PythonOperator(
-    task_id="one_two_three_task_2",
+one_two_three_task = PythonOperator(
+    task_id="one_two_three_task",
     python_callable=one_two_three_traditional
 )
 
-plus_10_task_2 = PythonOperator.partial(
-    task_id="plus_10_task_2",
+plus_10_task = PythonOperator.partial(
+    task_id="plus_10_task",
     python_callable=plus_10_traditional
 ).expand(
-    op_args=XComArg(one_two_three_task_2)
+    op_args=XComArg(one_two_three_task)
 )
 
 # when only using traditional operators, define dependencies explicitly
-one_two_three_task_2 >> plus_10_task_2
+one_two_three_task >> plus_10_task
 ```
 
 ## Mapping over multiple parameters
@@ -190,7 +196,7 @@ cross_product_example = BashOperator.partial(
 )
 ```
 
-The nine mapped task instance of the task `cross_product_example` run all possible combinations of the bash command with the env variable:
+The nine mapped task instances of the task `cross_product_example` run all possible combinations of the bash command with the env variable:
 
 - Map index 0: `hello`
 - Map index 1: `tea`
@@ -237,7 +243,7 @@ The `zip()` function takes in an arbitrary number of iterables (for example list
 - `zip(["a", "b"], [1], ["hi", "bye"], [19, 23], ["x", "y", "z"])` will result in a zip object containing only one tuple: `("a", 1, "hi", 19, "x")` because the shortest list provided only contains one element.
 - It is also possible to zip together different types of iterables: `zip(["a", "b"], {"hi", "bye"}, (19, 23))` will result in a zip object containing: `('a', 'hi', 19), ('b', 'bye', 23)`.
 
-The code snippet below shows how a list of zipped arguments can be provided to the `expand()` function in order to create mapped tasks over sets of positional arguments. Each set of positional arguments is passed the keyword argument `zipped_x_y_z`.
+The code snippet below shows how a list of zipped arguments can be provided to the `expand()` function in order to create mapped tasks over sets of positional arguments. Each set of positional arguments is passed to the keyword argument `zipped_x_y_z`.
 
 ```Python
 # use the zip function to create three-tuples out of three lists
@@ -305,7 +311,7 @@ The add_nums task will have three mapped instances with the following results:
 - Map index 1: `1202` (2+1000+200)
 - Map index 2: `2300` (1000+1000+300)
 
-## Example Implementations
+## Example implementations
 
 In this section we'll show how dynamic task mapping can be implemented for two classic use cases: ELT and ML Ops. The first implementation will use traditional Airflow operators, and the second will use decorated functions and the TaskFlow API.
 
@@ -326,26 +332,41 @@ The DAG below completes the following steps:
 ```python
 from airflow import DAG
 from airflow.decorators import task
-from airflow.providers.snowflake.transfers.s3_to_snowflake import S3ToSnowflakeOperator
+from airflow.providers.snowflake.transfers.s3_to_snowflake import (
+    S3ToSnowflakeOperator
+)
 from airflow.providers.snowflake.operators.snowflake import SnowflakeOperator
 from airflow.providers.amazon.aws.hooks.s3 import S3Hook
-from airflow.providers.amazon.aws.operators.s3_copy_object import S3CopyObjectOperator
-from airflow.providers.amazon.aws.operators.s3_delete_objects import S3DeleteObjectsOperator
+from airflow.providers.amazon.aws.operators.s3_copy_object import (
+    S3CopyObjectOperator
+)
+from airflow.providers.amazon.aws.operators.s3_delete_objects import (
+    S3DeleteObjectsOperator
+)
 
 from datetime import datetime
 
 @task
 def get_s3_files(current_prefix):
+
     s3_hook = S3Hook(aws_conn_id='s3')
-    current_files = s3_hook.list_keys(bucket_name='my-bucket', prefix=current_prefix + "/", start_after_key=current_prefix + "/")
+
+    current_files = s3_hook.list_keys(
+        bucket_name='my-bucket',
+        prefix=current_prefix+"/",
+        start_after_key=current_prefix+"/"
+    )
+
     return [[file] for file in current_files]
 
 
-with DAG(dag_id='mapping_elt',
-        start_date=datetime(2022, 4, 2),
-        catchup=False,
-        template_searchpath='/usr/local/airflow/include',
-        schedule_interval='@daily') as dag:
+with DAG(
+    dag_id='mapping_elt',
+    start_date=datetime(2022, 4, 2),
+    catchup=False,
+    template_searchpath='/usr/local/airflow/include',
+    schedule_interval='@daily'
+) as dag:
 
     copy_to_snowflake = S3ToSnowflakeOperator.partial(
         task_id='load_files_to_snowflake',
@@ -353,7 +374,10 @@ with DAG(dag_id='mapping_elt',
         table='COMBINED_HOMES',
         schema='MYSCHEMA',
         file_format="(type = 'CSV',field_delimiter = ',', skip_header=1)",
-        snowflake_conn_id='snowflake').expand(s3_keys=get_s3_files(current_prefix="{{ ds_nodash }}"))
+        snowflake_conn_id='snowflake'
+    ).expand(
+        s3_keys=get_s3_files(current_prefix="{{ ds_nodash }}")
+    )
 
     move_s3 = S3CopyObjectOperator(
         task_id='move_files_to_processed',
@@ -437,7 +461,10 @@ def mlflow_multimodel_example():
 
     @task
     def load_data():
-        """Pull Census data from Public BigQuery and save as Pandas dataframe in GCS bucket with XCom"""
+        """
+          Pull Census data from Public BigQuery and save as Pandas dataframe
+          in GCS bucket with XCom
+        """
 
         bq = BigQueryHook()
         sql = """
@@ -468,13 +495,22 @@ def mlflow_multimodel_example():
 
 
         # Rename up '?' values as 'Unknown'
-        df['workclass'] = df['workclass'].apply(lambda x: 'Unknown' if x == '?' else x)
-        df['occupation'] = df['occupation'].apply(lambda x: 'Unknown' if x == '?' else x)
-        df['native_country'] = df['native_country'].apply(lambda x: 'Unknown' if x == '?' else x)
+        df['workclass'] = df['workclass'].apply(
+            lambda x: 'Unknown' if x == '?' else x
+        )
+        df['occupation'] = df['occupation'].apply(
+            lambda x: 'Unknown' if x == '?' else x
+        )
+        df['native_country'] = df['native_country'].apply(
+            lambda x: 'Unknown' if x == '?' else x
+        )
 
 
         # Drop Extra/Unused Columns
-        df.drop(columns=['education_num', 'relationship', 'functional_weight'], inplace=True)
+        df.drop(
+            columns=['education_num', 'relationship', 'functional_weight'],
+            inplace=True
+        )
 
         return df
 
@@ -488,49 +524,78 @@ def mlflow_multimodel_example():
         Keyword arguments:
         df -- data from previous step pulled from BigQuery to be processed.
         """
+
         # Onehot encoding
         df = pd.get_dummies(df, prefix='workclass', columns=['workclass'])
         df = pd.get_dummies(df, prefix='education', columns=['education'])
         df = pd.get_dummies(df, prefix='occupation', columns=['occupation'])
         df = pd.get_dummies(df, prefix='race', columns=['race'])
         df = pd.get_dummies(df, prefix='sex', columns=['sex'])
-        df = pd.get_dummies(df, prefix='income_bracket', columns=['income_bracket'])
-        df = pd.get_dummies(df, prefix='native_country', columns=['native_country'])
+        df = pd.get_dummies(
+            df, prefix='income_bracket', columns=['income_bracket']
+        )
+        df = pd.get_dummies(
+            df, prefix='native_country', columns=['native_country']
+        )
 
         # Bin Ages
-        df['age_bins'] = pd.cut(x=df['age'], bins=[16,29,39,49,59,100], labels=[1, 2, 3, 4, 5])
+        df['age_bins'] = pd.cut(
+            x=df['age'],
+            bins=[16,29,39,49,59,100],
+            labels=[1, 2, 3, 4, 5]
+        )
 
         # Dependent Variable
-        df['never_married'] = df['marital_status'].apply(lambda x: 1 if x == 'Never-married' else 0)
+        df['never_married'] = df['marital_status'].apply(
+            lambda x: 1 if x == 'Never-married' else 0
+        )
 
         # Drop redundant column
-        df.drop(columns=['income_bracket_<=50K', 'marital_status', 'age'], inplace=True)
+        df.drop(
+            columns=['income_bracket_<=50K', 'marital_status', 'age'],
+            inplace=True
+        )
 
         return df
 
     @task
     def get_models():
         """
-        Returns list of models to train from by reading a file in the include/ directory.
-        We assume this file has two parameters for each model entry: model, and params
+        Returns list of models to train from by reading a file in the
+        include/ directory.
+        We assume this file has two parameters for each model entry:
+        model, and params
         """
+
         return [models]
 
     @task()
-    def train(df: pd.DataFrame, model_type=models, model=models[model], grid_params=models[params], **kwargs):
-        """Train and validate model using a grid search for the optimal parameter values and a five fold cross validation.
+    def train(
+        df: pd.DataFrame,
+        model_type=models,
+        model=models[model],
+        grid_params=models[params],
+        **kwargs
+    ):
+        """Train and validate model using a grid search for the optimal
+        parameter values and a five fold cross validation.
 
         Returns accuracy score via XCom to GCS bucket.
 
         Keyword arguments:
         df -- data from previous step pulled from BigQuery to be processed.
         """
+
         y = df['never_married']
         X = df.drop(columns=['never_married'])
 
-        X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=55, stratify=y)
+        X_train, X_test, y_train, y_test = train_test_split(
+            X, y, test_size=0.2, random_state=55, stratify=y
+        )
 
-        grid_search = GridSearchCV(model, param_grid=grid_params, verbose=1, cv=5, n_jobs=-1)
+        grid_search = GridSearchCV(
+            model, param_grid=grid_params, verbose=1, cv=5, n_jobs=-1
+        )
 
         with mlflow.start_run(run_name=f'{model_type}_{kwargs["run_id"]}'):
 
@@ -558,7 +623,11 @@ def mlflow_multimodel_example():
 
             else:
                 logging.info('Training model with best parameters')
-                clf = LogisticRegression(penalty=best_params['penalty'], C=best_params['C'], solver=best_params['solver']).fit(X_train, y_train)
+                clf = LogisticRegression(
+                     penalty=best_params['penalty'],
+                     C=best_params['C'],
+                     solver=best_params['solver']
+                ).fit(X_train, y_train)
 
             y_pred_class = metrics.test(clf, X_test)
 
@@ -571,7 +640,7 @@ def mlflow_multimodel_example():
     train_modes = train.partial(features).expand(get_models())
 
 dag = mlflow_multimodel_example()
- ```
+```
 
 Note that in this example, our model information that we map on is pulled from a `grid_configs` file in our `include/` directory, which looks like this:
 
@@ -583,7 +652,11 @@ import lightgbm as lgb
 
 models = {
     'lgbm': {
-        'model': lgb.LGBMClassifier(objective='binary', metric=['auc', 'binary_logloss'], seed=55, boosting_type='gbdt'),
+        'model': lgb.LGBMClassifier(
+            objective='binary',
+            metric=['auc', 'binary_logloss'],
+            seed=55, boosting_type='gbdt'
+        ),
         'params': {
             'learning_rate': [0.01, .05, .1],
             'n_estimators': [50, 100, 150],
@@ -600,7 +673,6 @@ models = {
         }
     }  
 }
-
 ```
 
 The model information could come from any external system as well, with an update to the `get_models()` task. The only requirement is that the resulting map input is a dict or list.
