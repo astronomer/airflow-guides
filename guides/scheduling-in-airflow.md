@@ -61,15 +61,15 @@ If we look at the next run in the UI, the logical date is `2022-08-28 22:42:33`.
 
 ![5 Minute Next Run](https://assets2.astronomer.io/main/guides/scheduling-in-airflow/2_4_5minExample_next_run.png)
 
-In the sections below, we'll walk through how to use the `schedule` parameter or timetables to schedule your DAG.
+In the sections below, we'll walk through how to use cron-based schedule, timetables, or datasets to schedule your DAG.
 
 ## Cron-based schedules
 
 For pipelines with simple scheduling needs, you can define a `schedule` in your DAG using:
 
-- a cron expression
-- a cron preset
-- a timedelta object
+- A cron expression
+- A cron preset
+- A timedelta object
 
 ### Setting a cron-based schedule
 
@@ -325,7 +325,7 @@ with DAG(
 ) as dag:
 ```
 
-The DAG defined above will only run once both `dataset1` and `dataset2` have been updated. These updates can occur by different tasks in different DAGs as long as they are located in the same Airflow environment.
+The DAG defined above will only run once both `dataset1` and `dataset2` have been updated. These updates can occur by tasks in different DAGs as long as they are located in the same Airflow environment.
 
 In the Airflow UI, the schedule of the DAG will be shown as `Dataset` and the Next Run column informs you how many datasets the DAG depends on and how many of them have been updated already.
 
