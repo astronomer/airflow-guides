@@ -95,7 +95,7 @@ The `TriggerDagRunOperator` is ideal for situations in which you want one upstre
 
 A common use case is that the upstream DAG fetches new testing data for a machine learning pipeline, runs and tests a model and then publishes the model's prediction. In case of the model underperforming the `TriggerDagRunOperator` is used to kick off a DAG that retrains the model, while the upstream DAG waits. Once the model is retrained and tested by the downstream DAG the upstream DAG resumes and goes on to publish the new model's results.
 
-Below is an example DAG that implements the `TriggerDagRunOperator` to trigger the `dependent-dag` between two other tasks. The `trigger-dagrun-dag` will wait until `dependent-dag` has finished its run until it moves onto running `end_task`, since `wait_for_completeion` in the `TriggerDagRunOperator` has been set to `True`.
+Below is an example DAG that implements the `TriggerDagRunOperator` to trigger the `dependent-dag` between two other tasks. The `trigger-dagrun-dag` will wait until `dependent-dag` has finished its run until it moves onto running `end_task`, since `wait_for_completion` in the `TriggerDagRunOperator` has been set to `True`.
 
 ```python
 from airflow import DAG
