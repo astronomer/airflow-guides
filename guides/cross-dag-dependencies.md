@@ -16,7 +16,7 @@ According to the Airflow documentation on [cross-DAG dependencies](https://airfl
 - Two DAGs are dependent, but they have different schedules.
 - Two DAGs are dependent, but they are owned by different teams.
 - A task depends on another task but for a different execution date.
-- A DAG should only run after one or more upstream DAGs have updated specific datasets.
+- A DAG should only run after one or more datasets have been updated by tasks in other DAGs.
 
 For any scenario where you have dependent DAGs, we've got you covered! In this guide, we'll discuss multiple methods for implementing cross-DAG dependencies, including how to implement dependencies if your dependent DAGs are located in different Airflow deployments.
 
@@ -26,10 +26,10 @@ For any scenario where you have dependent DAGs, we've got you covered! In this g
 
 To get the most out of this guide, you should have knowledge of:
 
-- The concept of dependencies in Airflow. See [Managing Dependencies in Apache Airflow](https://www.astronomer.io/guides/managing-dependencies/).
-- What a DAG is and how it is structured. See [Introduction to Airflow DAGs](https://www.astronomer.io/guides/managing-dependencies/).
-- What an Airflow operator is and how to define it. See [Operators 101](https://www.astronomer.io/guides/what-is-an-operator/).
-- What an Airflow sensor is and how to define it. See [Sensors 101](https://www.astronomer.io/guides/what-is-a-sensor/).
+- Dependencies in Airflow. See [Managing Dependencies in Apache Airflow](https://www.astronomer.io/guides/managing-dependencies/).
+- Airflow DAGs. See [Introduction to Airflow DAGs](https://www.astronomer.io/guides/managing-dependencies/).
+- Airflow operators. See [Operators 101](https://www.astronomer.io/guides/what-is-an-operator/).
+- Airflow sensors. See [Sensors 101](https://www.astronomer.io/guides/what-is-a-sensor/).
 
 ## Implementing Cross-DAG Dependencies
 
@@ -40,7 +40,7 @@ There are multiple ways to implement cross-DAG dependencies in Airflow, includin
 - The [Airflow API](https://airflow.apache.org/docs/apache-airflow/stable/stable-rest-api-ref.html)
 - [Dataset driven scheduling](https://www.astronomer.io/guides/airflow-datasets/)
 
-You'll want to use different implementations depending on your DAG dependencies and Airflow setup. In this section, we detail how to use each method and ideal scenarios for each, as well as how to view dependencies in the Airflow UI.
+Which implementations you choose will depend on your DAG dependencies and Airflow setup. In this section, we detail how to use each method and ideal scenarios for each, as well as how to view dependencies in the Airflow UI.
 
 > **Note:** It can be tempting to use SubDAGs to handle DAG dependencies, but we highly recommend against doing so as SubDAGs can create performance issues. Instead, use one of the other methods described below.
 
@@ -116,7 +116,7 @@ There are a couple of things to note when using this operator:
 
 The next method for creating cross-DAG dependencies is to add an `ExternalTaskSensor` to your downstream DAG. The downstream DAG will wait until a task is completed in the upstream DAG before moving on to the rest of the DAG. You can find more info on this sensor on the [Astronomer Registry](https://registry.astronomer.io/providers/apache-airflow/modules/externaltasksensor).
 
-> **Note**: In Airflow 2.2 a new way of waiting for events to happen was introduced: [Deferrable Operators](https://www.astronomer.io/guides/deferrable-operators/). A deferrable version of the `ExternalTaskSensor` is available, the [`ExternalTaskSensorAsync`](https://registry.astronomer.io/providers/astronomer-providers/modules/externaltasksensorasync).
+> **Note**: In Airflow 2.2+, a deferrable version of the `ExternalTaskSensor` is available, the [`ExternalTaskSensorAsync`](https://registry.astronomer.io/providers/astronomer-providers/modules/externaltasksensorasync). For more info on deferrable operators and their benefits, see [this guide](https://www.astronomer.io/guides/deferrable-operators/)
 
 This method is not as flexible as the `TriggerDagRunOperator`, since the dependency is implemented in the downstream DAG. It is ideal in situations where you have a downstream DAG that is dependent on multiple upstream DAGs. An example DAG using the `ExternalTaskSensor` is shown below:
 
@@ -256,16 +256,16 @@ In order to use the `SimpleHttpOperator` to trigger another DAG, you need to def
 
 ### Dataset driven scheduling
 
-Airflow 2.4 introduced the concept of Datasets and data driven dependencies. Datasets make it possible to flag updates to any data objects from within any operator to the local Airflow environment. Downstream DAGs can be made dependent on an arbitrary number of Datasets to be updated.
+In Airflow 2.4+, you can use datasets to create data driven dependencies between DAGs. This means that DAGs which access the same data can have explicit, visible relationships, and that DAGs can be scheduled based on updates to these datasets. Downstream DAGs can be made dependent on an arbitrary number of datasets to be updated.
 
-This method is useful when a downstream DAG should only run after one or more data objects have been updated by one or more upstream DAGs, especially if those updates can be very irregular. Additionally you get observability into the data driven dependencies between your DAGs (see also the section 'DAG dependencies View' below).
+This method is useful when a downstream DAG should only run after one or more datasets have been updated by one or more upstream DAGs, especially if those updates can be very irregular. Additionally, you will have increased observability into the dependencies between your DAGs in the Airflow UI (see the 'DAG dependencies View' section).
 
-In the context of Dataset driven scheduling, two new terms were introduced:
+In the context of dataset driven scheduling, two new terms were introduced:
 
-- Producing task: A task flagging an update to a specific Dataset provided to its `outlets` parameter.
-- Consuming DAG: A DAG that will be run as soon as a specific Dataset (or several) are flagged as updated.
+- Producing task: A task that updates a specific dataset, defined by its `outlets` parameter.
+- Consuming DAG: A DAG that will run as soon as a specific dataset(s) are updated.
 
-Any task can be made into a producing task by providing one or more Datasets to the `outlets` parameter as shown below.
+Any task can be made into a producing task by providing one or more datasets to the `outlets` parameter as shown below.
 
 ```Python
 dataset1 = Dataset('s3://folder1/dataset_1.txt')
@@ -277,7 +277,7 @@ EmptyOperator(
 )
 ```
 
-The downstream DAG is scheduled to run after dataset1 has been updated by providing it to the `schedule` parameter.
+The downstream DAG is scheduled to run after `dataset1` has been updated by providing it to the `schedule` parameter.
 
 ```Python
 dataset1 = Dataset('s3://folder1/dataset_1.txt')
@@ -291,7 +291,7 @@ with DAG(
 ) as dag:
 ```
 
-The downstream DAG's Next Run will show how many datasets it depends on and how many of those have been flagged as updated since the last DAG run. The screenshot below shows that of the DAG `dataset_dependent_example_dag` is scheduled depending on two datasets, one of which has already been updated.
+The downstream DAG's Next Run will show how many datasets it depends on and how many of those have been updated since the last DAG run. The screenshot below shows that the DAG `dataset_dependent_example_dag` is scheduled depending on two datasets, one of which has already been updated.
 
 ![DAG Dependencies View](https://assets2.astronomer.io/main/guides/cross-dag-dependencies/2_4_DatasetDependentDAG.png)
 
@@ -303,13 +303,13 @@ In [Airflow 2.1](https://airflow.apache.org/docs/apache-airflow/stable/changelog
 
 - Using a `TriggerDagRunOperator`
 - Using an `ExternalTaskSensor`
-- Using dependencies set on Datasets
+- Using dataset driven scheduling
 
 Dependencies can be viewed in the UI by going to `Browse` → `DAG Dependencies` or by clicking on the `Graph` button from within the Datasets tab. The screenshot below shows the dependencies created by the `TriggerDagRunOperator` and `ExternalTaskSensor` example DAGs in the sections above.
 
 ![DAG Dependencies View](https://assets2.astronomer.io/main/guides/cross-dag-dependencies/dag_dependencies_view.png)
 
-When DAGs are scheduled depending on Datasets, both the DAG containing the producing task, as well as the Dataset itself will be shown upstream of the consuming DAG.
+When DAGs are scheduled depending on datasets, both the DAG containing the producing task, as well as the dataset itself will be shown upstream of the consuming DAG.
 
 ![DAG Dependencies View Datasets](https://assets2.astronomer.io/main/guides/cross-dag-dependencies/2_4_CrossGuide_Dependencies.png)
 
