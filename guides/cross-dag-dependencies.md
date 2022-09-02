@@ -257,7 +257,7 @@ In this DAG
 
 These processes happen in parallel and independent of each other. The graph view shows the state of the DAG after `my_task` in `upstream_dag_1` has finished which caused `ets_branch_1` and `task_branch_1` to run. `ets_branch_2` and `ets_branch_3` are still waiting for their upstream tasks to finish.
 
-![External Task Sensor 3 Branches](https://assets2.astronomer.io/main/guides/cross-dag-dependencies/external_task_sensor_graph_3_branches.png)
+![External Task Sensor 3 Branches](https://assets2.astronomer.io/main/guides/cross-dag-dependencies/2_4_external_task_sensor_graph_3_branches.png)
 
 If you want the downstream DAG to wait for the entire upstream DAG to finish instead of a specific task, you can set the `external_task_id` to `None`. In the example above, we specify that the external task must have a state of `success` for the downstream task to succeed, as defined by the `allowed_states` and `failed_states`.
 
