@@ -163,19 +163,23 @@ For example, you could have upstream tasks modifying different tables in a data 
 
 > **Note**: In Airflow 2.2+, a deferrable version of the `ExternalTaskSensor` is available, the [`ExternalTaskSensorAsync`](https://registry.astronomer.io/providers/astronomer-providers/modules/externaltasksensorasync). For more info on deferrable operators and their benefits, see [this guide](https://www.astronomer.io/guides/deferrable-operators/)
 
-An example DAG using the `ExternalTaskSensor` is shown below:
+An example DAG using three `ExternalTaskSensor`s at the start of three parallel branches in the same DAG is shown below.
 
 ```python
 from airflow import DAG
 from airflow.operators.python import PythonOperator
 from airflow.sensors.external_task import ExternalTaskSensor
+from airflow.operators.empty import EmptyOperator
 from datetime import datetime, timedelta
 
-def downstream_fuction():
-    """
-    Downstream function with print statement.
-    """
-    print('Upstream DAG has completed. Starting other tasks.')
+def downstream_function_branch_1():
+    print('Upstream DAG 1 has completed. Starting tasks of branch 1.')
+
+def downstream_function_branch_2():
+    print('Upstream DAG 2 has completed. Starting tasks of branch 2.')
+
+def downstream_function_branch_3():
+    print('Upstream DAG 3 has completed. Starting tasks of branch 3.')
 
 default_args = {
     'owner': 'airflow',
@@ -186,33 +190,74 @@ default_args = {
     'retry_delay': timedelta(minutes=5)
 }
 
-with DAG('external-task-sensor-dag',
-         start_date=datetime(2021, 1, 1),
-         max_active_runs=3,
-         schedule_interval='*/1 * * * *',
-         catchup=False
-         ) as dag:
+with DAG(
+    'external-task-sensor-dag',
+    start_date=datetime(2022, 8, 1),
+    max_active_runs=3,
+    schedule='*/1 * * * *',
+    catchup=False
+) as dag:
 
-    downstream_task1 = ExternalTaskSensor(
-        task_id="downstream_task1",
-        external_dag_id='example_dag',
-        external_task_id='bash_print_date2',
+    start = EmptyOperator(task_id="start")
+    end = EmptyOperator(task_id="end")
+
+    ets_branch_1 = ExternalTaskSensor(
+        task_id="ets_branch_1",
+        external_dag_id='upstream_dag_1',
+        external_task_id='my_task',
         allowed_states=['success'],
         failed_states=['failed', 'skipped']
     )
 
-    downstream_task2 = PythonOperator(
-        task_id='downstream_task2',
-        python_callable=downstream_fuction,
-        provide_context=True
+    task_branch_1 = PythonOperator(
+        task_id='task_branch_1',
+        python_callable=downstream_function_branch_1,
     )
 
-    downstream_task1 >> downstream_task2
+    ets_branch_2 = ExternalTaskSensor(
+        task_id="ets_branch_2",
+        external_dag_id='upstream_dag_2',
+        external_task_id='my_task',
+        allowed_states=['success'],
+        failed_states=['failed', 'skipped']
+    )
+
+    task_branch_2 = PythonOperator(
+        task_id='task_branch_2',
+        python_callable=downstream_function_branch_2,
+    )
+
+    ets_branch_3 = ExternalTaskSensor(
+        task_id="ets_branch_3",
+        external_dag_id='upstream_dag_3',
+        external_task_id='my_task',
+        allowed_states=['success'],
+        failed_states=['failed', 'skipped']
+    )
+
+    task_branch_3 = PythonOperator(
+        task_id='task_branch_3',
+        python_callable=downstream_function_branch_3,
+    )
+
+    start >> [ets_branch_1, ets_branch_2, ets_branch_3]
+
+    ets_branch_1 >> task_branch_1
+    ets_branch_2 >> task_branch_2
+    ets_branch_3 >> task_branch_3
+
+    [task_branch_1, task_branch_2, task_branch_3] >> end
 ```
 
-In this DAG, `downstream_task1` waits for the `bash_print_date2` task of `example_dag` to complete before moving on to execute the rest of the downstream tasks (`downstream_task2`). The graph view of the DAG looks like this:
+In this DAG
 
-![External Task Sensor Graph](https://assets2.astronomer.io/main/guides/cross-dag-dependencies/external_task_sensor_graph.png)
+- `ets_branch_1` waits for the `my_task` task of `upstream_dag_1` to complete before moving on to execute `task_branch_1`.
+- `ets_branch_2` waits for the `my_task` task of `upstream_dag_2` to complete before moving on to execute `task_branch_2`.
+- `ets_branch_3` waits for the `my_task` task of `upstream_dag_3` to complete before moving on to execute `task_branch_3`.
+
+These processes happen in parallel and independent of each other. The graph view shows the state of the DAG after `my_task` in `upstream_dag_1` has finished which caused `ets_branch_1` and `task_branch_1` to run. `ets_branch_2` and `ets_branch_3` are still waiting for their upstream tasks to finish.
+
+![External Task Sensor 3 Branches](https://assets2.astronomer.io/main/guides/cross-dag-dependencies/external_task_sensor_graph_3_branches.png)
 
 If you want the downstream DAG to wait for the entire upstream DAG to finish instead of a specific task, you can set the `external_task_id` to `None`. In the example above, we specify that the external task must have a state of `success` for the downstream task to succeed, as defined by the `allowed_states` and `failed_states`.
 
