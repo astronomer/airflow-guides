@@ -46,9 +46,9 @@ Which implementations you choose will depend on your DAG dependencies and Airflo
 
 ### Dataset driven scheduling
 
-In Airflow 2.4+, you can use datasets to create data driven dependencies between DAGs. This means that DAGs which access the same data can have explicit, visible relationships, and that DAGs can be scheduled based on updates to these datasets. Downstream DAGs can be made dependent on an arbitrary number of datasets to be updated.
+In Airflow 2.4+, you can use datasets to create data-driven dependencies between DAGs. This means that DAGs which access the same data can have explicit, visible relationships, and that DAGs can be scheduled based on updates to these datasets. Downstream DAGs can be made dependent on an arbitrary number of datasets to be updated.
 
-This method is useful when a downstream DAG should only run after one or more datasets have been updated by one or more upstream DAGs, especially if those updates can be very irregular. Additionally, you will have increased observability into the dependencies between your DAGs and datasets in the Airflow UI (see the 'DAG dependencies View' section).
+You should use this method if you have a downstream DAG that should only run after one or more datasets have been updated by one or more upstream DAGs, especially if those updates can be very irregular. Additionally, you will have increased observability into the dependencies between your DAGs and datasets in the Airflow UI (see the 'DAG dependencies View' section).
 
 In the context of dataset driven scheduling, two new terms were introduced:
 
@@ -91,9 +91,9 @@ Check out the [Datasets and Data Driven Scheduling in Airflow](https://www.astro
 
 The `TriggerDagRunOperator` is an easy way to implement cross-DAG dependencies from within the upstream DAG. This operator allows you to have a task in one DAG that triggers another DAG in the same Airflow environment. Read more in-depth documentation about this operator on the [Astronomer Registry](https://registry.astronomer.io/providers/apache-airflow/modules/triggerdagrunoperator).
 
-The `TriggerDagRunOperator` is ideal for situations in which you want one upstream DAG to run up to a specific task, trigger a downstream DAG and then continue running the next task in the upstream DAG as soon as the downstream DAG has finished running. This behavior can be achieved by setting the parameters `wait_for_completion` of the `TriggerDagRunOperator` to `True` (`False` by default).
+The `TriggerDagRunOperator` is ideal for situations in which you want to trigger a downstream DAG in the middle of the upstream DAG, and then continue running the next task in the upstream DAG as soon as the downstream DAG has finished running. This behavior can be achieved by setting the parameters `wait_for_completion` of the `TriggerDagRunOperator` to `True` (`False` by default).
 
-A common use case is that the upstream DAG fetches new testing data for a machine learning pipeline, runs and tests a model and then publishes the model's prediction. In case of the model underperforming the `TriggerDagRunOperator` is used to kick off a DAG that retrains the model, while the upstream DAG waits. Once the model is retrained and tested by the downstream DAG the upstream DAG resumes and goes on to publish the new model's results.
+A common use case for this implementation is when an upstream DAG fetches new testing data for a machine learning pipeline, runs and tests a model, and publishes the model's prediction. In case of the model underperforming, the `TriggerDagRunOperator` is used to kick off a separate DAG that retrains the model, while the upstream DAG waits. Once the model is retrained and tested by the downstream DAG, the upstream DAG resumes and goes on to publish the new model's results.
 
 Below is an example DAG that implements the `TriggerDagRunOperator` to trigger the `dependent-dag` between two other tasks. The `trigger-dagrun-dag` will wait until `dependent-dag` has finished its run until it moves onto running `end_task`, since `wait_for_completion` in the `TriggerDagRunOperator` has been set to `True`.
 
@@ -152,12 +152,12 @@ In the following graph view, you can see that the `trigger_dependent_dag` task i
 
 ![Trigger DAG Graph](https://assets2.astronomer.io/main/guides/cross-dag-dependencies/trigger_dag_run_graph.png)
 
-Note that f your dependent DAG requires a config input or a specific execution date, these can be specified in the operator using the `conf` and `execution_date` params respectively.
+Note that if your dependent DAG requires a config input or a specific execution date, these can be specified in the operator using the `conf` and `execution_date` params respectively.
 
 ### ExternalTaskSensor
 
 To create cross-DAG dependencies from within your downstream DAG, consider using one or more [`ExternalTaskSensor`s](https://registry.astronomer.io/providers/apache-airflow/modules/externaltasksensor). The downstream DAG will wait until a task is completed in the upstream DAG before moving on to the rest of the DAG.
-This method of creating cross-DAG dependencies is especially useful when you have a downstream DAG with different branches that depend on different tasks in one or more upstream DAGs to have succeeded. Instead of defining a whole DAG as being downstream of another DAG like with datasets, you can define specific tasks in a downstream DAG as having to wait for a specific task to finishe in an upstream DAG.
+This method of creating cross-DAG dependencies is especially useful when you have a downstream DAG with different branches that depend on different tasks in one or more upstream DAGs. Instead of defining an entire DAG as being downstream of another DAG like with datasets, you can define specific tasks in a downstream DAG as having to wait for a specific task to finish in an upstream DAG.
 
 For example, you could have upstream tasks modifying different tables in a data warehouse and one downstream DAG running one branch of data quality checks for each of those tables. You can use one `ExternalTaskSensor` at the start of each branch to make sure that the checks running on each table only start, once the update to that specific table has finished.
 
