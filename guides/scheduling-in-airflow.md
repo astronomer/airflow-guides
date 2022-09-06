@@ -7,7 +7,7 @@ heroImagePath: null
 tags: ["DAGs"]
 ---
 
-One of the most fundamental features of Apache Airflow is the ability to schedule jobs. Historically, Airflow users could schedule their DAGs by specifying a `schedule` with a cron expression, a timedelta object, or a preset Airflow schedule.
+One of the fundamental features of Apache Airflow is the ability to schedule jobs. Historically, Airflow users could schedule their DAGs by specifying a `schedule` with a cron expression, a timedelta object, or a preset Airflow schedule.
 
 Timetables, released in Airflow 2.2, brought new flexibility to scheduling. Timetables allow users to create their own custom schedules using Python, effectively eliminating the limitations of cron. With timetables, you can now schedule DAGs to run at any time for any use case.
 
@@ -21,15 +21,13 @@ In this guide, we'll walk through Airflow scheduling concepts and the different 
 
 To get the most out of this guide, you should have knowledge of:
 
-- What Airflow is and when to use it. See [Introduction to Apache Airflow](https://www.astronomer.io/guides/intro-to-airflow).
-- Parameters of Airflow DAGs. See [Introduction to Airflow DAGs](https://www.astronomer.io/guides/dags/).
+- Basic Airflow concepts. See [Introduction to Apache Airflow](https://www.astronomer.io/guides/intro-to-airflow).
+- Configuring Airflow DAGs. See [Introduction to Airflow DAGs](https://www.astronomer.io/guides/dags/).
 - Date and time modules in Python3. See the [Python documentation on the `datetime` package](https://docs.python.org/3/library/datetime.html).
 
 ## Scheduling concepts
 
 There are a couple of terms and parameters in Airflow that are important to understand related to scheduling.
-
-### Terms
 
 - **Data Interval**: The data interval is a property of each DAG run that represents the period of data that each task should operate on. For example, for a DAG scheduled hourly each data interval will begin at the top of the hour (minute 0) and end at the close of the hour (minute 59). The DAG run is typically executed at the *end* of the data interval, depending on whether your DAG's schedule has "gaps" in it.
 - **Logical Date**: The logical date of a DAG run is the same as the *start* of the data interval. It does not represent when the DAG will actually be executed. Prior to Airflow 2.2, this was referred to as the execution date.
@@ -37,7 +35,7 @@ There are a couple of terms and parameters in Airflow that are important to unde
 - **Run After**: The earliest time the DAG can be scheduled. This date is shown in the Airflow UI, and may be the same as the end of the data interval depending on your DAG's timetable.
 - **Backfilling and Catchup**: We won't cover these concepts in depth here, but they can be related to scheduling. We recommend reading [the Apache Airflow documentation](https://airflow.apache.org/docs/apache-airflow/stable/dag-run.html) on them to understand how they work and whether they're relevant for your use case.
 
-> Note: in this guide we do not cover the `execution_date` concept, which has been deprecated as of Airflow 2.2. If you are using older versions of Airflow, review [this doc](https://airflow.apache.org/docs/apache-airflow/stable/faq.html#faq-what-does-execution-date-mean) for more on `execution_date`.
+> Note: In this guide we do not cover the `execution_date` concept, which has been deprecated as of Airflow 2.2. If you are using older versions of Airflow, review [this doc](https://airflow.apache.org/docs/apache-airflow/stable/faq.html#faq-what-does-execution-date-mean) for more on `execution_date`.
 
 ### Parameters
 
@@ -49,15 +47,15 @@ The following parameters are derived from the concepts described above and are i
 - **`start_date`**: The first date your DAG will be executed. This parameter is required for your DAG to be scheduled by Airflow.
 - **`end_date`**: The last date your DAG will be executed. This parameter is optional.
 
-> **Note** In Airflow 2.3 or older, the `schedule` parameter was called `schedule_interval` and only accepted cron expressions or timedelta objects. Timetables had to be passed to Airflow using the now obsolete `timetable` parameter. For versions of Airflow prior to 2.2 specifying the `schedule_interval` was the only mechanism for defining a DAG's schedule.
+> **Note** In Airflow 2.3 or older, the `schedule` parameter is called `schedule_interval` and only accepts cron expressions or timedelta objects. Additionally, timetables have to be passed using the `timetable` parameter, which is deprecated in Airflow 2.4+. In versions of Airflow 2.2 and earlier, specifying `schedule_interval` is the only way to define a DAG's schedule.
 
 ### Example
 
-As a simple example of how these concepts work together, say we have a DAG that is scheduled to run every 5 minutes. Taking the most recent DAG run, the logical date is `2022-08-28 22:37:33`, which is the same as the `data_interval_start` shown in the bottom right corner of in the screenshot below. The `data_interval_end` is 5 minutes later.
+As a simple example of how these concepts work together, say we have a DAG that is scheduled to run every 5 minutes. Looking at the most recent DAG run, the logical date is `2022-08-28 22:37:33`, which is the same as the **Data interval start** shown in the bottom right corner of in the screenshot below. The **Data interval end** is 5 minutes later.
 
 ![5 Minute Example DAG](https://assets2.astronomer.io/main/guides/scheduling-in-airflow/2_4_5minExample.png)
 
-If we look at the next run in the UI, the logical date is `2022-08-28 22:42:33`. This is 5 minutes after the previous logical date, and the same as the `data_interval_end` of the last DAG run since there are no gaps in the schedule. The data interval of the next DAG run is also shown. Run After, which is the date and time that the next DAG run is scheduled for, is the same as the current DAG run's `data_interval_end`: `2022-08-28 19:47:33`.
+If we look at the next DAG run in the UI, the logical date is `2022-08-28 22:42:33`. This is 5 minutes after the previous logical date, and the same as the **Data interval end** of the last DAG run because there are no gaps in the schedule. If we hover over **Next Run**, we can see that **Run After**, which is the date and time that the next DAG run is scheduled for, is also the same as the current DAG run's **Data interval end**:
 
 ![5 Minute Next Run](https://assets2.astronomer.io/main/guides/scheduling-in-airflow/2_4_5minExample_next_run.png)
 
@@ -67,9 +65,9 @@ In the sections below, we'll walk through how to use cron-based schedule, timeta
 
 For pipelines with simple scheduling needs, you can define a `schedule` in your DAG using:
 
-- A cron expression
-- A cron preset
-- A timedelta object
+- A cron expression.
+- A cron preset.
+- A timedelta object.
 
 ### Setting a cron-based schedule
 
@@ -93,7 +91,7 @@ If you want to schedule your DAG on a particular cadence (hourly, every 5 minute
 
 ### Cron-based schedules & the logical date
 
-Airflow was originally developed for ETL under the expectation that data is constantly flowing in from some source and then will be summarized on a regular interval. If you want to summarize Monday's data, you can only do it after Monday is over (Tuesday at 12:01 AM). However, this assumption has turned out to be ill suited to the many other things Airflow is being used for now. This discrepancy is what led to Timetables, which were introduced in Airflow 2.2.
+Airflow was originally developed for ETL under the expectation that data is constantly flowing in from some source and then will be summarized on a regular interval. If you want to summarize Monday's data, you can only do it after Monday is over (Tuesday at 12:01 AM). However, this assumption has turned out to be ill-suited to the many other things Airflow is being used for now. This discrepancy is what led to Timetables, which were introduced in Airflow 2.2.
 
 Each DAG run therefore has a `logical_date` that is separate from the time that the DAG run is expected to begin (`logical_date` was called `execution_date` before Airflow 2.2). A DAG run is not actually allowed to run until the `logical_date` for the *following* DAG run has passed. So if you are running a daily DAG, Monday's DAG run will not actually execute until Tuesday. In this example, the `logical_date` would be Monday 12:01 AM, even though the DAG run will not actually begin until Tuesday 12:01 AM.
 
@@ -310,7 +308,7 @@ There are some limitations to keep in mind when implementing custom timetables:
 
 ## Dataset driven scheduling
 
-Airflow 2.4 introduced the concept of datasets and data driven cross-DAG dependencies. In short, this means that you can make Airflow aware of the fact that a task in a DAG updated a data object. Using that awareness, other DAGs can be scheduled depending on these updates to datasets. To do so, you simply pass the names of the datasets as a list to the `schedule` parameter.
+Airflow 2.4 introduced the concept of datasets and data-driven DAG dependencies. You can now make Airflow detect when a task in a DAG updates a data object. Using that awareness, other DAGs can be scheduled depending on updates to these datasets. To create a dataset-based schedule, you simply pass the names of the datasets as a list to the `schedule` parameter.
 
 ```Python
 dataset1 = Dataset(f"{DATASETS_PATH}/dataset_1.txt")
@@ -325,9 +323,9 @@ with DAG(
 ) as dag:
 ```
 
-The DAG defined above will only run once both `dataset1` and `dataset2` have been updated. These updates can occur by tasks in different DAGs as long as they are located in the same Airflow environment.
+This DAG runs only when both `dataset1` and `dataset2` have been updated. These updates can occur by tasks in different DAGs as long as they are located in the same Airflow environment.
 
-In the Airflow UI, the schedule of the DAG will be shown as `Dataset` and the Next Run column informs you how many datasets the DAG depends on and how many of them have been updated already.
+In the Airflow UI, the DAG now has a schedule of **Dataset** and the **Next Run** column shows how many datasets the DAG depends on and how many of them have been updated.
 
 ![Dataset dependent DAG](https://assets2.astronomer.io/main/guides/scheduling-in-airflow/2_4_DatasetDependentDAG.png)
 
