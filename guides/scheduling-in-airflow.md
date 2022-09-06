@@ -51,13 +51,18 @@ The following parameters are derived from the concepts described above and are i
 
 ### Example
 
-As a simple example of how these concepts work together, say we have a DAG that is scheduled to run every 5 minutes. Looking at the most recent DAG run, the logical date is `2022-08-28 22:37:33`, which is the same as the **Data interval start** shown in the bottom right corner of in the screenshot below. The **Data interval end** is 5 minutes later.
+As a simple example of how these concepts work together, say we have a DAG that is scheduled to run every 5 minutes. Looking at the most recent DAG run, the logical date is `2022-08-28 22:37:33` (shown below **Run** next to the DAG name in the UI), which is the same as the **Data interval start** shown in the bottom right corner of in the screenshot below. The logical date is also the timestamp that will be incorporated into the **Run ID** of the DAG run which will is how the DAG run is identified in the Airflow metadata database. The **Data interval end** is 5 minutes later.
 
 ![5 Minute Example DAG](https://assets2.astronomer.io/main/guides/scheduling-in-airflow/2_4_5minExample.png)
 
-If we look at the next DAG run in the UI, the logical date is `2022-08-28 22:42:33`. This is 5 minutes after the previous logical date, and the same as the **Data interval end** of the last DAG run because there are no gaps in the schedule. If we hover over **Next Run**, we can see that **Run After**, which is the date and time that the next DAG run is scheduled for, is also the same as the current DAG run's **Data interval end**:
+If we look at the next DAG run in the UI, the logical date is `2022-08-28 22:42:33`, which is shown as the **Next Run** timestamp in the UI. This is 5 minutes after the previous logical date, and the same as the **Data interval end** of the last DAG run because there are no gaps in the schedule. If we hover over **Next Run**, we can see that **Run After**, which is the date and time that the next DAG run will actually start, is also the same as the next DAG run's **Data interval end**:
 
 ![5 Minute Next Run](https://assets2.astronomer.io/main/guides/scheduling-in-airflow/2_4_5minExample_next_run.png)
+
+In summary we've described 2 DAG runs:
+
+- DAG run 1 with the **Run ID** `scheduled__2022-08-28T22:37:33.620191+00:00` has a logical date of `2022-08-28 22:37:33`, a **Data interval start** of `2022-08-28 22:37:33` and a **Data interval end** of `2022-08-28 22:42:33`. This DAG run will actually start at `2022-08-28 22:42:33`.
+- DAG run 2 with the **Run ID** `scheduled__2022-08-28T22:42:33.617231+00:00` has a logical date of `2022-08-28 22:42:33` (shown as **Next Run** in the UI), a **Data interval start** of `2022-08-28 22:42:33` and a **Data interval end** of `2022-08-28 22:47:33`. This DAG run will actually start at `2022-08-28 22:47:33` (shown as **Run After** in the UI) in the second screenshot.
 
 In the sections below, we'll walk through how to use cron-based schedule, timetables, or datasets to schedule your DAG.
 
