@@ -21,11 +21,15 @@ To get the most out of this guide, you should have knowledge of:
 
 ## Dataset concepts
 
-You can define datasets in your Airflow environment and use them to create dependencies between DAGs. To define a dataset, instantiate the `Dataset` class and provide a name for the dataset. The name should be in the form of a valid Uniform Resource Identifier (URI). In 2.4, Airflow simply treats the URI as a string; Airflow does not use the URI to connect to an external system and has no awareness of the content or location of the dataset. However, using this naming convention helps you to easily identify which dataset in which location you are referring to and will ensure compatibility with future Airflow versions.
+You can define datasets in your Airflow environment and use them to create dependencies between DAGs. To define a dataset, instantiate the `Dataset` class and provide a string to identify the location of the dataset. This string must be in the form of a valid Uniform Resource Identifier (URI). 
+
+In 2.4, Airflow does not use this URI to connect to an external system and has no awareness of the content or location of the dataset. However, using this naming convention helps you to easily identify the datasets that your DAG accesses and ensures compatibility with future Airflow features.
 
 > **Note:** The dataset URI is saved in plain text, so it is best practice to hide any sensitive values using environment variables or a secrets backend.
 
-You can reference the dataset in a task by passing it to the `outlets` parameter. `outlets` is part of the `BaseOperator`, so it's available to every Airflow operator. Defining an `outlet` tells Airflow that the task updates the given dataset. Note that it is up to the DAG author to figure out which tasks should be considered producer tasks for a dataset. You can define an `outlet` dataset on any task, even if that task doesn't actually operate on a dataset (for example, the sleeping BashOperator examples below).
+You can reference the dataset in a task by passing it to the task's `outlets` parameter. `outlets` is part of the `BaseOperator`, so it's available to every Airflow operator. 
+
+When you define a task's `outlets` parameter, Airflow labels the task as a "producer task" which updates the given datasets. Note that it is up to you to determine which tasks should be considered producer tasks for a dataset. As long as a task has an outlet dataset, Airflow considers it a producer task even if that task doesn't technically operate on the referenced dataset. In the following example, Airflow treats both `upstream_task_1` and `upstream_task_2` as producer tasks even though they only run `sleep` in a bash shell.
 
 ```python
 from airflow import DAG, Dataset
@@ -54,7 +58,7 @@ with DAG(
     )
 ```
 
-When you define a dataset as an `outlet` in a task, it is considered a "producer" task. Once a dataset is defined in one or more producer tasks, "consumer" DAGs in your Airflow environment listen to the producer tasks and run whenever the task completes, rather than running on a time-based schedule. For example, if you have a DAG that should run when `dag1_dataset` and `dag2_dataset` are updated, you define the DAG's schedule using the names of the datasets.
+Once a dataset is defined in one or more producer tasks, "consumer DAGs" in your Airflow environment listen to the producer tasks and run whenever the task completes, rather than running on a time-based schedule. For example, if you have a DAG that should run when `dag1_dataset` and `dag2_dataset` are updated, you define the DAG's schedule using the names of the datasets.
 
 ```python
 dag1_dataset = Dataset('s3://dataset1/output_1.txt')
@@ -153,9 +157,9 @@ def datasets_ml_example_publish():
 datasets_ml_example_publish = datasets_ml_example_publish()
 ```
 
-This DAG has a single task, `upload_data_to_s3`, that publishes the data. An outlet dataset is defined in the `@task` decorator: `outlets=Dataset(dataset_uri)` (where the dataset URI is defined at the top of the DAG script).
+This DAG has a single task, `upload_data_to_s3`, that publishes the data. An outlet dataset is defined in the `@task` decorator using `outlets=Dataset(dataset_uri)` (where the dataset URI is defined at the top of the DAG script).
 
-Then the data science team can provide that same dataset URI to the schedule parameter in their DAG:
+The data science team can then provide that same dataset URI to the `schedule` parameter in their DAG:
 
 ```python
 from airflow import DAG, Dataset
@@ -230,6 +234,6 @@ with DAG(
     predict >> results_to_redshift
 ```
  
-This dependency between the two DAGs is simple to implement and is easily viewed in the Airflow UI.
+This dependency between the two DAGs is simple to implement and is can be viewed alongside the dataset in the Airflow UI.
 
 ![ML Example Dependencies](https://assets2.astronomer.io/main/guides/data-driven-scheduling/ml_example_dependencies.png)
