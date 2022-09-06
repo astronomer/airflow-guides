@@ -92,9 +92,13 @@ On the **DAGs** view, we can see that our `dataset_downstream_1_2` DAG is schedu
 
 ![DAGs View](https://assets2.astronomer.io/main/guides/data-driven-scheduling/dags_view_dataset_schedule.png)
 
-The new **Datasets** tab shows a list of all datasets in your Airflow environment, including how many tasks update the dataset ("Producing tasks"), and how many DAGs are scheduled on updates to that dataset ("Consuming DAGs").
+The new **Datasets** tab shows a list of all datasets in your Airflow environment and a graph showing how your DAGs and datasets are connected.
 
-![Datasets View](https://assets2.astronomer.io/main/guides/data-driven-scheduling/datasets_view.png)
+![Datasets View](https://assets2.astronomer.io/main/guides/data-driven-scheduling/datasets_view_overview.png)
+
+Clicking on one of the datasets will show you a list of task instances that updated the dataset and a highlighted view of that dataset and its connections on the graph.
+
+![Datasets Highlight](https://assets2.astronomer.io/main/guides/data-driven-scheduling/datasets_view_highlight.png)
 
 The **DAG Dependencies** view (found under the **Browse** tab) shows a graph of all dependencies between DAGs (in green) and datasets (in orange) in your Airflow environment.
 
