@@ -62,7 +62,7 @@ If we look at the next DAG run in the UI, the logical date is `2022-08-28 22:42:
 In summary we've described 2 DAG runs:
 
 - DAG run 1 with the **Run ID** `scheduled__2022-08-28T22:37:33.620191+00:00` has a logical date of `2022-08-28 22:37:33`, a **Data interval start** of `2022-08-28 22:37:33` and a **Data interval end** of `2022-08-28 22:42:33`. This DAG run will actually start at `2022-08-28 22:42:33`.
-- DAG run 2 with the **Run ID** `scheduled__2022-08-28T22:42:33.617231+00:00` has a logical date of `2022-08-28 22:42:33` (shown as **Next Run** in the UI), a **Data interval start** of `2022-08-28 22:42:33` and a **Data interval end** of `2022-08-28 22:47:33`. This DAG run will actually start at `2022-08-28 22:47:33` (shown as **Run After** in the UI) in the second screenshot.
+- DAG run 2 with the **Run ID** `scheduled__2022-08-28T22:42:33.617231+00:00` has a logical date of `2022-08-28 22:42:33` (shown as **Next Run** in the UI in the second screenshot), a **Data interval start** of `2022-08-28 22:42:33` and a **Data interval end** of `2022-08-28 22:47:33`. This DAG run will actually start at `2022-08-28 22:47:33` (shown as **Run After** in the UI in the second screenshot).
 
 In the sections below, we'll walk through how to use cron-based schedule, timetables, or datasets to schedule your DAG.
 
