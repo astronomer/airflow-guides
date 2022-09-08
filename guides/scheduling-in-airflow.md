@@ -51,7 +51,7 @@ The following parameters are derived from the concepts described above and are i
 
 ### Example
 
-As a simple example of how these concepts work together, say we have a DAG that is scheduled to run every 5 minutes. Looking at the most recent DAG run, the logical date is `2022-08-28 22:37:33` (shown below **Run** next to the DAG name in the UI), which is the same as the **Data interval start** shown in the bottom right corner of in the screenshot below. The logical date is also the timestamp that will be incorporated into the **Run ID** of the DAG run which will is how the DAG run is identified in the Airflow metadata database. The **Data interval end** is 5 minutes later.
+As a simple example of how these concepts work together, say we have a DAG that is scheduled to run every 5 minutes. Looking at the most recent DAG run, the logical date is `2022-08-28 22:37:33` (shown below **Run** next to the DAG name in the UI), which is the same as the **Data interval start** shown in the bottom right corner of in the screenshot below. The logical date is also the timestamp that will be incorporated into the **Run ID** of the DAG run which is how the DAG run is identified in the Airflow metadata database. The **Data interval end** is 5 minutes later.
 
 ![5 Minute Example DAG](https://assets2.astronomer.io/main/guides/scheduling-in-airflow/2_4_5minExample.png)
 
