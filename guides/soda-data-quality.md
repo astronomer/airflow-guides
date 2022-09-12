@@ -4,7 +4,7 @@ description: "Using Soda Core to implement data quality checks in Airflow DAGs."
 date: 2022-08-11T00:00:00.000Z
 slug: "soda-data-quality"
 heroImagePath: null
-tags: ["Soda", "Data quality"]
+tags: ["Soda", "Data Quality"]
 ---
 
 [Soda Core](https://www.soda.io/core) is an open source framework for checking data quality. It uses the Soda Checks Language (SodaCL) to run checks defined in a YAML file.
