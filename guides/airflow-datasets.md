@@ -10,7 +10,7 @@ The release of [Airflow 2.4](link release notes!) introduces datasets and data d
 
 This feature will help with many common use cases. For example, consider a data engineering team with a DAG that creates a dataset and an analytics team with a DAG that analyses the dataset. Using datasets, the data analytics team can ensure their DAG runs only when the data engineering team's DAG has finished publishing the dataset.
 
-In this guide, we'll explain the concept of datasets in Airflow and how to use them to implement triggering of DAGs based on dataset updates.
+In this guide, we'll explain the concept of datasets in Airflow and how to use them to implement triggering of DAGs based on dataset updates. We'll also discuss how the datasets concept works with the Astro Python SDK.
 
 ## Assumed knowledge
 
@@ -18,6 +18,7 @@ To get the most out of this guide, you should have knowledge of:
 
 - Airflow scheduling concepts. See [Scheduling and Timetables in Airflow](https://www.astronomer.io/guides/scheduling-in-airflow/).
 - Creating dependencies between DAGs. See [Cross-DAG Dependencies](https://www.astronomer.io/guides/cross-dag-dependencies/).
+- The Astro Python SDK. See [Using the Astro Python SDK](https://docs.astronomer.io/tutorials/astro-python-sdk).
 
 ## Dataset concepts
 
@@ -237,3 +238,67 @@ with DAG(
 This dependency between the two DAGs is simple to implement and is can be viewed alongside the dataset in the Airflow UI.
 
 ![ML Example Dependencies](https://assets2.astronomer.io/main/guides/data-driven-scheduling/ml_example_dependencies.png)
+
+## Datasets with the Astro Python SDK
+
+If you are using the Astro Python SDK version 1.1 or later, you do not need to make any code updates to use the datasets feature. Datasets will be automatically registered for any functions with output tables and you do not need to define any `outlet` parameters. 
+
+For example, the following DAG results in three registered datasets: one for each `load_file` function and one for the resulting data from the `transform` function.
+
+```python
+import os
+from datetime import datetime
+
+import pandas as pd
+from airflow.decorators import dag
+
+from astro.files import File
+from astro.sql import (
+    load_file,
+    transform,
+)
+from astro.sql.table import Table
+
+SNOWFLAKE_CONN_ID = "snowflake_conn"
+AWS_CONN_ID = "aws_conn"
+
+# The first transformation combines data from the two source tables
+@transform
+def extract_data(homes1: Table, homes2: Table):
+    return """
+    SELECT *
+    FROM {{homes1}}
+    UNION
+    SELECT *
+    FROM {{homes2}}
+    """
+
+@dag(start_date=datetime(2021, 12, 1), schedule_interval="@daily", catchup=False)
+def example_sdk_datasets():
+
+    # Initial load of homes data csv's from S3 into Snowflake
+    homes_data1 = load_file(
+        task_id="load_homes1",
+        input_file=File(path="s3://airflow-kenten/homes1.csv", conn_id=AWS_CONN_ID),
+        output_table=Table(name="HOMES1", conn_id=SNOWFLAKE_CONN_ID),
+        if_exists='replace'
+    )
+
+    homes_data2 = load_file(
+        task_id="load_homes2",
+        input_file=File(path="s3://airflow-kenten/homes2.csv", conn_id=AWS_CONN_ID),
+        output_table=Table(name="HOMES2", conn_id=SNOWFLAKE_CONN_ID),
+        if_exists='replace'
+    )
+
+    # Define task dependencies
+    extracted_data = extract_data(
+        homes1=homes_data1,
+        homes2=homes_data2,
+        output_table=Table(name="combined_homes_data"),
+    )
+
+example_sdk_datasets = example_sdk_datasets()
+```
+
+![SDK datasets](https://assets2.astronomer.io/main/guides/data-driven-scheduling/sdk_datasets.png)
