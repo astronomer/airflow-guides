@@ -60,7 +60,7 @@ with DAG(
 ```
 
 Once a dataset is defined in one or more producer tasks, "consumer DAGs" in your Airflow environment listen to the producer tasks and run whenever the task completes, rather than running on a time-based schedule. For example, if you have a DAG that should run when `dag1_dataset` and `dag2_dataset` are updated, you define the DAG's schedule using the names of the datasets.
-
+As long as a task is scheduled via a `Dataset`, Airflow considers it a consumer task even if that task doesn't technically consume the referenced dataset. In other words, it is up to the DAG author of the consumer DAG to correctly reference and use the `Dataset` that the consumer DAG is scheduled on.
 ```python
 dag1_dataset = Dataset('s3://dataset1/output_1.txt')
 dag2_dataset = Dataset('s3://dataset2/output_2.txt')
