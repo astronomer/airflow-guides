@@ -241,7 +241,7 @@ This dependency between the two DAGs is simple to implement and is can be viewed
 
 ## Datasets with the Astro Python SDK
 
-If you are using the Astro Python SDK version 1.1 or later, you do not need to make any code updates to use the datasets feature. Datasets will be automatically registered for any functions with output tables and you do not need to define any `outlet` parameters. 
+If you are using the [Astro Python SDK](https://docs.astronomer.io/tutorials/astro-python-sdk) version 1.1 or later, you do not need to make any code updates to use the datasets feature. Datasets will be automatically registered for any functions with output tables and you do not need to define any `outlet` parameters. 
 
 For example, the following DAG results in three registered datasets: one for each `load_file` function and one for the resulting data from the `transform` function.
 
