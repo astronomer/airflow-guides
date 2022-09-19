@@ -61,7 +61,7 @@ In the **Graph View**, any mapped tasks will be indicated by a set of brackets `
 
 ![Mapped Graph](https://assets2.astronomer.io/main/guides/dynamic-tasks/mapped_task_graph.png)
 
-Clicking on the mapped task, we have a new **Mapped Instances** drop down where we can select a specific mapped task run to perform actions on.
+Clicking on the mapped task, we have a **Mapped Instances** drop down where we can select a specific mapped task run to perform actions on.
 
 ![Mapped Actions](https://assets2.astronomer.io/main/guides/dynamic-tasks/mapped_instances_task_actions.png)
 
@@ -75,16 +75,18 @@ Similarly, the **Grid View** shows task details and history for each mapped task
 
 ## Mapping over the result of another operator
 
-It is possible to use the output of an upstream operator as the input over which a downstream task is being mapped over. A possible use case is shown below in the ETL example.
+You can use the output of an upstream operator as the input data for a dynamically mapped downstream task.
 
-In this section we will show how to pass mapping information to a downstream task for the following cases:
+In this section you'll learn how to pass mapping information to a downstream task for each of the following scenarios:
 
-- Both tasks are defined using the TaskFlowAPI.
-- The upstream task is defined using the TaskFlowAPI and the downstream task is using a traditional operator.
-- The upstream task is defined using a traditional operator and the downstream task is defined using the TaskFlowAPI.
+- Both tasks are defined using the TaskFlow API.
+- The upstream task is defined using the TaskFlow API and the downstream task is using a traditional operator.
+- The upstream task is defined using a traditional operator and the downstream task is defined using the TaskFlow API.
 - Both tasks are defined using traditional operators.
 
-If both tasks are defined using the TaskFlowAPI, you can provide the call of the upstream task to the keyword parameter that is being expanded over.
+### Map inputs when both tasks are defined with the TaskFlow API
+
+If both tasks are defined using the TaskFlow API, you can provide a function call to the upstream task as the argument for the `expand()` function.
 
 ```Python
 @task
@@ -97,8 +99,9 @@ def plus_10_TF(x):
 
 plus_10_TF.partial().expand(x=one_two_three_TF())
 ```
+### Map inputs to an operator-defined task from a TaskFlow API-defined task.
 
-Passing data from an upstream task defined using the TaskFlowAPI to a downstream traditional operator works in a very similar fashion. Note that the format of the mapping information returned by the upstream task may need to be modified to be accepted by the `op_args` argument of the traditional `PythonOperator`.
+Passing data from an upstream task defined using the TaskFlowAPI to a downstream traditional operator works in a very similar fashion. Note that the format of the mapping information returned by the upstream TaskFlow API task might need to be modified to be accepted by the `op_args` argument of the traditional PythonOperator.
 
 ```Python
 @task
@@ -117,7 +120,9 @@ plus_10_task = PythonOperator.partial(
 )
 ```
 
-If you are mapping over the results of a traditional operator, you need to extract the return value using the `XComArg` object.
+### Map inputs to  TaskFlow API-defined task from an operator-defined task.
+
+If you are mapping over the results of a traditional operator, you need to format the argument for `expand()` using the `XComArg` object.
 
 ```Python
 from airflow import XComArg
@@ -136,6 +141,9 @@ one_two_three_task = PythonOperator(
 
 plus_10_TF.partial().expand(x=XComArg(one_two_three_task))
 ```
+
+### Map inputs when both tasks are defined with traditional operators
+
 
 The `XComArg` object can also be used to map a traditional operator over the results of another traditional operator.
 
@@ -169,8 +177,8 @@ one_two_three_task >> plus_10_task
 
 There are three different ways to map over multiple parameters:
 
-- **Cross-Product**: Mapping over 2 or more *keyword* arguments results in a mapped task instance for each possible combination of inputs. This type of mapping uses the `expand()` function.
-- **Sets of keyword arguments**: Mapping over 2 or more sets of one or more *keyword* arguments results in a mapped task instance for every set. This type of mapping uses the `expand_kwargs()` function.
+- **Cross-product**: Mapping over 2 or more *keyword* arguments results in a mapped task instance for each possible combination of inputs. This type of mapping uses the `expand()` function.
+- **Sets of keyword arguments**: Mapping over 2 or more sets of one or more keyword arguments results in a mapped task instance for every defined set, rather than every combination of individual inputs. This type of mapping uses the `expand_kwargs()` function.
 - **Zip**: Mapping over a set of *positional* arguments created with Python's built-in `zip()` function or with the `.zip()` method of an XComArg results in one mapped task for every set of positional arguments. Each set of positional arguments is passed to the same *keyword* argument of the operator. This type of mapping uses the `expand()` function.
 
 ### Cross-Product
@@ -231,17 +239,16 @@ The task `t1` will have 3 mapped task instances printing their results into the 
 
 ### Zip
 
-In Airflow 2.4+ you can provide sets of positional arguments to the same keyword argument, for example to the `op_args` keyword argument of the `PythonOperator`. You can use the built-in Python function [`zip()`](https://docs.python.org/3/library/functions.html#zip) if your inputs are in the form of iterables such as tuples, dictionaries or lists and the `.zip()` method of the `XComArg` object if your inputs are coming from XComs.
+In Airflow 2.4+ you can provide sets of positional arguments to the same keyword argument, such as the `op_args` argument of the PythonOperator. You can use the built-in [`zip()`] function(https://docs.python.org/3/library/functions.html#zip) Python function if your inputs are in the form of iterables such as tuples, dictionaries, or lists. If your inputs come from XCom objects, you can use the `.zip()` method of the `XComArg` object.
 
-> **Note**: It is currently not possible to provide XComArg objects to the built-in Python function `zip()` or to directly provide iterables to the `.zip()` method of the XComArg object.
 
-#### Built-in Python function zip()
+#### Provide positional arguments with the built-in Python zip()
 
 The `zip()` function takes in an arbitrary number of iterables (for example lists) and uses their elements to create a zip-object containing tuples. There will be as many tuples as there are elements in the shortest iterable. Each tuple contains one element from every iterable provided. For example:
 
-- `zip(["a", "b", "c"], [1, 2, 3], ["hi", "bye", "tea"])` will result in a zip object containing: `("a", 1, "hi"), ("b", 2, "bye"), ("c", 3, "tea")`
-- `zip(["a", "b"], [1], ["hi", "bye"], [19, 23], ["x", "y", "z"])` will result in a zip object containing only one tuple: `("a", 1, "hi", 19, "x")` because the shortest list provided only contains one element.
-- It is also possible to zip together different types of iterables: `zip(["a", "b"], {"hi", "bye"}, (19, 23))` will result in a zip object containing: `('a', 'hi', 19), ('b', 'bye', 23)`.
+- `zip(["a", "b", "c"], [1, 2, 3], ["hi", "bye", "tea"])` results in a zip object containing: `("a", 1, "hi"), ("b", 2, "bye"), ("c", 3, "tea")`.
+- `zip(["a", "b"], [1], ["hi", "bye"], [19, 23], ["x", "y", "z"])` results in a zip object containing only one tuple: `("a", 1, "hi", 19, "x")`. This is because the shortest list provided only contains one element.
+- It is also possible to zip together different types of iterables. `zip(["a", "b"], {"hi", "bye"}, (19, 23))` results in a zip object containing: `('a', 'hi', 19), ('b', 'bye', 23)`.
 
 The code snippet below shows how a list of zipped arguments can be provided to the `expand()` function in order to create mapped tasks over sets of positional arguments. Each set of positional arguments is passed to the keyword argument `zipped_x_y_z`.
 
@@ -258,17 +265,17 @@ def add_numbers(zipped_x_y_z):
 add_numbers.expand(zipped_x_y_z=zipped_arguments)
 ```
 
-The task `add_numbers` will have three mapped task instances each performing one calculation with the results being:
+The task `add_numbers` will have three mapped task instances for each possible combination of positional arguments:
 
 - Map index 0: `111`
 - Map index 1: `222`
 - Map index 2: `333`
 
-#### .zip() method of the XComArg object
+#### Provide positional arguments XComArg object zip()
 
 It is also possible to zip `XComArg` objects. If the upstream task has been defined using the TaskFlow API, simply provide the function call. If the upstream task used a traditional operator, provide the `XComArg(task_object)`. Below you can see an example of the results of two TaskFlowAPI tasks and one traditional operator being zipped together to form the `zipped_arguments` (`[(1,10,100), (2,1000,200), (1000,1000,300)]`).
 
-To mimic the behavior of the [`zip_longest()`](https://docs.python.org/3/library/itertools.html#itertools.zip_longest) function from the `itertools` package, you can add an optional keyword argument `fillvalue` to the `.zip()` method. If `fillvalue` is specified, the method will produce as many tuples as the longest input has elements, missing elements are filled with the default value. If `fillvalue` would not have been specified in the example below, `zipped_arguments` would only contain one tuple `[(1,10,100)]` since the shortest list provided to the `.zip()` method is only one element long.
+To mimic the behavior of the [`zip_longest()`](https://docs.python.org/3/library/itertools.html#itertools.zip_longest) function, you can add the optional `fillvalue` keyword argument to the `.zip()` method. If you specify a default value with `fillvalue`, the method produces as many tuples as the longest input has elements and fills in missing elements with the default value. If `fillvalue` was not specified in the example below, `zipped_arguments` would only contain one tuple `[(1,10,100)]` since the shortest list provided to the `.zip()` method is only one element long.
 
 ```Python
 from airflow import XComArg
