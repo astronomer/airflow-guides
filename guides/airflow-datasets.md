@@ -1,12 +1,12 @@
 ---
-title: "Datasets and Data Driven Scheduling in Airflow"
+title: "Datasets and Data-Aware Scheduling in Airflow"
 description: "Using datasets to implement DAG dependencies and scheduling in Airflow."
 date: 2022-09-01T00:00:00.000Z
 slug: "airflow-datasets"
 tags: ["DAGs", "Dependencies", "Scheduling"]
 ---
 
-The release of [Airflow 2.4](https://airflow.apache.org/docs/apache-airflow/2.4.0/release_notes.html#airflow-2-4-0-2022-09-19) introduces datasets and data dependencies. This means that DAGs which access the same data now have explicit, visible relationships, and that DAGs can be scheduled based on updates to these datasets. This feature is a big step forward in making Airflow data-aware and vastly expands Airflow's scheduling capabilities beyond time-based methods like Cron.
+The release of [Airflow 2.4](https://airflow.apache.org/docs/apache-airflow/2.4.0/release_notes.html#airflow-2-4-0-2022-09-19) introduces datasets and data-aware scheduling. This means that DAGs which access the same data now have explicit, visible relationships, and that DAGs can be scheduled based on updates to these datasets. This feature is a big step forward in making Airflow data-aware and vastly expands Airflow's scheduling capabilities beyond time-based methods like Cron.
 
 This feature will help with many common use cases. For example, consider a data engineering team with a DAG that creates a dataset and an analytics team with a DAG that analyses the dataset. Using datasets, the data analytics team can ensure their DAG runs only when the data engineering team's DAG has finished publishing the dataset.
 
@@ -113,7 +113,7 @@ The **DAG Dependencies** view (found under the **Browse** tab) shows a graph of 
 
 ## Example implementation
 
-In this section we'll show how datasets and data-driven scheduling can help with a classic ML Ops use case. We assume that two teams are responsible for DAGs that provide data, train a model, and publish the results. 
+In this section we'll show how datasets and data-aware scheduling can help with a classic ML Ops use case. We assume that two teams are responsible for DAGs that provide data, train a model, and publish the results. 
 
 In this example, a data engineering team has a DAG that sends data to an S3 bucket. Then a data science team has another DAG that uses that data to train a Sagemaker model and publish the results to Redshift. 
 
