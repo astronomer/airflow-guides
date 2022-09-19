@@ -11,7 +11,7 @@ With the release of [Airflow 2.3](https://airflow.apache.org/blog/airflow-2.3.0/
 
 Prior to Airflow 2.3, tasks could only be generated dynamically at the time that the DAG was parsed, meaning you had to change your DAG code if you needed to adjust tasks based on some external factor. With dynamic task mapping, you can easily write DAGs that create tasks based on your current runtime environment.
 
-In this guide, we'll explain the concept of dynamic task mapping and provide example implementations for common use cases.
+In this guide, we'll explain the concept of dynamic task mapping and provide an example implementation for a common use case.
 
 ## Assumed knowledge
 
