@@ -69,9 +69,9 @@ Selecting one of the mapped instances provides links to other views like you wou
 
 ![Mapped Views](https://assets2.astronomer.io/main/guides/dynamic-tasks/mapped_instance_views.png)
 
-Similarly, the **Grid View** shows task details and history for each mapped task. All mapped tasks will be combined into one row on the grid (shown as `load_files_to_snowflake [ ]` in the following example). Clicking into that task will provide details on each individual mapped instance.
+Similarly, the **Grid View** shows task details and history for each mapped task. All mapped tasks will be combined into one row on the grid (shown for example as `mix_cross_and_zip [ ]` in the screenshot below). Clicking into that task will provide details on each individual mapped instance under the `Mapped Tasks` tab.
 
-![Mapped Grid](https://assets2.astronomer.io/main/guides/dynamic-tasks/mapped_grid_view.png)
+![Mapped Grid](https://assets2.astronomer.io/main/guides/dynamic-tasks/mapped_grid_view_2_4.png)
 
 ## Mapping over the result of another operator
 
@@ -80,7 +80,7 @@ You can use the output of an upstream operator as the input data for a dynamical
 In this section you'll learn how to pass mapping information to a downstream task for each of the following scenarios:
 
 - Both tasks are defined using the TaskFlow API.
-- The upstream task is defined using the TaskFlow API and the downstream task is using a traditional operator.
+- The upstream task is defined using the TaskFlow API and the downstream task is defined using a traditional operator.
 - The upstream task is defined using a traditional operator and the downstream task is defined using the TaskFlow API.
 - Both tasks are defined using traditional operators.
 
@@ -100,9 +100,9 @@ def plus_10_TF(x):
 plus_10_TF.partial().expand(x=one_two_three_TF())
 ```
 
-### Map inputs to an operator-defined task from a TaskFlow API-defined task
+### Map inputs to a traditional operator-defined task from a TaskFlow API-defined task
 
-Passing data from an upstream task defined using the TaskFlowAPI to a downstream traditional operator works in a very similar fashion. Note that the format of the mapping information returned by the upstream TaskFlow API task might need to be modified to be accepted by the `op_args` argument of the traditional PythonOperator.
+Passing data from an upstream task defined using the TaskFlow API to a downstream traditional operator works in a very similar fashion. Note that the format of the mapping information returned by the upstream TaskFlow API task might need to be modified to be accepted by the `op_args` argument of the traditional PythonOperator.
 
 ```Python
 @task
@@ -121,7 +121,7 @@ plus_10_task = PythonOperator.partial(
 )
 ```
 
-### Map inputs to TaskFlow API-defined task from an operator-defined task
+### Map inputs to TaskFlow API-defined task from a traditional operator-defined task
 
 If you are mapping over the results of a traditional operator, you need to format the argument for `expand()` using the `XComArg` object.
 
@@ -222,7 +222,7 @@ The nine mapped task instances of the task `cross_product_example` run all possi
 To map over sets of inputs to two or more keyword arguments (kwargs), you can use the `expand_kwargs()` function in Airflow 2.4+. You can provide sets of parameters as a list containing a dictionary or as an `XComArg`. The operator gets 3 sets of commands, resulting in 3 mapped task instances.
 
 ```Python
-# input sets of kwargs directly as a list[dict] PENDING IMPLEMENTATION!
+# input sets of kwargs provided directly as a list[dict]
 t1 = BashOperator.partial(task_id="t1").expand_kwargs(
     [
         {"bash_command": "echo $WORD", "env" : {"WORD": "hello"}},
@@ -258,7 +258,7 @@ The code snippet below shows how a list of zipped arguments can be provided to t
 zipped_arguments = list(zip([1,2,3], [10,20,30], [100,200,300]))
 # zipped_arguments contains: [(1,10,100), (2,20,200), (3,30,300)]
 
-# creating the mapped task instances using the TaskFlowAPI
+# creating the mapped task instances using the TaskFlow API
 @task
 def add_numbers(zipped_x_y_z):
     return zipped_x_y_z[0] + zipped_x_y_z[1] + zipped_x_y_z[2]
@@ -266,7 +266,7 @@ def add_numbers(zipped_x_y_z):
 add_numbers.expand(zipped_x_y_z=zipped_arguments)
 ```
 
-The task `add_numbers` will have three mapped task instances for each possible combination of positional arguments:
+The task `add_numbers` will have three mapped task instances one for each tuple of positional arguments:
 
 - Map index 0: `111`
 - Map index 1: `222`
@@ -274,7 +274,7 @@ The task `add_numbers` will have three mapped task instances for each possible c
 
 #### Provide positional arguments XComArg object zip()
 
-It is also possible to zip `XComArg` objects. If the upstream task has been defined using the TaskFlow API, simply provide the function call. If the upstream task used a traditional operator, provide the `XComArg(task_object)`. Below you can see an example of the results of two TaskFlowAPI tasks and one traditional operator being zipped together to form the `zipped_arguments` (`[(1,10,100), (2,1000,200), (1000,1000,300)]`).
+It is also possible to zip `XComArg` objects. If the upstream task has been defined using the TaskFlow API, simply provide the function call. If the upstream task used a traditional operator, provide the `XComArg(task_object)`. Below you can see an example of the results of two TaskFlow API tasks and one traditional operator being zipped together to form the `zipped_arguments` (`[(1,10,100), (2,1000,200), (1000,1000,300)]`).
 
 To mimic the behavior of the [`zip_longest()`](https://docs.python.org/3/library/itertools.html#itertools.zip_longest) function, you can add the optional `fillvalue` keyword argument to the `.zip()` method. If you specify a default value with `fillvalue`, the method produces as many tuples as the longest input has elements and fills in missing elements with the default value. If `fillvalue` was not specified in the example below, `zipped_arguments` would only contain one tuple `[(1,10,100)]` since the shortest list provided to the `.zip()` method is only one element long.
 
@@ -304,7 +304,7 @@ zipped_arguments = one_two_three().zip(
 )
 # zipped_arguments contains [(1,10,100), (2,1000,200), (1000,1000,300)]
 
-# creating the mapped task instances using the TaskFlowAPI
+# creating the mapped task instances using the TaskFlow API
 @task
 def add_nums(zipped_x_y_z):
     print(zipped_x_y_z)
