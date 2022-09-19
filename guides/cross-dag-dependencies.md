@@ -119,13 +119,14 @@ default_args = {
     'retry_delay': timedelta(minutes=5)
 }
 
-with DAG('trigger-dagrun-dag',
-         start_date=datetime(2021, 1, 1),
-         max_active_runs=1,
-         schedule_interval='@daily',
-         default_args=default_args,
-         catchup=False
-         ) as dag:
+with DAG(
+    'trigger-dagrun-dag',
+    start_date=datetime(2021, 1, 1),
+    max_active_runs=1,
+    schedule_interval='@daily',
+    default_args=default_args,
+    catchup=False
+) as dag:
 
     start_task = PythonOperator(
         task_id='starting_task',
@@ -302,12 +303,13 @@ default_args = {
     'retry_delay': timedelta(minutes=5)
 }
 
-with DAG('api-dag',
-         start_date=datetime(2021, 1, 1),
-         max_active_runs=1,
-         schedule_interval='@daily',
-         catchup=False
-         ) as dag:
+with DAG(
+    'api-dag',
+    start_date=datetime(2021, 1, 1),
+    max_active_runs=1,
+    schedule_interval='@daily',
+    catchup=False
+) as dag:
 
     start_task = PythonOperator(
         task_id='starting_task',
