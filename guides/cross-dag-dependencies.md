@@ -360,6 +360,9 @@ When DAGs are scheduled depending on datasets, both the DAG containing the produ
 
 ![DAG Dependencies View Datasets](https://assets2.astronomer.io/main/guides/cross-dag-dependencies/2_4_CrossGuide_Dependencies.png)
 
+In Airflow 2.4 an additional **Datasets** tab was added, which shows all dependencies between datasets and DAGs.
+![DAG Dependencies View Datasets](https://assets2.astronomer.io/main/guides/cross-dag-dependencies/2_4_Datasets.png)
+
 ## Cross-Deployment Dependencies
 
 Sometimes it may be necessary to implement cross-DAG dependencies where the DAGs do not exist in the same Airflow deployment. The `TriggerDagRunOperator`, `ExternalTaskSensor` and data driven methods described above are designed to work with DAGs in the same Airflow environment, so they are not ideal for cross-Airflow deployments. The Airflow API, on the other hand, is perfect for this use case. In this section, we'll focus on how to implement this method on Astro, but the general concepts will likely be similar wherever your Airflow environments are deployed.
