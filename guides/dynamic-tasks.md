@@ -99,7 +99,8 @@ def plus_10_TF(x):
 
 plus_10_TF.partial().expand(x=one_two_three_TF())
 ```
-### Map inputs to an operator-defined task from a TaskFlow API-defined task.
+
+### Map inputs to an operator-defined task from a TaskFlow API-defined task
 
 Passing data from an upstream task defined using the TaskFlowAPI to a downstream traditional operator works in a very similar fashion. Note that the format of the mapping information returned by the upstream TaskFlow API task might need to be modified to be accepted by the `op_args` argument of the traditional PythonOperator.
 
@@ -120,7 +121,7 @@ plus_10_task = PythonOperator.partial(
 )
 ```
 
-### Map inputs to  TaskFlow API-defined task from an operator-defined task.
+### Map inputs to TaskFlow API-defined task from an operator-defined task
 
 If you are mapping over the results of a traditional operator, you need to format the argument for `expand()` using the `XComArg` object.
 
@@ -239,7 +240,7 @@ The task `t1` will have 3 mapped task instances printing their results into the 
 
 ### Zip
 
-In Airflow 2.4+ you can provide sets of positional arguments to the same keyword argument, such as the `op_args` argument of the PythonOperator. You can use the built-in [`zip()`] function(https://docs.python.org/3/library/functions.html#zip) Python function if your inputs are in the form of iterables such as tuples, dictionaries, or lists. If your inputs come from XCom objects, you can use the `.zip()` method of the `XComArg` object.
+In Airflow 2.4+ you can provide sets of positional arguments to the same keyword argument, such as the `op_args` argument of the PythonOperator. You can use the built-in [`zip()`](https://docs.python.org/3/library/functions.html#zip) Python function if your inputs are in the form of iterables such as tuples, dictionaries, or lists. If your inputs come from XCom objects, you can use the `.zip()` method of the `XComArg` object.
 
 
 #### Provide positional arguments with the built-in Python zip()
