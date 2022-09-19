@@ -22,9 +22,9 @@ To get the most out of this guide, you should have knowledge of:
 
 ## DAGs
 
-The DAGs view is the landing page when you sign in to Airflow. It shows a list of all your DAGs, the status of recent DAG runs and tasks, the time of the last DAG run, and basic metadata about the DAG like the owner and the schedule.
+The DAGs view is the landing page when you sign in to Airflow. It shows a list of all your DAGs, the status of recent DAG runs and tasks, the time of the last DAG run, and basic metadata about the DAG like the owner and the schedule. You can toggle the Auto-refresh button (added in Airflow 2.4) to `on` to see the status of the DAGs update in real time.
 
-> Note: All screenshots in this guide were taken from an [Astronomer Runtime](https://docs.astronomer.io/astro/runtime-release-notes) Airflow image. Other than some modified colors, the UI is the same as that of OSS Airflow.
+> Note: All screenshots in this guide were taken from an [Astronomer Runtime](https://docs.astronomer.io/astro/runtime-release-notes) Airflow image. Other than some modified colors and in some screenshots an additional `Astronomer` tab, the UI is the same as that of OSS Airflow.
 
 ![DAGs View](https://assets2.astronomer.io/main/guides/airflow-ui/2_4_DAGs.png)
 
@@ -100,7 +100,7 @@ There are a couple of additional DAG views that we won't cover in depth here, bu
 
 ## Datasets
 
-The Dataset tab was introduced in Airflow 2.4 in support of the new [dataset driven scheduling](https://www.astronomer.io/guides/airflow-datasets) feature. The Dataset tab links to a page showing all datasets that have been produced in this Airflow environment, as well as a count of producing tasks and consuming DAGs for each individual dataset. The `Graph` button links to the DAG Dependencies view, which is also accessible through the Browse tab.
+The Dataset tab was introduced in Airflow 2.4 in support of the new [dataset driven scheduling](https://www.astronomer.io/guides/airflow-datasets) feature. The Dataset tab links to a page showing all datasets that have been produced in this Airflow environment, as well as all dependencies between datasets and DAGs in a graph.
 
 ![Datasets](https://assets2.astronomer.io/main/guides/airflow-ui/2_4_Datasets.png)
 
@@ -122,7 +122,7 @@ The Browse tab links to multiple pages that provide additional insight into and 
 
 ![Browse](https://assets2.astronomer.io/main/guides/airflow-ui/2_4_BrowseTab.png)
 
-The DAG runs and task instances (shown in the screenshot below) pages are the easiest way to view and manipulate these objects in aggregate. If you need to re-run tasks in multiple DAG runs, you can do so from this page by selecting all relevant tasks and clearing their status.
+The DAG runs and task instances pages (shown in the screenshot below) are the easiest way to view and manipulate these objects in aggregate. If you need to re-run tasks in multiple DAG runs, you can do so from this page by selecting all relevant tasks and clearing their status.
 
 ![Task Instance](https://assets2.astronomer.io/main/guides/airflow-ui/2_4_ListTaskInstance.png)
 
