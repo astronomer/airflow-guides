@@ -361,6 +361,7 @@ When DAGs are scheduled depending on datasets, both the DAG containing the produ
 ![DAG Dependencies View Datasets](https://assets2.astronomer.io/main/guides/cross-dag-dependencies/2_4_CrossGuide_Dependencies.png)
 
 In Airflow 2.4 an additional **Datasets** tab was added, which shows all dependencies between datasets and DAGs.
+
 ![DAG Dependencies View Datasets](https://assets2.astronomer.io/main/guides/cross-dag-dependencies/2_4_Datasets.png)
 
 ## Cross-Deployment Dependencies
