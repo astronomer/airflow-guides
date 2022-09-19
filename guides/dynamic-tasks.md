@@ -272,7 +272,7 @@ The task `add_numbers` will have three mapped task instances one for each tuple 
 - Map index 1: `222`
 - Map index 2: `333`
 
-#### Provide positional arguments XComArg object zip()
+#### Provide positional arguments with XComArg.zip()
 
 It is also possible to zip `XComArg` objects. If the upstream task has been defined using the TaskFlow API, simply provide the function call. If the upstream task used a traditional operator, provide the `XComArg(task_object)`. Below you can see an example of the results of two TaskFlow API tasks and one traditional operator being zipped together to form the `zipped_arguments` (`[(1,10,100), (2,1000,200), (1000,1000,300)]`).
 
