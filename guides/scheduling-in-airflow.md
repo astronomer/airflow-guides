@@ -315,7 +315,7 @@ There are some limitations to keep in mind when implementing custom timetables:
 
 Airflow 2.4 introduced the concept of datasets and data-driven DAG dependencies. You can now make Airflow detect when a task in a DAG updates a data object. Using that awareness, other DAGs can be scheduled depending on updates to these datasets. To create a dataset-based schedule, you simply pass the names of the datasets as a list to the `schedule` parameter.
 
-```Python
+```python
 dataset1 = Dataset(f"{DATASETS_PATH}/dataset_1.txt")
 dataset2 = Dataset(f"{DATASETS_PATH}/dataset_2.txt")
 
