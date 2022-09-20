@@ -88,7 +88,7 @@ In this section you'll learn how to pass mapping information to a downstream tas
 
 If both tasks are defined using the TaskFlow API, you can provide a function call to the upstream task as the argument for the `expand()` function.
 
-```Python
+```python
 @task
 def one_two_three_TF():
     return [1,2,3]
@@ -104,7 +104,7 @@ plus_10_TF.partial().expand(x=one_two_three_TF())
 
 Passing data from an upstream task defined using the TaskFlow API to a downstream traditional operator works in a very similar fashion. Note that the format of the mapping information returned by the upstream TaskFlow API task might need to be modified to be accepted by the `op_args` argument of the traditional PythonOperator.
 
-```Python
+```python
 @task
 def one_two_three_TF():
     # this adjustment is due to op_args expecting each argument as a list
@@ -125,7 +125,7 @@ plus_10_task = PythonOperator.partial(
 
 If you are mapping over the results of a traditional operator, you need to format the argument for `expand()` using the `XComArg` object.
 
-```Python
+```python
 from airflow import XComArg
 
 def one_two_three_traditional():
@@ -148,7 +148,7 @@ plus_10_TF.partial().expand(x=XComArg(one_two_three_task))
 
 The `XComArg` object can also be used to map a traditional operator over the results of another traditional operator.
 
-```Python
+```python
 from airflow import XComArg
 
 def one_two_three_traditional():
@@ -188,7 +188,7 @@ The default behavior of the `expand()` function is to create a mapped task insta
 
 The task definition below maps over 3 options for  the `bash_command` parameter and 3 options for the `env` parameter. This will result in 3x3=9 mapped task instances. Each bash command runs with each definition for the environment variable `WORD`.
 
-```Python
+```python
 cross_product_example = BashOperator.partial(
     task_id="cross_product_example"
 ).expand(
@@ -221,7 +221,7 @@ The nine mapped task instances of the task `cross_product_example` run all possi
 
 To map over sets of inputs to two or more keyword arguments (kwargs), you can use the `expand_kwargs()` function in Airflow 2.4+. You can provide sets of parameters as a list containing a dictionary or as an `XComArg`. The operator gets 3 sets of commands, resulting in 3 mapped task instances.
 
-```Python
+```python
 # input sets of kwargs provided directly as a list[dict]
 t1 = BashOperator.partial(task_id="t1").expand_kwargs(
     [
@@ -253,7 +253,7 @@ The `zip()` function takes in an arbitrary number of iterables (for example list
 
 The code snippet below shows how a list of zipped arguments can be provided to the `expand()` function in order to create mapped tasks over sets of positional arguments. Each set of positional arguments is passed to the keyword argument `zipped_x_y_z`.
 
-```Python
+```python
 # use the zip function to create three-tuples out of three lists
 zipped_arguments = list(zip([1,2,3], [10,20,30], [100,200,300]))
 # zipped_arguments contains: [(1,10,100), (2,20,200), (3,30,300)]
@@ -278,7 +278,7 @@ It is also possible to zip `XComArg` objects. If the upstream task has been defi
 
 To mimic the behavior of the [`zip_longest()`](https://docs.python.org/3/library/itertools.html#itertools.zip_longest) function, you can add the optional `fillvalue` keyword argument to the `.zip()` method. If you specify a default value with `fillvalue`, the method produces as many tuples as the longest input has elements and fills in missing elements with the default value. If `fillvalue` was not specified in the example below, `zipped_arguments` would only contain one tuple `[(1,10,100)]` since the shortest list provided to the `.zip()` method is only one element long.
 
-```Python
+```python
 from airflow import XComArg
 
 @task
