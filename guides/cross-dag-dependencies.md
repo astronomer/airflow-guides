@@ -57,7 +57,7 @@ Using datasets requires knowledge of the following scheduling concepts:
 
 Any task can be made into a producing task by providing one or more datasets to the `outlets` parameter as shown below.
 
-```Python
+```python
 dataset1 = Dataset('s3://folder1/dataset_1.txt')
 
 # producing task in the upstream DAG
@@ -69,7 +69,7 @@ EmptyOperator(
 
 The downstream DAG is scheduled to run after `dataset1` has been updated by providing it to the `schedule` parameter.
 
-```Python
+```python
 dataset1 = Dataset('s3://folder1/dataset_1.txt')
 
 # consuming DAG
