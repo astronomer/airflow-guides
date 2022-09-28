@@ -1,8 +1,7 @@
 # Airflow Guides
 
-A curated collection of guides to help with using Airflow for many different use cases.
-
----
+## This repo is currently frozen
+**Note:** Our Airflow guides will be moving to a new home shortly. Until that migration is complete, this repo is frozen to any changes. If you need to submit an issue for guides updates/errors, please do so in our docs repo: https://github.com/astronomer/docs/issues. If you have questions about what to do for now, please reach out to Kenten (kenten@astronomer.io).
 
 ## How to use this repo for contributions to www.astronomer.io/guides
 
